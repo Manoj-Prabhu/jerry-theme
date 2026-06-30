@@ -1,0 +1,177 @@
+/* ==========================================================
+   Jerry Theme Layout
+   Mano Studio
+========================================================== */
+
+/* -------------------------
+   Container
+-------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+.container-sm {
+  max-width: 960px;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+.container-lg {
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+/* -------------------------
+   Sections
+-------------------------- */
+
+.section {
+  padding-block: var(--space-16);
+}
+
+.section-sm {
+  padding-block: var(--space-10);
+}
+
+.section-lg {
+  padding-block: 96px;
+}
+
+/* -------------------------
+   Grid
+-------------------------- */
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+/* -------------------------
+   Flex
+-------------------------- */
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* -------------------------
+   Alignment
+-------------------------- */
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+/* -------------------------
+   Width Helpers
+-------------------------- */
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+/* -------------------------
+   Responsive
+-------------------------- */
+
+@media (max-width: 1024px) {
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .container,
+  .container-sm,
+  .container-lg {
+    padding-inline: var(--space-4);
+  }
+
+  .section {
+    padding-block: var(--space-12);
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+}

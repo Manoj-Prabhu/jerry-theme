@@ -1,0 +1,139 @@
+/* ==========================================================
+   Jerry Theme Components
+   Mano Studio
+========================================================== */
+
+/* -------------------------
+   Buttons
+-------------------------- */
+
+.j-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  padding: 14px 28px;
+
+  background: var(--color-primary);
+  color: var(--color-white);
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  font-size: var(--font-size-md);
+  font-weight: var(--font-semibold);
+
+  cursor: pointer;
+
+transition:
+  background-color var(--transition),
+  color var(--transition),
+  border-color var(--transition),
+  transform var(--transition),
+  box-shadow var(--transition);
+}
+
+.j-button:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--shadow-md);
+}
+
+.j-button-outline:active {
+  transform: translateY(0);
+}
+
+.j-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.j-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.j-button:active {
+  transform: translateY(0);
+}
+
+/* -------------------------
+   Secondary Button
+-------------------------- */
+
+.j-button-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+
+}
+
+.j-button-outline:hover {
+  background: var(--color-primary);
+  color: white;
+
+}
+
+/* -------------------------
+   Card
+-------------------------- */
+
+.j-card {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.j-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* -------------------------
+   Card Content
+-------------------------- */
+
+.j-card-content {
+  padding: var(--space-6);
+}
+
+/* -------------------------
+   Badge
+-------------------------- */
+
+.j-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+}
+
+/* -------------------------
+   Section Heading
+-------------------------- */
+
+.j-section-title {
+  margin-bottom: var(--space-4);
+  text-align: center;
+}
+
+.j-section-title h2{
+  margin-bottom: var(--space-3);
+}
+
+.j-section-title p{
+  max-width: 700px;
+  margin-inline: auto;
+}

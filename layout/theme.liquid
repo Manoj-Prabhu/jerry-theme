@@ -19,6 +19,11 @@
 
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'variables.css' | asset_url | stylesheet_tag }}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'layout.css' | asset_url | stylesheet_tag }}
+    {{ 'components.css' | asset_url | stylesheet_tag }}
+    {{ 'utilities.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -30,7 +35,7 @@
     {% sections 'header-group' %}
 
     {{ content_for_layout }}
-
     {% sections 'footer-group' %}
+    {{ 'theme.js' | asset_url | script_tag }}
   </body>
 </html>
