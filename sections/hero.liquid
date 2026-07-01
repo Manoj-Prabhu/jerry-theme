@@ -1,0 +1,118 @@
+<section class="j-hero">
+
+  <div class="j-hero__content">
+
+    <span class="j-hero__badge">
+      {{ section.settings.badge }}
+    </span>
+
+    <h1>
+    {{ section.settings.heading }}
+    <span>{{ section.settings.highlight_heading }}</span>
+    </h1>
+
+    <p>
+        {{ section.settings.description }}
+    </p>
+
+    <div class="j-hero__buttons">
+        <a
+        href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+        class="j-button">
+        {{ section.settings.button_label }}
+        </a>
+
+        <a
+        href="{{ section.settings.secondary_link | default: routes.all_products_collection_url }}"
+        class="j-button j-button-outline">
+        {{ section.settings.secondary_label }}
+        </a>
+    </div>
+
+  </div>
+
+  <div class="j-hero__image">
+
+    {% if section.settings.image %}
+    {{
+    section.settings.image
+    | image_url: width: 1200
+    | image_tag:
+        loading: 'lazy',
+        class: 'j-hero__img',
+        alt: section.settings.heading
+    }}
+    {% else %}
+
+      <div class="j-hero__placeholder">
+
+        <div class="floating-circle"></div>
+        <div class="floating-square"></div>
+        <div class="floating-dot"></div>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "Premium Lifestyle Collection"
+    },
+    {
+    "type": "text",
+    "id": "heading",
+    "label": "Heading",
+    "default": "Discover Your"
+    },
+    {
+    "type": "text",
+    "id": "highlight_heading",
+    "label": "Highlighted Heading",
+    "default": "Next Favorite"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary Button",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary Button",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}
