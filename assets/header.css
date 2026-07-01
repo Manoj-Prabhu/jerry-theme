@@ -1,0 +1,112 @@
+/* ==========================================================
+   Jerry Theme Header
+========================================================== */
+
+/* Announcement Bar */
+
+.j-announcement {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 10px 20px;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.j-announcement a {
+  color: inherit;
+}
+
+/* Header */
+
+header{
+  max-width: var(--container-width);
+  margin:0 auto;
+  height:80px;
+  padding:0 var(--space-8);
+
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  column-gap:60px;
+}
+
+/* Logo */
+
+.header__title{
+  white-space:nowrap;
+  margin-right:var(--space-16);
+}
+
+.header__title a{
+  display:block;
+  white-space:nowrap;
+  font-size:2rem;
+  font-weight:700;
+  color:var(--color-primary);
+}
+
+/* Navigation */
+
+.header__menu{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:48px;
+}
+
+.j-nav-link{
+  position:relative;
+  display:inline-block;
+  color:var(--color-text);
+  font-weight:500;
+  transition:color .3s ease;
+}
+
+.j-nav-link:hover{
+  color:var(--color-accent);
+}
+
+.j-nav-link::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-6px;
+
+  width:0;
+  height:2px;
+
+  background:var(--color-accent);
+
+  transform:translateX(-50%);
+  transition:width .3s ease;
+}
+
+.j-nav-link:hover::after{
+  width:100%;
+}
+
+/* Icons */
+
+.header__icons{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:22px;
+}
+
+.header__icons a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .25s ease;
+}
+
+.header__icons a:hover{
+  transform:translateY(-2px);
+}
+
+.header__icons svg{
+  width:24px;
+  height:24px;
+}

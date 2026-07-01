@@ -1,0 +1,22 @@
+{% comment %}
+  Jerry Announcement Bar
+{% endcomment %}
+
+{% if section.settings.show_announcement %}
+  <div class="j-announcement">
+    <div class="container">
+      {% if section.settings.announcement_link != blank %}
+        <a
+          href="{{ section.settings.announcement_link }}"
+          class="j-announcement__text"
+        >
+          {{ section.settings.announcement_text }}
+        </a>
+      {% else %}
+        <span class="j-announcement__text">
+          {{ section.settings.announcement_text }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

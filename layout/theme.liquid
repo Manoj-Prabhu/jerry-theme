@@ -24,6 +24,7 @@
     {{ 'layout.css' | asset_url | stylesheet_tag }}
     {{ 'components.css' | asset_url | stylesheet_tag }}
     {{ 'utilities.css' | asset_url | stylesheet_tag }}
+    {{ 'header.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -37,5 +38,6 @@
     {{ content_for_layout }}
     {% sections 'footer-group' %}
     {{ 'theme.js' | asset_url | script_tag }}
+    {{ 'header.js' | asset_url | script_tag }}
   </body>
 </html>
