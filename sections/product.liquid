@@ -1,44 +1,84 @@
 {% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+  Product Section
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+<div class="j-product">
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+  <!-- Product Images -->
+  <div class="j-product__images">
+    {% for image in product.images %}
+      <div class="j-product__image">
+        {% render 'image', class: 'product-image', image: image %}
+      </div>
+    {% endfor %}
+  </div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+  <!-- Product Content -->
+  <div class="j-product__content">
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
+    <h1 class="j-product__title">
+      {{ product.title }}
+    </h1>
+
+    <p class="j-product__price">
+      {{ product.price | money }}
+    </p>
+
+    <div class="j-product__description">
+      {{ product.description }}
+    </div>
+
+    {% form 'product', product, class: 'product-form' %}
+
+      {% assign current_variant = product.selected_or_first_available_variant %}
+
+      {% if product.has_only_default_variant == false %}
+        <label for="ProductVariant">
+          Variant
+        </label>
+
+        <select
+          id="ProductVariant"
+          name="id"
         >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+          {% for variant in product.variants %}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}
+                selected
+              {% endif %}
+            >
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endif %}
 
-    <input type="text" name="quantity" min="1" value="1">
+      <label for="Quantity">
+        Quantity
+      </label>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
+      <input
+        id="Quantity"
+        type="number"
+        name="quantity"
+        min="1"
+        value="1"
+      >
+
+      <button
+        type="submit"
+        class="j-button"
+      >
+        Add to Cart
+      </button>
+
+      {{ form | payment_button }}
+
+    {% endform %}
+
+  </div>
+
 </div>
 
 {% schema %}

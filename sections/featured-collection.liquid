@@ -1,0 +1,61 @@
+<section class="j-featured-collection">
+  <div class="j-featured-collection__heading">
+    <h2>{{ section.settings.heading }}</h2>
+    {% if section.settings.description != blank %}
+      <p>{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+  {% assign selected_collection = collections[section.settings.collection] %}
+  {% if selected_collection != blank %}
+    <div class="j-product-grid">
+      {% for product in selected_collection.products limit: section.settings.products_to_show %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <p style="text-align:center;">
+      Select a collection in the Theme Editor.
+    </p>
+  {% endif %}
+
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover our latest curated products."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

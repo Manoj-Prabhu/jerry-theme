@@ -1,0 +1,97 @@
+/* ==========================================================
+   Jerry Theme Product
+========================================================== */
+
+.j-product {
+  max-width: var(--container-width);
+  margin: 80px auto;
+  padding: 0 var(--space-8);
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Images */
+
+.j-product__images {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.j-product__image {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.j-product__image img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Content */
+
+.j-product__title {
+  margin-bottom: 20px;
+}
+
+.j-product__price {
+  margin-bottom: 24px;
+
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.j-product__description {
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+/* Form */
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-form label {
+  font-weight: 600;
+}
+
+.product-form select,
+.product-form input[type="number"] {
+  width: 100%;
+  padding: 14px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  font-size: 1rem;
+}
+
+.product-form .j-button {
+  width: 100%;
+}
+
+/* Shopify Dynamic Checkout Button */
+
+.shopify-payment-button {
+  margin-top: 16px;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+  .j-product {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+}

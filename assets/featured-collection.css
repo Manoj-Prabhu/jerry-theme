@@ -1,0 +1,139 @@
+/* ==========================================================
+   Jerry Theme Featured Collection
+========================================================== */
+
+/* Section */
+
+.j-featured-collection {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 120px var(--space-8);
+}
+
+/* Heading */
+
+.j-featured-collection__heading {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.j-featured-collection__heading h2 {
+  font-size: 42px;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.j-featured-collection__heading p {
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+}
+
+/* Product Grid */
+
+.j-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+/* Product Card */
+
+.j-product-card {
+  display: block;
+
+  background: #fff;
+
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.j-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+/* Image */
+
+.j-product-card__image {
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.j-product-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.j-product-card:hover .j-product-card__img {
+  transform: scale(1.08);
+}
+
+/* Sale Badge */
+
+.j-product-card__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Content */
+
+.j-product-card__content {
+  padding: 24px;
+}
+
+.j-product-card__content h3 {
+  font-size: 20px;
+  color: var(--color-primary);
+  margin-bottom: 14px;
+}
+
+/* Price */
+
+.j-product-card__price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.j-product-card__price del {
+  color: var(--color-text-light);
+}
+
+.j-product-card__price .sale {
+  color: var(--color-accent);
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+  .j-product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .j-product-grid {
+    grid-template-columns: 1fr;
+  }
+}
