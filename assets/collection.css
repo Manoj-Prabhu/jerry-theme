@@ -1,0 +1,35 @@
+/* ==========================================================
+   Jerry Theme Collection Page
+========================================================== */
+
+.j-collection {
+  padding: var(--space-16) 0;
+}
+
+.j-collection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+.j-empty {
+  text-align: center;
+  color: var(--color-text-light);
+  padding: var(--space-16) 0;
+}
+
+/* Tablet */
+
+@media (max-width: 992px) {
+  .j-collection-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 640px) {
+  .j-collection-grid {
+    grid-template-columns: 1fr;
+  }
+}

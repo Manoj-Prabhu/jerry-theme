@@ -1,0 +1,33 @@
+<section class="j-collection">
+
+  <div class="page-width">
+
+    <div class="j-section-title">
+      <h1>{{ collection.title }}</h1>
+
+      {% if collection.description != blank %}
+        <p>{{ collection.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="j-collection-grid">
+
+      {% for product in collection.products %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Main Collection",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
