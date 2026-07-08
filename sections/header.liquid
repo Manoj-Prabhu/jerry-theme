@@ -25,9 +25,9 @@
       aria-label="Open cart"
     >
 
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
+    <sup id="CartCount">
+      {{ cart.item_count }}
+    </sup>
 
       {{ 'icon-cart.svg' | inline_asset_content }}
 
