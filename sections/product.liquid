@@ -28,9 +28,15 @@
       {{ product.description }}
     </div>
 
-    {% form 'product', product, class: 'product-form' %}
+    {% form 'product', product, class: 'product-form j-product-form' %}
 
       {% assign current_variant = product.selected_or_first_available_variant %}
+
+      <input
+        type="hidden"
+        name="id"
+        value="{{ current_variant.id }}"
+      >
 
       {% if product.has_only_default_variant == false %}
         <label for="ProductVariant">
@@ -69,11 +75,14 @@
       <button
         type="submit"
         class="j-button"
+        id="AddToCartButton"
       >
         Add to Cart
       </button>
 
+      {% comment %}
       {{ form | payment_button }}
+      {% endcomment %}
 
     {% endform %}
 

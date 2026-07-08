@@ -1,0 +1,70 @@
+<div class="j-cart-drawer" id="CartDrawer">
+
+  <div class="j-cart-overlay"></div>
+
+  <aside class="j-cart">
+
+    <!-- Header -->
+    <div class="j-cart__header">
+
+      <h2>Your Cart</h2>
+
+      <button
+        type="button"
+        class="j-cart__close"
+        aria-label="Close cart"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <!-- Cart Items -->
+    <div class="j-cart__body">
+
+      <div
+        id="CartItems"
+        class="j-cart-items"
+      ></div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="j-cart__footer">
+
+      <div class="j-cart__subtotal">
+
+        <span>Subtotal</span>
+
+        <strong id="CartSubtotal">
+          {{ cart.total_price | money }}
+        </strong>
+
+      </div>
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="j-button j-button-outline"
+      >
+        View Cart
+      </a>
+
+      <a
+        href="{{ routes.checkout_url }}"
+        class="j-button"
+      >
+        Checkout
+      </a>
+
+    </div>
+
+  </aside>
+
+</div>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": []
+}
+{% endschema %}

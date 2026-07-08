@@ -30,6 +30,7 @@
     {{ 'product.css' | asset_url | stylesheet_tag }}
     {{ 'collection.css' | asset_url | stylesheet_tag }}
     {{ 'footer.css' | asset_url | stylesheet_tag }}
+    {{ 'cart.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -39,11 +40,13 @@
 
   <body>
     {% sections 'header-group' %}
-
     {{ content_for_layout }}
+    {% section 'cart-drawer' %}
     {% sections 'footer-group' %}
+
     {{ 'theme.js' | asset_url | script_tag }}
     {{ 'header.js' | asset_url | script_tag }}
     {{ 'footer.js' | asset_url | script_tag }}
+    {{ 'cart.js' | asset_url | script_tag }}
   </body>
 </html>

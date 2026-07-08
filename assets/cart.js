@@ -1,0 +1,152 @@
+/* ==========================================================
+   Jerry Theme Cart Drawer
+========================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const drawer = document.querySelector(".j-cart-drawer");
+  const overlay = document.querySelector(".j-cart-overlay");
+  const closeButton = document.querySelector(".j-cart__close");
+  const cartButton = document.querySelector(".j-header__cart");
+  const productForm = document.querySelector(".j-product-form");
+
+  // Open Drawer
+  function openCartDrawer() {
+    if (drawer) {
+      drawer.classList.add("is-open");
+    }
+  }
+
+  // Close Drawer
+  function closeCartDrawer() {
+    if (drawer) {
+      drawer.classList.remove("is-open");
+    }
+  }
+
+  // Format Money
+  function formatMoney(cents) {
+    return `$${(cents / 100).toFixed(2)}`;
+  }
+
+  // Render Cart
+  function renderCart(cart) {
+
+    const cartItems = document.getElementById("CartItems");
+    const subtotal = document.getElementById("CartSubtotal");
+
+    if (!cartItems) return;
+
+    if (cart.items.length === 0) {
+
+      cartItems.innerHTML = `
+        <p class="j-cart__empty">
+          Your cart is empty.
+        </p>
+      `;
+
+    } else {
+
+      cartItems.innerHTML = cart.items.map(item => `
+        <div class="j-cart-item">
+
+          <div class="j-cart-item__image">
+            <img
+              src="${item.image}"
+              alt="${item.product_title}"
+              width="80"
+            >
+          </div>
+
+          <div class="j-cart-item__content">
+            <h4>${item.product_title}</h4>
+            <p>${formatMoney(item.final_price)}</p>
+            <span>Qty: ${item.quantity}</span>
+          </div>
+
+        </div>
+      `).join("");
+
+    }
+
+    if (subtotal) {
+      subtotal.textContent = formatMoney(cart.total_price);
+    }
+
+  }
+
+  // Header Cart
+  if (cartButton) {
+    cartButton.addEventListener("click", openCartDrawer);
+  }
+
+  // Close Button
+  if (closeButton) {
+    closeButton.addEventListener("click", closeCartDrawer);
+  }
+
+  // Overlay
+  if (overlay) {
+    overlay.addEventListener("click", closeCartDrawer);
+  }
+
+  // AJAX Add to Cart
+  if (productForm) {
+
+    productForm.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const variantInput = productForm.querySelector('[name="id"]');
+      const quantityInput = productForm.querySelector('[name="quantity"]');
+
+      const variantId = Number(variantInput.value);
+      const quantity = Number(quantityInput.value);
+
+      try {
+
+        const response = await fetch("/cart/add.js", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: variantId,
+                quantity: quantity
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+
+          const error = await response.json();
+          console.error("Cart Error:", error);
+
+          throw new Error(error.description || "Failed to add product");
+        }
+
+        await response.json();
+
+        const cartResponse = await fetch("/cart.js");
+        const cart = await cartResponse.json();
+
+        console.log(cart);
+
+        renderCart(cart);
+
+        openCartDrawer();
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    });
+
+  }
+
+});
