@@ -1,0 +1,62 @@
+{% if recommendations.performed %}
+
+  {% if recommendations.products_count > 0 %}
+
+    <div
+      class="j-product-recommendations"
+      data-product-id="{{ product.id }}"
+      data-limit="4"
+    >
+
+      <h2 class="j-section-title">
+        You may also like
+      </h2>
+
+      <div
+        class="j-product-grid"
+        id="ProductRecommendations"
+      >
+
+        {% for product in recommendations.products %}
+
+          {% render 'product-card',
+            product: product
+          %}
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  {% endif %}
+
+{% else %}
+
+  <div
+    class="j-product-recommendations"
+    data-product-id="{{ product.id }}"
+    data-limit="4"
+  >
+
+    <h2 class="j-section-title">
+      You may also like
+    </h2>
+
+    <div
+      class="j-product-grid"
+      id="ProductRecommendations"
+    ></div>
+
+  </div>
+
+  {{ 'product-recommendations.js' | asset_url | script_tag }}
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "settings": []
+}
+{% endschema %}

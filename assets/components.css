@@ -149,6 +149,16 @@
 
 
 /* -------------------------
+   Product Recommendations
+-------------------------- */
+
+.j-product-recommendations {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 40px var(--space-8) 60px;
+}
+
+/* -------------------------
    Section Heading
 -------------------------- */
 
