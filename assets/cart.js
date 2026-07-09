@@ -267,13 +267,34 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
 
   if (productForm) {
+    const formError = document.getElementById("ProductFormError");
+
+    const showFormError = (message) => {
+      if (!formError) return;
+      formError.textContent = message;
+      formError.hidden = false;
+    };
+
+    const clearFormError = () => {
+      if (!formError) return;
+      formError.textContent = "";
+      formError.hidden = true;
+    };
+
     productForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      clearFormError();
 
       const variantId = Number(productForm.querySelector('[name="id"]').value);
       const quantity = Number(
         productForm.querySelector('[name="quantity"]').value,
       );
+
+      if (!variantId || !quantity || quantity < 1) {
+        showFormError("Please select a valid option and quantity.");
+        return;
+      }
 
       try {
         setLoading(true);
@@ -295,13 +316,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.description);
+          throw new Error(error.description || "Unable to add item to cart.");
         }
 
         await refreshCart();
         openCartDrawer();
       } catch (error) {
         console.error(error);
+        showFormError(error.message || "Unable to add item to cart.");
       } finally {
         setLoading(false);
       }

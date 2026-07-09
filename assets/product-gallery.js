@@ -24,6 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
       thumbnails.forEach((item) => item.classList.remove("is-active"));
 
       thumbnail.classList.add("is-active");
+
+      const variantButtons = document.querySelectorAll(
+        ".j-product__variant-button",
+      );
+
+      const matches = Array.from(variantButtons).filter(
+        (button) =>
+          !button.disabled &&
+          button.dataset.hasOwnImage === "true" &&
+          button.dataset.image === thumbnail.dataset.image,
+      );
+
+      if (matches.length === 1 && !matches[0].classList.contains("is-active")) {
+        matches[0].click();
+      }
     });
   });
 });
