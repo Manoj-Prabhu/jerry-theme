@@ -5,12 +5,41 @@
 <div class="j-product">
 
   <!-- Product Images -->
-  <div class="j-product__images">
-    {% for image in product.images %}
-      <div class="j-product__image">
-        {% render 'image', class: 'product-image', image: image %}
-      </div>
-    {% endfor %}
+  <div class="j-product__gallery">
+
+    <div class="j-product__main-image">
+
+      {{ product.featured_image
+        | image_url: width: 1000
+        | image_tag:
+            class: 'j-product-main-image',
+            id: 'ProductMainImage'
+      }}
+
+    </div>
+
+    <div class="j-product__thumbnails">
+
+      {% for image in product.images %}
+
+        <button
+          type="button"
+          class="j-product-thumbnail {% if forloop.first %}is-active{% endif %}"
+          data-image="{{ image | image_url: width: 1200 }}"
+        >
+
+          {{
+            image
+            | image_url: width: 150
+            | image_tag
+          }}
+
+        </button>
+
+      {% endfor %}
+
+    </div>
+
   </div>
 
   <!-- Product Content -->
