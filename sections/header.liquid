@@ -25,7 +25,12 @@
       aria-label="Open cart"
     >
 
-    <sup id="CartCount">
+    <sup
+      id="CartCount"
+      {% if cart.item_count == 0 %}
+        hidden
+      {% endif %}
+    >
       {{ cart.item_count }}
     </sup>
 

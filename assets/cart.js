@@ -23,6 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function setLoading(isLoading) {
+    document
+      .querySelectorAll(
+        ".j-product-form button, .j-cart-remove, .j-cart-qty-plus, .j-cart-qty-minus",
+      )
+      .forEach((button) => {
+        button.disabled = isLoading;
+      });
+  }
+
   // Format Money
   function formatMoney(cents) {
     return `$${(cents / 100).toFixed(2)}`;
@@ -123,14 +133,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateCartCount(cart) {
     const cartCount = document.getElementById("CartCount");
-
     if (!cartCount) return;
-
     cartCount.textContent = cart.item_count;
+
+    if (cart.item_count > 0) {
+      cartCount.hidden = false;
+    } else {
+      cartCount.hidden = true;
+    }
   }
 
   async function removeCartItem(itemKey) {
     try {
+      setLoading(true);
+
       await fetch("/cart/change.js", {
         method: "POST",
         headers: {
@@ -147,13 +163,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderCart(cart);
       updateCartCount(cart);
+
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error(error);
     }
   }
 
   async function updateCartQuantity(itemKey, quantity) {
     try {
+      setLoading(true);
+
       await fetch("/cart/change.js", {
         method: "POST",
         headers: {
@@ -170,7 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderCart(cart);
       updateCartCount(cart);
+
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error(error);
     }
   }
@@ -202,6 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const quantity = Number(quantityInput.value);
 
       try {
+
+        setLoading(true);
+
         const response = await fetch("/cart/add.js", {
           method: "POST",
           headers: {
@@ -231,10 +258,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderCart(cart);
         updateCartCount(cart);
-
         openCartDrawer();
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error(error);
+
       }
     });
   }
