@@ -9,19 +9,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartButton = document.querySelector(".j-header__cart");
   const productForm = document.querySelector(".j-product-form");
 
-  // Open Drawer
+  // -------------------------
+  // Drawer
+  // -------------------------
+
   function openCartDrawer() {
     if (drawer) {
       drawer.classList.add("is-open");
     }
   }
 
-  // Close Drawer
   function closeCartDrawer() {
     if (drawer) {
       drawer.classList.remove("is-open");
     }
   }
+
+  // -------------------------
+  // Loading
+  // -------------------------
 
   function setLoading(isLoading) {
     document
@@ -33,12 +39,36 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Format Money
+  // -------------------------
+  // Money
+  // -------------------------
+
   function formatMoney(cents) {
     return `$${(cents / 100).toFixed(2)}`;
   }
 
+  // -------------------------
+  // Header Cart Count
+  // -------------------------
+
+  function updateCartCount(cart) {
+    const cartCount = document.getElementById("CartCount");
+
+    if (!cartCount) return;
+
+    if (cart.item_count > 0) {
+      cartCount.textContent = cart.item_count;
+      cartCount.hidden = false;
+    } else {
+      cartCount.hidden = true;
+      cartCount.textContent = "";
+    }
+  }
+
+  // -------------------------
   // Render Cart
+  // -------------------------
+
   function renderCart(cart) {
     const cartItems = document.getElementById("CartItems");
     const subtotal = document.getElementById("CartSubtotal");
@@ -66,10 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="j-cart-item__content">
+
             <h4>${item.product_title}</h4>
+
             <p>${formatMoney(item.final_price)}</p>
 
             <div class="j-cart-item__quantity">
+
               <button
                 class="j-cart-qty-minus"
                 data-key="${item.key}"
@@ -87,13 +120,16 @@ document.addEventListener("DOMContentLoaded", () => {
               >
                 +
               </button>
+
             </div>
+
             <button
               class="j-cart-remove"
               data-key="${item.key}"
             >
               Remove
             </button>
+
           </div>
 
         </div>
@@ -106,11 +142,15 @@ document.addEventListener("DOMContentLoaded", () => {
       subtotal.textContent = formatMoney(cart.total_price);
     }
 
+    // Remove
+
     document.querySelectorAll(".j-cart-remove").forEach((button) => {
       button.addEventListener("click", () => {
         removeCartItem(button.dataset.key);
       });
     });
+
+    // Minus
 
     document.querySelectorAll(".j-cart-qty-minus").forEach((button) => {
       button.addEventListener("click", () => {
@@ -122,6 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    // Plus
+
     document.querySelectorAll(".j-cart-qty-plus").forEach((button) => {
       button.addEventListener("click", () => {
         const quantity = Number(button.dataset.quantity);
@@ -131,17 +173,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function updateCartCount(cart) {
-    const cartCount = document.getElementById("CartCount");
-    if (!cartCount) return;
-    cartCount.textContent = cart.item_count;
+  // -------------------------
+  // Refresh Cart
+  // -------------------------
 
-    if (cart.item_count > 0) {
-      cartCount.hidden = false;
-    } else {
-      cartCount.hidden = true;
+  async function refreshCart() {
+    try {
+      const response = await fetch("/cart.js");
+      const cart = await response.json();
+
+      renderCart(cart);
+      updateCartCount(cart);
+    } catch (error) {
+      console.error(error);
     }
   }
+
+  // -------------------------
+  // Remove Item
+  // -------------------------
 
   async function removeCartItem(itemKey) {
     try {
@@ -158,18 +208,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       });
 
-      const cartResponse = await fetch("/cart.js");
-      const cart = await cartResponse.json();
-
-      renderCart(cart);
-      updateCartCount(cart);
-
-      setLoading(false);
+      await refreshCart();
     } catch (error) {
-      setLoading(false);
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
+
+  // -------------------------
+  // Update Quantity
+  // -------------------------
 
   async function updateCartQuantity(itemKey, quantity) {
     try {
@@ -186,47 +235,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       });
 
-      const cartResponse = await fetch("/cart.js");
-      const cart = await cartResponse.json();
-
-      renderCart(cart);
-      updateCartCount(cart);
-
-      setLoading(false);
+      await refreshCart();
     } catch (error) {
-      setLoading(false);
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
-  // Header Cart
+  // -------------------------
+  // Drawer Events
+  // -------------------------
+
   if (cartButton) {
-    cartButton.addEventListener("click", openCartDrawer);
+    cartButton.addEventListener("click", async () => {
+      await refreshCart();
+      openCartDrawer();
+    });
   }
 
-  // Close Button
   if (closeButton) {
     closeButton.addEventListener("click", closeCartDrawer);
   }
 
-  // Overlay
   if (overlay) {
     overlay.addEventListener("click", closeCartDrawer);
   }
 
-  // AJAX Add to Cart
+  // -------------------------
+  // AJAX Add To Cart
+  // -------------------------
+
   if (productForm) {
     productForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const variantInput = productForm.querySelector('[name="id"]');
-      const quantityInput = productForm.querySelector('[name="quantity"]');
-
-      const variantId = Number(variantInput.value);
-      const quantity = Number(quantityInput.value);
+      const variantId = Number(productForm.querySelector('[name="id"]').value);
+      const quantity = Number(
+        productForm.querySelector('[name="quantity"]').value,
+      );
 
       try {
-
         setLoading(true);
 
         const response = await fetch("/cart/add.js", {
@@ -246,25 +295,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!response.ok) {
           const error = await response.json();
-          console.error("Cart Error:", error);
-
-          throw new Error(error.description || "Failed to add product");
+          throw new Error(error.description);
         }
 
-        await response.json();
-
-        const cartResponse = await fetch("/cart.js");
-        const cart = await cartResponse.json();
-
-        renderCart(cart);
-        updateCartCount(cart);
+        await refreshCart();
         openCartDrawer();
-        setLoading(false);
       } catch (error) {
-        setLoading(false);
         console.error(error);
-
+      } finally {
+        setLoading(false);
       }
     });
   }
+
+  // -------------------------
+  // Initial Load
+  // -------------------------
+
+  refreshCart();
 });

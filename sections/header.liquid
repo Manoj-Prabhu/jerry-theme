@@ -13,6 +13,7 @@
   </div>
 
   <div class="header__icons">
+
     {% if shop.customer_accounts_enabled %}
       <shopify-account menu="{{ section.settings.customer_account_menu }}">
         {{ 'icon-account.svg' | inline_asset_content }}
@@ -25,18 +26,19 @@
       aria-label="Open cart"
     >
 
-    <sup
-      id="CartCount"
-      {% if cart.item_count == 0 %}
-        hidden
-      {% endif %}
-    >
-      {{ cart.item_count }}
-    </sup>
-
       {{ 'icon-cart.svg' | inline_asset_content }}
 
+      <sup
+        id="CartCount"
+        {% if cart.item_count == 0 %}
+          hidden
+        {% endif %}
+      >
+        {{ cart.item_count }}
+      </sup>
+
     </button>
+
   </div>
 </header>
 
