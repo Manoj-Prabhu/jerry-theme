@@ -2,6 +2,8 @@
   Product Section
 {% endcomment %}
 
+{% assign current_variant = product.selected_or_first_available_variant %}
+
 <div class="j-product">
 
   <!-- Product Images -->
@@ -9,11 +11,12 @@
 
     <div class="j-product__main-image">
 
-      {{ product.featured_image
+      {{
+        current_variant.featured_image | default: product.featured_image
         | image_url: width: 1000
         | image_tag:
-            class: 'j-product-main-image',
-            id: 'ProductMainImage'
+          class: 'j-product-main-image',
+          id: 'ProductMainImage'
       }}
 
     </div>
@@ -49,8 +52,11 @@
       {{ product.title }}
     </h1>
 
-    <p class="j-product__price">
-      {{ product.price | money }}
+    <p
+      class="j-product__price"
+      id="ProductPrice"
+    >
+      {{ current_variant.price | money }}
     </p>
 
     <div class="j-product__description">
@@ -59,34 +65,41 @@
 
     {% form 'product', product, class: 'product-form j-product-form' %}
 
-      {% assign current_variant = product.selected_or_first_available_variant %}
-
       <input
         type="hidden"
         name="id"
+        id="SelectedVariant"
         value="{{ current_variant.id }}"
       >
 
       {% if product.has_only_default_variant == false %}
-        <label for="ProductVariant">
-          Variant
-        </label>
 
-        <select
-          id="ProductVariant"
-          name="id"
-        >
-          {% for variant in product.variants %}
-            <option
-              value="{{ variant.id }}"
-              {% if variant == current_variant %}
-                selected
-              {% endif %}
-            >
-              {{ variant.title }} - {{ variant.price | money }}
-            </option>
-          {% endfor %}
-        </select>
+        <div class="j-product__variants">
+
+          <label>
+            {{ product.options.first }}
+          </label>
+
+          <div class="j-product__variant-buttons">
+
+            {% for variant in product.variants %}
+
+              <button
+                type="button"
+                class="j-product__variant-button {% if variant.id == current_variant.id %}is-active{% endif %}"
+                data-variant-id="{{ variant.id }}"
+                data-price="{{ variant.price | money }}"
+                data-image="{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 1200 }}{% else %}{{ product.featured_image | image_url: width: 1200 }}{% endif %}"
+              >
+                {{ variant.title }}
+              </button>
+
+            {% endfor %}
+
+          </div>
+
+        </div>
+
       {% endif %}
 
       <label for="Quantity">
@@ -110,7 +123,7 @@
       </button>
 
       {% comment %}
-      {{ form | payment_button }}
+        {{ form | payment_button }}
       {% endcomment %}
 
     {% endform %}

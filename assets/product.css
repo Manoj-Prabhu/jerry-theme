@@ -154,3 +154,52 @@
 .j-product-main-image.is-loading {
   opacity: 0;
 }
+
+/* ==========================================================
+   Product Variants
+========================================================== */
+
+.j-product__variants {
+  margin: 24px 0;
+}
+
+.j-product__variants label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.j-product__variant-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.j-product__variant-button {
+  min-width: 80px;
+  padding: 12px 20px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background: var(--color-background);
+  color: var(--color-text);
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.j-product__variant-button:hover {
+  border-color: var(--color-primary);
+}
+
+.j-product__variant-button.is-active {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
