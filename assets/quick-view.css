@@ -1,3 +1,7 @@
+/* ==========================================================
+   Jerry Theme Quick View
+========================================================== */
+
 .j-quick-view-modal {
   position: fixed;
   inset: 0;
@@ -12,57 +16,330 @@
 .j-quick-view-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(17, 24, 39, .55);
+  backdrop-filter: blur(2px);
 }
 
 .j-quick-view-content {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(900px, 90%);
+  transform: translate(-50%, -50%) scale(.96);
+  width: min(920px, 92%);
   max-height: 90vh;
   overflow: auto;
-  background: #fff;
-  border-radius: 10px;
-  padding: 30px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+
+  opacity: 0;
+  animation: j-quick-view-in .25s ease forwards;
+}
+
+@keyframes j-quick-view-in {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .j-quick-view-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: var(--space-5);
+  right: var(--space-5);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  font-size: 16px;
+  line-height: 1;
   cursor: pointer;
+
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
+
+.j-quick-view-close:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: rotate(90deg);
+}
+
+/* -------------------------
+   Layout
+-------------------------- */
 
 .j-quick-view {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: var(--space-10);
   align-items: start;
 }
 
-.j-quick-view img {
+/* Gallery */
+
+.j-quick-view__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.j-quick-view__main-image {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.j-quick-view__main-image img {
   width: 100%;
-  border-radius: 8px;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.j-quick-view__thumbnails {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.j-quick-view-thumbnail {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.j-quick-view-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.j-quick-view-thumbnail:hover,
+.j-quick-view-thumbnail.is-active {
+  border-color: var(--color-accent);
+}
+
+/* Details */
+
+.j-quick-view__details h2 {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+  margin-bottom: var(--space-3);
+  padding-right: var(--space-8);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .j-quick-view__price {
-  font-size: 28px;
-  color: #16a34a;
-  font-weight: 700;
-  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-5);
 }
 
-.j-quick-view__details p {
-  line-height: 1.6;
+.j-quick-view__price .sale {
+  color: var(--color-accent);
 }
+
+.j-quick-view__price del {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-normal);
+  color: var(--color-text-light);
+}
+
+/* Variants */
+
+.j-quick-view__variants {
+  margin-bottom: var(--space-5);
+}
+
+.j-quick-view__variants label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.j-quick-view__variant-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.j-quick-view-variant-button {
+  min-width: 56px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.j-quick-view-variant-button:hover {
+  border-color: var(--color-primary);
+}
+
+.j-quick-view-variant-button.is-active {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.j-quick-view-variant-button.is-sold-out,
+.j-quick-view-variant-button:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-light);
+  text-decoration: line-through;
+}
+
+/* Quantity */
+
+.j-quick-view__quantity {
+  margin-bottom: var(--space-5);
+}
+
+.j-quick-view__quantity label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.j-quick-view__qty-control {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.j-quick-view__qty-control button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.j-quick-view__qty-control button:hover {
+  background: var(--color-border);
+}
+
+.j-quick-view__qty-control input {
+  width: 48px;
+  height: 38px;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  -moz-appearance: textfield;
+}
+
+.j-quick-view__qty-control input::-webkit-outer-spin-button,
+.j-quick-view__qty-control input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Add to Cart */
+
+.j-quick-view-add {
+  width: 100%;
+  margin-bottom: var(--space-3);
+}
+
+.j-quick-view__form-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-3);
+}
+
+/* Description */
+
+.j-quick-view__description {
+  color: var(--color-text-light);
+  line-height: 1.6;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+
+  max-height: 4.8em;
+  overflow: hidden;
+}
+
+.j-quick-view__description.is-expanded {
+  max-height: none;
+}
+
+.j-quick-view__description.is-empty {
+  display: none;
+}
+
+.j-quick-view-read-more {
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: var(--space-5);
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+}
+
+.j-quick-view__link {
+  display: inline-block;
+  margin-top: var(--space-2);
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+}
+
+/* -------------------------
+   Responsive
+-------------------------- */
 
 @media (max-width: 768px) {
   .j-quick-view {
     grid-template-columns: 1fr;
   }
+
+  .j-quick-view-content {
+    padding: var(--space-6);
+  }
 }
+
+/* -------------------------
+   Quick View Trigger Button (product card)
+-------------------------- */
 
 .j-quick-view-button {
   width: calc(100% - 48px);
