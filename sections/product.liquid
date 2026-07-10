@@ -146,6 +146,42 @@
     {% endform %}
 
   </div>
+  <div
+  class="j-sticky-cart"
+  id="StickyCart"
+>
+
+  <div class="j-sticky-cart__product">
+
+    <div class="j-sticky-cart__image">
+      {{
+        current_variant.featured_image | default: product.featured_image
+        | image_url: width: 100
+        | image_tag: alt: product.title
+      }}
+    </div>
+
+    <div class="j-sticky-cart__info">
+
+      <h4>{{ product.title }}</h4>
+
+      <p id="StickyPrice">
+        {{ current_variant.price | money }}
+      </p>
+
+    </div>
+
+  </div>
+
+    <button
+      type="button"
+      class="j-button"
+      id="StickyAddToCart"
+    >
+      Add to Cart
+    </button>
+
+  </div>
 
 </div>
 

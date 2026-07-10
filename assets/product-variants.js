@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const price = document.getElementById("ProductPrice");
   const mainImage = document.getElementById("ProductMainImage");
   const addToCartButton = document.getElementById("AddToCartButton");
+  const stickyPrice = document.getElementById("StickyPrice");
 
   if (!buttons.length) return;
 
@@ -26,17 +27,23 @@ document.addEventListener("DOMContentLoaded", () => {
         price.textContent = button.dataset.price;
       }
 
+      if (stickyPrice) {
+        stickyPrice.textContent = button.dataset.price;
+      }
+
       if (mainImage && button.dataset.image) {
         mainImage.src = button.dataset.image;
         mainImage.srcset = "";
 
         if (button.dataset.hasOwnImage === "true") {
-          document.querySelectorAll(".j-product-thumbnail").forEach((thumbnail) => {
-            thumbnail.classList.toggle(
-              "is-active",
-              thumbnail.dataset.image === button.dataset.image,
-            );
-          });
+          document
+            .querySelectorAll(".j-product-thumbnail")
+            .forEach((thumbnail) => {
+              thumbnail.classList.toggle(
+                "is-active",
+                thumbnail.dataset.image === button.dataset.image,
+              );
+            });
         }
       }
 
