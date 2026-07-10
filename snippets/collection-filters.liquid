@@ -1,0 +1,116 @@
+<div class="j-collection-filters">
+
+  <div class="j-collection-filters__header">
+
+    <h3>Filters</h3>
+
+    {% if collection.filters != empty %}
+      {% assign has_active_filters = false %}
+      {% for filter in collection.filters %}
+        {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+          {% assign has_active_filters = true %}
+        {% endif %}
+      {% endfor %}
+
+      {% if has_active_filters %}
+        <a href="{{ collection.url }}" class="j-collection-filters__clear">
+          Clear all
+        </a>
+      {% endif %}
+    {% endif %}
+
+  </div>
+
+  <form id="CollectionFiltersForm">
+
+    {% if collection.sort_by %}
+      <input
+        type="hidden"
+        name="sort_by"
+        value="{{ collection.sort_by }}"
+      >
+    {% endif %}
+
+    {% for filter in collection.filters %}
+
+      {% assign filter_is_active = false %}
+      {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+        {% assign filter_is_active = true %}
+      {% endif %}
+
+      <details class="j-filter" {% if filter_is_active %}open{% endif %}>
+
+        <summary>
+          {{ filter.label }}
+        </summary>
+
+        <div class="j-filter__values">
+
+          {% case filter.type %}
+
+            {% when 'list', 'boolean' %}
+
+              {% for value in filter.values %}
+
+                <label class="j-filter__option">
+
+                  <input
+                    type="checkbox"
+                    name="{{ value.param_name }}"
+                    value="{{ value.value }}"
+                    {% if value.active %}checked{% endif %}
+                  >
+
+                  <span class="j-filter__option-label">{{ value.label }}</span>
+                  <span class="j-filter__option-count">{{ value.count }}</span>
+
+                </label>
+
+              {% endfor %}
+
+            {% when 'price_range' %}
+
+              <div class="j-filter__price-range">
+
+                <div class="j-filter__price-input">
+                  <span>$</span>
+                  <input
+                    type="number"
+                    name="{{ filter.min_value.param_name }}"
+                    placeholder="Min"
+                    value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                  >
+                </div>
+
+                <span class="j-filter__price-separator">to</span>
+
+                <div class="j-filter__price-input">
+                  <span>$</span>
+                  <input
+                    type="number"
+                    name="{{ filter.max_value.param_name }}"
+                    placeholder="Max"
+                    value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                  >
+                </div>
+
+              </div>
+
+          {% endcase %}
+
+        </div>
+
+      </details>
+
+    {% endfor %}
+
+    <button
+      type="submit"
+      class="j-button j-collection-filters__apply"
+    >
+      Apply Filters
+    </button>
+
+  </form>
+
+</div>

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentProduct = null;
   let selectedVariant = null;
+  let selectedQuantity = 1;
 
   // -------------------------
   // Helpers
@@ -21,11 +22,44 @@ document.addEventListener("DOMContentLoaded", () => {
     return `$${(cents / 100).toFixed(2)}`;
   }
 
+  function normalizeSrc(src) {
+    if (!src) return "";
+
+    return src
+      .split("?")[0]
+      .replace(/_(?:pico|icon|thumb|small|compact|medium|large|grande|original|\d+x\d*|\d*x\d+)(?=\.[a-z0-9]+$)/i, "");
+  }
+
+  function getProductImages(product) {
+    if (product.media && product.media.length) {
+      return product.media
+        .filter((media) => media.media_type === "image")
+        .map((media) => ({
+          id: media.id,
+          src: media.preview_image ? media.preview_image.src : media.src,
+        }));
+    }
+
+    return (product.images || []).map((src, index) => ({
+      id: `index-${index}`,
+      src,
+    }));
+  }
+
+  function findVariantByImage(src) {
+    return currentProduct.variants.find(
+      (v) =>
+        v.featured_image &&
+        normalizeSrc(v.featured_image.src) === normalizeSrc(src),
+    );
+  }
+
   function closeModal() {
     modal.classList.remove("is-open");
     content.innerHTML = "";
     currentProduct = null;
     selectedVariant = null;
+    selectedQuantity = 1;
   }
 
   if (overlay) overlay.addEventListener("click", closeModal);
@@ -39,13 +73,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const product = currentProduct;
     const variant = selectedVariant;
 
-    const images =
-      product.images && product.images.length
-        ? product.images
-        : [product.featured_image].filter(Boolean);
+    const images = getProductImages(product);
 
-    const mainImage =
-      (variant.featured_image && variant.featured_image.src) || images[0];
+    const mainImageEntry =
+      (variant.featured_image &&
+        images.find(
+          (image) =>
+            normalizeSrc(image.src) === normalizeSrc(variant.featured_image.src),
+        )) ||
+      images[0] ||
+      { id: null, src: product.featured_image };
+
+    const mainImage = mainImageEntry.src;
 
     const onSale = variant.compare_at_price > variant.price;
 
@@ -64,13 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="j-quick-view__thumbnails">
               ${images
                 .map(
-                  (src, index) => `
+                  (image, index) => `
                 <button
                   type="button"
-                  class="j-quick-view-thumbnail ${src === mainImage ? "is-active" : ""}"
-                  data-image="${src}"
+                  class="j-quick-view-thumbnail ${normalizeSrc(image.src) === normalizeSrc(mainImage) ? "is-active" : ""}"
+                  data-image="${image.src}"
                 >
-                  <img src="${src}" alt="${product.title} ${index + 1}">
+                  <img src="${image.src}" alt="${product.title} ${index + 1}">
                 </button>
               `,
                 )
@@ -125,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <label>Quantity</label>
             <div class="j-quick-view__qty-control">
               <button type="button" class="j-quick-view-qty-minus" aria-label="Decrease quantity">−</button>
-              <input type="number" id="QuickViewQty" value="1" min="1">
+              <input type="number" id="QuickViewQty" value="${selectedQuantity}" min="1">
               <button type="button" class="j-quick-view-qty-plus" aria-label="Increase quantity">+</button>
             </div>
           </div>
@@ -171,6 +210,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Thumbnails
     content.querySelectorAll(".j-quick-view-thumbnail").forEach((thumb) => {
       thumb.addEventListener("click", () => {
+        const matchingVariant = findVariantByImage(thumb.dataset.image);
+
+        if (matchingVariant && matchingVariant.id !== selectedVariant.id) {
+          selectedVariant = matchingVariant;
+          render();
+          return;
+        }
+
         const mainImage = document.getElementById("QuickViewMainImage");
         if (mainImage) mainImage.src = thumb.dataset.image;
 
@@ -201,16 +248,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const qtyMinus = content.querySelector(".j-quick-view-qty-minus");
     const qtyPlus = content.querySelector(".j-quick-view-qty-plus");
 
+    if (qtyInput) {
+      qtyInput.addEventListener("change", () => {
+        selectedQuantity = Math.max(1, Number(qtyInput.value) || 1);
+        qtyInput.value = selectedQuantity;
+      });
+    }
+
     if (qtyMinus) {
       qtyMinus.addEventListener("click", () => {
-        const value = Math.max(1, Number(qtyInput.value) - 1);
-        qtyInput.value = value;
+        selectedQuantity = Math.max(1, Number(qtyInput.value) - 1);
+        qtyInput.value = selectedQuantity;
       });
     }
 
     if (qtyPlus) {
       qtyPlus.addEventListener("click", () => {
-        qtyInput.value = Number(qtyInput.value) + 1;
+        selectedQuantity = Number(qtyInput.value) + 1;
+        qtyInput.value = selectedQuantity;
       });
     }
 

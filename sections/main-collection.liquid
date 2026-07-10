@@ -10,11 +10,60 @@
       {% endif %}
     </div>
 
-    <div class="j-collection-grid">
+    <div class="j-collection-layout">
 
-      {% for product in collection.products %}
-        {% render 'product-card', product: product %}
-      {% endfor %}
+      <aside class="j-collection-sidebar">
+
+        {% render 'collection-filters' %}
+
+      </aside>
+
+      <div class="j-collection-content">
+        
+        <div class="j-collection-toolbar">
+            <form id="CollectionSortForm">
+              <label for="SortBy">
+                Sort By
+              </label>
+
+              <div class="j-collection-sort">
+
+                <select
+                  id="SortBy"
+                  name="sort_by"
+                >
+                  {% for option in collection.sort_options %}
+
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == collection.sort_by %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ option.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                <svg class="j-collection-sort__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+              </div>
+            </form>
+          </div>
+
+        <div class="j-collection-grid">
+
+          {% for product in collection.products %}
+
+            {% render 'product-card', product: product %}
+
+          {% endfor %}
+
+        </div>
+
+      </div>
 
     </div>
 
