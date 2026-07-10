@@ -1,0 +1,9 @@
+/* ==========================================================
+   Jerry Theme Recently Viewed
+========================================================== */
+
+.j-recently-viewed {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-16);
+}

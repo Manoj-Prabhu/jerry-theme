@@ -5,10 +5,14 @@
     },
     "product-recommendations": {
       "type": "product-recommendations"
+    },
+    "recently_viewed": {
+      "type": "recently-viewed-products"
     }
   },
   "order": [
     "main",
-    "product-recommendations"
+    "product-recommendations",
+    "recently_viewed"
   ]
 }

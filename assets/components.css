@@ -171,6 +171,10 @@
   margin-bottom: var(--space-3);
 }
 
+h2.j-section-title {
+  font-size: var(--font-size-xl);
+}
+
 .j-section-title p {
   max-width: 700px;
   margin-inline: auto;

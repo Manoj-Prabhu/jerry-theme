@@ -1,0 +1,24 @@
+{{ 'recently-viewed.css' | asset_url | stylesheet_tag }}
+
+<div class="j-recently-viewed">
+
+  <h2 class="j-section-title">
+    Recently Viewed
+  </h2>
+
+  <div
+    class="j-product-grid"
+    id="RecentlyViewedProducts"
+  >
+  </div>
+
+</div>
+
+{{ 'recently-viewed.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "Recently Viewed Products",
+  "settings": []
+}
+{% endschema %}
