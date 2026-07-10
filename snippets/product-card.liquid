@@ -1,41 +1,64 @@
-{% assign card_product = product %}
+<div class="j-product-card">
 
-<a class="j-product-card" href="{{ card_product.url }}">
-  <div class="j-product-card__image">
-    {% if card_product.featured_image %}
-      {{
-        card_product.featured_image
-        | image_url: width: 700
-        | image_tag:
-          loading: 'lazy',
-          class: 'j-product-card__img',
-          alt: card_product.title
-      }}
-    {% else %}
-      {{ 'product-1' | placeholder_svg_tag }}
-    {% endif %}
-    {% if card_product.compare_at_price > card_product.price %}
-      <span class="j-product-card__badge">
-        Sale
-      </span>
-    {% endif %}
-  </div>
+  <a href="{{ product.url }}" class="j-product-card__link">
 
-  <div class="j-product-card__content">
-    <h3>{{ card_product.title }}</h3>
-    <div class="j-product-card__price">
-      {% if card_product.compare_at_price > card_product.price %}
-        <span class="sale">
-          {{ card_product.price | money }}
-        </span>
-        <del>
-          {{ card_product.compare_at_price | money }}
-        </del>
+    <div class="j-product-card__image">
+      {% if product.featured_image %}
+        {{
+          product.featured_image
+          | image_url: width: 700
+          | image_tag:
+            loading: 'lazy',
+            class: 'j-product-card__img',
+            alt: product.title
+        }}
       {% else %}
-        <span>
-          {{ card_product.price | money }}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {% endif %}
+
+      {% if product.compare_at_price > product.price %}
+        <span class="j-product-card__badge">
+          Sale
         </span>
       {% endif %}
     </div>
-  </div>
-</a>
+
+    <div class="j-product-card__content">
+
+      <h3>{{ product.title }}</h3>
+
+      <div class="j-product-card__price">
+
+        {% if product.compare_at_price > product.price %}
+
+          <span class="sale">
+            {{ product.price | money }}
+          </span>
+
+          <del>
+            {{ product.compare_at_price | money }}
+          </del>
+
+        {% else %}
+
+          <span>
+            {{ product.price | money }}
+          </span>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </a>
+
+  <button
+    type="button"
+    class="j-quick-view-button"
+    data-handle="{{ product.handle }}"
+  >
+    Quick View
+  </button>
+
+</div>
