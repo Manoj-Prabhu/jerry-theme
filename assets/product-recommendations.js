@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (recommendations && recommendations.children.length > 0) {
       container.innerHTML = recommendations.innerHTML;
+
+      if (window.JerryWishlist) {
+        window.JerryWishlist.sync(container);
+      }
     } else {
       section.hidden = true;
     }

@@ -97,7 +97,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="j-cart-item__content">
 
-            <h4>${item.product_title}</h4>
+            <div class="j-cart-item__top">
+              <h4>${item.product_title}</h4>
+
+              <button
+                class="j-cart-remove"
+                data-key="${item.key}"
+                aria-label="Remove ${item.product_title}"
+              >
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m-9 0 1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
 
             <p>${formatMoney(item.final_price)}</p>
 
@@ -107,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 class="j-cart-qty-minus"
                 data-key="${item.key}"
                 data-quantity="${item.quantity}"
+                aria-label="Decrease quantity"
               >
                 −
               </button>
@@ -117,18 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 class="j-cart-qty-plus"
                 data-key="${item.key}"
                 data-quantity="${item.quantity}"
+                aria-label="Increase quantity"
               >
                 +
               </button>
 
             </div>
-
-            <button
-              class="j-cart-remove"
-              data-key="${item.key}"
-            >
-              Remove
-            </button>
 
           </div>
 

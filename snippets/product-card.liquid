@@ -3,7 +3,9 @@
   <a href="{{ product.url }}" class="j-product-card__link">
 
     <div class="j-product-card__image">
+
       {% if product.featured_image %}
+
         {{
           product.featured_image
           | image_url: width: 700
@@ -12,15 +14,21 @@
             class: 'j-product-card__img',
             alt: product.title
         }}
+
       {% else %}
+
         {{ 'product-1' | placeholder_svg_tag }}
+
       {% endif %}
 
       {% if product.compare_at_price > product.price %}
+
         <span class="j-product-card__badge">
           Sale
         </span>
+
       {% endif %}
+
     </div>
 
     <div class="j-product-card__content">
@@ -52,6 +60,15 @@
     </div>
 
   </a>
+
+  <button
+    type="button"
+    class="j-wishlist-button"
+    data-handle="{{ product.handle }}"
+    aria-label="Add to Wishlist"
+  >
+    ♡
+  </button>
 
   <button
     type="button"
