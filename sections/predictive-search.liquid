@@ -1,0 +1,49 @@
+{% if predictive_search.performed %}
+
+  {% if predictive_search.resources.products.size > 0 %}
+
+    <div class="j-predictive-search-results">
+
+      {% for product in predictive_search.resources.products %}
+
+        <a
+          href="{{ product.url }}"
+          class="j-predictive-search-item"
+        >
+
+          {{
+            product.featured_image
+            | image_url: width: 80
+            | image_tag
+          }}
+
+          <div>
+
+            <p>{{ product.title }}</p>
+
+            <span>{{ product.price | money }}</span>
+
+          </div>
+
+        </a>
+
+      {% endfor %}
+
+    </div>
+
+  {% else %}
+
+    <p class="j-predictive-search-empty">
+      No products found.
+    </p>
+
+  {% endif %}
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Predictive Search",
+  "settings": []
+}
+{% endschema %}

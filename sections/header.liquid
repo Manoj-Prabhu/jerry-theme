@@ -12,6 +12,33 @@
     {% endfor %}
   </div>
 
+  <form
+    action="{{ routes.search_url }}"
+    method="get"
+    role="search"
+    class="j-search-form"
+  >
+
+    <input
+      type="search"
+      name="q"
+      placeholder="Search products..."
+      autocomplete="off"
+      id="PredictiveSearchInput"
+    >
+
+    <svg class="j-search-form__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+
+    <div
+      class="j-predictive-search"
+      id="PredictiveSearchResults"
+    ></div>
+
+  </form>
+
   <div class="header__icons">
 
     {% if shop.customer_accounts_enabled %}
@@ -77,3 +104,5 @@
   ]
 }
 {% endschema %}
+
+{{ 'predictive-search.js' | asset_url | script_tag }}
