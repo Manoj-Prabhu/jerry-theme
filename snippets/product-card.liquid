@@ -70,12 +70,14 @@
     ♡
   </button>
 
-  <button
-    type="button"
-    class="j-quick-view-button"
-    data-handle="{{ product.handle }}"
-  >
-    Quick View
-  </button>
+  {% unless show_quick_view == false %}
+    <button
+      type="button"
+      class="j-quick-view-button"
+      data-handle="{{ product.handle }}"
+    >
+      Quick View
+    </button>
+  {% endunless %}
 
 </div>
