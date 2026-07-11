@@ -9,26 +9,12 @@
 }
 
 .j-contact__header {
-  position: relative;
   text-align: center;
   margin-bottom: 60px;
-  padding-bottom: 28px;
 }
 
 .j-contact__header h1 {
   margin-bottom: 16px;
-}
-
-.j-contact__header::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 64px;
-  height: 4px;
-  border-radius: var(--radius-xl);
-  background: var(--color-accent);
 }
 
 .j-contact__intro {
