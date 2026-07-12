@@ -1,68 +1,56 @@
-{% comment %}
-  This section is used in the article template to render the article page, which
-  displays the full content of the blog post and can optionally include a
-  comments section for customers (not shown in this example).
+<div class="j-article page-width">
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/article
-{% endcomment %}
+  {% if article.image %}
+    <div class="j-article__hero">
+      {{
+        article.image
+        | image_url: width: 1400
+        | image_tag:
+          loading: 'eager',
+          alt: article.title
+      }}
+    </div>
+  {% endif %}
 
-{% if article.image %}
-  {{ article.image | image_url: width: 1000 | image_tag }}
-{% endif %}
+  <header class="j-article__header">
 
-<h1>{{ article.title }}</h1>
+    <h1>{{ article.title }}</h1>
 
-{% assign date = article.published_at | time_tag: format: 'date' %}
-<p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
+    <div class="j-article__meta">
+      <span>{{ article.author }}</span>
+      <span>•</span>
+      <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
+    </div>
 
-{{ article.content }}
+  </header>
 
-{% if blog.comments_enabled? %}
-  <h2>{{ 'blog.article_comments' | t }}</h2>
-
-  <div id="comments">
-    {% paginate article.comments by 10 %}
-      {% for comment in article.comments %}
-        <div>
-          <p>{{ comment.author }}</p>
-          <p>
-            {{- comment.created_at | time_tag: format: 'date' -}}
-          </p>
-          <p>{{ comment.content }}</p>
-        </div>
-      {% endfor %}
-
-      {{ paginate | default_pagination: anchor: 'comments' }}
-    {% endpaginate %}
+  <div class="j-article__content">
+    {{ article.content }}
   </div>
 
-  {% form 'new_comment', article %}
-    <h2>{{ 'blog.comment_form_title' | t }}</h2>
+  {% if blog.next_article or blog.previous_article %}
+    <div class="j-article__navigation">
 
-    {{ form.errors | default_errors }}
+      {% if blog.previous_article %}
+        <a href="{{ blog.previous_article.url }}">
+          ← {{ blog.previous_article.title }}
+        </a>
+      {% endif %}
 
-    <div>
-      <label for="author">{{ 'blog.comment_form_name' | t }}</label>
-      <input type="text" name="comment[author]" id="author" value="{{ form.author }}" required>
+      {% if blog.next_article %}
+        <a href="{{ blog.next_article.url }}">
+          {{ blog.next_article.title }} →
+        </a>
+      {% endif %}
+
     </div>
+  {% endif %}
 
-    <div>
-      <label for="email">{{ 'blog.comment_form_email' | t }}</label>
-      <input type="email" name="comment[email]" id="email" value="{{ form.email }}" required>
-    </div>
-
-    <div>
-      <label for="body">{{ 'blog.comment_form_body' | t }}</label>
-      <textarea name="comment[body]" id="body" required>{{ form.body }}</textarea>
-    </div>
-
-    <input type="submit" value="{{ 'blog.comment_form_submit' | t }}">
-  {% endform %}
-{% endif %}
+</div>
 
 {% schema %}
 {
-  "name": "t:general.article",
+  "name": "Article",
   "settings": []
 }
 {% endschema %}
