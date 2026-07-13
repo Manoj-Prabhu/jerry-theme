@@ -76,10 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!cartItems) return;
 
     if (cart.items.length === 0) {
+      const continueUrl = cartItems.dataset.continueShoppingUrl || "/";
+
       cartItems.innerHTML = `
         <p class="j-cart__empty">
           Your cart is empty.
         </p>
+        <a href="${continueUrl}" class="j-button j-cart__continue">
+          Continue Shopping
+        </a>
       `;
     } else {
       cartItems.innerHTML = cart.items

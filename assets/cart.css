@@ -113,6 +113,12 @@
   margin-top: 40px;
 }
 
+.j-cart__continue {
+  display: flex;
+  width: fit-content;
+  margin: 20px auto 0;
+}
+
 /* Footer */
 
 .j-cart__footer {

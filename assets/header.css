@@ -17,6 +17,14 @@
   color: inherit;
 }
 
+.j-announcement__text {
+  transition: color var(--transition);
+}
+
+.j-announcement__text:hover {
+  color: var(--color-accent);
+}
+
 /* Header */
 
 header {
