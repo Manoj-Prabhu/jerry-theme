@@ -1,0 +1,87 @@
+<div class="j-faq page-width">
+
+  <div class="j-faq__header">
+
+    <h1>{{ page.title }}</h1>
+
+    {% if section.settings.subtitle != blank %}
+      <p>{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+  </div>
+
+  <div class="j-faq__items">
+
+    {% for block in section.blocks %}
+
+      <details
+        class="j-faq__item"
+        {{ block.shopify_attributes }}
+      >
+
+        <summary class="j-faq__question">
+          {{ block.settings.question }}
+        </summary>
+
+        <div class="j-faq__answer">
+          {{ block.settings.answer }}
+        </div>
+
+      </details>
+
+    {% endfor %}
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Main FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your return policy?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>You can return any item within 30 days.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

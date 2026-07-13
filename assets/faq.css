@@ -1,0 +1,87 @@
+/* ==========================================================
+   Jerry Theme FAQ
+========================================================== */
+
+.j-faq {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 0 var(--space-8);
+}
+
+.j-faq__header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.j-faq__header h1 {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.j-faq__header p {
+  color: var(--color-text-light);
+}
+
+.j-faq__items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.j-faq__item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  overflow: hidden;
+  transition: box-shadow .3s ease;
+}
+
+.j-faq__item[open] {
+  box-shadow: var(--shadow-md);
+}
+
+.j-faq__question {
+  list-style: none;
+  cursor: pointer;
+  padding: 22px 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-primary);
+  position: relative;
+}
+
+.j-faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.j-faq__question::after {
+  content: "+";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26px;
+  transition: transform .25s ease;
+}
+
+.j-faq__item[open] .j-faq__question::after {
+  content: "−";
+}
+
+.j-faq__answer {
+  padding: 0 24px 24px;
+  color: var(--color-text-light);
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+
+  .j-faq {
+    margin: 60px auto;
+  }
+
+  .j-faq__question {
+    font-size: 18px;
+  }
+
+}
