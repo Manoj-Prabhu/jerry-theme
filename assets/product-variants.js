@@ -35,16 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
         mainImage.src = button.dataset.image;
         mainImage.srcset = "";
 
-        if (button.dataset.hasOwnImage === "true") {
-          document
-            .querySelectorAll(".j-product-thumbnail")
-            .forEach((thumbnail) => {
-              thumbnail.classList.toggle(
-                "is-active",
-                thumbnail.dataset.image === button.dataset.image,
-              );
-            });
-        }
+        document
+          .querySelectorAll(".j-product-thumbnail")
+          .forEach((thumbnail) => {
+            thumbnail.classList.toggle(
+              "is-active",
+              thumbnail.dataset.image === button.dataset.image,
+            );
+          });
       }
 
       if (addToCartButton) {

@@ -130,6 +130,14 @@
   font-weight: var(--font-semibold);
 }
 
+.j-cart__footer form {
+  display: flex;
+}
+
+.j-cart__footer .j-button {
+  width: 100%;
+}
+
 /* Cart Item */
 
 .j-cart-item {

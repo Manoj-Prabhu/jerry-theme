@@ -23,11 +23,13 @@
 
     <div class="j-product__thumbnails">
 
+      {% assign current_image = current_variant.featured_image | default: product.featured_image %}
+
       {% for image in product.images %}
 
         <button
           type="button"
-          class="j-product-thumbnail {% if forloop.first %}is-active{% endif %}"
+          class="j-product-thumbnail {% if image == current_image %}is-active{% endif %}"
           data-image="{{ image | image_url: width: 1200 }}"
         >
 

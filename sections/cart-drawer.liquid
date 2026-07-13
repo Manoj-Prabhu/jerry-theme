@@ -42,19 +42,14 @@
 
       </div>
 
-      <a
-        href="{{ routes.cart_url }}"
-        class="j-button j-button-outline"
-      >
-        View Cart
-      </a>
-
-      <a
-        href="{{ routes.checkout_url }}"
-        class="j-button"
-      >
-        Checkout
-      </a>
+      <form action="{{ routes.cart_url }}" method="post">
+        <input
+          type="submit"
+          name="checkout"
+          class="j-button"
+          value="{{ 'cart.checkout' | t }}"
+        >
+      </form>
 
     </div>
 
