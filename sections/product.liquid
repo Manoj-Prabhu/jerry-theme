@@ -135,15 +135,20 @@
         {% endif %}
       </button>
 
+      <button
+        type="submit"
+        class="j-button j-buy-now"
+        id="BuyNowButton"
+        {% unless current_variant.available %}disabled{% endunless %}
+      >
+        Buy it now
+      </button>
+
       <p
         class="j-product__form-error"
         id="ProductFormError"
         hidden
       ></p>
-
-      {% comment %}
-        {{ form | payment_button }}
-      {% endcomment %}
 
     {% endform %}
 

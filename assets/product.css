@@ -79,10 +79,18 @@
   width: 100%;
 }
 
-/* Shopify Dynamic Checkout Button */
+/* Buy It Now Button */
 
-.shopify-payment-button {
+.j-buy-now {
   margin-top: 16px;
+
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.j-buy-now:hover {
+  background: var(--color-black);
+  color: #fff;
 }
 
 /* Mobile */

@@ -276,6 +276,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -------------------------
+  // Checkout Redirect
+  // -------------------------
+
+  function redirectToCheckout() {
+    const form = document.createElement("form");
+    form.action = "/cart";
+    form.method = "post";
+
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "checkout";
+    input.value = "Checkout";
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  // -------------------------
   // AJAX Add To Cart
   // -------------------------
 
@@ -298,6 +317,8 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
 
       clearFormError();
+
+      const isBuyNow = event.submitter && event.submitter.id === "BuyNowButton";
 
       const variantId = Number(productForm.querySelector('[name="id"]').value);
       const quantity = Number(
@@ -330,6 +351,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.description || "Unable to add item to cart.");
+        }
+
+        if (isBuyNow) {
+          redirectToCheckout();
+          return;
         }
 
         await refreshCart();
