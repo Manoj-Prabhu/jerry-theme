@@ -23,7 +23,6 @@
     <div class="j-cart__body">
 
       <div
-        id="CartItems"
         class="j-cart-items"
         data-continue-shopping-url="{{ routes.all_products_collection_url }}"
       ></div>
@@ -37,18 +36,32 @@
 
         <span>Subtotal</span>
 
-        <strong id="CartSubtotal">
+        <strong class="j-cart-subtotal-value">
           {{ cart.total_price | money }}
         </strong>
 
       </div>
 
+      {% unless template.name == 'cart' %}
+        <a
+          href="{{ routes.cart_url }}"
+          class="j-button j-button-outline j-cart-view-link {% if cart.item_count == 0 %}is-disabled{% endif %}"
+          {% if cart.item_count == 0 %}
+            aria-disabled="true"
+            tabindex="-1"
+          {% endif %}
+        >
+          View Cart
+        </a>
+      {% endunless %}
+
       <form action="{{ routes.cart_url }}" method="post">
         <input
           type="submit"
           name="checkout"
-          class="j-button"
+          class="j-button j-cart-checkout-button"
           value="{{ 'cart.checkout' | t }}"
+          {% if cart.item_count == 0 %}disabled{% endif %}
         >
       </form>
 

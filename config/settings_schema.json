@@ -80,6 +80,18 @@
     ]
   },
   {
+    "name": "Cart & Shipping",
+    "settings": [
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold ($)",
+        "info": "Used by the cart page's shipping progress bar and the header announcement bar's {{ amount }} token. Set to 0 to disable the cart progress bar.",
+        "default": 100
+      }
+    ]
+  },
+  {
     "name": "Colors",
     "settings": [
       {

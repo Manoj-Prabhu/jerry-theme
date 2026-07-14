@@ -69,12 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Render Cart
   // -------------------------
 
-  function renderCart(cart) {
-    const cartItems = document.getElementById("CartItems");
-    const subtotal = document.getElementById("CartSubtotal");
-
-    if (!cartItems) return;
-
+  function renderCartItems(cartItems, cart) {
     if (cart.items.length === 0) {
       const continueUrl = cartItems.dataset.continueShoppingUrl || "/";
 
@@ -155,41 +150,87 @@ document.addEventListener("DOMContentLoaded", () => {
         )
         .join("");
     }
+  }
 
-    if (subtotal) {
+  function renderCart(cart) {
+    document
+      .querySelectorAll(".j-cart-items")
+      .forEach((cartItems) => renderCartItems(cartItems, cart));
+
+    document.querySelectorAll(".j-cart-subtotal-value").forEach((subtotal) => {
       subtotal.textContent = formatMoney(cart.total_price);
-    }
-
-    // Remove
-
-    document.querySelectorAll(".j-cart-remove").forEach((button) => {
-      button.addEventListener("click", () => {
-        removeCartItem(button.dataset.key);
-      });
     });
 
-    // Minus
+    const isEmpty = cart.items.length === 0;
 
-    document.querySelectorAll(".j-cart-qty-minus").forEach((button) => {
-      button.addEventListener("click", () => {
-        const quantity = Number(button.dataset.quantity);
-
-        if (quantity > 1) {
-          updateCartQuantity(button.dataset.key, quantity - 1);
-        }
-      });
+    document.querySelectorAll(".j-cart-checkout-button").forEach((button) => {
+      button.disabled = isEmpty;
     });
 
-    // Plus
+    document.querySelectorAll(".j-cart-view-link").forEach((link) => {
+      link.classList.toggle("is-disabled", isEmpty);
+      link.setAttribute("aria-disabled", isEmpty);
+      link.tabIndex = isEmpty ? -1 : 0;
+    });
 
-    document.querySelectorAll(".j-cart-qty-plus").forEach((button) => {
-      button.addEventListener("click", () => {
-        const quantity = Number(button.dataset.quantity);
+    document.querySelectorAll(".j-cart-page").forEach((page) => {
+      page.classList.toggle("is-empty", isEmpty);
+    });
 
-        updateCartQuantity(button.dataset.key, quantity + 1);
-      });
+    document.querySelectorAll(".j-cart-page__count").forEach((count) => {
+      count.textContent = `${cart.item_count} ${cart.item_count === 1 ? "item" : "items"}`;
+    });
+
+    document.querySelectorAll(".j-cart-page__shipping-bar").forEach((bar) => {
+      const threshold = Number(bar.dataset.freeShippingThreshold);
+      if (!threshold) return;
+
+      const remaining = threshold - cart.total_price;
+      const unlocked = remaining <= 0;
+      const percent = unlocked ? 100 : Math.min(100, (cart.total_price / threshold) * 100);
+
+      bar.classList.toggle("is-unlocked", unlocked);
+
+      const message = bar.querySelector(".j-cart-page__shipping-message");
+      if (message) {
+        message.innerHTML = unlocked
+          ? "🎉 You've unlocked free shipping!"
+          : `Add <strong>${formatMoney(remaining)}</strong> more to unlock free shipping`;
+      }
+
+      const fill = bar.querySelector(".j-cart-page__shipping-fill");
+      if (fill) {
+        fill.style.width = `${percent}%`;
+      }
     });
   }
+
+  // Event delegation: bound once so re-rendering the cart never
+  // stacks duplicate listeners on repeat clicks.
+  document.addEventListener("click", (event) => {
+    const removeButton = event.target.closest(".j-cart-remove");
+    if (removeButton) {
+      removeCartItem(removeButton.dataset.key);
+      return;
+    }
+
+    const minusButton = event.target.closest(".j-cart-qty-minus");
+    if (minusButton) {
+      const quantity = Number(minusButton.dataset.quantity);
+
+      if (quantity > 1) {
+        updateCartQuantity(minusButton.dataset.key, quantity - 1);
+      }
+      return;
+    }
+
+    const plusButton = event.target.closest(".j-cart-qty-plus");
+    if (plusButton) {
+      const quantity = Number(plusButton.dataset.quantity);
+
+      updateCartQuantity(plusButton.dataset.key, quantity + 1);
+    }
+  });
 
   // -------------------------
   // Refresh Cart

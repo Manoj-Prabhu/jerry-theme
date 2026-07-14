@@ -1,0 +1,117 @@
+{% comment %}
+  This section is used in the cart template to render /cart page with an
+  overview of the items in customer's cart.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+{% endcomment %}
+
+{% liquid
+  assign free_shipping_threshold_cents = settings.free_shipping_threshold | times: 100
+  assign remaining_cents = free_shipping_threshold_cents | minus: cart.total_price
+  assign free_shipping_unlocked = false
+  if remaining_cents <= 0
+    assign free_shipping_unlocked = true
+  endif
+  assign progress_percent = 100
+  if free_shipping_threshold_cents > 0 and free_shipping_unlocked == false
+    assign progress_percent = cart.total_price | times: 100 | divided_by: free_shipping_threshold_cents
+  endif
+%}
+
+<div class="j-cart-page container {% if cart.item_count == 0 %}is-empty{% endif %}">
+
+  <div class="j-cart-page__header">
+
+    <h1 class="j-cart-page__title">
+      {{ 'cart.title' | t }}
+    </h1>
+
+    <span class="j-cart-page__count">
+      {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}
+    </span>
+
+  </div>
+
+  {% if settings.free_shipping_threshold > 0 %}
+    <div
+      class="j-cart-page__shipping-bar {% if free_shipping_unlocked %}is-unlocked{% endif %}"
+      data-free-shipping-threshold="{{ free_shipping_threshold_cents }}"
+    >
+
+      <p class="j-cart-page__shipping-message">
+        {% if free_shipping_unlocked %}
+          🎉 You've unlocked free shipping!
+        {% else %}
+          Add <strong>{{ remaining_cents | money }}</strong> more to unlock free shipping
+        {% endif %}
+      </p>
+
+      <div class="j-cart-page__shipping-track">
+        <div
+          class="j-cart-page__shipping-fill"
+          style="width: {{ progress_percent }}%"
+        ></div>
+      </div>
+
+    </div>
+  {% endif %}
+
+  <div class="j-cart-page__layout">
+
+    <div
+      class="j-cart-items j-cart-page__items"
+      data-continue-shopping-url="{{ routes.all_products_collection_url }}"
+    ></div>
+
+    <aside class="j-cart-page__summary">
+
+      <h2>Order Summary</h2>
+
+      <div class="j-cart__subtotal">
+
+        <span>Subtotal</span>
+
+        <strong class="j-cart-subtotal-value">
+          {{ cart.total_price | money }}
+        </strong>
+
+      </div>
+
+      <p class="j-cart-page__note">
+        Shipping and taxes calculated at checkout.
+      </p>
+
+      <form action="{{ routes.cart_url }}" method="post">
+        <input
+          type="submit"
+          name="checkout"
+          class="j-button j-cart-checkout-button"
+          value="{{ 'cart.checkout' | t }}"
+          {% if cart.item_count == 0 %}disabled{% endif %}
+        >
+      </form>
+
+      <p class="j-cart-page__secure">
+        {{ 'icon-lock.svg' | inline_asset_content }}
+        Secure checkout
+      </p>
+
+      <a
+        href="{{ routes.all_products_collection_url }}"
+        class="j-cart-page__continue-link"
+      >
+        Continue Shopping
+      </a>
+
+    </aside>
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "t:general.cart",
+  "settings": []
+}
+{% endschema %}
