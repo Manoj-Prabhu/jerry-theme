@@ -2,57 +2,76 @@
 
   <div class="j-footer__container">
 
-    <div class="j-footer__column">
-      <h3>{{ shop.name }}</h3>
+    <div class="j-footer__column j-footer__column--brand">
+      <h3 class="j-footer__logo">{{ shop.name }}</h3>
       <p>
         {{ section.settings.description }}
       </p>
     </div>
 
-    <div class="j-footer__column">
-      <h4>Quick Links</h4>
+    {% if section.settings.quick_links.links.size > 0 %}
+      <div class="j-footer__column">
+        <h4>Quick Links</h4>
 
-      <ul>
-        {% for link in section.settings.quick_links.links %}
-          <li>
-            <a href="{{ link.url }}">{{ link.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+        <ul>
+          {% for link in section.settings.quick_links.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
-    <div class="j-footer__column">
-      <h4>Customer</h4>
+    {% if section.settings.customer_links.links.size > 0 %}
+      <div class="j-footer__column">
+        <h4>Customer</h4>
 
-      <ul>
-        {% for link in section.settings.customer_links.links %}
-          <li>
-            <a href="{{ link.url }}">{{ link.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+        <ul>
+          {% for link in section.settings.customer_links.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
-    <div class="j-footer__column">
+    <div class="j-footer__column j-footer__column--newsletter">
       <h4>Newsletter</h4>
+      <p class="j-footer__newsletter-copy">Get product news and offers straight to your inbox.</p>
+
       {% form 'customer', class: 'j-footer__newsletter' %}
         <input
           type="hidden"
           name="contact[tags]"
           value="newsletter"
         >
-        <input
-          type="email"
-          name="contact[email]"
-          placeholder="Enter your email"
-          required
-        >
-        <button
-          type="submit"
-          class="j-button"
-        >
-          Subscribe
-        </button>
+
+        {% if form.posted_successfully? %}
+          <p class="j-footer__form-message j-footer__form-message--success">Thanks for subscribing!</p>
+        {% elsif form.errors %}
+          <p class="j-footer__form-message j-footer__form-message--error">{{ form.errors.messages['form'] | default: 'Please enter a valid email address.' }}</p>
+        {% endif %}
+
+        <div class="j-footer__newsletter-field">
+          <label for="footer-newsletter-email" class="visually-hidden">Email address</label>
+          <input
+            id="footer-newsletter-email"
+            type="email"
+            name="contact[email]"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+          >
+          <button
+            type="submit"
+            class="j-button j-footer__newsletter-submit"
+            aria-label="Subscribe"
+          >
+            Subscribe
+          </button>
+        </div>
       {% endform %}
     </div>
   </div>
