@@ -108,18 +108,92 @@
       "default": true
     },
     {
-      "type": "text",
-      "id": "announcement_text",
-      "label": "Announcement text",
-      "info": "Use [amount] to insert the free shipping threshold set in Theme Settings > Cart & Shipping.",
-      "default": "Free shipping on orders over [amount]"
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto rotate announcements",
+      "default": true
     },
     {
-      "type": "url",
-      "id": "announcement_link",
-      "label": "Announcement link"
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "Rotation speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "sec",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "label": "Show close button",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "announcement_background",
+      "label": "Background color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "announcement_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
     }
-  ]
+  ],
+  "blocks": [
+  {
+    "type": "announcement",
+    "name": "Announcement",
+    "settings": [
+      {
+        "type": "text",
+        "id": "icon",
+        "label": "Icon / Emoji",
+        "default": "🚚"
+      },
+      {
+        "type": "text",
+        "id": "text",
+        "label": "Announcement text",
+        "default": "Free shipping on orders over [amount]"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_free_shipping_amount",
+        "label": "Use free shipping amount",
+        "default": false
+      }
+    ]
+  }
+],
+"max_blocks": 5
 }
 {% endschema %}
 

@@ -9,7 +9,57 @@
 
 class JerryHeader {
   init() {
-    console.log('Jerry Header Loaded');
+    this.initAnnouncementBar();
+  }
+
+  initAnnouncementBar() {
+    const bar = document.querySelector('.j-announcement');
+
+    if (!bar) return;
+
+    const items = bar.querySelectorAll('.j-announcement__item');
+    const closeButton = bar.querySelector('.j-announcement__close');
+    const isAutoplay = bar.dataset.autoplay === 'true';
+    const speedSeconds = Number(bar.dataset.speed) || 5;
+
+    let activeIndex = Array.from(items).findIndex((item) =>
+      item.classList.contains('is-active'),
+    );
+    if (activeIndex < 0) activeIndex = 0;
+
+    let rotationTimer = null;
+
+    const rotate = () => {
+      items[activeIndex].classList.remove('is-active');
+      activeIndex = (activeIndex + 1) % items.length;
+      items[activeIndex].classList.add('is-active');
+    };
+
+    const startRotation = () => {
+      if (!rotationTimer && isAutoplay && items.length > 1) {
+        rotationTimer = window.setInterval(rotate, speedSeconds * 1000);
+      }
+    };
+
+    const stopRotation = () => {
+      if (rotationTimer) {
+        clearInterval(rotationTimer);
+        rotationTimer = null;
+      }
+    };
+
+    startRotation();
+
+    bar.addEventListener('mouseenter', stopRotation);
+    bar.addEventListener('mouseleave', startRotation);
+    
+
+    if (closeButton) {
+      closeButton.addEventListener('click', () => {
+        if (rotationTimer) window.clearInterval(rotationTimer);
+        bar.remove();
+      });
+    }
   }
 }
 

@@ -2,26 +2,81 @@
   Jerry Announcement Bar
 {% endcomment %}
 
-{% if section.settings.show_announcement %}
-  {% liquid
-    assign free_shipping_amount = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
-    assign announcement_text = section.settings.announcement_text | replace: '[amount]', free_shipping_amount
-  %}
+{% if section.settings.show_announcement and section.blocks.size > 0 %}
 
-  <div class="j-announcement full-width">
+  <div
+    class="j-announcement full-width"
+    style="
+    --announcement-bg: {{ section.settings.announcement_background }};
+    --announcement-color: {{ section.settings.announcement_text_color }};
+    --announcement-align: {{ section.settings.announcement_alignment }};
+    "
+    data-autoplay="{{ section.settings.auto_rotate }}"
+    data-speed="{{ section.settings.rotation_speed }}"
+  >
+
     <div class="container">
-      {% if section.settings.announcement_link != blank %}
-        <a
-          href="{{ section.settings.announcement_link }}"
-          class="j-announcement__text"
-        >
-          {{ announcement_text }}
-        </a>
-      {% else %}
-        <span class="j-announcement__text">
-          {{ announcement_text }}
-        </span>
-      {% endif %}
+
+      <div class="j-announcement__slider">
+
+        {% liquid
+          assign free_shipping_amount = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
+        %}
+
+        {% for block in section.blocks %}
+
+          {% liquid
+            assign announcement_text = block.settings.text
+
+            if block.settings.use_free_shipping_amount
+              assign announcement_text = announcement_text | replace: '[amount]', free_shipping_amount
+            endif
+          %}
+
+          <div
+            class="j-announcement__item{% if forloop.first %} is-active{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+
+            {% if block.settings.link != blank %}
+
+              <a
+                href="{{ block.settings.link }}"
+                class="j-announcement__text"
+              >
+                {{ block.settings.icon }}
+                {{ announcement_text }}
+              </a>
+
+            {% else %}
+
+              <span class="j-announcement__text">
+                {{ block.settings.icon }}
+                {{ announcement_text }}
+              </span>
+
+            {% endif %}
+
+          </div>
+
+        {% endfor %}
+
+      </div>
+
     </div>
+
+    {% if section.settings.show_close %}
+
+      <button
+        class="j-announcement__close"
+        type="button"
+        aria-label="Close announcement"
+      >
+        ×
+      </button>
+
+    {% endif %}
+
   </div>
+
 {% endif %}

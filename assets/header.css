@@ -4,13 +4,11 @@
 
 /* Announcement Bar */
 
-.j-announcement {
-  background: var(--color-primary);
-  color: var(--color-white);
-  padding: 10px 20px;
-  text-align: center;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-semibold);
+.j-announcement{
+    position: relative;
+    background:var(--announcement-bg);
+    color:var(--announcement-color);
+    text-align:var(--announcement-align);
 }
 
 .j-announcement a {
@@ -18,11 +16,55 @@
 }
 
 .j-announcement__text {
+  font-size: 13px;
   transition: color var(--transition);
 }
 
 .j-announcement__text:hover {
   color: var(--color-accent);
+}
+
+.j-announcement .container {
+  padding-right: 32px;
+}
+
+/* .j-announcement__slider text-align is inherited from the inline style on .j-announcement */
+
+.j-announcement__item {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.j-announcement__item.is-active {
+  display: inline-flex;
+}
+
+.j-announcement__close {
+  position: absolute;
+  right: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: .8;
+
+  transition: opacity var(--transition-fast);
+}
+
+.j-announcement__close:hover {
+  opacity: 1;
 }
 
 /* Header */
