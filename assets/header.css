@@ -81,6 +81,30 @@ header {
   column-gap: var(--space-8);
 }
 
+/* ==========================================================
+   Sticky Header
+========================================================== */
+
+.j-header--sticky{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:var(--color-white);
+
+    transition:
+        top .25s ease,
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+.j-header--sticky.is-hidden{
+    transform:translateY(-100%);
+}
+
+.j-header--sticky.is-scrolled{
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
 /* Logo */
 
 .header__title {
@@ -388,4 +412,71 @@ header {
 
 #WishlistCount[hidden] {
   display: none;
+}
+
+/* ==========================
+   Dropdown Navigation
+========================== */
+
+.j-nav-item{
+  position:relative;
+}
+
+.j-nav-arrow{
+  margin-left:6px;
+  font-size:11px;
+}
+
+.j-dropdown{
+  position:absolute;
+  top:100%;
+  left:0;
+
+  min-width:220px;
+
+  background:var(--color-white);
+
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+
+  box-shadow:var(--shadow-lg);
+
+  padding:8px 0;
+
+  opacity:0;
+  visibility:hidden;
+
+  transform:translateY(8px);
+
+  transition:
+    opacity .25s,
+    transform .25s,
+    visibility .25s;
+
+  z-index:100;
+}
+
+.j-nav-item:hover .j-dropdown{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.j-dropdown__link{
+  display:block;
+
+  padding:10px 18px;
+
+  color:var(--color-text);
+
+  font-size:var(--font-size-sm);
+
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.j-dropdown__link:hover{
+  background:var(--color-surface);
+  color:var(--color-accent);
 }

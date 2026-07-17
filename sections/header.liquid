@@ -1,6 +1,8 @@
 {% render 'announcement-bar' %}
 
-<header>
+<header
+  class="{% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
+>
 
   <h1 class="header__title">
 
@@ -32,9 +34,29 @@
 
   <div class="header__menu">
     {% for link in section.settings.menu.links %}
-      <a href="{{ link.url }}" class="j-nav-link">
-        {{ link.title }}
-      </a>
+      <div class="j-nav-item">
+        <a
+          href="{{ link.url }}"
+          class="j-nav-link"
+        >
+          {{ link.title }}
+          {% if link.links != blank %}
+            <span class="j-nav-arrow">▾</span>
+          {% endif %}
+        </a>
+        {% if link.links != blank %}
+          <div class="j-dropdown">
+            {% for childlink in link.links %}
+              <a
+                href="{{ childlink.url }}"
+                class="j-dropdown__link"
+              >
+                {{ childlink.title }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
     {% endfor %}
   </div>
 
@@ -131,6 +153,12 @@
       "step": 10,
       "unit": "px",
       "default": 160
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_header",
+      "label": "Enable sticky header",
+      "default": true
     },
     {
       "type": "link_list",
