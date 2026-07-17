@@ -6,6 +6,7 @@
 
 .j-announcement {
   position: relative;
+  padding: 10px 0;
   background: var(--announcement-bg);
   color: var(--announcement-color);
   text-align: var(--announcement-align);
@@ -16,7 +17,7 @@
 }
 
 .j-announcement__text {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   transition: color var(--transition);
 }
 
@@ -24,7 +25,7 @@
   color: var(--color-accent);
 }
 
-.j-announcement .container {
+.j-announcement.has-close .container {
   padding-right: 32px;
 }
 
@@ -110,6 +111,7 @@ header {
 .header__title {
   margin: 0;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .j-logo {
@@ -119,6 +121,7 @@ header {
   color: var(--color-primary);
   font-size: 2rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .j-logo img {
@@ -456,7 +459,8 @@ header {
   z-index:100;
 }
 
-.j-nav-item:hover .j-dropdown{
+.j-nav-item:hover .j-dropdown,
+.j-nav-item:focus-within .j-dropdown{
   opacity:1;
   visibility:visible;
   transform:translateY(0);

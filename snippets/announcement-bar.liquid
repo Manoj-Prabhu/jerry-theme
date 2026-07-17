@@ -5,7 +5,7 @@
 {% if section.settings.show_announcement and section.blocks.size > 0 %}
 
   <div
-    class="j-announcement full-width"
+    class="j-announcement full-width{% if section.settings.show_close %} has-close{% endif %}"
     style="
     --announcement-bg: {{ section.settings.announcement_background }};
     --announcement-color: {{ section.settings.announcement_text_color }};

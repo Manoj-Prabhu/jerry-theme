@@ -51,7 +51,7 @@
         {% if form.posted_successfully? %}
           <p class="j-footer__form-message j-footer__form-message--success">Thanks for subscribing!</p>
         {% elsif form.errors %}
-          <p class="j-footer__form-message j-footer__form-message--error">{{ form.errors.messages['form'] | default: 'Please enter a valid email address.' }}</p>
+          <p class="j-footer__form-message j-footer__form-message--error">{{ form.errors.messages['email'] | default: 'Please enter a valid email address.' }}</p>
         {% endif %}
 
         <div class="j-footer__newsletter-field">

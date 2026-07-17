@@ -4,7 +4,7 @@
   class="{% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
 
-  <h1 class="header__title">
+  <h2 class="header__title">
 
     <a href="{{ routes.root_url }}" class="j-logo">
 
@@ -30,7 +30,7 @@
 
     </a>
 
-  </h1>
+  </h2>
 
   <div class="header__menu">
     {% for link in section.settings.menu.links %}

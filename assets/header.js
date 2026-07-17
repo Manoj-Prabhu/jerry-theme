@@ -17,8 +17,8 @@ class JerryHeader {
      Announcement Bar
   ========================================================== */
 
-  initAnnouncementBar() {
-    const bar = document.querySelector(".j-announcement");
+  initAnnouncementBar(root = document) {
+    const bar = root.querySelector(".j-announcement");
 
     if (!bar) return;
 
@@ -117,4 +117,10 @@ class JerryHeader {
 
 document.addEventListener("DOMContentLoaded", () => {
   new JerryHeader().init();
+});
+
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector(".j-announcement")) {
+    new JerryHeader().initAnnouncementBar(event.target);
+  }
 });
