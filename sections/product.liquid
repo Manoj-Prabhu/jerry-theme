@@ -11,6 +11,8 @@
 
     <div class="j-product__main-image">
 
+      {% render 'product-badges', product: product %}
+
       {{
         current_variant.featured_image | default: product.featured_image
         | image_url: width: 1000

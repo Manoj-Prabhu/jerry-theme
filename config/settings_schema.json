@@ -92,6 +92,53 @@
     ]
   },
   {
+    "name": "Product Badges",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_new_badge",
+        "label": "Show \"New\" badge",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "new_badge_days",
+        "label": "\"New\" badge duration",
+        "info": "Show the New badge for this many days after a product is created.",
+        "min": 1,
+        "max": 90,
+        "step": 1,
+        "unit": "d",
+        "default": 30
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sale_badge",
+        "label": "Show \"Sale\" badge",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sold_out_badge",
+        "label": "Show \"Sold Out\" badge",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_bestseller_badge",
+        "label": "Show \"Bestseller\" badge",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "bestseller_tag",
+        "label": "Bestseller tag",
+        "info": "Products with this tag (case-insensitive) show the Bestseller badge.",
+        "default": "bestseller"
+      }
+    ]
+  },
+  {
     "name": "Colors",
     "settings": [
       {

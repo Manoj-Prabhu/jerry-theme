@@ -1,0 +1,69 @@
+{% comment %}
+  Renders automatic product badges: New, Sale, Sold Out, Bestseller.
+  Usage: {% render 'product-badges', product: product %}
+{% endcomment %}
+
+{% liquid
+  assign show_sold_out = false
+  assign show_sale = false
+  assign show_new = false
+  assign show_bestseller = false
+
+  if settings.show_sold_out_badge and product.available == false
+    assign show_sold_out = true
+  endif
+
+  if settings.show_sale_badge and product.available and product.compare_at_price > product.price
+    assign show_sale = true
+  endif
+
+  if settings.show_new_badge
+    assign current_time = 'now' | date: '%s'
+    assign created_time = product.created_at | date: '%s'
+    assign seconds_since_created = current_time | minus: created_time
+    assign days_since_created = seconds_since_created | divided_by: 86400
+    if days_since_created <= settings.new_badge_days
+      assign show_new = true
+    endif
+  endif
+
+  if settings.show_bestseller_badge and settings.bestseller_tag != blank
+    assign bestseller_tag_downcase = settings.bestseller_tag | downcase
+    for tag in product.tags
+      assign tag_downcase = tag | downcase
+      if tag_downcase == bestseller_tag_downcase
+        assign show_bestseller = true
+      endif
+    endfor
+  endif
+%}
+
+{% if show_sold_out or show_sale or show_new or show_bestseller %}
+  <div class="j-product-badges">
+
+    {% if show_sold_out %}
+      <span class="j-product-badge j-product-badge--sold-out">
+        <span class="j-product-badge__icon" aria-hidden="true">✕</span> Sold Out
+      </span>
+    {% else %}
+      {% if show_sale %}
+        <span class="j-product-badge j-product-badge--sale">
+          🔥 Sale
+        </span>
+      {% endif %}
+
+      {% if show_new %}
+        <span class="j-product-badge j-product-badge--new">
+          ✨ New
+        </span>
+      {% endif %}
+
+      {% if show_bestseller %}
+        <span class="j-product-badge j-product-badge--bestseller">
+          ⭐ Bestseller
+        </span>
+      {% endif %}
+    {% endif %}
+
+  </div>
+{% endif %}

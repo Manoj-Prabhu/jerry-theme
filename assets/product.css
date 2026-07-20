@@ -113,6 +113,7 @@
 }
 
 .j-product__main-image {
+    position: relative;
     max-width: 450px;
     width: 100%;
     aspect-ratio: 1 / 1;
