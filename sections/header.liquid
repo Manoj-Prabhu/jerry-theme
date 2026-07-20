@@ -55,7 +55,16 @@
     </button>
 
     {% for link in section.settings.menu.links %}
-      <div class="j-nav-item">
+      {% liquid
+        assign is_mega_menu = false
+        for column in link.links
+          if column.links != blank
+            assign is_mega_menu = true
+          endif
+        endfor
+      %}
+
+      <div class="j-nav-item{% if is_mega_menu %} j-nav-item--mega{% endif %}">
         <a
           href="{{ link.url }}"
           class="j-nav-link"
@@ -65,7 +74,38 @@
             <span class="j-nav-arrow">▾</span>
           {% endif %}
         </a>
-        {% if link.links != blank %}
+
+        {% if is_mega_menu %}
+          <div class="j-dropdown j-dropdown--mega">
+            <div class="j-mega-menu">
+              {% for column in link.links %}
+                <div class="j-mega-menu__column">
+
+                  <a
+                    href="{{ column.url }}"
+                    class="j-mega-menu__heading"
+                  >
+                    {{ column.title }}
+                  </a>
+
+                  {% if column.links != blank %}
+                    <div class="j-mega-menu__links">
+                      {% for grandchild in column.links %}
+                        <a
+                          href="{{ grandchild.url }}"
+                          class="j-dropdown__link"
+                        >
+                          {{ grandchild.title }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% elsif link.links != blank %}
           <div class="j-dropdown">
             {% for childlink in link.links %}
               <a
