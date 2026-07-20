@@ -36,6 +36,7 @@
     {{ 'blog.css' | asset_url | stylesheet_tag }}
     {{ 'article.css' | asset_url | stylesheet_tag }}
     {{ 'faq.css' | asset_url | stylesheet_tag }}
+    {{ 'back-to-top.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -83,5 +84,18 @@
     {{ 'wishlist.js' | asset_url | script_tag }}
     {{ 'sticky-cart.js' | asset_url | script_tag }}
     {{ 'collection.js' | asset_url | script_tag }}
+
+    <button
+      type="button"
+      id="BackToTop"
+      class="j-back-to-top"
+      aria-label="Back to top"
+    >
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5 12.5 10 7.5 15 12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    {{ 'back-to-top.js' | asset_url | script_tag }}
   </body>
 </html>

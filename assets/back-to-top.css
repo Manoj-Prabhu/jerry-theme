@@ -1,0 +1,73 @@
+/* ==========================================================
+   Jerry Theme Back to Top Button
+========================================================== */
+
+.j-back-to-top {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: 900;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  color: var(--color-primary);
+  cursor: pointer;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast),
+    transform var(--transition-fast),
+    bottom var(--transition),
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.j-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.j-back-to-top.is-raised {
+  bottom: 90px;
+}
+
+.j-back-to-top:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.j-back-to-top svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 480px) {
+  .j-back-to-top {
+    right: var(--space-4);
+    bottom: var(--space-4);
+    width: 38px;
+    height: 38px;
+  }
+
+  .j-back-to-top.is-raised {
+    bottom: 78px;
+  }
+
+  .j-back-to-top svg {
+    width: 18px;
+    height: 18px;
+  }
+}
