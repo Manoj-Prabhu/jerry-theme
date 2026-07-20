@@ -4,20 +4,32 @@
 
     <h3>Filters</h3>
 
-    {% if collection.filters != empty %}
-      {% assign has_active_filters = false %}
-      {% for filter in collection.filters %}
-        {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
-          {% assign has_active_filters = true %}
-        {% endif %}
-      {% endfor %}
+    <div class="j-collection-filters__header-actions">
 
-      {% if has_active_filters %}
-        <a href="{{ collection.url }}" class="j-collection-filters__clear">
-          Clear all
-        </a>
+      {% if collection.filters != empty %}
+        {% assign has_active_filters = false %}
+        {% for filter in collection.filters %}
+          {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+            {% assign has_active_filters = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if has_active_filters %}
+          <a href="{{ collection.url }}" class="j-collection-filters__clear">
+            Clear all
+          </a>
+        {% endif %}
       {% endif %}
-    {% endif %}
+
+      <button
+        type="button"
+        class="j-collection-filters__close"
+        aria-label="Close filters"
+      >
+        ✕
+      </button>
+
+    </div>
 
   </div>
 

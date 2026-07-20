@@ -71,6 +71,7 @@
 /* Header */
 
 header {
+  position: relative;
   max-width: var(--container-width);
   margin: 0 auto;
   height: 80px;
@@ -80,6 +81,34 @@ header {
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
   column-gap: var(--space-8);
+}
+
+/* Mobile Menu Toggle */
+
+.j-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.j-menu-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 1px;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.j-menu-close {
+  display: none;
 }
 
 /* ==========================================================
@@ -143,6 +172,7 @@ header {
 .j-nav-link {
   position: relative;
   display: inline-block;
+  white-space: nowrap;
   color: var(--color-text);
   font-weight: 500;
   transition: color 0.3s ease;
@@ -194,6 +224,37 @@ header {
 .header__icons svg {
   width: 24px;
   height: 24px;
+}
+
+.header__icons shopify-account {
+  --shopify-account-avatar-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.header__icons shopify-account::part(signed-out-avatar) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.j-header__search-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
 }
 
 .j-header__cart {
@@ -483,4 +544,200 @@ header {
 .j-dropdown__link:hover{
   background:var(--color-surface);
   color:var(--color-accent);
+}
+
+/* ==========================================================
+   Nav Overlay (mobile drawer backdrop)
+========================================================== */
+
+.j-nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.j-nav-overlay.is-open {
+  display: block;
+  opacity: 1;
+}
+
+/* ==========================================================
+   Responsive — Tablet / Mobile Navigation
+========================================================== */
+
+@media (max-width: 992px) {
+  header {
+    grid-template-columns: auto 1fr auto;
+    height: 70px;
+    padding: 0 var(--space-4);
+  }
+
+  .header__title {
+    justify-self: center;
+  }
+
+  .j-menu-toggle {
+    display: flex;
+  }
+
+  .j-menu-toggle.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .j-menu-toggle.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .j-menu-toggle.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .header__menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+
+    width: min(320px, 85vw);
+    height: 100%;
+    padding: var(--space-6);
+
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--space-4);
+
+    background: var(--color-white);
+    box-shadow: var(--shadow-lg);
+
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform var(--transition), visibility var(--transition);
+    overflow-y: auto;
+  }
+
+  .header__menu.is-open {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .j-menu-close {
+    align-self: flex-end;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .j-nav-item {
+    width: 100%;
+  }
+
+  .j-nav-link {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) 0;
+  }
+
+  .j-dropdown {
+    position: static;
+    display: none;
+    width: 100%;
+    margin-top: var(--space-2);
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    padding-left: var(--space-4);
+  }
+
+  .j-nav-item.is-open .j-dropdown {
+    display: block;
+  }
+
+  .j-nav-arrow {
+    transition: transform var(--transition-fast);
+  }
+
+  .j-nav-item.is-open .j-nav-arrow {
+    transform: rotate(180deg);
+  }
+
+  .j-search-form {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-white);
+    box-shadow: var(--shadow-md);
+    z-index: 90;
+  }
+
+  .j-search-form.is-open {
+    display: block;
+  }
+
+  .j-header__search-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    height: 64px;
+    column-gap: var(--space-2);
+  }
+
+  .j-logo {
+    font-size: 1.125rem;
+    max-width: 160px;
+    overflow: hidden;
+  }
+
+  .header__icons {
+    gap: 6px;
+  }
+
+  .j-header__search-toggle,
+  .j-header__wishlist,
+  .j-header__cart {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header__icons svg,
+  .j-header__search-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .header__icons shopify-account {
+    --shopify-account-avatar-size: 18px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #CartCount,
+  #WishlistCount {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+
+  .j-menu-toggle {
+    gap: 4px;
+    width: 26px;
+    height: 26px;
+  }
 }

@@ -12,15 +12,29 @@
 
     <div class="j-collection-layout">
 
-      <aside class="j-collection-sidebar">
+      <aside class="j-collection-sidebar" id="CollectionFilters">
 
         {% render 'collection-filters' %}
 
       </aside>
 
+      <div class="j-filter-overlay"></div>
+
       <div class="j-collection-content">
-        
+
         <div class="j-collection-toolbar">
+            <button
+              type="button"
+              class="j-filter-toggle"
+              aria-expanded="false"
+              aria-controls="CollectionFilters"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              Filters
+            </button>
+
             <form id="CollectionSortForm">
               <label for="SortBy">
                 Sort By

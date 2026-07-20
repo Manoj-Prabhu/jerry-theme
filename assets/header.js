@@ -11,6 +11,8 @@ class JerryHeader {
   init() {
     this.initAnnouncementBar();
     this.initStickyHeader();
+    this.initMobileMenu();
+    this.initHeaderSearchToggle();
   }
 
   /* ==========================================================
@@ -111,6 +113,101 @@ class JerryHeader {
       }
 
       lastScroll = currentScroll;
+    });
+  }
+
+  /* ==========================================================
+     Mobile Menu
+  ========================================================== */
+
+  initMobileMenu() {
+    const toggle = document.querySelector(".j-menu-toggle");
+    const closeButton = document.querySelector(".j-menu-close");
+    const nav = document.getElementById("HeaderNav");
+    const overlay = document.querySelector(".j-nav-overlay");
+
+    if (!toggle || !nav || !overlay) return;
+
+    const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
+
+    const openMenu = () => {
+      nav.classList.add("is-open");
+      overlay.classList.add("is-open");
+      toggle.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+    };
+
+    const closeMenu = () => {
+      nav.classList.remove("is-open");
+      overlay.classList.remove("is-open");
+      toggle.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+
+      nav.querySelectorAll(".j-nav-item.is-open").forEach((item) => {
+        item.classList.remove("is-open");
+      });
+    };
+
+    toggle.addEventListener("click", () => {
+      if (nav.classList.contains("is-open")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener("click", closeMenu);
+    }
+
+    overlay.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+
+    window.addEventListener("resize", () => {
+      if (!isMobile()) closeMenu();
+    });
+
+    /* On mobile, tapping a parent link with children expands the
+       dropdown instead of navigating away; desktop keeps :hover. */
+
+    nav.querySelectorAll(".j-nav-item").forEach((item) => {
+      const link = item.querySelector(".j-nav-link");
+      const dropdown = item.querySelector(".j-dropdown");
+
+      if (!dropdown) return;
+
+      link.addEventListener("click", (event) => {
+        if (!isMobile()) return;
+
+        event.preventDefault();
+        item.classList.toggle("is-open");
+      });
+    });
+  }
+
+  /* ==========================================================
+     Header Search Toggle
+  ========================================================== */
+
+  initHeaderSearchToggle() {
+    const toggle = document.querySelector(".j-header__search-toggle");
+    const searchForm = document.getElementById("HeaderSearchForm");
+
+    if (!toggle || !searchForm) return;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = searchForm.classList.toggle("is-open");
+
+      toggle.setAttribute("aria-expanded", String(isOpen));
+
+      if (isOpen) {
+        searchForm.querySelector("input")?.focus();
+      }
     });
   }
 }

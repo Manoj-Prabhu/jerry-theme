@@ -4,6 +4,18 @@
   class="{% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
 
+  <button
+    type="button"
+    class="j-menu-toggle"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="HeaderNav"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
   <h2 class="header__title">
 
     <a href="{{ routes.root_url }}" class="j-logo">
@@ -32,7 +44,16 @@
 
   </h2>
 
-  <div class="header__menu">
+  <div class="header__menu" id="HeaderNav">
+
+    <button
+      type="button"
+      class="j-menu-close"
+      aria-label="Close menu"
+    >
+      ✕
+    </button>
+
     {% for link in section.settings.menu.links %}
       <div class="j-nav-item">
         <a
@@ -60,11 +81,14 @@
     {% endfor %}
   </div>
 
+  <div class="j-nav-overlay"></div>
+
   <form
     action="{{ routes.search_url }}"
     method="get"
     role="search"
     class="j-search-form"
+    id="HeaderSearchForm"
   >
 
     <input
@@ -88,6 +112,19 @@
   </form>
 
   <div class="header__icons">
+
+    <button
+      type="button"
+      class="j-header__search-toggle"
+      aria-label="Search"
+      aria-expanded="false"
+      aria-controls="HeaderSearchForm"
+    >
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
 
     {% if shop.customer_accounts_enabled %}
       <shopify-account menu="{{ section.settings.customer_account_menu }}">

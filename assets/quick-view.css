@@ -350,6 +350,7 @@
   color: var(--color-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
+  white-space: nowrap;
   cursor: pointer;
   border-radius: var(--radius-md);
   transition: background var(--transition-fast), color var(--transition-fast);

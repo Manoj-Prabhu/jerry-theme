@@ -48,6 +48,7 @@
 
 .j-hero__buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
@@ -159,5 +160,23 @@
 
   .j-hero h1 {
     font-size: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .j-hero {
+    padding: 80px var(--space-4);
+  }
+
+  .j-hero h1 {
+    font-size: 34px;
+  }
+
+  .j-hero p {
+    font-size: 16px;
+  }
+
+  .j-hero__placeholder {
+    height: 280px;
   }
 }
