@@ -12,6 +12,8 @@
   {{ settings.type_body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
   {{ settings.type_body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
 
+  {{ settings.type_logo_font | font_face: font_display: 'swap' }}
+
   :root {
 
     /* ===============================
@@ -25,6 +27,10 @@
     --font-body--family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
     --font-body--style: {{ settings.type_body_font.style }};
     --font-body--weight: {{ settings.type_body_font.weight }};
+
+    --font-logo--family: {{ settings.type_logo_font.family }}, {{ settings.type_logo_font.fallback_families }};
+    --font-logo--style: {{ settings.type_logo_font.style }};
+    --font-logo--weight: {{ settings.type_logo_font.weight }};
 
     /* ===============================
        Layout

@@ -36,12 +36,12 @@
 
       {% else %}
 
-      {% assign words = shop.name | split: ' ' %}
+      {% assign words = shop.name | strip | split: ' ' %}
 
       {% if words.size > 1 %}
-        {{ words[0] | slice: 0 }}{{ words[1] | slice: 0 }}
+        <span class="j-logo-mark">{{ words[0] | slice: 0 | upcase }}{{ words[1] | slice: 0 | upcase }}</span>
       {% else %}
-        {{ shop.name }}
+        <span class="j-logo-mark">{{ shop.name | slice: 0, 2 | upcase }}</span>
       {% endif %}
 
       {% endif %}

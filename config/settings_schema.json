@@ -25,6 +25,12 @@
         "id": "type_body_font",
         "default": "work_sans_n4",
         "label": "Body font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_logo_font",
+        "default": "poppins_n7",
+        "label": "Logo font"
       }
     ]
   },

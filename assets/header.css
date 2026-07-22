@@ -160,6 +160,24 @@ header {
   height: auto;
 }
 
+.j-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--style-border-radius-card, 8px);
+  background: linear-gradient(135deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 65%, #000) 100%);
+  color: #fff;
+  font-family: var(--font-logo--family, sans-serif);
+  font-style: var(--font-logo--style, normal);
+  font-weight: var(--font-logo--weight, 700);
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
 /* Navigation */
 
 .header__menu {
