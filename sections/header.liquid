@@ -36,7 +36,13 @@
 
       {% else %}
 
+      {% assign words = shop.name | split: ' ' %}
+
+      {% if words.size > 1 %}
+        {{ words[0] | slice: 0 }}{{ words[1] | slice: 0 }}
+      {% else %}
         {{ shop.name }}
+      {% endif %}
 
       {% endif %}
 
