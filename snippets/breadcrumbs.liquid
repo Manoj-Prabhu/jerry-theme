@@ -1,0 +1,99 @@
+{%- comment -%}
+  Renders a breadcrumb trail for the current template, with schema.org
+  BreadcrumbList markup for SEO. Controlled by settings.show_breadcrumbs plus
+  the per-template toggles (product / collection / blog / page).
+{%- endcomment -%}
+
+{%- assign show_on_template = true -%}
+{%- case template.name -%}
+  {%- when 'product' -%}
+    {%- assign show_on_template = settings.show_breadcrumbs_product -%}
+  {%- when 'collection' or 'list-collections' -%}
+    {%- assign show_on_template = settings.show_breadcrumbs_collection -%}
+  {%- when 'blog' or 'article' -%}
+    {%- assign show_on_template = settings.show_breadcrumbs_blog -%}
+  {%- when 'page' -%}
+    {%- assign show_on_template = settings.show_breadcrumbs_page -%}
+{%- endcase -%}
+
+{%- if settings.show_breadcrumbs and show_on_template and template.name != 'index' and template.name != 'cart' and template.name != '404' -%}
+
+  <nav class="j-breadcrumbs" aria-label="{{ 'breadcrumbs.label' | t }}">
+    <ol class="j-breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+
+      <li class="j-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="{{ routes.root_url }}" itemprop="item">
+          <span itemprop="name">{{ 'breadcrumbs.home' | t }}</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+
+      {%- case template.name -%}
+
+        {%- when 'product' -%}
+          {%- if collection.handle -%}
+            <li class="j-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a href="{{ collection.url }}" itemprop="item">
+                <span itemprop="name">{{ collection.title }}</span>
+              </a>
+              <meta itemprop="position" content="2">
+            </li>
+            <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+              <span itemprop="name">{{ product.title }}</span>
+              <meta itemprop="position" content="3">
+            </li>
+          {%- else -%}
+            <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+              <span itemprop="name">{{ product.title }}</span>
+              <meta itemprop="position" content="2">
+            </li>
+          {%- endif -%}
+
+        {%- when 'collection' -%}
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ collection.title }}</span>
+            <meta itemprop="position" content="2">
+          </li>
+
+        {%- when 'page' -%}
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ page.title }}</span>
+            <meta itemprop="position" content="2">
+          </li>
+
+        {%- when 'article' -%}
+          <li class="j-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="{{ blog.url }}" itemprop="item">
+              <span itemprop="name">{{ blog.title }}</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ article.title }}</span>
+            <meta itemprop="position" content="3">
+          </li>
+
+        {%- when 'blog' -%}
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ blog.title }}</span>
+            <meta itemprop="position" content="2">
+          </li>
+
+        {%- when 'search' -%}
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ 'search.title' | t }}</span>
+            <meta itemprop="position" content="2">
+          </li>
+
+        {%- when 'list-collections' -%}
+          <li class="j-breadcrumbs__item is-active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+            <span itemprop="name">{{ 'collections.title' | t }}</span>
+            <meta itemprop="position" content="2">
+          </li>
+
+      {%- endcase -%}
+
+    </ol>
+  </nav>
+
+{%- endif -%}

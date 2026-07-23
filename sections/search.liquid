@@ -5,6 +5,8 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/search
 {% endcomment %}
 
+{% render 'breadcrumbs' %}
+
 <h1>{{ 'search.title' | t }}</h1>
 
 <form action="{{ routes.search_url }}" method="get" role="search">

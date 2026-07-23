@@ -86,6 +86,43 @@
     ]
   },
   {
+    "name": "Breadcrumbs",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs",
+        "label": "Enable breadcrumbs",
+        "info": "Displays a navigation trail (e.g. Home > Collection > Product) so customers can see where they are and navigate back.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs_product",
+        "label": "Show on product pages",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs_collection",
+        "label": "Show on collection pages",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs_blog",
+        "label": "Show on blog pages",
+        "info": "Applies to both the blog listing and individual articles.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs_page",
+        "label": "Show on pages",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "Cart & Shipping",
     "settings": [
       {
