@@ -161,7 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  form.addEventListener("submit", () => {
+  form.addEventListener("submit", (event) => {
+    if (!input.value.trim()) {
+      event.preventDefault();
+      return;
+    }
+
     saveRecentSearch(input.value);
   });
 
