@@ -9,12 +9,12 @@
       </p>
     </div>
 
-    {% if section.settings.quick_links.links.size > 0 %}
+    {% if section.settings.footer_menu_1.links.size > 0 %}
       <div class="j-footer__column">
-        <h4>Quick Links</h4>
+        <h4>{{ section.settings.footer_menu_1.title }}</h4>
 
         <ul>
-          {% for link in section.settings.quick_links.links %}
+          {% for link in section.settings.footer_menu_1.links %}
             <li>
               <a href="{{ link.url }}">{{ link.title }}</a>
             </li>
@@ -23,12 +23,26 @@
       </div>
     {% endif %}
 
-    {% if section.settings.customer_links.links.size > 0 %}
+    {% if section.settings.footer_menu_2.links.size > 0 %}
       <div class="j-footer__column">
-        <h4>Customer</h4>
+        <h4>{{ section.settings.footer_menu_2.title }}</h4>
 
         <ul>
-          {% for link in section.settings.customer_links.links %}
+          {% for link in section.settings.footer_menu_2.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if section.settings.footer_menu_3.links.size > 0 %}
+      <div class="j-footer__column">
+        <h4>{{ section.settings.footer_menu_3.title }}</h4>
+
+        <ul>
+          {% for link in section.settings.footer_menu_3.links %}
             <li>
               <a href="{{ link.url }}">{{ link.title }}</a>
             </li>
@@ -76,6 +90,42 @@
     </div>
   </div>
 
+  {% if section.settings.show_social_icons %}
+    <div class="j-footer__social">
+      {% if settings.facebook != blank %}
+        <a href="{{ settings.facebook }}" class="j-footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 8.5h2V5.5h-2c-2.2 0-4 1.8-4 4v2H9v3h2v7h3v-7h2.2l.8-3H14v-2c0-.6.4-1 1-1z" fill="currentColor"/></svg>
+        </a>
+      {% endif %}
+
+      {% if settings.instagram != blank %}
+        <a href="{{ settings.instagram }}" class="j-footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>
+        </a>
+      {% endif %}
+
+      {% if settings.x != blank %}
+        <a href="{{ settings.x }}" class="j-footer__social-link" aria-label="X" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </a>
+      {% endif %}
+
+      {% if settings.youtube != blank %}
+        <a href="{{ settings.youtube }}" class="j-footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></svg>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
+    <div class="j-footer__payment">
+      {% for type in shop.enabled_payment_types %}
+        {{ type | payment_type_svg_tag: class: 'j-footer__payment-icon' }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <div class="j-footer__bottom">
     <p>
       © {{ 'now' | date: '%Y' }}
@@ -98,13 +148,30 @@
     },
     {
       "type": "link_list",
-      "id": "quick_links",
-      "label": "Quick Links"
+      "id": "footer_menu_1",
+      "label": "Footer Menu 1"
     },
     {
       "type": "link_list",
-      "id": "customer_links",
-      "label": "Customer Links"
+      "id": "footer_menu_2",
+      "label": "Footer Menu 2"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu_3",
+      "label": "Footer Menu 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
     }
   ]
 }
