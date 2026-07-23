@@ -16,7 +16,7 @@
 .j-quick-view-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(17, 24, 39, .55);
+  background: rgba(17, 24, 39, 0.55);
   backdrop-filter: blur(2px);
 }
 
@@ -24,7 +24,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(.96);
+  transform: translate(-50%, -50%) scale(0.96);
   width: min(920px, 92%);
   max-height: 90vh;
   overflow: auto;
@@ -34,7 +34,7 @@
   padding: var(--space-8);
 
   opacity: 0;
-  animation: j-quick-view-in .25s ease forwards;
+  animation: j-quick-view-in 0.25s ease forwards;
 }
 
 @keyframes j-quick-view-in {
@@ -65,7 +65,10 @@
   line-height: 1;
   cursor: pointer;
 
-  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .j-quick-view-close:hover {
@@ -197,7 +200,10 @@
   color: var(--color-text);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .j-quick-view-variant-button:hover {
@@ -353,7 +359,9 @@
   white-space: nowrap;
   cursor: pointer;
   border-radius: var(--radius-md);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .j-quick-view-button:hover {

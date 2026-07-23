@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const response = await fetch(
-      `/recommendations/products?section_id=product-recommendations&product_id=${productId}&limit=${limit}`
+      `/recommendations/products?section_id=product-recommendations&product_id=${productId}&limit=${limit}`,
     );
 
     if (!response.ok) {

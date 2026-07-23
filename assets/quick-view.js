@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return src
       .split("?")[0]
-      .replace(/_(?:pico|icon|thumb|small|compact|medium|large|grande|original|\d+x\d*|\d*x\d+)(?=\.[a-z0-9]+$)/i, "");
+      .replace(
+        /_(?:pico|icon|thumb|small|compact|medium|large|grande|original|\d+x\d*|\d*x\d+)(?=\.[a-z0-9]+$)/i,
+        "",
+      );
   }
 
   function getProductImages(product) {
@@ -75,14 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const images = getProductImages(product);
 
-    const mainImageEntry =
-      (variant.featured_image &&
-        images.find(
-          (image) =>
-            normalizeSrc(image.src) === normalizeSrc(variant.featured_image.src),
-        )) ||
-      images[0] ||
-      { id: null, src: product.featured_image };
+    const mainImageEntry = (variant.featured_image &&
+      images.find(
+        (image) =>
+          normalizeSrc(image.src) === normalizeSrc(variant.featured_image.src),
+      )) ||
+      images[0] || { id: null, src: product.featured_image };
 
     const mainImage = mainImageEntry.src;
 
@@ -228,20 +229,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Variant buttons
-    content.querySelectorAll(".j-quick-view-variant-button").forEach((button) => {
-      if (button.disabled) return;
+    content
+      .querySelectorAll(".j-quick-view-variant-button")
+      .forEach((button) => {
+        if (button.disabled) return;
 
-      button.addEventListener("click", () => {
-        const variant = currentProduct.variants.find(
-          (v) => v.id === Number(button.dataset.variantId),
-        );
+        button.addEventListener("click", () => {
+          const variant = currentProduct.variants.find(
+            (v) => v.id === Number(button.dataset.variantId),
+          );
 
-        if (!variant) return;
+          if (!variant) return;
 
-        selectedVariant = variant;
-        render();
+          selectedVariant = variant;
+          render();
+        });
       });
-    });
 
     // Quantity
     const qtyInput = document.getElementById("QuickViewQty");
@@ -323,7 +326,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (cartButton) cartButton.click();
         } catch (error) {
           console.error(error);
-          formError.textContent = error.message || "Unable to add item to cart.";
+          formError.textContent =
+            error.message || "Unable to add item to cart.";
           formError.hidden = false;
           addButton.disabled = false;
           addButton.textContent = "Add to Cart";

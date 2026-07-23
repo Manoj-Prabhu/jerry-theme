@@ -5,8 +5,8 @@
  * ==========================================================
  */
 
-'use strict';
+"use strict";
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('Jerry Theme initialized');
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Jerry Theme initialized");
 });

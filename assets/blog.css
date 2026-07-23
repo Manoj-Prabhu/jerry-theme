@@ -32,7 +32,10 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .j-blog-card:hover {
@@ -56,7 +59,7 @@
   height: 170px;
   object-fit: cover;
   display: block;
-  transition: transform .4s ease;
+  transition: transform 0.4s ease;
 }
 
 .j-blog-card:hover .j-blog-card__image img {
@@ -75,7 +78,7 @@
 
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, .92);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--color-primary);
 
   font-size: var(--font-size-xs);
@@ -105,7 +108,7 @@
   font-size: var(--font-size-xs);
   color: var(--color-text-light);
   text-transform: uppercase;
-  letter-spacing: .03em;
+  letter-spacing: 0.03em;
   margin-bottom: 10px;
 }
 
@@ -174,7 +177,10 @@
   font-weight: var(--font-semibold);
   text-decoration: none;
 
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .j-pagination .pagination a:hover {

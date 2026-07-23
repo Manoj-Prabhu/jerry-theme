@@ -23,7 +23,7 @@
 }
 
 .j-breadcrumbs__item:not(:last-child)::after {
-  content: '';
+  content: "";
   width: 5px;
   height: 5px;
   border-top: 1.5px solid currentColor;

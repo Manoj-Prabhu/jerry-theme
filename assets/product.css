@@ -113,19 +113,19 @@
 }
 
 .j-product__main-image {
-    position: relative;
-    max-width: 450px;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto;
-    overflow: hidden;
+  position: relative;
+  max-width: 450px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .j-product__main-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .j-product__thumbnails {
@@ -270,7 +270,6 @@
   font-size: 0.9rem;
 }
 
-
 /* ==========================================================
    Sticky Add To Cart
 ========================================================== */
@@ -291,7 +290,7 @@
 
   padding: var(--space-2) var(--space-8);
 
-  background: rgba(255, 255, 255, .8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--color-border);
@@ -300,7 +299,7 @@
   box-shadow: var(--shadow-lg);
 
   transform: translateY(100%);
-  transition: transform .35s ease;
+  transition: transform 0.35s ease;
 
   z-index: 999;
 }
@@ -357,7 +356,6 @@
 }
 
 @media (max-width: 768px) {
-
   .j-sticky-cart {
     padding: var(--space-2) var(--space-4);
   }
@@ -371,5 +369,4 @@
     padding: 10px 18px;
     font-size: var(--font-size-sm);
   }
-
 }

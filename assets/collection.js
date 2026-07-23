@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sortSelect) {
     sortSelect.addEventListener("change", () => {
       const url = new URL(window.location.href);
-
       url.searchParams.set("sort_by", sortSelect.value);
-
       window.location.href = url.toString();
     });
   }

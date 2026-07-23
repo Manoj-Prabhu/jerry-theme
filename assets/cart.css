@@ -8,10 +8,8 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-
   visibility: hidden;
   opacity: 0;
-
   transition:
     opacity var(--transition),
     visibility var(--transition);
@@ -29,7 +27,7 @@
 .j-cart-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, .45);
+  background: rgba(0, 0, 0, 0.45);
 }
 
 /* Drawer */
@@ -38,19 +36,14 @@
   position: absolute;
   top: 0;
   right: 0;
-
   width: 420px;
   max-width: 100%;
   height: 100%;
-
   background: var(--color-white);
-
   display: flex;
   flex-direction: column;
-
   transform: translateX(100%);
   transition: transform var(--transition-slow);
-
   box-shadow: var(--shadow-lg);
 }
 
@@ -64,9 +57,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 24px;
-
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -80,17 +71,17 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-
   border: none;
   border-radius: 50%;
   background: var(--color-surface);
   color: var(--color-text);
-
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
-
-  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .j-cart__close:hover {
@@ -124,7 +115,6 @@
 .j-cart__footer {
   padding: 24px;
   border-top: 1px solid var(--color-border);
-
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -156,7 +146,9 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .j-cart-item:hover {
@@ -168,7 +160,6 @@
   width: 72px;
   height: 72px;
   flex-shrink: 0;
-
   border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--color-surface);
@@ -219,14 +210,14 @@
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-
   border: none;
   border-radius: 50%;
   background: transparent;
   color: var(--color-text-light);
   cursor: pointer;
-
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .j-cart-remove svg {
@@ -235,7 +226,7 @@
 }
 
 .j-cart-remove:hover {
-  background: rgba(239, 68, 68, .1);
+  background: rgba(239, 68, 68, 0.1);
   color: var(--color-error);
 }
 
@@ -244,7 +235,6 @@
 .j-cart-item__quantity {
   display: inline-flex;
   align-items: center;
-
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -254,14 +244,11 @@
 .j-cart-qty-plus {
   width: 30px;
   height: 30px;
-
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
-
   font-size: 15px;
   cursor: pointer;
-
   transition: background var(--transition-fast);
 }
 
@@ -276,10 +263,8 @@
   justify-content: center;
   min-width: 32px;
   height: 30px;
-
   border-left: 1px solid var(--color-border);
   border-right: 1px solid var(--color-border);
-
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
   color: var(--color-text);
@@ -288,11 +273,9 @@
 /* Mobile */
 
 @media (max-width: 768px) {
-
   .j-cart {
     width: 100%;
   }
-
 }
 
 /* ==========================================================
@@ -308,7 +291,6 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-
   margin-bottom: 40px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--color-border);
@@ -328,7 +310,6 @@
 .j-cart-page__shipping-bar {
   padding: 20px 24px;
   margin-bottom: 32px;
-
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -420,14 +401,11 @@
 .j-cart-page__summary {
   position: sticky;
   top: 24px;
-
   padding: 28px;
-
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -480,7 +458,6 @@
 /* Mobile */
 
 @media (max-width: 900px) {
-
   .j-cart-page__layout {
     grid-template-columns: 1fr;
   }
@@ -488,5 +465,4 @@
   .j-cart-page__summary {
     position: static;
   }
-
 }

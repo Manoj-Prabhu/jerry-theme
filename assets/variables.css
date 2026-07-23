@@ -4,22 +4,21 @@
 ========================================================== */
 
 :root {
-
   /* ===========================
      Static Colors
      (Theme colors come from css-variables.liquid)
   =========================== */
 
-  --color-surface: #F8FAFC;
+  --color-surface: #f8fafc;
 
   --color-white: #ffffff;
   --color-black: #000000;
 
-  --color-text-light: #6B7280;
+  --color-text-light: #6b7280;
 
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 
   /* ===========================
      Aliases
@@ -82,15 +81,15 @@
      Shadows
   =========================== */
 
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, .05);
-  --shadow-md: 0 8px 20px rgba(0, 0, 0, .08);
-  --shadow-lg: 0 18px 40px rgba(0, 0, 0, .12);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.12);
 
   /* ===========================
      Animation
   =========================== */
 
-  --transition-fast: .15s ease;
-  --transition: .25s ease;
-  --transition-slow: .4s ease;
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
+  --transition-slow: 0.4s ease;
 }

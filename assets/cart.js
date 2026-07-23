@@ -53,9 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateCartCount(cart) {
     const cartCount = document.getElementById("CartCount");
-
     if (!cartCount) return;
-
     if (cart.item_count > 0) {
       cartCount.textContent = cart.item_count;
       cartCount.hidden = false;
@@ -187,7 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const remaining = threshold - cart.total_price;
       const unlocked = remaining <= 0;
-      const percent = unlocked ? 100 : Math.min(100, (cart.total_price / threshold) * 100);
+      const percent = unlocked
+        ? 100
+        : Math.min(100, (cart.total_price / threshold) * 100);
 
       bar.classList.toggle("is-unlocked", unlocked);
 
