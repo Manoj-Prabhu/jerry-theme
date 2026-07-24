@@ -172,15 +172,20 @@
   border: 0;
 }
 
-/* Social + payment row */
+/* ==========================================================
+   Social + Payment Row
+========================================================== */
 
 .j-footer__meta {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 32px var(--space-8);
+
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 24px var(--space-8);
+
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -188,8 +193,9 @@
 
 .j-footer__social {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .j-footer__social-link {
@@ -220,13 +226,23 @@
   transform: translateY(-2px);
 }
 
+/* Copyright */
+
+.j-footer__copyright {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+}
 /* Payment icons */
 
 .j-footer__payment {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .j-footer__payment-icon {
@@ -234,26 +250,14 @@
   width: auto;
   border-radius: 4px;
   opacity: 0.9;
-  transition: 0.25s;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
 .j-footer__payment-icon:hover {
   opacity: 1;
   transform: translateY(-2px);
-}
-
-/* Bottom */
-
-.j-footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 24px var(--space-8);
-  text-align: center;
-}
-
-.j-footer__bottom p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: var(--font-size-sm);
 }
 
 /* Responsive */
@@ -290,13 +294,27 @@
   }
 
   .j-footer__meta {
-    justify-content: center;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
-  .j-footer__social,
+  .j-footer__social {
+    justify-content: center;
+  }
+
   .j-footer__payment {
     justify-content: center;
+  }
+
+  .j-footer__copyright {
+    position: static;
+    transform: none;
+    order: 2;
+    text-align: center;
+    white-space: normal;
+    margin: 0;
   }
 }
 

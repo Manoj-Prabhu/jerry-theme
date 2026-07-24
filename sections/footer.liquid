@@ -90,8 +90,7 @@
     </div>
   </div>
 
-  {% if section.settings.show_social_icons or section.settings.show_payment_icons %}
-    <div class="j-footer__meta">
+  <div class="j-footer__meta">
 
       {% if section.settings.show_social_icons %}
         <div class="j-footer__social">
@@ -129,16 +128,13 @@
         </div>
       {% endif %}
 
-    </div>
-  {% endif %}
+      <p class="j-footer__copyright">
+        © {{ 'now' | date: '%Y' }}
+        {{ shop.name }}
+        •
+        All rights reserved.
+      </p>
 
-  <div class="j-footer__bottom">
-    <p>
-      © {{ 'now' | date: '%Y' }}
-      {{ shop.name }}
-      •
-      All rights reserved.
-    </p>
   </div>
 
 </footer>
