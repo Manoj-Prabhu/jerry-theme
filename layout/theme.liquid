@@ -51,13 +51,13 @@
     {% section 'cart-drawer' %}
     {% sections 'footer-group' %}
 
-    {{ 'theme.js' | asset_url | script_tag }}
-    {{ 'header.js' | asset_url | script_tag }}
-    {{ 'footer.js' | asset_url | script_tag }}
-    {{ 'cart.js' | asset_url | script_tag }}
-    {{ 'product-gallery.js' | asset_url | script_tag }}
-    {{ 'product-variants.js' | asset_url | script_tag }}
-    {{ 'product.js' | asset_url | script_tag }}
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'footer.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-variants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
     <div
       class="j-quick-view-modal"
       id="QuickViewModal"
@@ -81,10 +81,10 @@
 
     </div>
 
-    {{ 'quick-view.js' | asset_url | script_tag }}
-    {{ 'wishlist.js' | asset_url | script_tag }}
-    {{ 'sticky-cart.js' | asset_url | script_tag }}
-    {{ 'collection.js' | asset_url | script_tag }}
+    <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'sticky-cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
 
     <button
       type="button"
@@ -97,6 +97,6 @@
       </svg>
     </button>
 
-    {{ 'back-to-top.js' | asset_url | script_tag }}
+    <script src="{{ 'back-to-top.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

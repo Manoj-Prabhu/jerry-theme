@@ -51,7 +51,7 @@
 
   </div>
 
-  {{ 'product-recommendations.js' | asset_url | script_tag }}
+ <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
 
 {% endif %}
 

@@ -14,7 +14,7 @@
 
 </div>
 
-{{ 'recently-viewed.js' | asset_url | script_tag }}
+<script src="{{ 'recently-viewed.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
