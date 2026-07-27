@@ -321,5 +321,20 @@
 @media (max-width: 480px) {
   .j-footer__newsletter-field {
     flex-direction: column;
+    gap: 10px;
+  }
+
+  .j-footer__newsletter input {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: var(--font-size-sm);
+  }
+
+  .j-footer__newsletter-submit {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: var(--font-size-sm);
   }
 }
