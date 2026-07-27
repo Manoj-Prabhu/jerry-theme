@@ -40,6 +40,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -------------------------
+  // Cart Notice
+  // -------------------------
+
+  let cartNoticeTimeout = null;
+
+  function showCartNotice(message) {
+    let notice = document.querySelector(".j-cart-notice");
+
+    if (!notice) {
+      notice = document.createElement("div");
+      notice.className = "j-cart-notice";
+      document.body.appendChild(notice);
+    }
+
+    notice.textContent = message;
+    notice.classList.add("is-visible");
+
+    clearTimeout(cartNoticeTimeout);
+    cartNoticeTimeout = setTimeout(() => {
+      notice.classList.remove("is-visible");
+    }, 3500);
+  }
+
+  // -------------------------
   // Money
   // -------------------------
 
@@ -283,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       setLoading(true);
 
-      await fetch("/cart/change.js", {
+      const response = await fetch("/cart/change.js", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -293,6 +317,22 @@ document.addEventListener("DOMContentLoaded", () => {
           quantity: quantity,
         }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showCartNotice(data.description || data.message || "Unable to update quantity.");
+      } else {
+        const item = data.items.find((cartItem) => cartItem.key === itemKey);
+
+        if (item && item.quantity < quantity) {
+          showCartNotice(
+            item.quantity > 0
+              ? `Only ${item.quantity} of "${item.product_title}" available in stock.`
+              : `"${item.product_title}" is out of stock.`,
+          );
+        }
+      }
 
       await refreshCart();
     } catch (error) {

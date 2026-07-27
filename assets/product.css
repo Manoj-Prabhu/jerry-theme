@@ -47,6 +47,26 @@
   color: var(--color-accent);
 }
 
+.j-product__inventory {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin: -12px 0 24px;
+  padding: 4px 12px;
+
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error, #ef4444);
+
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.j-product__inventory[hidden] {
+  display: none;
+}
+
 .j-product__description {
   margin-bottom: 32px;
   line-height: 1.7;

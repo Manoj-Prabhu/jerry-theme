@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const addToCartButton = document.getElementById("AddToCartButton");
   const buyNowButton = document.getElementById("BuyNowButton");
   const stickyButton = document.getElementById("StickyAddToCart");
+  const inventoryStatus = document.getElementById("ProductInventoryStatus");
+  const quantityInput = document.getElementById("Quantity");
+  const LOW_STOCK_THRESHOLD = 3;
 
   if (!optionButtons.length) return;
 
@@ -64,8 +67,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function updateInventoryStatus(variant) {
+    if (!inventoryStatus) return;
+
+    const isLowStock =
+      variant.inventoryManagement === "shopify" &&
+      variant.inventoryQuantity > 0 &&
+      variant.inventoryQuantity < LOW_STOCK_THRESHOLD;
+
+    if (isLowStock) {
+      inventoryStatus.textContent = `Only ${variant.inventoryQuantity} left in stock`;
+      inventoryStatus.hidden = false;
+    } else {
+      inventoryStatus.textContent = "";
+      inventoryStatus.hidden = true;
+    }
+  }
+
+  function updateQuantityLimit(variant) {
+    if (!quantityInput) return;
+
+    const isLimited =
+      variant.inventoryManagement === "shopify" &&
+      variant.inventoryPolicy === "deny";
+
+    if (isLimited) {
+      const max = Math.max(0, variant.inventoryQuantity);
+
+      quantityInput.max = String(max);
+
+      if (Number(quantityInput.value) > max) {
+        quantityInput.value = String(Math.max(1, max));
+      }
+    } else {
+      quantityInput.removeAttribute("max");
+    }
+  }
+
   function selectVariant(variant) {
     variantInput.value = variant.id;
+
+    updateInventoryStatus(variant);
+    updateQuantityLimit(variant);
 
     if (price) {
       price.textContent = variant.price;
@@ -136,6 +179,10 @@ document.addEventListener("DOMContentLoaded", () => {
         [buyNowButton, stickyButton].forEach((button) => {
           if (button) button.disabled = true;
         });
+
+        if (inventoryStatus) {
+          inventoryStatus.hidden = true;
+        }
       }
 
       updateAvailability();
