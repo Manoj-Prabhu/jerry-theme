@@ -38,6 +38,7 @@
     {{ 'article.css' | asset_url | stylesheet_tag }}
     {{ 'faq.css' | asset_url | stylesheet_tag }}
     {{ 'back-to-top.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-reveal.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -47,7 +48,9 @@
 
   <body>
     {% sections 'header-group' %}
-    {{ content_for_layout }}
+    <main id="MainContent" class="j-main">
+      {{ content_for_layout }}
+    </main>
     {% section 'cart-drawer' %}
     {% sections 'footer-group' %}
 
@@ -98,5 +101,6 @@
     </button>
 
     <script src="{{ 'back-to-top.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'scroll-reveal.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

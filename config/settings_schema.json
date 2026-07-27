@@ -82,6 +82,44 @@
         "unit": "px",
         "label": "Card border radius",
         "default": 16
+      },
+      {
+        "type": "range",
+        "id": "base_border_radius",
+        "min": 0,
+        "max": 30,
+        "step": 2,
+        "unit": "px",
+        "label": "Border radius",
+        "info": "General rounding scale used across badges, swatches, cart notices, and other UI elements.",
+        "default": 10
+      }
+    ]
+  },
+  {
+    "name": "Effects",
+    "settings": [
+      {
+        "type": "range",
+        "id": "animation_speed",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Animation speed",
+        "info": "Scales hover and transition animation durations across the theme.",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "shadow_strength",
+        "min": 0,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Shadow strength",
+        "info": "Scales the intensity of card and element shadows.",
+        "default": 100
       }
     ]
   },

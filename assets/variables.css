@@ -69,27 +69,34 @@
 
   /* ===========================
      Default Radius Tokens
-     (Can be overridden by Theme Settings)
+     (Base scale driven by Theme Settings > Layout > Border radius)
   =========================== */
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: calc(var(--style-border-radius-base, 10px) * 0.6);
+  --radius-md: var(--style-border-radius-base, 10px);
+  --radius-lg: calc(var(--style-border-radius-base, 10px) * 1.6);
+  --radius-xl: calc(var(--style-border-radius-base, 10px) * 2.4);
 
   /* ===========================
      Shadows
+     (Intensity driven by Theme Settings > Effects > Shadow strength.
+     The rgba() declarations are a fallback for browsers that don't
+     support calc() inside a color's alpha channel.)
   =========================== */
 
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgb(0 0 0 / calc(0.05 * var(--shadow-strength-multiplier, 1)));
   --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 20px rgb(0 0 0 / calc(0.08 * var(--shadow-strength-multiplier, 1)));
   --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 18px 40px rgb(0 0 0 / calc(0.12 * var(--shadow-strength-multiplier, 1)));
 
   /* ===========================
      Animation
+     (Speed driven by Theme Settings > Effects > Animation speed)
   =========================== */
 
-  --transition-fast: 0.15s ease;
-  --transition: 0.25s ease;
-  --transition-slow: 0.4s ease;
+  --transition-fast: calc(0.15s * var(--animation-speed-multiplier, 1)) ease;
+  --transition: calc(0.25s * var(--animation-speed-multiplier, 1)) ease;
+  --transition-slow: calc(0.4s * var(--animation-speed-multiplier, 1)) ease;
 }

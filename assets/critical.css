@@ -13,6 +13,10 @@ body {
   min-height: 100svh;
 }
 
+.j-main {
+  flex: 1 0 auto;
+}
+
 html:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
   overflow: hidden;
 }

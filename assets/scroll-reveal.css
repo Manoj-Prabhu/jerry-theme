@@ -1,0 +1,28 @@
+/* ==========================================================
+   Jerry Theme Scroll Reveal
+========================================================== */
+
+.j-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.j-reveal.is-revealed {
+  opacity: 1;
+  /* "none" (not translateY(0)) so this element stops establishing a
+     new containing block once revealed — otherwise any position:fixed
+     descendant (e.g. the product page's sticky add-to-cart bar) would
+     stay pinned to this element instead of the viewport. */
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
