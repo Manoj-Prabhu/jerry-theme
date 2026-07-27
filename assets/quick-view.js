@@ -57,6 +57,34 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function colorKey(value) {
+    return value.replace(/[\s-]/g, "").toLowerCase();
+  }
+
+  function getOptionValues(product, index) {
+    const values = [];
+
+    product.variants.forEach((v) => {
+      const value = v.options[index];
+      if (value && !values.includes(value)) values.push(value);
+    });
+
+    return values;
+  }
+
+  function isOptionValueAvailable(product, selectedOptions, index, value) {
+    const testOptions = selectedOptions.slice();
+    testOptions[index] = value;
+
+    return product.variants.some(
+      (v) =>
+        v.available &&
+        v.options.every(
+          (val, i) => testOptions[i] === undefined || val === testOptions[i],
+        ),
+    );
+  }
+
   function closeModal() {
     modal.classList.remove("is-open");
     content.innerHTML = "";
@@ -134,28 +162,68 @@ document.addEventListener("DOMContentLoaded", () => {
           ${
             product.variants.length > 1
               ? `
-            <div class="j-quick-view__variants">
-              <label>${
-                typeof product.options[0] === "object"
-                  ? product.options[0].name
-                  : product.options[0]
-              }</label>
-              <div class="j-quick-view__variant-buttons">
-                ${product.variants
-                  .map(
-                    (v) => `
-                  <button
-                    type="button"
-                    class="j-quick-view-variant-button ${v.id === variant.id ? "is-active" : ""} ${!v.available ? "is-sold-out" : ""}"
-                    data-variant-id="${v.id}"
-                    ${!v.available ? "disabled" : ""}
-                  >
-                    ${v.title}
-                  </button>
-                `,
-                  )
-                  .join("")}
-              </div>
+            <div class="j-quick-view__options">
+              ${product.options
+                .map((optionNameRaw, index) => {
+                  const optionName =
+                    typeof optionNameRaw === "object"
+                      ? optionNameRaw.name
+                      : optionNameRaw;
+                  const isColor = /^colou?r$/i.test(optionName);
+                  const values = getOptionValues(product, index);
+                  const selectedValue = variant.options[index];
+
+                  return `
+                    <div class="j-quick-view__option">
+                      <div class="j-quick-view__option-header">
+                        <label>${optionName}</label>
+                        <span class="j-quick-view__option-value">${selectedValue}</span>
+                      </div>
+                      ${
+                        isColor
+                          ? `
+                        <div class="j-quick-view__swatches">
+                          ${values
+                            .map(
+                              (value) => `
+                            <button
+                              type="button"
+                              class="j-quick-view-swatch ${value === selectedValue ? "is-active" : ""} ${!isOptionValueAvailable(product, variant.options, index, value) ? "is-sold-out" : ""}"
+                              data-option-index="${index}"
+                              data-value="${value}"
+                              aria-label="${value}"
+                              title="${value}"
+                            >
+                              <span class="j-quick-view-swatch-inner" style="background-color: ${colorKey(value)};"></span>
+                            </button>
+                          `,
+                            )
+                            .join("")}
+                        </div>
+                      `
+                          : `
+                        <div class="j-quick-view__variant-buttons">
+                          ${values
+                            .map(
+                              (value) => `
+                            <button
+                              type="button"
+                              class="j-quick-view-variant-button ${value === selectedValue ? "is-active" : ""} ${!isOptionValueAvailable(product, variant.options, index, value) ? "is-sold-out" : ""}"
+                              data-option-index="${index}"
+                              data-value="${value}"
+                            >
+                              ${value}
+                            </button>
+                          `,
+                            )
+                            .join("")}
+                        </div>
+                      `
+                      }
+                    </div>
+                  `;
+                })
+                .join("")}
             </div>
           `
               : ""
@@ -228,15 +296,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Variant buttons
+    // Option swatches / pills
     content
-      .querySelectorAll(".j-quick-view-variant-button")
+      .querySelectorAll(".j-quick-view-swatch, .j-quick-view-variant-button")
       .forEach((button) => {
-        if (button.disabled) return;
-
         button.addEventListener("click", () => {
-          const variant = currentProduct.variants.find(
-            (v) => v.id === Number(button.dataset.variantId),
+          const index = Number(button.dataset.optionIndex);
+          const testOptions = selectedVariant.options.slice();
+
+          testOptions[index] = button.dataset.value;
+
+          const variant = currentProduct.variants.find((v) =>
+            v.options.every((val, i) => val === testOptions[i]),
           );
 
           if (!variant) return;

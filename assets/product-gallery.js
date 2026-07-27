@@ -5,8 +5,20 @@
 document.addEventListener("DOMContentLoaded", () => {
   const mainImage = document.getElementById("ProductMainImage");
   const thumbnails = document.querySelectorAll(".j-product-thumbnail");
+  const variantsJson = document.getElementById("ProductVariantsJson");
 
   if (!mainImage || thumbnails.length === 0) return;
+
+  const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
+
+  function normalizeImageUrl(url) {
+    try {
+      const parsed = new URL(url, window.location.href);
+      return parsed.pathname + parsed.search;
+    } catch (error) {
+      return url;
+    }
+  }
 
   thumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", () => {
@@ -25,20 +37,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
       thumbnail.classList.add("is-active");
 
-      const variantButtons = document.querySelectorAll(
-        ".j-product__variant-button",
+      const targetImage = normalizeImageUrl(thumbnail.dataset.image);
+      const sameImageVariants = variants.filter(
+        (variant) => normalizeImageUrl(variant.image) === targetImage,
       );
+      const matchingVariant = sameImageVariants[0];
 
-      const matches = Array.from(variantButtons).filter(
-        (button) =>
-          !button.disabled &&
-          button.dataset.hasOwnImage === "true" &&
-          button.dataset.image === thumbnail.dataset.image,
-      );
+      if (!matchingVariant) return;
 
-      if (matches.length === 1 && !matches[0].classList.contains("is-active")) {
-        matches[0].click();
-      }
+      // Only sync an option index if this image implies a single value for
+      // it (e.g. Color, or the only option on a single-option product).
+      // If variants with other option values (e.g. different Sizes) share
+      // this same image, that index isn't image-specific — leave the
+      // user's current selection for it untouched.
+      matchingVariant.options.forEach((value, index) => {
+        const isImageSpecific = sameImageVariants.every(
+          (variant) => variant.options[index] === value,
+        );
+
+        if (!isImageSpecific) return;
+
+        const button = document.querySelector(
+          `.j-product__swatch[data-option-index="${index}"][data-value="${CSS.escape(value)}"], .j-product__pill[data-option-index="${index}"][data-value="${CSS.escape(value)}"]`,
+        );
+
+        if (button && !button.classList.contains("is-active")) {
+          button.click();
+        }
+      });
     });
   });
 });

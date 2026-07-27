@@ -2,55 +2,145 @@
    Jerry Theme Product Variants
 ========================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  const buttons = document.querySelectorAll(".j-product__variant-button");
+  const optionsWrap = document.getElementById("ProductOptions");
+  const variantsJson = document.getElementById("ProductVariantsJson");
+
+  if (!optionsWrap || !variantsJson) return;
+
+  const variants = JSON.parse(variantsJson.textContent);
+  const optionButtons = optionsWrap.querySelectorAll(
+    ".j-product__swatch, .j-product__pill",
+  );
   const variantInput = document.getElementById("SelectedVariant");
   const price = document.getElementById("ProductPrice");
+  const stickyPrice = document.getElementById("StickyPrice");
   const mainImage = document.getElementById("ProductMainImage");
   const addToCartButton = document.getElementById("AddToCartButton");
-  const stickyPrice = document.getElementById("StickyPrice");
+  const buyNowButton = document.getElementById("BuyNowButton");
+  const stickyButton = document.getElementById("StickyAddToCart");
 
-  if (!buttons.length) return;
+  if (!optionButtons.length) return;
 
-  buttons.forEach((button) => {
-    if (button.disabled) return;
+  function normalizeImageUrl(url) {
+    try {
+      const parsed = new URL(url, window.location.href);
+      return parsed.pathname + parsed.search;
+    } catch (error) {
+      return url;
+    }
+  }
 
-    button.addEventListener("click", () => {
-      buttons.forEach((item) => {
-        item.classList.remove("is-active");
+  const selectedOptions = [];
+
+  optionButtons.forEach((button) => {
+    if (button.classList.contains("is-active")) {
+      selectedOptions[Number(button.dataset.optionIndex)] =
+        button.dataset.value;
+    }
+  });
+
+  function findVariant(options) {
+    return variants.find((variant) =>
+      variant.options.every((value, index) => value === options[index]),
+    );
+  }
+
+  function updateAvailability() {
+    optionButtons.forEach((button) => {
+      const index = Number(button.dataset.optionIndex);
+      const testOptions = selectedOptions.slice();
+
+      testOptions[index] = button.dataset.value;
+
+      const isAvailable = variants.some(
+        (variant) =>
+          variant.available &&
+          variant.options.every(
+            (value, i) => testOptions[i] === undefined || value === testOptions[i],
+          ),
+      );
+
+      button.classList.toggle("is-sold-out", !isAvailable);
+    });
+  }
+
+  function selectVariant(variant) {
+    variantInput.value = variant.id;
+
+    if (price) {
+      price.textContent = variant.price;
+    }
+
+    if (stickyPrice) {
+      stickyPrice.textContent = variant.price;
+    }
+
+    if (mainImage && variant.image) {
+      mainImage.src = variant.image;
+      mainImage.srcset = "";
+
+      const targetImage = normalizeImageUrl(variant.image);
+
+      document.querySelectorAll(".j-product-thumbnail").forEach((thumbnail) => {
+        thumbnail.classList.toggle(
+          "is-active",
+          normalizeImageUrl(thumbnail.dataset.image) === targetImage,
+        );
       });
+    }
+
+    [addToCartButton, buyNowButton, stickyButton].forEach((button) => {
+      if (button) {
+        button.disabled = !variant.available;
+      }
+    });
+
+    if (addToCartButton) {
+      addToCartButton.textContent = variant.available
+        ? "Add to Cart"
+        : "Sold Out";
+    }
+  }
+
+  optionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.optionIndex);
+      const group = button.closest(".j-product__swatches, .j-product__pills");
+
+      selectedOptions[index] = button.dataset.value;
+
+      group
+        .querySelectorAll(".j-product__swatch, .j-product__pill")
+        .forEach((item) => item.classList.remove("is-active"));
 
       button.classList.add("is-active");
 
-      variantInput.value = button.dataset.variantId;
+      const optionValueLabel = button
+        .closest(".j-product__option")
+        .querySelector(".j-product__option-value");
 
-      if (price) {
-        price.textContent = button.dataset.price;
+      if (optionValueLabel) {
+        optionValueLabel.textContent = button.dataset.value;
       }
 
-      if (stickyPrice) {
-        stickyPrice.textContent = button.dataset.price;
+      const variant = findVariant(selectedOptions);
+
+      if (variant) {
+        selectVariant(variant);
+      } else {
+        if (addToCartButton) {
+          addToCartButton.disabled = true;
+          addToCartButton.textContent = "Unavailable";
+        }
+
+        [buyNowButton, stickyButton].forEach((button) => {
+          if (button) button.disabled = true;
+        });
       }
 
-      if (mainImage && button.dataset.image) {
-        mainImage.src = button.dataset.image;
-        mainImage.srcset = "";
-
-        document
-          .querySelectorAll(".j-product-thumbnail")
-          .forEach((thumbnail) => {
-            thumbnail.classList.toggle(
-              "is-active",
-              thumbnail.dataset.image === button.dataset.image,
-            );
-          });
-      }
-
-      if (addToCartButton) {
-        const isAvailable = button.dataset.available === "true";
-
-        addToCartButton.disabled = !isAvailable;
-        addToCartButton.textContent = isAvailable ? "Add to Cart" : "Sold Out";
-      }
+      updateAvailability();
     });
   });
+
+  updateAvailability();
 });
