@@ -26,7 +26,8 @@
           loading: 'eager',
           fetchpriority: 'high',
           widths: '400, 600, 800, 1000',
-          sizes: '(max-width: 768px) 100vw, 450px'
+          sizes: '(max-width: 768px) 100vw, 450px',
+          alt: current_variant.featured_image.alt | default: product.title
       }}
 
     </div>
@@ -41,12 +42,13 @@
           type="button"
           class="j-product-thumbnail {% if image == current_image %}is-active{% endif %}"
           data-image="{{ image | image_url: width: 1200 }}"
+          aria-label="{{ product.title }} — view {{ forloop.index }}"
         >
 
           {{
             image
             | image_url: width: 150
-            | image_tag: loading: 'lazy'
+            | image_tag: loading: 'lazy', alt: ''
           }}
 
         </button>
@@ -67,6 +69,7 @@
     <p
       class="j-product__price"
       id="ProductPrice"
+      aria-live="polite"
     >
       {{ current_variant.price | money }}
     </p>
@@ -80,6 +83,7 @@
     <p
       class="j-product__inventory"
       id="ProductInventoryStatus"
+      aria-live="polite"
       {% unless is_low_stock %}hidden{% endunless %}
     >
       {% if is_low_stock %}Only {{ current_variant.inventory_quantity }} left in stock{% endif %}
@@ -125,6 +129,7 @@
                       data-option-index="{{ option_index }}"
                       data-value="{{ value | escape }}"
                       aria-label="{{ value | escape }}"
+                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
                       title="{{ value | escape }}"
                     >
                       <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
@@ -141,6 +146,7 @@
                       class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
                       data-option-index="{{ option_index }}"
                       data-value="{{ value | escape }}"
+                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
                     >
                       {{ value }}
                     </button>
@@ -215,6 +221,7 @@
       <p
         class="j-product__form-error"
         id="ProductFormError"
+        role="alert"
         hidden
       ></p>
 
@@ -238,7 +245,7 @@
 
     <div class="j-sticky-cart__info">
 
-      <h4>{{ product.title }}</h4>
+      <p class="j-sticky-cart__name">{{ product.title }}</p>
 
       <p id="StickyPrice">
         {{ current_variant.price | money }}

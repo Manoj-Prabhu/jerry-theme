@@ -200,6 +200,12 @@ class JerryHeader {
 
     if (!toggle || !searchForm) return;
 
+    const closeSearch = () => {
+      searchForm.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
+    };
+
     toggle.addEventListener("click", () => {
       const isOpen = searchForm.classList.toggle("is-open");
 
@@ -208,6 +214,10 @@ class JerryHeader {
       if (isOpen) {
         searchForm.querySelector("input")?.focus();
       }
+    });
+
+    searchForm.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSearch();
     });
   }
 }

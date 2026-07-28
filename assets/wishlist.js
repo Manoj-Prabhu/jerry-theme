@@ -14,12 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateButton(button, active) {
+    const title = button.dataset.productTitle || "";
+
     if (active) {
       button.classList.add("is-active");
       button.textContent = "♥";
+      button.setAttribute("aria-pressed", "true");
+      button.setAttribute("aria-label", `Remove ${title} from Wishlist`);
     } else {
       button.classList.remove("is-active");
       button.textContent = "♡";
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("aria-label", `Add ${title} to Wishlist`);
     }
   }
 

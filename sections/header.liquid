@@ -189,6 +189,7 @@
 
       <sup
         id="WishlistCount"
+        aria-live="polite"
         hidden
       >
         0
@@ -206,6 +207,7 @@
 
       <sup
         id="CartCount"
+        aria-live="polite"
         {% if cart.item_count == 0 %}
           hidden
         {% endif %}

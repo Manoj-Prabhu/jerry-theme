@@ -13,15 +13,58 @@ document.addEventListener("DOMContentLoaded", () => {
   // Drawer
   // -------------------------
 
-  function openCartDrawer() {
-    if (drawer) {
-      drawer.classList.add("is-open");
+  let lastCartTrigger = null;
+
+  function getDrawerFocusable() {
+    return Array.from(
+      drawer.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+  }
+
+  function trapDrawerFocus(event) {
+    if (event.key === "Escape") {
+      closeCartDrawer();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = getDrawerFocusable();
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   }
 
+  function openCartDrawer() {
+    if (!drawer) return;
+
+    lastCartTrigger = document.activeElement;
+    drawer.classList.add("is-open");
+    document.addEventListener("keydown", trapDrawerFocus);
+
+    if (closeButton) closeButton.focus();
+  }
+
   function closeCartDrawer() {
-    if (drawer) {
-      drawer.classList.remove("is-open");
+    if (!drawer) return;
+
+    drawer.classList.remove("is-open");
+    document.removeEventListener("keydown", trapDrawerFocus);
+
+    if (lastCartTrigger) {
+      lastCartTrigger.focus();
+      lastCartTrigger = null;
     }
   }
 
@@ -51,6 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!notice) {
       notice = document.createElement("div");
       notice.className = "j-cart-notice";
+      notice.setAttribute("role", "status");
+      notice.setAttribute("aria-live", "polite");
       document.body.appendChild(notice);
     }
 

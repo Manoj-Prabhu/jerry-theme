@@ -204,4 +204,11 @@ document.addEventListener("DOMContentLoaded", () => {
       results.classList.remove("is-open");
     }
   });
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      results.classList.remove("is-open");
+      input.blur();
+    }
+  });
 });

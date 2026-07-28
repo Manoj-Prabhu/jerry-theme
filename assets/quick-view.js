@@ -13,6 +13,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentProduct = null;
   let selectedVariant = null;
   let selectedQuantity = 1;
+  let lastFocusedTrigger = null;
+
+  function getFocusableElements() {
+    return Array.from(
+      modal.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+  }
+
+  function trapFocus(event) {
+    if (event.key === "Escape") {
+      closeModal();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = getFocusableElements();
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   // -------------------------
   // Helpers
@@ -91,6 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
     currentProduct = null;
     selectedVariant = null;
     selectedQuantity = 1;
+
+    document.removeEventListener("keydown", trapFocus);
+
+    if (lastFocusedTrigger) {
+      lastFocusedTrigger.focus();
+      lastFocusedTrigger = null;
+    }
   }
 
   if (overlay) overlay.addEventListener("click", closeModal);
@@ -192,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               data-option-index="${index}"
                               data-value="${value}"
                               aria-label="${value}"
+                              aria-pressed="${value === selectedValue}"
                               title="${value}"
                             >
                               <span class="j-quick-view-swatch-inner" style="background-color: ${colorKey(value)};"></span>
@@ -211,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               class="j-quick-view-variant-button ${value === selectedValue ? "is-active" : ""} ${!isOptionValueAvailable(product, variant.options, index, value) ? "is-sold-out" : ""}"
                               data-option-index="${index}"
                               data-value="${value}"
+                              aria-pressed="${value === selectedValue}"
                             >
                               ${value}
                             </button>
@@ -247,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ${variant.available ? "Add to Cart" : "Sold Out"}
           </button>
 
-          <p class="j-quick-view__form-error" id="QuickViewFormError" hidden></p>
+          <p class="j-quick-view__form-error" id="QuickViewFormError" role="alert" hidden></p>
 
           <div class="j-quick-view__description ${product.description ? "" : "is-empty"}" id="QuickViewDescription">
             ${product.description || ""}
@@ -426,6 +467,11 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
 
         modal.classList.add("is-open");
+
+        lastFocusedTrigger = button;
+        document.addEventListener("keydown", trapFocus);
+
+        if (close) close.focus();
       } catch (error) {
         console.error(error);
       }

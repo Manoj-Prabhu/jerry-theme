@@ -250,7 +250,8 @@
         "type": "color",
         "id": "accent_color",
         "label": "Accent color",
-        "default": "#16A34A"
+        "info": "Used as text color (links, sale price, nav hover) as well as backgrounds, so pick a shade that reaches at least 4.5:1 contrast against white for accessibility.",
+        "default": "#15803D"
       },
       {
         "type": "color",

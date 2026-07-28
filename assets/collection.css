@@ -74,7 +74,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.j-collection-filters__header h3 {
+.j-collection-filters__header h2 {
   font-size: var(--font-size-sm);
 }
 
@@ -218,8 +218,9 @@
   font-size: var(--font-size-xs);
 }
 
-.j-filter__values input[type="number"]:focus {
-  outline: none;
+.j-filter__values input[type="number"]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
 }
 
 .j-filter__price-separator {

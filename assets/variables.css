@@ -16,9 +16,12 @@
 
   --color-text-light: #6b7280;
 
-  --color-success: #22c55e;
+  /* Darkened from the more common #22c55e/#ef4444 shades — those only hit
+     ~2.3:1 and ~3.8:1 against white, failing WCAG AA (4.5:1) for normal
+     text. These pass at ~5:1 and ~4.8:1 while staying visually green/red. */
+  --color-success: #15803d;
   --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-error: #dc2626;
 
   /* ===========================
      Aliases

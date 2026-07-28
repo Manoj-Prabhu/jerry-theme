@@ -154,9 +154,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       group
         .querySelectorAll(".j-product__swatch, .j-product__pill")
-        .forEach((item) => item.classList.remove("is-active"));
+        .forEach((item) => {
+          item.classList.remove("is-active");
+          item.setAttribute("aria-pressed", "false");
+        });
 
       button.classList.add("is-active");
+      button.setAttribute("aria-pressed", "true");
 
       const optionValueLabel = button
         .closest(".j-product__option")

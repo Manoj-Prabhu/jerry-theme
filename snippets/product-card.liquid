@@ -61,7 +61,9 @@
     type="button"
     class="j-wishlist-button"
     data-handle="{{ product.handle }}"
-    aria-label="Add to Wishlist"
+    data-product-title="{{ product.title | escape }}"
+    aria-label="Add {{ product.title | escape }} to Wishlist"
+    aria-pressed="false"
   >
     ♡
   </button>

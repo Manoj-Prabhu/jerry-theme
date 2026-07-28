@@ -387,7 +387,7 @@
   display: block;
 }
 
-.j-sticky-cart__info h4 {
+.j-sticky-cart__info .j-sticky-cart__name {
   margin: 0;
   font-size: var(--font-size-md);
 
@@ -397,7 +397,7 @@
   max-width: 320px;
 }
 
-.j-sticky-cart__info p {
+.j-sticky-cart__info #StickyPrice {
   margin: 2px 0 0;
   color: var(--color-accent);
   font-weight: var(--font-semibold);
@@ -415,7 +415,7 @@
     padding: var(--space-2) var(--space-4);
   }
 
-  .j-sticky-cart__info h4 {
+  .j-sticky-cart__info .j-sticky-cart__name {
     max-width: 140px;
     font-size: var(--font-size-sm);
   }

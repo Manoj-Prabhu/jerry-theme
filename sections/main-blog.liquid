@@ -28,7 +28,8 @@
                   article.image
                   | image_url: width: 700
                   | image_tag:
-                    loading: 'lazy'
+                    loading: 'lazy',
+                    alt: article.image.alt | default: article.title
                 }}
 
                 <span class="j-blog-card__date">
