@@ -70,7 +70,7 @@
 
 /* Header */
 
-header {
+.j-site-header {
   position: relative;
   max-width: var(--container-width);
   margin: 0 auto;
@@ -802,7 +802,7 @@ header {
 ========================================================== */
 
 @media (max-width: 992px) {
-  header {
+  .j-site-header {
     grid-template-columns: auto 1fr auto;
     height: 70px;
     padding: 0 var(--space-4);
@@ -940,7 +940,7 @@ header {
 }
 
 @media (max-width: 480px) {
-  header {
+  .j-site-header {
     height: 64px;
     column-gap: var(--space-2);
   }
