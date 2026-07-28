@@ -41,11 +41,13 @@
       matters once elements approach the viewport): loaded without blocking
       render via the preload+swap pattern, with a <noscript> fallback.
     {% endcomment %}
+    {% # theme-check-disable AssetPreload %}
     {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
     {% for file in non_critical_css %}
       <link rel="preload" href="{{ file | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
       <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
     {% endfor %}
+    {% # theme-check-enable AssetPreload %}
 
     {% comment %}
       featured-collection.css holds the shared .j-product-card / .j-wishlist-button
