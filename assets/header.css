@@ -251,22 +251,13 @@ header {
   height: 24px;
 }
 
-.header__icons shopify-account {
-  --shopify-account-avatar-size: 24px;
+.j-header__account {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 42px;
   height: 42px;
   flex-shrink: 0;
-}
-
-.header__icons shopify-account::part(signed-out-avatar) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
 }
 
 .j-header__search-toggle {
@@ -977,8 +968,7 @@ header {
     height: 18px;
   }
 
-  .header__icons shopify-account {
-    --shopify-account-avatar-size: 18px;
+  .j-header__account {
     width: 30px;
     height: 30px;
   }
