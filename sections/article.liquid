@@ -9,7 +9,10 @@
         | image_url: width: 1400
         | image_tag:
           loading: 'eager',
-          alt: article.title
+          fetchpriority: 'high',
+          alt: article.title,
+          widths: '400, 600, 900, 1400',
+          sizes: '(max-width: 700px) 100vw, 700px'
       }}
     </div>
   {% endif %}

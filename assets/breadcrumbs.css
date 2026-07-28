@@ -18,8 +18,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-foreground);
-  opacity: 0.65;
+  /* A solid, always-sufficient-contrast color rather than opacity-faded
+     foreground — opacity blends toward whatever is behind it, which can
+     drop below WCAG AA depending on the page background. */
+  color: var(--color-text-light, #6b7280);
 }
 
 .j-breadcrumbs__item:not(:last-child)::after {
@@ -44,6 +46,6 @@
 }
 
 .j-breadcrumbs__item.is-active {
-  opacity: 1;
+  color: var(--color-foreground);
   font-weight: 600;
 }
