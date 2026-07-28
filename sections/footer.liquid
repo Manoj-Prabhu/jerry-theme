@@ -1,6 +1,11 @@
+{% assign has_menus = false %}
+{% if section.settings.footer_menu_1.links.size > 0 or section.settings.footer_menu_2.links.size > 0 or section.settings.footer_menu_3.links.size > 0 %}
+  {% assign has_menus = true %}
+{% endif %}
+
 <footer class="j-footer full-width">
 
-  <div class="j-footer__container">
+  <div class="j-footer__container {% unless has_menus %}j-footer__container--no-menus{% endunless %}">
 
     <div class="j-footer__column j-footer__column--brand">
       <h3 class="j-footer__logo">{{ shop.name }}</h3>
@@ -9,45 +14,51 @@
       </p>
     </div>
 
-    {% if section.settings.footer_menu_1.links.size > 0 %}
-      <div class="j-footer__column">
-        <h4>{{ section.settings.footer_menu_1.title }}</h4>
+    {% if has_menus %}
+      <div class="j-footer__menus">
 
-        <ul>
-          {% for link in section.settings.footer_menu_1.links %}
-            <li>
-              <a href="{{ link.url }}">{{ link.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+        {% if section.settings.footer_menu_1.links.size > 0 %}
+          <div class="j-footer__column">
+            <h4>{{ section.settings.footer_menu_1.title }}</h4>
 
-    {% if section.settings.footer_menu_2.links.size > 0 %}
-      <div class="j-footer__column">
-        <h4>{{ section.settings.footer_menu_2.title }}</h4>
+            <ul>
+              {% for link in section.settings.footer_menu_1.links %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
 
-        <ul>
-          {% for link in section.settings.footer_menu_2.links %}
-            <li>
-              <a href="{{ link.url }}">{{ link.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+        {% if section.settings.footer_menu_2.links.size > 0 %}
+          <div class="j-footer__column">
+            <h4>{{ section.settings.footer_menu_2.title }}</h4>
 
-    {% if section.settings.footer_menu_3.links.size > 0 %}
-      <div class="j-footer__column">
-        <h4>{{ section.settings.footer_menu_3.title }}</h4>
+            <ul>
+              {% for link in section.settings.footer_menu_2.links %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
 
-        <ul>
-          {% for link in section.settings.footer_menu_3.links %}
-            <li>
-              <a href="{{ link.url }}">{{ link.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
+        {% if section.settings.footer_menu_3.links.size > 0 %}
+          <div class="j-footer__column">
+            <h4>{{ section.settings.footer_menu_3.title }}</h4>
+
+            <ul>
+              {% for link in section.settings.footer_menu_3.links %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
       </div>
     {% endif %}
 

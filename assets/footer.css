@@ -17,20 +17,27 @@
   padding: 80px var(--space-8) 56px;
 
   display: grid;
-  grid-template-columns: 1.6fr repeat(3, 1fr) 1.6fr;
+  grid-template-columns: 1.6fr minmax(0, 3fr) 1.6fr;
   gap: 40px;
+}
+
+/* When every footer menu is disabled, there's no middle column to lay
+   out — just balance the brand and newsletter columns evenly. */
+.j-footer__container--no-menus {
+  grid-template-columns: 1fr 1fr;
 }
 
 .j-footer__column {
   min-width: 0;
 }
 
-.j-footer__column--brand {
-  grid-column: 1;
-}
-
-.j-footer__column--newsletter {
-  grid-column: 5;
+/* Menu columns reflow to however many are actually enabled (1–3),
+   instead of assuming a fixed count — so a disabled menu never leaves
+   an awkward gap, at any screen size. */
+.j-footer__menus {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 40px;
 }
 
 /* Columns */
@@ -264,25 +271,20 @@
 /* Responsive */
 
 @media (max-width: 992px) {
-  .j-footer__container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .j-footer__column--brand,
-  .j-footer__column--newsletter {
-    grid-column: span 2;
+  .j-footer__container,
+  .j-footer__container--no-menus {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
   .j-footer__container {
-    grid-template-columns: 1fr;
     text-align: center;
   }
 
-  .j-footer__column--brand,
-  .j-footer__column--newsletter {
-    grid-column: span 1;
+  .j-footer__menus {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 24px;
   }
 
   .j-footer__newsletter {
