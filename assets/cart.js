@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="j-cart-item__content">
 
             <div class="j-cart-item__top">
-              <h4>${item.product_title}</h4>
+              <p class="j-cart-item__title">${item.product_title}</p>
 
               <button
                 class="j-cart-remove"

@@ -213,7 +213,7 @@
   gap: 12px;
 }
 
-.j-cart-item__content h4 {
+.j-cart-item__content .j-cart-item__title {
   margin-bottom: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
@@ -376,7 +376,10 @@
 
 .j-cart-page__shipping-bar.is-unlocked .j-cart-page__shipping-message {
   font-weight: var(--font-semibold);
-  color: var(--color-accent);
+  /* Fixed shade (not var(--color-accent)) so this always passes contrast
+     against the light tinted background above, regardless of which accent
+     color a merchant picks in theme settings. */
+  color: #0f5132;
 }
 
 .j-cart-page__shipping-bar.is-unlocked .j-cart-page__shipping-fill {
@@ -420,7 +423,7 @@
   height: 96px;
 }
 
-.j-cart-page__items .j-cart-item__content h4 {
+.j-cart-page__items .j-cart-item__content .j-cart-item__title {
   font-size: var(--font-size-md);
 }
 
