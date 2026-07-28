@@ -38,7 +38,10 @@
     section.settings.image
     | image_url: width: 1200
     | image_tag:
-        loading: 'lazy',
+        loading: 'eager',
+        fetchpriority: 'high',
+        widths: '480, 760, 1000, 1200',
+        sizes: '(max-width: 991px) 90vw, 560px',
         class: 'j-hero__img',
         alt: section.settings.heading
     }}

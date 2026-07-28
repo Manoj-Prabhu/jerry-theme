@@ -12,7 +12,9 @@
           | image_tag:
             loading: 'lazy',
             class: 'j-product-card__img',
-            alt: product.title
+            alt: product.title,
+            widths: '350, 500, 700',
+            sizes: '(max-width: 768px) 100vw, (max-width: 1100px) 50vw, 25vw'
         }}
 
       {% else %}

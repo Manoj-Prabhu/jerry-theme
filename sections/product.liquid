@@ -22,7 +22,11 @@
         | image_url: width: 1000
         | image_tag:
           class: 'j-product-main-image',
-          id: 'ProductMainImage'
+          id: 'ProductMainImage',
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '400, 600, 800, 1000',
+          sizes: '(max-width: 768px) 100vw, 450px'
       }}
 
     </div>
@@ -42,7 +46,7 @@
           {{
             image
             | image_url: width: 150
-            | image_tag
+            | image_tag: loading: 'lazy'
           }}
 
         </button>
@@ -228,7 +232,7 @@
       {{
         current_variant.featured_image | default: product.featured_image
         | image_url: width: 100
-        | image_tag: alt: product.title
+        | image_tag: alt: product.title, loading: 'lazy'
       }}
     </div>
 

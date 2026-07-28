@@ -17,18 +17,11 @@
       {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
     {% endunless %}
 
-    {% comment %} Preload the logo — it's rendered eager in the header and is
-      often the LCP element on non-product/non-hero pages. {% endcomment %}
-    {% assign header_logo = sections['header'].settings.logo %}
-    {% if header_logo != blank %}
-      {% assign header_logo_width = sections['header'].settings.logo_width | default: 200 %}
-      <link
-        rel="preload"
-        as="image"
-        href="{{ header_logo | image_url: width: header_logo_width }}"
-        imagesrcset="{{ header_logo | image_url: width: 120 }} 120w, {{ header_logo | image_url: width: 160 }} 160w, {{ header_logo | image_url: width: 200 }} 200w, {{ header_logo | image_url: width: 240 }} 240w, {{ header_logo | image_url: width: 300 }} 300w, {{ header_logo | image_url: width: 400 }} 400w"
-      >
-    {% endif %}
+    {% comment %}
+      Logo preload: handled via the `preload: true` argument on the
+      image_tag filter directly in sections/header.liquid (the idiomatic
+      Shopify approach), rather than a manual <link> here.
+    {% endcomment %}
 
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
@@ -41,9 +34,19 @@
     {{ 'breadcrumbs.css' | asset_url | stylesheet_tag }}
     {{ 'footer.css' | asset_url | stylesheet_tag }}
     {{ 'cart.css' | asset_url | stylesheet_tag }}
-    {{ 'quick-view.css' | asset_url | stylesheet_tag }}
-    {{ 'back-to-top.css' | asset_url | stylesheet_tag }}
-    {{ 'scroll-reveal.css' | asset_url | stylesheet_tag }}
+
+    {% comment %}
+      Non-critical CSS (not needed for first paint — quick view only opens on
+      click, back-to-top only appears after scrolling, scroll-reveal only
+      matters once elements approach the viewport): loaded without blocking
+      render via the preload+swap pattern, with a <noscript> fallback.
+    {% endcomment %}
+    {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
+    {% for file in non_critical_css %}
+      <link rel="preload" href="{{ file | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
+    {% endfor %}
+
     {% comment %}
       featured-collection.css holds the shared .j-product-card / .j-wishlist-button
       component styles used by every product grid (collection, search, product
