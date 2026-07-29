@@ -105,49 +105,58 @@
 
 .j-footer__newsletter-field {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  align-items: center;
+  gap: 4px;
+  max-width: 420px;
+  padding: 4px 4px 4px 20px;
+  border-radius: 999px;
+  background: var(--color-white);
 }
 
 .j-footer__newsletter input {
-  flex: 1 1 180px;
+  flex: 1 1 auto;
   min-width: 0;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--color-white);
+  padding: 12px 0;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
   font-size: var(--font-size-md);
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease;
 }
 
 .j-footer__newsletter input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .j-footer__newsletter input:focus {
   outline: none;
-  border-color: var(--color-accent);
-  background: rgba(255, 255, 255, 0.12);
 }
 
 .j-footer__newsletter-submit {
-  flex: 1 1 180px;
-  white-space: nowrap;
-  background: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
   color: var(--color-primary);
+  cursor: pointer;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+    color 0.2s ease;
+}
+
+.j-footer__newsletter-submit svg {
+  width: 18px;
+  height: 18px;
 }
 
 .j-footer__newsletter-submit:hover {
   background: var(--color-accent);
   color: var(--color-white);
-  transform: translateY(-1px);
 }
 
 .j-footer__form-message {
@@ -323,21 +332,11 @@
 
 @media (max-width: 480px) {
   .j-footer__newsletter-field {
-    flex-direction: column;
-    gap: 10px;
+    width: 100%;
+    max-width: none;
   }
 
   .j-footer__newsletter input {
-    flex: 1 1 auto;
-    width: 100%;
-    padding: 12px 14px;
-    font-size: var(--font-size-sm);
-  }
-
-  .j-footer__newsletter-submit {
-    flex: 1 1 auto;
-    width: 100%;
-    padding: 12px 20px;
     font-size: var(--font-size-sm);
   }
 }
