@@ -71,11 +71,132 @@
 
         <div class="j-collection-grid">
 
-          {% for product in collection.products %}
+          {% paginate collection.products by 8, window_size: 1000 %}
+            {% for product in collection.products %}
 
-            {% render 'product-card', product: product %}
+              {% render 'product-card', product: product %}
 
-          {% endfor %}
+            {% endfor %}
+
+            {% if paginate.pages > 1 %}
+              <nav class="j-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t: default: 'Pagination' }}">
+                {% if paginate.previous %}
+                  <a href="{{ paginate.previous.url }}" class="j-pagination__arrow j-pagination__arrow--prev">
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Prev</span>
+                  </a>
+                {% else %}
+                  <span class="j-pagination__arrow j-pagination__arrow--prev is-disabled" aria-disabled="true">
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Prev</span>
+                  </span>
+                {% endif %}
+
+                {% comment %}
+                  Custom windowing: while browsing the first `front_count` pages, show
+                  1..front_count (bridging one page further only at the exact handoff to
+                  the tail block). Once within `tail_count` pages of the end, show the
+                  first page plus the last `tail_count` pages. Anything in between (only
+                  reachable when there are enough pages for a real middle) shows the
+                  first page, the current page's neighbours, and the last page.
+                {% endcomment %}
+                {% assign total_pages = paginate.pages %}
+                {% assign current = paginate.current_page %}
+                {% assign front_count = 4 %}
+                {% assign tail_count = 3 %}
+
+                {% assign tail_start = total_pages | minus: tail_count | plus: 1 %}
+                {% if tail_start < 1 %}
+                  {% assign tail_start = 1 %}
+                {% endif %}
+
+                {% assign remaining = total_pages | minus: current %}
+                {% assign mode = 'front' %}
+                {% if remaining < tail_count %}
+                  {% assign mode = 'back' %}
+                {% elsif current > front_count %}
+                  {% assign mode = 'middle' %}
+                {% endif %}
+
+                {% assign front_end = front_count %}
+                {% if front_end > total_pages %}
+                  {% assign front_end = total_pages %}
+                {% endif %}
+
+                {% assign bridge_page = front_end | plus: 1 %}
+                {% assign show_bridge = false %}
+                {% if mode == 'front' and current == front_count and bridge_page == tail_start %}
+                  {% assign show_bridge = true %}
+                {% endif %}
+
+                {% assign sib_prev = current | minus: 1 %}
+                {% assign sib_next = current | plus: 1 %}
+
+                <ul class="j-pagination__list">
+                  {% assign gap_open = false %}
+                  {% for page in (1..total_pages) %}
+                    {% assign visible = false %}
+
+                    {% case mode %}
+                      {% when 'front' %}
+                        {% if page <= front_end %}
+                          {% assign visible = true %}
+                        {% endif %}
+                        {% if show_bridge and page == bridge_page %}
+                          {% assign visible = true %}
+                        {% endif %}
+                      {% when 'back' %}
+                        {% if page == 1 or page >= tail_start %}
+                          {% assign visible = true %}
+                        {% endif %}
+                      {% when 'middle' %}
+                        {% if page == 1 or page == total_pages %}
+                          {% assign visible = true %}
+                        {% endif %}
+                        {% if page >= sib_prev and page <= sib_next %}
+                          {% assign visible = true %}
+                        {% endif %}
+                    {% endcase %}
+
+                    {% if visible %}
+                      {% assign gap_open = false %}
+                      {% assign part = paginate.parts[forloop.index0] %}
+                      <li>
+                        {% if page == current %}
+                          <span class="j-pagination__item j-pagination__item--current" aria-current="page">{{ page }}</span>
+                        {% else %}
+                          <a href="{{ part.url }}" class="j-pagination__item">{{ page }}</a>
+                        {% endif %}
+                      </li>
+                    {% elsif gap_open == false %}
+                      <li><span class="j-pagination__item j-pagination__item--gap">…</span></li>
+                      {% assign gap_open = true %}
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+
+                {% if paginate.next %}
+                  <a href="{{ paginate.next.url }}" class="j-pagination__arrow j-pagination__arrow--next">
+                    <span>Next</span>
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                {% else %}
+                  <span class="j-pagination__arrow j-pagination__arrow--next is-disabled" aria-disabled="true">
+                    <span>Next</span>
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                {% endif %}
+              </nav>
+            {% endif %}
+          {% endpaginate %}
 
         </div>
 

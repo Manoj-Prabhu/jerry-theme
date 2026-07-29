@@ -8,7 +8,7 @@
 <h1>{{ collection.title }}</h1>
 
 <div class="collection-products">
-  {% paginate collection.products by 20 %}
+  {% paginate collection.products by 10 %}
     {% for product in collection.products %}
       <div class="collection-product">
         {% if product.featured_image %}
