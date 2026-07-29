@@ -40,7 +40,11 @@
 
       <p class="j-cart-page__shipping-message">
         {% if free_shipping_unlocked %}
-          🎉 You've unlocked free shipping!
+          <span class="j-cart-page__shipping-emoji is-bursting">
+            🎉
+            <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
+            <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
+          </span> You've unlocked free shipping!
         {% else %}
           Add <strong>{{ remaining_cents | money }}</strong> more to unlock free shipping
         {% endif %}

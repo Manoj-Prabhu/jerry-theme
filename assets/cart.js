@@ -112,6 +112,59 @@ document.addEventListener("DOMContentLoaded", () => {
   // Money
   // -------------------------
 
+  const CONFETTI_COLORS = ["#ffd166", "#ef476f", "#06d6a0", "#118ab2", "#ffffff"];
+
+  function launchConfetti(originEl) {
+    if (!originEl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const rect = originEl.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+
+    const container = document.createElement("div");
+    container.className = "j-confetti-burst";
+    document.body.appendChild(container);
+
+    const pieceCount = 34;
+
+    for (let i = 0; i < pieceCount; i++) {
+      const piece = document.createElement("i");
+      piece.className = "j-confetti-piece";
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 60 + Math.random() * 120;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance - 40;
+      const fall = 140 + Math.random() * 160;
+      const rotate = Math.random() * 720 - 360;
+      const size = 5 + Math.random() * 5;
+      const duration = 900 + Math.random() * 500;
+      const delay = Math.random() * 80;
+      const color =
+        CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+      const isCircle = Math.random() > 0.5;
+
+      piece.style.left = `${originX}px`;
+      piece.style.top = `${originY}px`;
+      piece.style.width = `${size}px`;
+      piece.style.height = `${size * (isCircle ? 1 : 1.6)}px`;
+      piece.style.background = color;
+      piece.style.borderRadius = isCircle ? "50%" : "1px";
+      piece.style.setProperty("--tx", `${tx}px`);
+      piece.style.setProperty("--ty", `${ty}px`);
+      piece.style.setProperty("--fall", `${fall}px`);
+      piece.style.setProperty("--rotate", `${rotate}deg`);
+      piece.style.animationDuration = `${duration}ms`;
+      piece.style.animationDelay = `${delay}ms`;
+
+      container.appendChild(piece);
+    }
+
+    setTimeout(() => container.remove(), 1600);
+  }
+
   function formatMoney(cents) {
     return `$${(cents / 100).toFixed(2)}`;
   }
@@ -258,13 +311,28 @@ document.addEventListener("DOMContentLoaded", () => {
         ? 100
         : Math.min(100, (cart.total_price / threshold) * 100);
 
+      const justUnlocked = unlocked && !bar.classList.contains("is-unlocked");
       bar.classList.toggle("is-unlocked", unlocked);
 
       const message = bar.querySelector(".j-cart-page__shipping-message");
       if (message) {
         message.innerHTML = unlocked
-          ? "🎉 You've unlocked free shipping!"
+          ? `<span class="j-cart-page__shipping-emoji">
+              🎉
+              <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
+              <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
+            </span> You've unlocked free shipping!`
           : `Add <strong>${formatMoney(remaining)}</strong> more to unlock free shipping`;
+      }
+
+      if (justUnlocked) {
+        const emoji = bar.querySelector(".j-cart-page__shipping-emoji");
+        if (emoji) {
+          emoji.classList.remove("is-bursting");
+          void emoji.offsetWidth;
+          emoji.classList.add("is-bursting");
+          launchConfetti(emoji);
+        }
       }
 
       const fill = bar.querySelector(".j-cart-page__shipping-fill");
