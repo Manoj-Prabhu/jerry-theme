@@ -52,6 +52,35 @@
   gap: 20px;
 }
 
+/* Trust Row */
+
+.j-hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 36px;
+}
+
+.j-hero__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+}
+
+.j-hero__trust-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.j-hero__trust-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* Right Side */
 
 .j-hero__image {
