@@ -3,6 +3,37 @@
     "hero": {
       "type": "hero"
     },
+    "shop_by_category": {
+      "type": "shop-by-category",
+      "blocks": {
+        "cat-1": {
+          "type": "category",
+          "settings": {
+            "title": "New Arrivals"
+          }
+        },
+        "cat-2": {
+          "type": "category",
+          "settings": {
+            "title": "Best Sellers"
+          }
+        },
+        "cat-3": {
+          "type": "category",
+          "settings": {
+            "title": "Accessories"
+          }
+        },
+        "cat-4": {
+          "type": "category",
+          "settings": {
+            "title": "Sale"
+          }
+        }
+      },
+      "block_order": ["cat-1", "cat-2", "cat-3", "cat-4"],
+      "settings": {}
+    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -14,6 +45,7 @@
   },
   "order": [
     "hero",
+    "shop_by_category",
     "featured_collection"
   ]
 }
