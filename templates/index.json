@@ -41,11 +41,46 @@
         "description": "Hand-picked products you'll love.",
         "products_to_show": 4
       }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "review-1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "This shop exceeded my expectations. Fast shipping, great quality, and excellent customer service.",
+            "name": "Jane Doe",
+            "role": "Verified Buyer"
+          }
+        },
+        "review-2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Beautifully made products and the packaging felt so premium. Will definitely order again.",
+            "name": "Alex Rivera",
+            "role": "Verified Buyer"
+          }
+        },
+        "review-3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 4,
+            "quote": "Great selection and easy checkout. Delivery was quicker than expected too.",
+            "name": "Sam Chen",
+            "role": "Verified Buyer"
+          }
+        }
+      },
+      "block_order": ["review-1", "review-2", "review-3"],
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "shop_by_category",
-    "featured_collection"
+    "featured_collection",
+    "testimonials"
   ]
 }

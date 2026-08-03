@@ -70,6 +70,7 @@
     {% if template.name == 'index' %}
       {{ 'hero.css' | asset_url | stylesheet_tag }}
       {{ 'shop-by-category.css' | asset_url | stylesheet_tag }}
+      {{ 'testimonials.css' | asset_url | stylesheet_tag }}
     {% endif %}
     {% if template.name == 'product' %}
       {{ 'product.css' | asset_url | stylesheet_tag }}

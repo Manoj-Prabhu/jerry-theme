@@ -1,0 +1,97 @@
+/* ==========================================================
+   Jerry Theme Testimonials
+========================================================== */
+
+.j-testimonials {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: var(--container-width);
+  margin: 80px auto;
+  padding: 0 var(--space-8);
+}
+
+.j-testimonials__heading {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.j-testimonials__heading p {
+  color: var(--color-text-light);
+  margin-top: 8px;
+}
+
+.j-testimonials__grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.j-testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.j-testimonial-card__stars {
+  display: flex;
+  gap: 2px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.j-testimonial-card__quote {
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.7;
+  font-style: normal;
+}
+
+.j-testimonial-card__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.j-testimonial-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.j-testimonial-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-testimonial-card__avatar-initial {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+}
+
+.j-testimonial-card__author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.j-testimonial-card__name {
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+}
+
+.j-testimonial-card__role {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+}

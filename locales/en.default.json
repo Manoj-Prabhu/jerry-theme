@@ -213,7 +213,13 @@
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
     "recommendations_title": "You may also like",
-    "recently_viewed_title": "Recently Viewed"
+    "recently_viewed_title": "Recently Viewed",
+    "rating_label_html": "{{ rating }} out of 5 stars",
+    "rating_count": {
+      "one": "{{ count }} review",
+      "other": "{{ count }} reviews"
+    },
+    "more_colors": "+{{ count }} more"
   },
   "announcement": {
     "close": "Close announcement"

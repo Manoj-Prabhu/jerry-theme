@@ -44,6 +44,34 @@
 
       <h3>{{ product.title }}</h3>
 
+      {% assign rating = product.metafields.custom.rating.value %}
+      {% if rating %}
+        {% assign rating_count = product.metafields.custom.rating_count.value %}
+        <div class="j-product-card__rating">
+          <span class="visually-hidden">
+            {{ 'product.rating_label_html' | t: rating: rating.rating }}
+            {% if rating_count %}
+              ({{ 'product.rating_count' | t: count: rating_count }})
+            {% endif %}
+          </span>
+          <span class="j-product-card__stars" aria-hidden="true">
+            {% for i in (1..5) %}
+              {% assign star_fill = rating.rating | minus: forloop.index0 %}
+              {% if star_fill > 1 %}
+                {% assign star_fill = 1 %}
+              {% elsif star_fill < 0 %}
+                {% assign star_fill = 0 %}
+              {% endif %}
+              {% assign star_fill_percent = star_fill | times: 100 %}
+              <span class="j-star" style="--fill: {{ star_fill_percent }}%;">★</span>
+            {% endfor %}
+          </span>
+          {% if rating_count %}
+            <span class="j-product-card__rating-count" aria-hidden="true">({{ rating_count }})</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
       <div class="j-product-card__price">
 
         {% if product.compare_at_price > product.price %}
@@ -65,6 +93,34 @@
         {% endif %}
 
       </div>
+
+      {% assign color_option = null %}
+      {% for option in product.options_with_values %}
+        {% assign option_name_down = option.name | downcase %}
+        {% if option_name_down == 'color' or option_name_down == 'colour' %}
+          {% assign color_option = option %}
+        {% endif %}
+      {% endfor %}
+
+      {% if color_option %}
+        {% assign swatch_limit = 4 %}
+        <div class="j-product-card__swatches">
+          {% for value in color_option.values limit: swatch_limit %}
+            {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+            <span
+              class="j-product-card__swatch"
+              style="background-color: {{ color_key }};"
+              title="{{ value | escape }}"
+            ></span>
+          {% endfor %}
+          {% assign remaining_colors = color_option.values.size | minus: swatch_limit %}
+          {% if remaining_colors > 0 %}
+            <span class="j-product-card__swatch-more">
+              {{ 'product.more_colors' | t: count: remaining_colors }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
 
     </div>
 
