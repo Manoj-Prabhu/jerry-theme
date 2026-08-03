@@ -2,12 +2,12 @@
 
   <div class="j-cart-overlay"></div>
 
-  <aside class="j-cart">
+  <aside class="j-cart" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
 
     <!-- Header -->
     <div class="j-cart__header">
 
-      <h2>{{ 'cart.drawer_title' | t }}</h2>
+      <h2 id="CartDrawerTitle">{{ 'cart.drawer_title' | t }}</h2>
 
       <button
         type="button"

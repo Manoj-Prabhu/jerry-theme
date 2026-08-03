@@ -144,6 +144,10 @@
       placeholder="{{ 'header.search_placeholder' | t }}"
       autocomplete="off"
       id="PredictiveSearchInput"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="PredictiveSearchResults"
+      aria-autocomplete="list"
     >
 
     <svg class="j-search-form__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -154,6 +158,8 @@
     <div
       class="j-predictive-search"
       id="PredictiveSearchResults"
+      role="listbox"
+      aria-live="polite"
     ></div>
 
   </form>
@@ -205,6 +211,8 @@
       type="button"
       class="j-header__cart"
       aria-label="{{ 'header.cart_open' | t }}"
+      aria-expanded="false"
+      aria-controls="CartDrawer"
     >
 
       {{ 'icon-cart.svg' | inline_asset_content }}

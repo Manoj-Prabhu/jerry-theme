@@ -130,12 +130,48 @@ class JerryHeader {
 
     const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
 
+    let lastMenuTrigger = null;
+
+    const getNavFocusable = () =>
+      Array.from(
+        nav.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null);
+
+    const trapNavFocus = (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = getNavFocusable();
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
     const openMenu = () => {
+      lastMenuTrigger = document.activeElement;
       nav.classList.add("is-open");
       overlay.classList.add("is-open");
       toggle.classList.add("is-open");
       toggle.setAttribute("aria-expanded", "true");
       document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", trapNavFocus);
+
+      if (closeButton) closeButton.focus();
     };
 
     const closeMenu = () => {
@@ -144,10 +180,16 @@ class JerryHeader {
       toggle.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", trapNavFocus);
 
       nav.querySelectorAll(".j-nav-item.is-open").forEach((item) => {
         item.classList.remove("is-open");
       });
+
+      if (lastMenuTrigger) {
+        lastMenuTrigger.focus();
+        lastMenuTrigger = null;
+      }
     };
 
     toggle.addEventListener("click", () => {
@@ -163,10 +205,6 @@ class JerryHeader {
     }
 
     overlay.addEventListener("click", closeMenu);
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeMenu();
-    });
 
     window.addEventListener("resize", () => {
       if (!isMobile()) closeMenu();

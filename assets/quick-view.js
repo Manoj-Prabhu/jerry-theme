@@ -133,6 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedVariant = null;
     selectedQuantity = 1;
 
+    const main = document.getElementById("MainContent");
+    if (main) main.removeAttribute("aria-hidden");
+
     document.removeEventListener("keydown", trapFocus);
 
     if (lastFocusedTrigger) {
@@ -513,6 +516,9 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
 
         modal.classList.add("is-open");
+
+        const main = document.getElementById("MainContent");
+        if (main) main.setAttribute("aria-hidden", "true");
 
         lastFocusedTrigger = button;
         document.addEventListener("keydown", trapFocus);

@@ -26,11 +26,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
 
+  let lastFilterTrigger = null;
+
+  const getFilterFocusable = () =>
+    Array.from(
+      filterSidebar.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+
+  const trapFilterFocus = (event) => {
+    if (event.key === "Escape") {
+      closeFilters();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = getFilterFocusable();
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
   const openFilters = () => {
+    lastFilterTrigger = document.activeElement;
     filterSidebar.classList.add("is-open");
     filterOverlay.classList.add("is-open");
     filterToggle.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", trapFilterFocus);
+
+    if (filterClose) filterClose.focus();
   };
 
   const closeFilters = () => {
@@ -38,6 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     filterOverlay.classList.remove("is-open");
     filterToggle.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
+    document.removeEventListener("keydown", trapFilterFocus);
+
+    if (lastFilterTrigger) {
+      lastFilterTrigger.focus();
+      lastFilterTrigger = null;
+    }
   };
 
   filterToggle.addEventListener("click", openFilters);
@@ -46,10 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (filterClose) {
     filterClose.addEventListener("click", closeFilters);
   }
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeFilters();
-  });
 
   window.addEventListener("resize", () => {
     if (!isMobile()) closeFilters();

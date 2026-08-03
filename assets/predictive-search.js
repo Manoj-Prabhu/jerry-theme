@@ -65,6 +65,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ==========================================================
+     Open / Close State
+  ========================================================== */
+
+  const openResults = () => {
+    results.classList.add("is-open");
+    input.setAttribute("aria-expanded", "true");
+  };
+
+  const closeResults = () => {
+    results.classList.remove("is-open");
+    input.setAttribute("aria-expanded", "false");
+  };
+
+  /* ==========================================================
      Rendering
   ========================================================== */
 
@@ -85,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const recent = getRecentSearches();
 
     if (recent.length === 0) {
-      results.classList.remove("is-open");
+      closeResults();
       results.innerHTML = "";
       return;
     }
@@ -115,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    results.classList.add("is-open");
+    openResults();
   };
 
   const runPredictiveSearch = async (query) => {
@@ -133,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (content) {
         results.innerHTML = content.innerHTML;
-        results.classList.add("is-open");
+        openResults();
       }
     } catch (error) {
       console.error(error);
@@ -201,13 +215,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".j-search-form")) {
-      results.classList.remove("is-open");
+      closeResults();
     }
   });
 
   input.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      results.classList.remove("is-open");
+      closeResults();
       input.blur();
     }
   });

@@ -54,6 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.add("j-scroll-lock");
     document.addEventListener("keydown", trapDrawerFocus);
 
+    if (cartButton) cartButton.setAttribute("aria-expanded", "true");
+    const main = document.getElementById("MainContent");
+    if (main) main.setAttribute("aria-hidden", "true");
+
     if (closeButton) closeButton.focus();
   }
 
@@ -63,6 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
     drawer.classList.remove("is-open");
     document.documentElement.classList.remove("j-scroll-lock");
     document.removeEventListener("keydown", trapDrawerFocus);
+
+    if (cartButton) cartButton.setAttribute("aria-expanded", "false");
+    const main = document.getElementById("MainContent");
+    if (main) main.removeAttribute("aria-hidden");
 
     if (lastCartTrigger) {
       lastCartTrigger.focus();
