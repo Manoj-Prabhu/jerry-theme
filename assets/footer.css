@@ -189,6 +189,126 @@
 }
 
 /* ==========================================================
+   Country / Currency Selector
+========================================================== */
+
+.j-footer__localization {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8) 32px;
+}
+
+.j-localization-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: border-color 0.2s ease;
+}
+
+.j-localization-form:focus-within {
+  border-color: var(--color-accent);
+}
+
+.j-localization-form__globe {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.j-localization-form__globe svg {
+  width: 16px;
+  height: 16px;
+}
+
+.j-localization-form__label {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.j-localization-form__field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.j-localization-form__select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0 20px 0 0;
+  margin-right: 6px;
+  border: none;
+  background: transparent;
+  color: var(--color-white);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold, 600);
+  cursor: pointer;
+}
+
+.j-localization-form__select:focus-visible {
+  outline: none;
+}
+
+.j-localization-form__select option {
+  color: var(--color-primary);
+}
+
+.j-localization-form__icon {
+  position: absolute;
+  right: 6px;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.j-localization-form__submit {
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.j-localization-form__submit:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+/* The select auto-submits on change via JS, making this button redundant
+   for JS users — keep it in the DOM as a no-JS fallback, just hidden. */
+.js .j-localization-form__submit {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================
    Social + Payment Row
 ========================================================== */
 

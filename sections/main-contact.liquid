@@ -62,7 +62,7 @@
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <path d="M4 10.5 8 14.5 16 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Thank you! Your message has been sent.
+            {{ 'contact.success' | t }}
           </p>
         {% endif %}
 
@@ -75,7 +75,7 @@
           <input
             type="text"
             name="contact[name]"
-            placeholder="Your Name"
+            placeholder="{{ 'contact.name' | t }}"
             required
           >
         </div>
@@ -88,7 +88,7 @@
           <input
             type="email"
             name="contact[email]"
-            placeholder="Your Email"
+            placeholder="{{ 'contact.email' | t }}"
             required
           >
         </div>
@@ -100,7 +100,7 @@
           <input
             type="tel"
             name="contact[phone]"
-            placeholder="Phone Number"
+            placeholder="{{ 'contact.phone' | t }}"
           >
         </div>
 
@@ -111,7 +111,7 @@
           <textarea
             name="contact[body]"
             rows="6"
-            placeholder="Your Message"
+            placeholder="{{ 'contact.message' | t }}"
             required
           ></textarea>
         </div>
@@ -120,7 +120,7 @@
           type="submit"
           class="j-button j-contact__submit"
         >
-          Send Message
+          {{ 'contact.submit' | t }}
         </button>
 
       {% endform %}

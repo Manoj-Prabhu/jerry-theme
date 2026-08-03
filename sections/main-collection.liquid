@@ -34,12 +34,12 @@
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
-              Filters
+              {{ 'filters.title' | t }}
             </button>
 
             <form id="CollectionSortForm">
               <label for="SortBy">
-                Sort By
+                {{ 'collection.sort_by' | t }}
               </label>
 
               <div class="j-collection-sort">
@@ -85,14 +85,14 @@
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>Prev</span>
+                    <span>{{ 'general.pagination.prev' | t }}</span>
                   </a>
                 {% else %}
                   <span class="j-pagination__arrow j-pagination__arrow--prev is-disabled" aria-disabled="true">
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>Prev</span>
+                    <span>{{ 'general.pagination.prev' | t }}</span>
                   </span>
                 {% endif %}
 
@@ -181,14 +181,14 @@
 
                 {% if paginate.next %}
                   <a href="{{ paginate.next.url }}" class="j-pagination__arrow j-pagination__arrow--next">
-                    <span>Next</span>
+                    <span>{{ 'general.pagination.next' | t }}</span>
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </a>
                 {% else %}
                   <span class="j-pagination__arrow j-pagination__arrow--next is-disabled" aria-disabled="true">
-                    <span>Next</span>
+                    <span>{{ 'general.pagination.next' | t }}</span>
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>

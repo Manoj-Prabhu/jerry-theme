@@ -223,6 +223,10 @@
   outline-offset: 1px;
 }
 
+.j-filter__price-input input[type="number"]:focus-visible {
+  outline: none;
+}
+
 .j-filter__price-separator {
   color: var(--color-text-light);
   font-size: var(--font-size-xs);

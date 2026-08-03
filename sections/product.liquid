@@ -86,7 +86,7 @@
       aria-live="polite"
       {% unless is_low_stock %}hidden{% endunless %}
     >
-      {% if is_low_stock %}Only {{ current_variant.inventory_quantity }} left in stock{% endif %}
+      {% if is_low_stock %}{{ 'product.low_stock_html' | t: count: current_variant.inventory_quantity }}{% endif %}
     </p>
 
     <div class="j-product__description">
@@ -179,7 +179,7 @@
       {% endif %}
 
       <label for="Quantity">
-        Quantity
+        {{ 'product.quantity' | t }}
       </label>
 
       {% assign quantity_max = null %}
@@ -203,9 +203,9 @@
         {% unless current_variant.available %}disabled{% endunless %}
       >
         {% if current_variant.available %}
-          Add to Cart
+          {{ 'product.add_to_cart' | t }}
         {% else %}
-          Sold Out
+          {{ 'product.sold_out' | t }}
         {% endif %}
       </button>
 
@@ -215,7 +215,7 @@
         id="BuyNowButton"
         {% unless current_variant.available %}disabled{% endunless %}
       >
-        Buy it now
+        {{ 'product.buy_now' | t }}
       </button>
 
       <p
@@ -260,7 +260,7 @@
       class="j-button"
       id="StickyAddToCart"
     >
-      Add to Cart
+      {{ 'product.add_to_cart' | t }}
     </button>
 
   </div>

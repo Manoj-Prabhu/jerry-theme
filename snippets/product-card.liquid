@@ -75,7 +75,7 @@
     class="j-wishlist-button"
     data-handle="{{ product.handle }}"
     data-product-title="{{ product.title | escape }}"
-    aria-label="Add {{ product.title | escape }} to Wishlist"
+    aria-label="{{ 'product.add_to_wishlist_html' | t: title: product.title | escape }}"
     aria-pressed="false"
   >
     ♡
@@ -87,7 +87,7 @@
       class="j-quick-view-button"
       data-handle="{{ product.handle }}"
     >
-      Quick View
+      {{ 'product.quick_view' | t }}
     </button>
   {% endunless %}
 

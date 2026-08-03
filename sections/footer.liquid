@@ -63,8 +63,8 @@
     {% endif %}
 
     <div class="j-footer__column j-footer__column--newsletter">
-      <h4>Newsletter</h4>
-      <p class="j-footer__newsletter-copy">Get product news and offers straight to your inbox.</p>
+      <h4>{{ 'footer.newsletter_title' | t }}</h4>
+      <p class="j-footer__newsletter-copy">{{ 'footer.newsletter_subtext' | t }}</p>
 
       {% form 'customer', class: 'j-footer__newsletter' %}
         <input
@@ -74,25 +74,31 @@
         >
 
         {% if form.posted_successfully? %}
-          <p class="j-footer__form-message j-footer__form-message--success">Thanks for subscribing!</p>
+          <p class="j-footer__form-message j-footer__form-message--success">{{ 'footer.subscribe_success' | t }}</p>
         {% elsif form.errors %}
-          <p class="j-footer__form-message j-footer__form-message--error">{{ form.errors.messages['email'] | default: 'Please enter a valid email address.' }}</p>
+          <p class="j-footer__form-message j-footer__form-message--error">
+            {% if form.errors.messages['email'] %}
+              {{ form.errors.messages['email'] }}
+            {% else %}
+              {{ 'footer.subscribe_error' | t }}
+            {% endif %}
+          </p>
         {% endif %}
 
         <div class="j-footer__newsletter-field">
-          <label for="footer-newsletter-email" class="visually-hidden">Email address</label>
+          <label for="footer-newsletter-email" class="visually-hidden">{{ 'footer.email_label' | t }}</label>
           <input
             id="footer-newsletter-email"
             type="email"
             name="contact[email]"
-            placeholder="Your email"
+            placeholder="{{ 'footer.email_placeholder' | t }}"
             autocomplete="email"
             required
           >
           <button
             type="submit"
             class="j-footer__newsletter-submit"
-            aria-label="Subscribe"
+            aria-label="{{ 'footer.subscribe' | t }}"
           >
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,6 +108,12 @@
       {% endform %}
     </div>
   </div>
+
+  {% if section.settings.show_localization_selector %}
+    <div class="j-footer__localization">
+      {% render 'localization' %}
+    </div>
+  {% endif %}
 
   <div class="j-footer__meta">
 
@@ -145,7 +157,7 @@
         © {{ 'now' | date: '%Y' }}
         {{ shop.name }}
         •
-        All rights reserved.
+        {{ 'footer.rights_reserved' | t }}
       </p>
 
   </div>
@@ -187,6 +199,12 @@
       "type": "checkbox",
       "id": "show_payment_icons",
       "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization_selector",
+      "label": "Show country/currency selector",
       "default": true
     }
   ]

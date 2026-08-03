@@ -1,6 +1,8 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
@@ -129,13 +131,13 @@
         class="j-quick-view-content"
         role="dialog"
         aria-modal="true"
-        aria-label="Quick view"
+        aria-label="{{ 'product.quick_view' | t }}"
       >
 
         <button
           class="j-quick-view-close"
           type="button"
-          aria-label="Close quick view"
+          aria-label="{{ 'product.quick_view_close' | t }}"
         >
           ✕
         </button>
@@ -157,7 +159,7 @@
       type="button"
       id="BackToTop"
       class="j-back-to-top"
-      aria-label="Back to top"
+      aria-label="{{ 'general.back_to_top' | t }}"
     >
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M5 12.5 10 7.5 15 12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>

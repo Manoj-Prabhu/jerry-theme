@@ -27,7 +27,7 @@
     </h1>
 
     <span class="j-cart-page__count">
-      {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}
+      {{ 'cart.item_count' | t: count: cart.item_count }}
     </span>
 
   </div>
@@ -44,9 +44,10 @@
             🎉
             <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
             <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
-          </span> You've unlocked free shipping!
+          </span> {{ 'cart.free_shipping_unlocked' | t }}
         {% else %}
-          Add <strong>{{ remaining_cents | money }}</strong> more to unlock free shipping
+          {% assign remaining_money = remaining_cents | money %}
+          {{ 'cart.free_shipping_remaining_html' | t: amount: remaining_money }}
         {% endif %}
       </p>
 
@@ -69,11 +70,11 @@
 
     <aside class="j-cart-page__summary">
 
-      <h2>Order Summary</h2>
+      <h2>{{ 'cart.order_summary' | t }}</h2>
 
       <div class="j-cart__subtotal">
 
-        <span>Subtotal</span>
+        <span>{{ 'cart.subtotal' | t }}</span>
 
         <strong class="j-cart-subtotal-value">
           {{ cart.total_price | money }}
@@ -82,7 +83,7 @@
       </div>
 
       <p class="j-cart-page__note">
-        Shipping and taxes calculated at checkout.
+        {{ 'cart.taxes_note' | t }}
       </p>
 
       <form action="{{ routes.cart_url }}" method="post">
@@ -97,14 +98,14 @@
 
       <p class="j-cart-page__secure">
         {{ 'icon-lock.svg' | inline_asset_content }}
-        Secure checkout
+        {{ 'cart.secure_checkout' | t }}
       </p>
 
       <a
         href="{{ routes.all_products_collection_url }}"
         class="j-cart-page__continue-link"
       >
-        Continue Shopping
+        {{ 'cart.continue_shopping' | t }}
       </a>
 
     </aside>

@@ -2,7 +2,7 @@
 
   <div class="j-collection-filters__header">
 
-    <h2>Filters</h2>
+    <h2>{{ 'filters.title' | t }}</h2>
 
     <div class="j-collection-filters__header-actions">
 
@@ -16,7 +16,7 @@
 
         {% if has_active_filters %}
           <a href="{{ collection.url }}" class="j-collection-filters__clear">
-            Clear all
+            {{ 'filters.clear_all' | t }}
           </a>
         {% endif %}
       {% endif %}
@@ -24,7 +24,7 @@
       <button
         type="button"
         class="j-collection-filters__close"
-        aria-label="Close filters"
+        aria-label="{{ 'filters.close' | t }}"
       >
         ✕
       </button>
@@ -85,23 +85,23 @@
               <div class="j-filter__price-range">
 
                 <div class="j-filter__price-input">
-                  <span>$</span>
+                  <span>{{ cart.currency.symbol }}</span>
                   <input
                     type="number"
                     name="{{ filter.min_value.param_name }}"
-                    placeholder="Min"
+                    placeholder="{{ 'filters.min' | t }}"
                     value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
                   >
                 </div>
 
-                <span class="j-filter__price-separator">to</span>
+                <span class="j-filter__price-separator">{{ 'filters.to' | t }}</span>
 
                 <div class="j-filter__price-input">
-                  <span>$</span>
+                  <span>{{ cart.currency.symbol }}</span>
                   <input
                     type="number"
                     name="{{ filter.max_value.param_name }}"
-                    placeholder="Max"
+                    placeholder="{{ 'filters.max' | t }}"
                     value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
                   >
                 </div>
@@ -120,7 +120,7 @@
       type="submit"
       class="j-button j-collection-filters__apply"
     >
-      Apply Filters
+      {{ 'filters.apply' | t }}
     </button>
 
   </form>

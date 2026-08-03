@@ -21,7 +21,21 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "drawer_title": "Your Cart",
+    "close": "Close cart",
+    "view_cart": "View Cart",
+    "order_summary": "Order Summary",
+    "subtotal": "Subtotal",
+    "taxes_note": "Shipping and taxes calculated at checkout.",
+    "secure_checkout": "Secure checkout",
+    "continue_shopping": "Continue Shopping",
+    "free_shipping_unlocked": "You've unlocked free shipping!",
+    "free_shipping_remaining_html": "Add <strong>{{ amount }}</strong> more to unlock free shipping",
+    "item_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    }
   },
   "customers": {
     "login": {
@@ -34,6 +48,44 @@
   "collections": {
     "title": "Collections"
   },
+  "collection": {
+    "sort_by": "Sort By"
+  },
+  "contact": {
+    "success": "Thank you! Your message has been sent.",
+    "name": "Your Name",
+    "email": "Your Email",
+    "phone": "Phone Number",
+    "message": "Your Message",
+    "submit": "Send Message"
+  },
+  "filters": {
+    "title": "Filters",
+    "clear_all": "Clear all",
+    "close": "Close filters",
+    "min": "Min",
+    "max": "Max",
+    "to": "to",
+    "apply": "Apply Filters"
+  },
+  "footer": {
+    "newsletter_title": "Newsletter",
+    "newsletter_subtext": "Get product news and offers straight to your inbox.",
+    "subscribe_success": "Thanks for subscribing!",
+    "subscribe_error": "Please enter a valid email address.",
+    "email_label": "Email address",
+    "email_placeholder": "Your email",
+    "subscribe": "Subscribe",
+    "rights_reserved": "All rights reserved."
+  },
+  "general": {
+    "pagination": {
+      "label": "Pagination",
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "back_to_top": "Back to top"
+  },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
     "card": "Gift card",
@@ -41,20 +93,45 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
-  "general": {
-    "pagination": {
-      "label": "Pagination"
-    }
+  "header": {
+    "menu_open": "Open menu",
+    "menu_close": "Close menu",
+    "search_placeholder": "Search products...",
+    "search": "Search",
+    "account": "Account",
+    "wishlist": "Wishlist",
+    "cart_open": "Open cart"
+  },
+  "localization": {
+    "country_label": "Country/region",
+    "shipping_to": "Shipping to",
+    "update": "Update"
   },
   "password": {
     "title": "This shop is private",
     "password": "Password",
     "enter": "Enter"
   },
+  "product": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "buy_now": "Buy it now",
+    "low_stock_html": "Only {{ count }} left in stock",
+    "quantity": "Quantity",
+    "add_to_wishlist_html": "Add {{ title }} to Wishlist",
+    "quick_view": "Quick View",
+    "quick_view_close": "Close quick view",
+    "recommendations_title": "You may also like",
+    "recently_viewed_title": "Recently Viewed"
+  },
+  "announcement": {
+    "close": "Close announcement"
+  },
   "search": {
     "title": "Search",
     "placeholder": "Search articles, pages, or products",
     "submit": "Search",
+    "no_results": "No products found.",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
   }

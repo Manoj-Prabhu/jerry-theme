@@ -7,7 +7,7 @@
   <button
     type="button"
     class="j-menu-toggle"
-    aria-label="Open menu"
+    aria-label="{{ 'header.menu_open' | t }}"
     aria-expanded="false"
     aria-controls="HeaderNav"
   >
@@ -56,7 +56,7 @@
     <button
       type="button"
       class="j-menu-close"
-      aria-label="Close menu"
+      aria-label="{{ 'header.menu_close' | t }}"
     >
       ✕
     </button>
@@ -141,7 +141,7 @@
     <input
       type="search"
       name="q"
-      placeholder="Search products..."
+      placeholder="{{ 'header.search_placeholder' | t }}"
       autocomplete="off"
       id="PredictiveSearchInput"
     >
@@ -163,7 +163,7 @@
     <button
       type="button"
       class="j-header__search-toggle"
-      aria-label="Search"
+      aria-label="{{ 'header.search' | t }}"
       aria-expanded="false"
       aria-controls="HeaderSearchForm"
     >
@@ -177,7 +177,7 @@
       <a
         href="{{ routes.account_url }}"
         class="j-header__account"
-        aria-label="Account"
+        aria-label="{{ 'header.account' | t }}"
       >
         {{ 'icon-account.svg' | inline_asset_content }}
       </a>
@@ -186,7 +186,7 @@
     <button
       type="button"
       class="j-header__wishlist"
-      aria-label="Wishlist"
+      aria-label="{{ 'header.wishlist' | t }}"
     >
 
       ♥
@@ -204,7 +204,7 @@
     <button
       type="button"
       class="j-header__cart"
-      aria-label="Open cart"
+      aria-label="{{ 'header.cart_open' | t }}"
     >
 
       {{ 'icon-cart.svg' | inline_asset_content }}

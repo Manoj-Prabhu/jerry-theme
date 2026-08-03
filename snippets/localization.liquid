@@ -1,0 +1,44 @@
+{% if localization.available_countries.size > 1 %}
+  {%- form 'localization', id: 'FooterCountryForm', class: 'j-localization-form' -%}
+    <span class="j-localization-form__globe" aria-hidden="true">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M2.5 10h15M10 2.5c2.2 2 3.5 5 3.5 7.5s-1.3 5.5-3.5 7.5c-2.2-2-3.5-5-3.5-7.5S7.8 4.5 10 2.5Z" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+    </span>
+
+    <span class="j-localization-form__label">
+      {{ 'localization.shipping_to' | t }}
+    </span>
+
+    <div class="j-localization-form__field">
+      <label for="FooterCountryFormCountry" class="visually-hidden">
+        {{ 'localization.country_label' | t }}
+      </label>
+      <select
+        id="FooterCountryFormCountry"
+        name="country_code"
+        class="j-localization-form__select"
+        onchange="this.form.submit()"
+      >
+        {%- for country in localization.available_countries -%}
+          <option
+            value="{{ country.iso_code }}"
+            {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+          >
+            {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+          </option>
+        {%- endfor -%}
+      </select>
+      <svg class="j-localization-form__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <input type="hidden" name="return_to" value="{{ request.path }}">
+
+    <button type="submit" class="j-localization-form__submit">
+      {{ 'localization.update' | t }}
+    </button>
+  {%- endform -%}
+{% endif %}

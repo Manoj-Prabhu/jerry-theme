@@ -7,12 +7,12 @@
     <!-- Header -->
     <div class="j-cart__header">
 
-      <h2>Your Cart</h2>
+      <h2>{{ 'cart.drawer_title' | t }}</h2>
 
       <button
         type="button"
         class="j-cart__close"
-        aria-label="Close cart"
+        aria-label="{{ 'cart.close' | t }}"
       >
         ×
       </button>
@@ -34,7 +34,7 @@
 
       <div class="j-cart__subtotal">
 
-        <span>Subtotal</span>
+        <span>{{ 'cart.subtotal' | t }}</span>
 
         <strong class="j-cart-subtotal-value">
           {{ cart.total_price | money }}
@@ -51,7 +51,7 @@
             tabindex="-1"
           {% endif %}
         >
-          View Cart
+          {{ 'cart.view_cart' | t }}
         </a>
       {% endunless %}
 
