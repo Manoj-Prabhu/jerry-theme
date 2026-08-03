@@ -44,6 +44,12 @@
     opacity var(--transition),
     visibility var(--transition);
 }
+/* Lock page scroll while drawer is open */
+html.j-scroll-lock,
+html.j-scroll-lock body {
+  overflow: hidden;
+  height: 100%;
+}
 
 /* Active State */
 
@@ -403,14 +409,17 @@
     opacity: 0;
   }
   35% {
-    transform: scale3d(1.6, 1.6, 1) rotateX(-30deg) rotateY(40deg) rotateZ(-18deg);
+    transform: scale3d(1.6, 1.6, 1) rotateX(-30deg) rotateY(40deg)
+      rotateZ(-18deg);
     opacity: 1;
   }
   60% {
-    transform: scale3d(0.85, 0.85, 1) rotateX(18deg) rotateY(-22deg) rotateZ(10deg);
+    transform: scale3d(0.85, 0.85, 1) rotateX(18deg) rotateY(-22deg)
+      rotateZ(10deg);
   }
   80% {
-    transform: scale3d(1.08, 1.08, 1) rotateX(-8deg) rotateY(10deg) rotateZ(-5deg);
+    transform: scale3d(1.08, 1.08, 1) rotateX(-8deg) rotateY(10deg)
+      rotateZ(-5deg);
   }
   100% {
     transform: scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0);
@@ -528,11 +537,13 @@
     opacity: 1;
   }
   30% {
-    transform: translate3d(var(--tx), var(--ty), 0) rotate(calc(var(--rotate) * 0.4));
+    transform: translate3d(var(--tx), var(--ty), 0)
+      rotate(calc(var(--rotate) * 0.4));
     opacity: 1;
   }
   100% {
-    transform: translate3d(var(--tx), calc(var(--ty) + var(--fall)), 0) rotate(var(--rotate));
+    transform: translate3d(var(--tx), calc(var(--ty) + var(--fall)), 0)
+      rotate(var(--rotate));
     opacity: 0;
   }
 }

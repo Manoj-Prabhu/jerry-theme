@@ -102,6 +102,16 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+    {% # theme-check-disable RemoteAsset %}
+    <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@2/rive.min.js" defer="defer"></script>
+    {% # theme-check-enable RemoteAsset %}
+    <script>
+      window.jerryMascotConfig = {
+        src: {{ 'mascot-cat.riv' | asset_url | json }},
+        stateMachine: "State Machine 1",
+      };
+    </script>
+    <script src="{{ 'mascot.js' | asset_url }}" defer="defer"></script>
     {% if template.name == 'product' %}
       <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'product-variants.js' | asset_url }}" defer="defer"></script>

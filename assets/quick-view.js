@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedVariant = null;
   let selectedQuantity = 1;
   let lastFocusedTrigger = null;
+  let mascotInstance = null;
+
+  function cleanupMascot() {
+    if (mascotInstance) {
+      mascotInstance.cleanup();
+      mascotInstance = null;
+    }
+  }
 
   function getFocusableElements() {
     return Array.from(
@@ -118,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeModal() {
+    cleanupMascot();
     modal.classList.remove("is-open");
     content.innerHTML = "";
     currentProduct = null;
@@ -279,14 +288,20 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
 
-          <button
-            type="button"
-            class="j-button j-quick-view-add"
-            id="QuickViewAddButton"
-            ${!variant.available ? "disabled" : ""}
-          >
-            ${variant.available ? "Add to Cart" : "Sold Out"}
-          </button>
+          <div class="j-quick-view__add-wrap ${!variant.available ? "is-sold-out" : ""}">
+            <div class="j-quick-view__mascot">
+              <canvas id="QuickViewMascotCanvas" width="144" height="144"></canvas>
+            </div>
+
+            <button
+              type="button"
+              class="j-button j-quick-view-add"
+              id="QuickViewAddButton"
+              ${!variant.available ? "disabled" : ""}
+            >
+              ${variant.available ? "Add to Cart" : "Sold Out"}
+            </button>
+          </div>
 
           <p class="j-quick-view__form-error" id="QuickViewFormError" role="alert" hidden></p>
 
@@ -310,6 +325,12 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     attachContentEvents();
+
+    cleanupMascot();
+    if (typeof window.jerryMascotMount === "function") {
+      const mascotCanvas = document.getElementById("QuickViewMascotCanvas");
+      if (mascotCanvas) mascotInstance = window.jerryMascotMount(mascotCanvas);
+    }
   }
 
   // -------------------------
@@ -408,6 +429,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const quantity = Number(qtyInput.value) || 1;
 
+        // --- ADD THIS: capture the cat in a box on click ---
+        const mascotEl = document.querySelector(".j-quick-view__mascot");
+        if (mascotEl) {
+          // Read wherever the cat currently is mid-pace so the cage
+          // drops around its actual position, not a reset one.
+          const currentTransform = getComputedStyle(mascotEl).transform;
+          let captureX = 0;
+
+          if (currentTransform && currentTransform !== "none") {
+            const matrix = new DOMMatrixReadOnly(currentTransform);
+            captureX = matrix.m41; // translateX component
+          }
+
+          mascotEl.style.setProperty("--capture-x", `${captureX}px`);
+          mascotEl.classList.remove("is-captured");
+          void mascotEl.offsetWidth; // force reflow to restart animation
+          mascotEl.classList.add("is-captured");
+        }
+        // --- END ADD ---
+
         try {
           addButton.disabled = true;
           addButton.textContent = "Adding...";
@@ -443,6 +484,11 @@ document.addEventListener("DOMContentLoaded", () => {
           formError.hidden = false;
           addButton.disabled = false;
           addButton.textContent = "Add to Cart";
+
+          // --- ADD THIS: release the cat if add-to-cart failed ---
+          const mascotEl = document.querySelector(".j-quick-view__mascot");
+          if (mascotEl) mascotEl.classList.remove("is-captured");
+          // --- END ADD ---
         }
       });
     }

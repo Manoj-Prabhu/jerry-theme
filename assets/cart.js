@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     lastCartTrigger = document.activeElement;
     drawer.classList.add("is-open");
+    document.documentElement.classList.add("j-scroll-lock");
     document.addEventListener("keydown", trapDrawerFocus);
 
     if (closeButton) closeButton.focus();
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!drawer) return;
 
     drawer.classList.remove("is-open");
+    document.documentElement.classList.remove("j-scroll-lock");
     document.removeEventListener("keydown", trapDrawerFocus);
 
     if (lastCartTrigger) {
