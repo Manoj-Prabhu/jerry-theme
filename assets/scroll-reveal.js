@@ -4,7 +4,7 @@
    viewport. Skipped entirely for prefers-reduced-motion.
 ========================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+function initScrollReveal() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   if (!("IntersectionObserver" in window)) return;
@@ -51,4 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sectionTargets.forEach((el) => observer.observe(el));
   cardTargets.forEach((el) => observer.observe(el));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Elements render fully visible until these reveal classes are applied,
+  // so deferring to idle time only delays the enter animation slightly —
+  // it never leaves content stuck hidden — while keeping this DOM scan
+  // off the critical main-thread work during page load.
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(initScrollReveal, { timeout: 2000 });
+  } else {
+    setTimeout(initScrollReveal, 200);
+  }
 });

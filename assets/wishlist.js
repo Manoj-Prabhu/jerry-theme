@@ -49,8 +49,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // (predictive search results, product recommendations, etc.)
   window.JerryWishlist = { sync: syncWishlistButtons };
 
-  syncWishlistButtons();
-  updateWishlistCount();
+  // The initial DOM scan isn't needed for first paint (buttons render in
+  // their default "not wishlisted" state either way) — deferring it to
+  // idle time keeps it off the critical main-thread work during load.
+  const runInitialSync = () => {
+    syncWishlistButtons();
+    updateWishlistCount();
+  };
+
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(runInitialSync, { timeout: 2000 });
+  } else {
+    setTimeout(runInitialSync, 200);
+  }
 
   document.addEventListener("click", (event) => {
     const button = event.target.closest(".j-wishlist-button");
