@@ -66,7 +66,20 @@
     <div
       class="j-cart-items j-cart-page__items"
       data-continue-shopping-url="{{ routes.all_products_collection_url }}"
-    ></div>
+    >
+      {% if cart.item_count == 0 %}
+        <p class="j-cart__empty">
+          {{ 'cart.empty' | t }}
+        </p>
+        <a href="{{ routes.all_products_collection_url }}" class="j-button j-cart__continue">
+          {{ 'cart.continue_shopping' | t }}
+        </a>
+      {% else %}
+        {% for item in cart.items %}
+          {% render 'cart-item', item: item, priority: forloop.first %}
+        {% endfor %}
+      {% endif %}
+    </div>
 
     <aside class="j-cart-page__summary">
 

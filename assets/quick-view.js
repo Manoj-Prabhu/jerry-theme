@@ -23,6 +23,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  let mascotAssetsPromise = null;
+
+  // Loads the Rive runtime + mascot.js on first use only, instead of on
+  // every page load — the mascot only ever appears inside this modal,
+  // so there's no reason to ship ~37KB of animation library to visitors
+  // who never open Quick View.
+  function loadMascotAssets() {
+    const config = window.jerryMascotConfig;
+    if (!config || !config.riveUrl || !config.scriptUrl) {
+      return Promise.reject(new Error("[mascot] config missing"));
+    }
+
+    if (mascotAssetsPromise) return mascotAssetsPromise;
+
+    mascotAssetsPromise = new Promise((resolve, reject) => {
+      const riveScript = document.createElement("script");
+      riveScript.src = config.riveUrl;
+      riveScript.onload = () => {
+        const mascotScript = document.createElement("script");
+        mascotScript.src = config.scriptUrl;
+        mascotScript.onload = resolve;
+        mascotScript.onerror = reject;
+        document.head.appendChild(mascotScript);
+      };
+      riveScript.onerror = reject;
+      document.head.appendChild(riveScript);
+    });
+
+    return mascotAssetsPromise;
+  }
+
   function getFocusableElements() {
     return Array.from(
       modal.querySelectorAll(
@@ -59,7 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
 
   function formatMoney(cents) {
-    return `$${(cents / 100).toFixed(2)}`;
+    return window.formatMoney
+      ? window.formatMoney(cents)
+      : `$${(cents / 100).toFixed(2)}`;
   }
 
   function normalizeSrc(src) {
@@ -330,9 +363,17 @@ document.addEventListener("DOMContentLoaded", () => {
     attachContentEvents();
 
     cleanupMascot();
-    if (typeof window.jerryMascotMount === "function") {
-      const mascotCanvas = document.getElementById("QuickViewMascotCanvas");
-      if (mascotCanvas) mascotInstance = window.jerryMascotMount(mascotCanvas);
+    const mascotCanvas = document.getElementById("QuickViewMascotCanvas");
+    if (mascotCanvas) {
+      loadMascotAssets()
+        .then(() => {
+          if (typeof window.jerryMascotMount === "function") {
+            mascotInstance = window.jerryMascotMount(mascotCanvas);
+          }
+        })
+        .catch((error) => {
+          console.warn("[mascot] failed to load animation assets:", error);
+        });
     }
   }
 

@@ -2,6 +2,18 @@
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+    <script>
+      window.themeMoneyFormat = {{ shop.money_format | json }};
+      window.themeStrings = {
+        cartItemCountOne: {{ 'cart.item_count' | t: count: 1 | json }},
+        cartItemCountOther: {{ 'cart.item_count' | t: count: 2 | json }},
+        cartEmpty: {{ 'cart.empty' | t | json }},
+        cartContinueShopping: {{ 'cart.continue_shopping' | t | json }},
+        cartRemoveItemHtml: {{ 'cart.remove_item_html' | t: title: '__TITLE__' | json }},
+        cartDecreaseQuantity: {{ 'cart.decrease_quantity' | t | json }},
+        cartIncreaseQuantity: {{ 'cart.increase_quantity' | t | json }}
+      };
+    </script>
 
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
@@ -109,16 +121,14 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
-    {% # theme-check-disable RemoteAsset %}
-    <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@2/rive.min.js" defer="defer"></script>
-    {% # theme-check-enable RemoteAsset %}
     <script>
       window.jerryMascotConfig = {
         src: {{ 'mascot-cat.riv' | asset_url | json }},
         stateMachine: "State Machine 1",
+        riveUrl: "https://cdn.jsdelivr.net/npm/@rive-app/canvas@2/rive.min.js",
+        scriptUrl: {{ 'mascot.js' | asset_url | json }},
       };
     </script>
-    <script src="{{ 'mascot.js' | asset_url }}" defer="defer"></script>
     {% if template.name == 'product' %}
       <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'product-variants.js' | asset_url }}" defer="defer"></script>

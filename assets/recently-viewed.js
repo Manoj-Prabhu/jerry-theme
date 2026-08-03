@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             <div class="j-product-card__content">
 
-              <h3>${product.title}</h3>
+              <h2>${product.title}</h2>
 
               <div class="j-product-card__price">
-                $${(product.price / 100).toFixed(2)}
+                ${window.formatMoney ? window.formatMoney(product.price) : `$${(product.price / 100).toFixed(2)}`}
               </div>
 
             </div>

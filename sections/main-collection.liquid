@@ -81,18 +81,27 @@
             {% if paginate.pages > 1 %}
               <nav class="j-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t: default: 'Pagination' }}">
                 {% if paginate.previous %}
-                  <a href="{{ paginate.previous.url }}" class="j-pagination__arrow j-pagination__arrow--prev">
+                  <a
+                    href="{{ paginate.previous.url }}"
+                    class="j-pagination__arrow j-pagination__arrow--prev"
+                    aria-label="{{ 'general.pagination.prev' | t }}"
+                  >
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>{{ 'general.pagination.prev' | t }}</span>
+                    <span aria-hidden="true">{{ 'general.pagination.prev' | t }}</span>
                   </a>
                 {% else %}
-                  <span class="j-pagination__arrow j-pagination__arrow--prev is-disabled" aria-disabled="true">
+                  <span
+                    class="j-pagination__arrow j-pagination__arrow--prev is-disabled"
+                    role="link"
+                    aria-disabled="true"
+                    aria-label="{{ 'general.pagination.prev' | t }}"
+                  >
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>{{ 'general.pagination.prev' | t }}</span>
+                    <span aria-hidden="true">{{ 'general.pagination.prev' | t }}</span>
                   </span>
                 {% endif %}
 
@@ -180,15 +189,24 @@
                 </ul>
 
                 {% if paginate.next %}
-                  <a href="{{ paginate.next.url }}" class="j-pagination__arrow j-pagination__arrow--next">
-                    <span>{{ 'general.pagination.next' | t }}</span>
+                  <a
+                    href="{{ paginate.next.url }}"
+                    class="j-pagination__arrow j-pagination__arrow--next"
+                    aria-label="{{ 'general.pagination.next' | t }}"
+                  >
+                    <span aria-hidden="true">{{ 'general.pagination.next' | t }}</span>
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </a>
                 {% else %}
-                  <span class="j-pagination__arrow j-pagination__arrow--next is-disabled" aria-disabled="true">
-                    <span>{{ 'general.pagination.next' | t }}</span>
+                  <span
+                    class="j-pagination__arrow j-pagination__arrow--next is-disabled"
+                    role="link"
+                    aria-disabled="true"
+                    aria-label="{{ 'general.pagination.next' | t }}"
+                  >
+                    <span aria-hidden="true">{{ 'general.pagination.next' | t }}</span>
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>

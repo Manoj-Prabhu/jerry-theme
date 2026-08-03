@@ -138,7 +138,7 @@
   padding: 24px;
 }
 
-.j-product-card__content h3 {
+.j-product-card__content h2 {
   font-size: 20px;
   color: var(--color-primary);
   margin-bottom: 14px;

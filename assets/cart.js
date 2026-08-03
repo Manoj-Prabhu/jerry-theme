@@ -176,7 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatMoney(cents) {
-    return `$${(cents / 100).toFixed(2)}`;
+    return window.formatMoney
+      ? window.formatMoney(cents)
+      : `$${(cents / 100).toFixed(2)}`;
   }
 
   // -------------------------
@@ -200,18 +202,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
 
   function renderCartItems(cartItems, cart) {
+    const strings = window.themeStrings || {};
+
     if (cart.items.length === 0) {
       const continueUrl = cartItems.dataset.continueShoppingUrl || "/";
+      const emptyText = strings.cartEmpty || "Your cart is empty.";
+      const continueText = strings.cartContinueShopping || "Continue Shopping";
 
       cartItems.innerHTML = `
         <p class="j-cart__empty">
-          Your cart is empty.
+          ${emptyText}
         </p>
         <a href="${continueUrl}" class="j-button j-cart__continue">
-          Continue Shopping
+          ${continueText}
         </a>
       `;
     } else {
+      const removeTemplate = strings.cartRemoveItemHtml || "Remove __TITLE__";
+      const decreaseText = strings.cartDecreaseQuantity || "Decrease quantity";
+      const increaseText = strings.cartIncreaseQuantity || "Increase quantity";
+
       cartItems.innerHTML = cart.items
         .map(
           (item) => `
@@ -222,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
               src="${item.image}"
               alt="${item.product_title}"
               width="80"
+              height="80"
             >
           </div>
 
@@ -233,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <button
                 class="j-cart-remove"
                 data-key="${item.key}"
-                aria-label="Remove ${item.product_title}"
+                aria-label="${removeTemplate.replace("__TITLE__", item.product_title)}"
               >
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
@@ -255,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 class="j-cart-qty-minus"
                 data-key="${item.key}"
                 data-quantity="${item.quantity}"
-                aria-label="Decrease quantity"
+                aria-label="${decreaseText}"
               >
                 −
               </button>
@@ -266,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 class="j-cart-qty-plus"
                 data-key="${item.key}"
                 data-quantity="${item.quantity}"
-                aria-label="Increase quantity"
+                aria-label="${increaseText}"
               >
                 +
               </button>
@@ -308,7 +319,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll(".j-cart-page__count").forEach((count) => {
-      count.textContent = `${cart.item_count} ${cart.item_count === 1 ? "item" : "items"}`;
+      const strings = window.themeStrings || {};
+      const template =
+        cart.item_count === 1
+          ? strings.cartItemCountOne || `${cart.item_count} item`
+          : strings.cartItemCountOther || `${cart.item_count} items`;
+
+      count.textContent = template.replace(/\d+/, cart.item_count);
     });
 
     document.querySelectorAll(".j-cart-page__shipping-bar").forEach((bar) => {
@@ -578,9 +595,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // -------------------------
-  // Initial Load
-  // -------------------------
-
-  refreshCart();
+  // Initial cart state (items, subtotal, header count, free-shipping bar)
+  // is already server-rendered by Liquid on page load — refreshCart()
+  // only needs to run after an actual mutation (add/remove/quantity
+  // change), which each of those handlers already triggers itself.
 });

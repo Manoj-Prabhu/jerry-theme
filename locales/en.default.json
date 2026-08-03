@@ -35,7 +35,11 @@
     "item_count": {
       "one": "{{ count }} item",
       "other": "{{ count }} items"
-    }
+    },
+    "empty": "Your cart is empty.",
+    "remove_item_html": "Remove {{ title }}",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity"
   },
   "customers": {
     "login": {
