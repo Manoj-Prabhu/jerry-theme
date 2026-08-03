@@ -1,0 +1,127 @@
+{% comment %}
+  Renders the shared field set for a customer_address form.
+  Accepts:
+  - form: the customer_address form object
+  - id: a unique suffix so field ids don't collide across multiple forms on one page
+{% endcomment %}
+
+<div class="j-account__row">
+  <div class="j-account__field">
+    <label for="AddressFirstName{{ id }}">{{ 'customers.addresses.first_name' | t }}</label>
+    <input
+      type="text"
+      name="address[first_name]"
+      id="AddressFirstName{{ id }}"
+      value="{{ form.first_name }}"
+      autocomplete="given-name"
+    >
+  </div>
+
+  <div class="j-account__field">
+    <label for="AddressLastName{{ id }}">{{ 'customers.addresses.last_name' | t }}</label>
+    <input
+      type="text"
+      name="address[last_name]"
+      id="AddressLastName{{ id }}"
+      value="{{ form.last_name }}"
+      autocomplete="family-name"
+    >
+  </div>
+</div>
+
+<div class="j-account__field">
+  <label for="AddressCompany{{ id }}">{{ 'customers.addresses.company' | t }}</label>
+  <input
+    type="text"
+    name="address[company]"
+    id="AddressCompany{{ id }}"
+    value="{{ form.company }}"
+    autocomplete="organization"
+  >
+</div>
+
+<div class="j-account__field">
+  <label for="AddressAddress1{{ id }}">{{ 'customers.addresses.address1' | t }}</label>
+  <input
+    type="text"
+    name="address[address1]"
+    id="AddressAddress1{{ id }}"
+    value="{{ form.address1 }}"
+    autocomplete="address-line1"
+  >
+</div>
+
+<div class="j-account__field">
+  <label for="AddressAddress2{{ id }}">{{ 'customers.addresses.address2' | t }}</label>
+  <input
+    type="text"
+    name="address[address2]"
+    id="AddressAddress2{{ id }}"
+    value="{{ form.address2 }}"
+    autocomplete="address-line2"
+  >
+</div>
+
+<div class="j-account__row">
+  <div class="j-account__field">
+    <label for="AddressCity{{ id }}">{{ 'customers.addresses.city' | t }}</label>
+    <input
+      type="text"
+      name="address[city]"
+      id="AddressCity{{ id }}"
+      value="{{ form.city }}"
+      autocomplete="address-level2"
+    >
+  </div>
+
+  <div class="j-account__field">
+    <label for="AddressZip{{ id }}">{{ 'customers.addresses.zip' | t }}</label>
+    <input
+      type="text"
+      name="address[zip]"
+      id="AddressZip{{ id }}"
+      value="{{ form.zip }}"
+      autocomplete="postal-code"
+    >
+  </div>
+</div>
+
+<div class="j-account__row">
+  <div class="j-account__field">
+    <label for="AddressCountry{{ id }}">{{ 'customers.addresses.country' | t }}</label>
+    <select
+      name="address[country]"
+      id="AddressCountry{{ id }}"
+      autocomplete="country"
+    >
+      {{ form.country_option_tags }}
+    </select>
+  </div>
+
+  <div class="j-account__field">
+    <label for="AddressProvince{{ id }}">{{ 'customers.addresses.province' | t }}</label>
+    <input
+      type="text"
+      name="address[province]"
+      id="AddressProvince{{ id }}"
+      value="{{ form.province }}"
+      autocomplete="address-level1"
+    >
+  </div>
+</div>
+
+<div class="j-account__field">
+  <label for="AddressPhone{{ id }}">{{ 'customers.addresses.phone' | t }}</label>
+  <input
+    type="tel"
+    name="address[phone]"
+    id="AddressPhone{{ id }}"
+    value="{{ form.phone }}"
+    autocomplete="tel"
+  >
+</div>
+
+<label class="j-account__checkbox">
+  <input type="checkbox" name="address[default]" value="1" {% if form.set_as_default_checked %}checked{% endif %}>
+  {{ 'customers.addresses.set_default' | t }}
+</label>

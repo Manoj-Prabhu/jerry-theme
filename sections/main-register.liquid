@@ -1,0 +1,59 @@
+{% comment %}
+  Customer Register
+{% endcomment %}
+
+<div class="page-width j-account">
+
+  {% render 'breadcrumbs' %}
+
+  <div class="j-account__narrow">
+
+    <h1>{{ 'customers.register.title' | t }}</h1>
+
+    {% form 'create_customer' %}
+
+      {{ form.errors | default_errors }}
+
+      <div class="j-account__row">
+        <div class="j-account__field">
+          <label for="FirstName">{{ 'customers.register.first_name' | t }}</label>
+          <input type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name">
+        </div>
+
+        <div class="j-account__field">
+          <label for="LastName">{{ 'customers.register.last_name' | t }}</label>
+          <input type="text" name="customer[last_name]" id="LastName" autocomplete="family-name">
+        </div>
+      </div>
+
+      <div class="j-account__field">
+        <label for="Email">{{ 'customers.register.email' | t }}</label>
+        <input type="email" name="customer[email]" id="Email" autocomplete="email" required>
+      </div>
+
+      <div class="j-account__field">
+        <label for="CreatePassword">{{ 'customers.register.password' | t }}</label>
+        <input type="password" name="customer[password]" id="CreatePassword" autocomplete="new-password" required>
+      </div>
+
+      <div class="j-account__actions">
+        <button type="submit" class="j-button">{{ 'customers.register.submit' | t }}</button>
+      </div>
+
+    {% endform %}
+
+    <p class="j-account__note">
+      {{ 'customers.register.already_have_account' | t }}
+      <a href="{{ routes.account_login_url }}">{{ 'customers.register.sign_in' | t }}</a>
+    </p>
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Customer Register",
+  "settings": []
+}
+{% endschema %}

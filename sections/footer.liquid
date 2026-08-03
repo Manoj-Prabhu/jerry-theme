@@ -162,6 +162,15 @@
 
   </div>
 
+  <div class="j-footer__blocks">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when '@app' %}
+          {% render block %}
+      {% endcase %}
+    {% endfor %}
+  </div>
+
 </footer>
 
 {% schema %}
@@ -206,6 +215,11 @@
       "id": "show_localization_selector",
       "label": "Show country/currency selector",
       "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
     }
   ]
 }

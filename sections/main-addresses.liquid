@@ -1,0 +1,98 @@
+{% comment %}
+  Customer Addresses
+{% endcomment %}
+
+<div class="page-width j-account">
+
+  {% render 'breadcrumbs' %}
+
+  <div class="j-account__header">
+    <h1>{{ 'customers.addresses.title' | t }}</h1>
+    <a href="{{ routes.account_url }}" class="j-account__link">
+      {{ 'customers.addresses.back_to_account' | t }}
+    </a>
+  </div>
+
+  <button type="button" class="j-button" data-address-toggle="AddAddress">
+    {{ 'customers.addresses.add_new' | t }}
+  </button>
+
+  <div id="AddAddress" class="j-account__address-form" hidden>
+    {% form 'customer_address', customer.new_address %}
+      {% render 'address-fields', form: form, id: 'New' %}
+      <div class="j-account__actions">
+        <button type="submit" class="j-button">{{ 'customers.addresses.add' | t }}</button>
+        <button type="button" class="j-button-outline" data-address-toggle="AddAddress">
+          {{ 'customers.addresses.cancel' | t }}
+        </button>
+      </div>
+    {% endform %}
+  </div>
+
+  <div class="j-account__address-list">
+    {% for address in customer.addresses %}
+      <div class="j-account__address-card">
+
+        <div class="j-account__address-body">
+          {{ address | format_address }}
+          {% if address == customer.default_address %}
+            <span class="j-account__address-badge">{{ 'customers.addresses.default' | t }}</span>
+          {% endif %}
+        </div>
+
+        <div class="j-account__address-actions">
+          <button type="button" class="j-account__link" data-address-toggle="EditAddress{{ address.id }}">
+            {{ 'customers.addresses.edit' | t }}
+          </button>
+
+          {% form 'customer_address', address, class: 'j-account__delete-form' %}
+            <button
+              type="submit"
+              class="j-account__link"
+              data-confirm-message="{{ 'customers.addresses.delete_confirm' | t }}"
+            >
+              {{ 'customers.addresses.delete' | t }}
+            </button>
+          {% endform %}
+        </div>
+
+        <div id="EditAddress{{ address.id }}" class="j-account__address-form" hidden>
+          {% form 'customer_address', address %}
+            {% render 'address-fields', form: form, id: address.id %}
+            <div class="j-account__actions">
+              <button type="submit" class="j-button">{{ 'customers.addresses.update' | t }}</button>
+              <button type="button" class="j-button-outline" data-address-toggle="EditAddress{{ address.id }}">
+                {{ 'customers.addresses.cancel' | t }}
+              </button>
+            </div>
+          {% endform %}
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('click', function (e) {
+    var toggle = e.target.closest('[data-address-toggle]');
+    if (toggle) {
+      var target = document.getElementById(toggle.getAttribute('data-address-toggle'));
+      if (target) target.hidden = !target.hidden;
+      return;
+    }
+
+    var confirmBtn = e.target.closest('[data-confirm-message]');
+    if (confirmBtn && !window.confirm(confirmBtn.getAttribute('data-confirm-message'))) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Customer Addresses",
+  "settings": []
+}
+{% endschema %}

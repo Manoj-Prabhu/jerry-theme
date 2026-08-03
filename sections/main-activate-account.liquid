@@ -1,0 +1,52 @@
+{% comment %}
+  Customer Account Activation
+{% endcomment %}
+
+<div class="page-width j-account">
+
+  <div class="j-account__narrow">
+
+    <h1>{{ 'customers.activate_account.title' | t }}</h1>
+    <p class="j-account__subtext">{{ 'customers.activate_account.subtext' | t }}</p>
+
+    {% form 'activate_customer_password' %}
+
+      {{ form.errors | default_errors }}
+
+      <div class="j-account__field">
+        <label for="CustomerPassword">{{ 'customers.activate_account.password' | t }}</label>
+        <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="new-password" required>
+      </div>
+
+      <div class="j-account__field">
+        <label for="CustomerPasswordConfirmation">
+          {{ 'customers.activate_account.password_confirm' | t }}
+        </label>
+        <input
+          type="password"
+          name="customer[password_confirmation]"
+          id="CustomerPasswordConfirmation"
+          autocomplete="new-password"
+          required
+        >
+      </div>
+
+      <div class="j-account__actions">
+        <button type="submit" class="j-button">{{ 'customers.activate_account.submit' | t }}</button>
+        <button type="submit" name="decline" class="j-button-outline">
+          {{ 'customers.activate_account.decline' | t }}
+        </button>
+      </div>
+
+    {% endform %}
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Activate Account",
+  "settings": []
+}
+{% endschema %}

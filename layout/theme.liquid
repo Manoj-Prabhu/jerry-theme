@@ -86,6 +86,9 @@
     {% if template.name == 'page' and template.suffix == 'faq' %}
       {{ 'faq.css' | asset_url | stylesheet_tag }}
     {% endif %}
+    {% if template.name == 'customers' %}
+      {{ 'customers.css' | asset_url | stylesheet_tag }}
+    {% endif %}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}

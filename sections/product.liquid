@@ -227,6 +227,15 @@
 
     {% endform %}
 
+    <div class="j-product__blocks">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when '@app' %}
+            {% render block %}
+        {% endcase %}
+      {% endfor %}
+    </div>
+
   </div>
   <div
   class="j-sticky-cart"
@@ -271,6 +280,11 @@
 {
   "name": "t:general.product",
   "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }

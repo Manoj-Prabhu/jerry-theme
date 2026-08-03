@@ -1,0 +1,158 @@
+{% comment %}
+  Customer Login
+{% endcomment %}
+
+<div class="page-width j-account">
+
+  {% render 'breadcrumbs' %}
+
+  <div class="j-account__narrow">
+
+    <div id="login" class="j-account__panel">
+
+      <h1>{{ 'customers.login.title' | t }}</h1>
+
+      {% form 'customer_login' %}
+
+        {% assign password_needed = form.password_needed %}
+
+        {{ form.errors | default_errors }}
+
+        <div class="j-account__field">
+          <label for="CustomerEmail">{{ 'customers.login.email' | t }}</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+          >
+        </div>
+
+        {% if form.password_needed %}
+          <div class="j-account__field">
+            <label for="CustomerPassword">{{ 'customers.login.password' | t }}</label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+        {% endif %}
+
+        <div class="j-account__actions">
+          <button type="submit" class="j-button">{{ 'customers.login.submit' | t }}</button>
+
+          {% if form.password_needed %}
+            <a href="#recover" data-show-recover class="j-account__link">
+              {{ 'customers.login.forgot_password' | t }}
+            </a>
+          {% endif %}
+        </div>
+
+      {% endform %}
+
+    </div>
+
+    {% if password_needed %}
+      <div id="recover" class="j-account__panel" hidden>
+
+        <h2>{{ 'customers.login.recover_title' | t }}</h2>
+        <p class="j-account__subtext">{{ 'customers.login.recover_subtext' | t }}</p>
+
+        {% form 'recover_customer_password' %}
+
+          {% if form.posted_successfully? %}
+            <p class="j-account__success">
+              {{ 'customers.login.recover_success' | t }}
+            </p>
+          {% else %}
+
+            {{ form.errors | default_errors }}
+
+            <div class="j-account__field">
+              <label for="RecoverEmail">{{ 'customers.login.email' | t }}</label>
+              <input
+                type="email"
+                name="email"
+                id="RecoverEmail"
+                autocomplete="email"
+                required
+              >
+            </div>
+
+            <div class="j-account__actions">
+              <button type="submit" class="j-button">{{ 'customers.login.recover_submit' | t }}</button>
+              <a href="#login" data-show-login class="j-account__link">
+                {{ 'customers.login.cancel' | t }}
+              </a>
+            </div>
+
+          {% endif %}
+
+        {% endform %}
+
+      </div>
+    {% endif %}
+
+    {% if shop.checkout.guest_login %}
+      <div class="j-account__panel j-account__guest">
+        <h2>{{ 'customers.login.guest_title' | t }}</h2>
+        {% form 'guest_login' %}
+          <button type="submit" class="j-button-outline">
+            {{ 'customers.login.guest_continue' | t }}
+          </button>
+        {% endform %}
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var login = document.getElementById('login');
+    var recover = document.getElementById('recover');
+    if (!login || !recover) return;
+
+    function showRecover() {
+      login.hidden = true;
+      recover.hidden = false;
+    }
+
+    function showLogin() {
+      recover.hidden = true;
+      login.hidden = false;
+    }
+
+    document.querySelectorAll('[data-show-recover]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        showRecover();
+      });
+    });
+
+    document.querySelectorAll('[data-show-login]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        showLogin();
+      });
+    });
+
+    if (window.location.hash === '#recover') {
+      showRecover();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Customer Login",
+  "settings": []
+}
+{% endschema %}

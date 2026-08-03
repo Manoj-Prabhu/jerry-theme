@@ -1,0 +1,91 @@
+{% comment %}
+  Customer Account Overview
+{% endcomment %}
+
+{% assign display_name = customer.first_name | default: customer.email %}
+
+<div class="page-width j-account">
+
+  {% render 'breadcrumbs' %}
+
+  <div class="j-account__header">
+    <h1>{{ 'customers.account.welcome_html' | t: name: display_name }}</h1>
+
+    <div class="j-account__header-actions">
+      <a href="{{ routes.account_addresses_url }}" class="j-button-outline">
+        {{ 'customers.account.view_addresses' | t }}
+      </a>
+      <a href="{{ routes.account_logout_url }}" class="j-button-outline">
+        {{ 'customers.account.logout' | t }}
+      </a>
+    </div>
+  </div>
+
+  <h2>{{ 'customers.account.order_history' | t }}</h2>
+
+  {% paginate customer.orders by 10 %}
+
+    {% if customer.orders.size > 0 %}
+
+      <div class="j-account__table-wrapper">
+        <table class="j-account__table">
+          <thead>
+            <tr>
+              <th>{{ 'customers.account.order_number' | t }}</th>
+              <th>{{ 'customers.account.order_date' | t }}</th>
+              <th>{{ 'customers.account.order_payment_status' | t }}</th>
+              <th>{{ 'customers.account.order_fulfillment_status' | t }}</th>
+              <th>{{ 'customers.account.order_total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in customer.orders %}
+              <tr>
+                <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                <td>{{ order.created_at | date: format: 'abbreviated_date' }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_price | money }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <nav class="j-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+          <ul class="j-pagination__list">
+            {% for part in paginate.parts %}
+              <li>
+                {% if part.is_link %}
+                  <a href="{{ part.url }}" class="j-pagination__item">{{ part.title }}</a>
+                {% elsif part.title == paginate.current_page %}
+                  <span class="j-pagination__item j-pagination__item--current" aria-current="page">{{ part.title }}</span>
+                {% else %}
+                  <span class="j-pagination__item j-pagination__item--gap">{{ part.title }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    {% else %}
+
+      <p class="j-account__empty">
+        {{ 'customers.account.no_orders' | t }}
+        <a href="{{ routes.all_products_collection_url }}">{{ 'customers.account.start_shopping' | t }}</a>
+      </p>
+
+    {% endif %}
+
+  {% endpaginate %}
+
+</div>
+
+{% schema %}
+{
+  "name": "Customer Account",
+  "settings": []
+}
+{% endschema %}

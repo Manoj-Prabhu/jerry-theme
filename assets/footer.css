@@ -397,6 +397,14 @@
   transform: translateY(-2px);
 }
 
+/* App blocks */
+
+.j-footer__blocks:not(:empty) {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8) 24px;
+}
+
 /* Responsive */
 
 @media (max-width: 992px) {
