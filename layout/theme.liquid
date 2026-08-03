@@ -11,7 +11,24 @@
         cartContinueShopping: {{ 'cart.continue_shopping' | t | json }},
         cartRemoveItemHtml: {{ 'cart.remove_item_html' | t: title: '__TITLE__' | json }},
         cartDecreaseQuantity: {{ 'cart.decrease_quantity' | t | json }},
-        cartIncreaseQuantity: {{ 'cart.increase_quantity' | t | json }}
+        cartIncreaseQuantity: {{ 'cart.increase_quantity' | t | json }},
+        addToWishlistHtml: {{ 'product.add_to_wishlist_html' | t: title: '__TITLE__' | json }},
+        removeFromWishlistHtml: {{ 'product.remove_from_wishlist_html' | t: title: '__TITLE__' | json }},
+        readMore: {{ 'product.read_more' | t | json }},
+        readLess: {{ 'product.read_less' | t | json }},
+        viewFullDetails: {{ 'product.view_full_details' | t | json }},
+        removeRecentSearchHtml: {{ 'search.remove_recent_search_html' | t: term: '__TERM__' | json }},
+        recentlySearched: {{ 'search.recently_searched' | t | json }},
+        searchClearAll: {{ 'search.clear_all' | t | json }},
+        addToCart: {{ 'product.add_to_cart' | t | json }},
+        adding: {{ 'product.adding' | t | json }},
+        unavailable: {{ 'product.unavailable' | t | json }},
+        soldOut: {{ 'product.sold_out' | t | json }},
+        quantity: {{ 'product.quantity' | t | json }},
+        addToCartError: {{ 'product.add_to_cart_error' | t | json }},
+        updateQuantityError: {{ 'cart.update_quantity_error' | t | json }},
+        decreaseQuantity: {{ 'cart.decrease_quantity' | t | json }},
+        increaseQuantity: {{ 'cart.increase_quantity' | t | json }}
       };
     </script>
 

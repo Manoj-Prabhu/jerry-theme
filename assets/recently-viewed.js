@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             type="button"
             class="j-wishlist-button"
             data-handle="${product.handle}"
-            aria-label="Add to Wishlist"
+            data-product-title="${product.title}"
+            aria-label="${(window.themeStrings && window.themeStrings.addToWishlistHtml ? window.themeStrings.addToWishlistHtml : "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
           >
             ♡
           </button>

@@ -37,6 +37,7 @@
       "other": "{{ count }} items"
     },
     "empty": "Your cart is empty.",
+    "update_quantity_error": "Unable to update quantity.",
     "remove_item_html": "Remove {{ title }}",
     "decrease_quantity": "Decrease quantity",
     "increase_quantity": "Increase quantity"
@@ -209,13 +210,20 @@
   },
   "product": {
     "add_to_cart": "Add to Cart",
+    "adding": "Adding...",
+    "unavailable": "Unavailable",
+    "add_to_cart_error": "Unable to add item to cart.",
     "sold_out": "Sold Out",
     "buy_now": "Buy it now",
     "low_stock_html": "Only {{ count }} left in stock",
     "quantity": "Quantity",
     "add_to_wishlist_html": "Add {{ title }} to Wishlist",
+    "remove_from_wishlist_html": "Remove {{ title }} from Wishlist",
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
+    "read_more": "Read more",
+    "read_less": "Read less",
+    "view_full_details": "View full details",
     "recommendations_title": "You may also like",
     "recently_viewed_title": "Recently Viewed",
     "rating_label_html": "{{ rating }} out of 5 stars",
@@ -234,6 +242,9 @@
     "submit": "Search",
     "no_results": "No products found.",
     "no_results_html": "No results found for {{ terms }}",
-    "results_for_html": "{{ count }} results found for {{ terms }}"
+    "results_for_html": "{{ count }} results found for {{ terms }}",
+    "remove_recent_search_html": "Remove {{ term }} from recent searches",
+    "recently_searched": "Recently Searched",
+    "clear_all": "Clear all"
   }
 }

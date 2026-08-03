@@ -104,6 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const strings = window.themeStrings || {};
+    const removeTemplate =
+      strings.removeRecentSearchHtml || "Remove __TERM__ from recent searches";
+
     const items = recent
       .map(
         (term) => `
@@ -111,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <button type="button" class="j-recent-searches__term" data-term="${escapeHtml(term)}">
               ${escapeHtml(term)}
             </button>
-            <button type="button" class="j-recent-searches__remove" data-remove="${escapeHtml(term)}" aria-label="Remove ${escapeHtml(term)} from recent searches">
+            <button type="button" class="j-recent-searches__remove" data-remove="${escapeHtml(term)}" aria-label="${escapeHtml(removeTemplate.replace("__TERM__", term))}">
               ✕
             </button>
           </li>
@@ -122,8 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
     results.innerHTML = `
       <div class="j-recent-searches">
         <div class="j-recent-searches__header">
-          <span>Recently Searched</span>
-          <button type="button" class="j-recent-searches__clear">Clear all</button>
+          <span>${strings.recentlySearched || "Recently Searched"}</span>
+          <button type="button" class="j-recent-searches__clear">${strings.searchClearAll || "Clear all"}</button>
         </div>
         <ul class="j-recent-searches__list">${items}</ul>
       </div>

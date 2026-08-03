@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     const product = currentProduct;
     const variant = selectedVariant;
+    const strings = window.themeStrings || {};
 
     const images = getProductImages(product);
 
@@ -316,11 +317,11 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           <div class="j-quick-view__quantity">
-            <label>Quantity</label>
+            <label>${strings.quantity || "Quantity"}</label>
             <div class="j-quick-view__qty-control">
-              <button type="button" class="j-quick-view-qty-minus" aria-label="Decrease quantity">−</button>
+              <button type="button" class="j-quick-view-qty-minus" aria-label="${strings.decreaseQuantity || "Decrease quantity"}">−</button>
               <input type="number" id="QuickViewQty" value="${selectedQuantity}" min="1">
-              <button type="button" class="j-quick-view-qty-plus" aria-label="Increase quantity">+</button>
+              <button type="button" class="j-quick-view-qty-plus" aria-label="${strings.increaseQuantity || "Increase quantity"}">+</button>
             </div>
           </div>
 
@@ -335,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
               id="QuickViewAddButton"
               ${!variant.available ? "disabled" : ""}
             >
-              ${variant.available ? "Add to Cart" : "Sold Out"}
+              ${variant.available ? strings.addToCart || "Add to Cart" : strings.soldOut || "Sold Out"}
             </button>
           </div>
 
@@ -347,12 +348,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           ${
             product.description && product.description.length > 220
-              ? `<button type="button" class="j-quick-view-read-more">Read more</button>`
+              ? `<button type="button" class="j-quick-view-read-more">${(window.themeStrings && window.themeStrings.readMore) || "Read more"}</button>`
               : ""
           }
 
           <a href="/products/${product.handle}" class="j-quick-view__link">
-            View full details
+            ${(window.themeStrings && window.themeStrings.viewFullDetails) || "View full details"}
           </a>
 
         </div>
@@ -456,9 +457,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (readMore && description) {
       readMore.addEventListener("click", () => {
         description.classList.toggle("is-expanded");
+        const strings = window.themeStrings || {};
         readMore.textContent = description.classList.contains("is-expanded")
-          ? "Read less"
-          : "Read more";
+          ? strings.readLess || "Read less"
+          : strings.readMore || "Read more";
       });
     }
 
@@ -493,9 +495,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         // --- END ADD ---
 
+        const strings = window.themeStrings || {};
+
         try {
           addButton.disabled = true;
-          addButton.textContent = "Adding...";
+          addButton.textContent = strings.adding || "Adding...";
 
           const response = await fetch("/cart/add.js", {
             method: "POST",
@@ -514,7 +518,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.description || "Unable to add item to cart.");
+            throw new Error(
+              error.description ||
+                strings.addToCartError ||
+                "Unable to add item to cart.",
+            );
           }
 
           closeModal();
@@ -524,10 +532,12 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
           console.error(error);
           formError.textContent =
-            error.message || "Unable to add item to cart.";
+            error.message ||
+            strings.addToCartError ||
+            "Unable to add item to cart.";
           formError.hidden = false;
           addButton.disabled = false;
-          addButton.textContent = "Add to Cart";
+          addButton.textContent = strings.addToCart || "Add to Cart";
 
           // --- ADD THIS: release the cat if add-to-cart failed ---
           const mascotEl = document.querySelector(".j-quick-view__mascot");

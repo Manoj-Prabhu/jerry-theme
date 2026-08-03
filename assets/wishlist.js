@@ -15,17 +15,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateButton(button, active) {
     const title = button.dataset.productTitle || "";
+    const strings = window.themeStrings || {};
 
     if (active) {
       button.classList.add("is-active");
       button.textContent = "♥";
       button.setAttribute("aria-pressed", "true");
-      button.setAttribute("aria-label", `Remove ${title} from Wishlist`);
+      button.setAttribute(
+        "aria-label",
+        (strings.removeFromWishlistHtml || "Remove __TITLE__ from Wishlist").replace(
+          "__TITLE__",
+          title,
+        ),
+      );
     } else {
       button.classList.remove("is-active");
       button.textContent = "♡";
       button.setAttribute("aria-pressed", "false");
-      button.setAttribute("aria-label", `Add ${title} to Wishlist`);
+      button.setAttribute(
+        "aria-label",
+        (strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace(
+          "__TITLE__",
+          title,
+        ),
+      );
     }
   }
 

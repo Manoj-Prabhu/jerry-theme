@@ -139,9 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (addToCartButton) {
+      const strings = window.themeStrings || {};
       addToCartButton.textContent = variant.available
-        ? "Add to Cart"
-        : "Sold Out";
+        ? strings.addToCart || "Add to Cart"
+        : strings.soldOut || "Sold Out";
     }
   }
 
@@ -177,7 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         if (addToCartButton) {
           addToCartButton.disabled = true;
-          addToCartButton.textContent = "Unavailable";
+          addToCartButton.textContent =
+            (window.themeStrings && window.themeStrings.unavailable) ||
+            "Unavailable";
         }
 
         [buyNowButton, stickyButton].forEach((button) => {

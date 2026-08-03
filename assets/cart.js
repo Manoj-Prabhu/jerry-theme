@@ -461,7 +461,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        showCartNotice(data.description || data.message || "Unable to update quantity.");
+        const strings = window.themeStrings || {};
+        showCartNotice(
+          data.description ||
+            data.message ||
+            strings.updateQuantityError ||
+            "Unable to update quantity.",
+        );
       } else {
         const item = data.items.find((cartItem) => cartItem.key === itemKey);
 
@@ -574,9 +580,15 @@ document.addEventListener("DOMContentLoaded", () => {
           }),
         });
 
+        const strings = window.themeStrings || {};
+
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.description || "Unable to add item to cart.");
+          throw new Error(
+            error.description ||
+              strings.addToCartError ||
+              "Unable to add item to cart.",
+          );
         }
 
         if (isBuyNow) {
@@ -588,7 +600,10 @@ document.addEventListener("DOMContentLoaded", () => {
         openCartDrawer();
       } catch (error) {
         console.error(error);
-        showFormError(error.message || "Unable to add item to cart.");
+        const strings = window.themeStrings || {};
+        showFormError(
+          error.message || strings.addToCartError || "Unable to add item to cart.",
+        );
       } finally {
         setLoading(false);
       }
