@@ -27,7 +27,7 @@
         <div
           class="j-hero j-hero-slideshow__slide{% if forloop.first %} is-active{% endif %}"
           data-slide-index="{{ forloop.index0 }}"
-          {% unless forloop.first %}aria-hidden="true"{% endunless %}
+          {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
           {{ block.shopify_attributes }}
         >
 

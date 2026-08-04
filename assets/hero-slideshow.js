@@ -91,9 +91,11 @@ function initHeroSlideshow(slideshow) {
 
     slides[currentIndex].classList.remove("is-active");
     slides[currentIndex].setAttribute("aria-hidden", "true");
+    slides[currentIndex].setAttribute("inert", "");
 
     slides[nextIndex].classList.add("is-active");
     slides[nextIndex].removeAttribute("aria-hidden");
+    slides[nextIndex].removeAttribute("inert");
 
     currentIndex = nextIndex;
   }
