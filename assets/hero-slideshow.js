@@ -135,9 +135,19 @@ function initHeroSlideshow(slideshow) {
     }
   });
 
-  // Pause on hover/focus so a shopper reading a slide isn't interrupted.
-  slideshow.addEventListener("mouseenter", stopAutoplay);
-  slideshow.addEventListener("mouseleave", startAutoplay);
+  // Pause on hover so a shopper reading a slide isn't interrupted — only
+  // wired up for devices with a real hover-capable pointer (a mouse).
+  // Touchscreens can fire a synthetic "mouseenter" on tap with no
+  // matching "mouseleave" afterward (there's no cursor to leave with),
+  // which would otherwise pause autoplay permanently until a manual
+  // interaction explicitly restarts it.
+  if (window.matchMedia("(hover: hover)").matches) {
+    slideshow.addEventListener("mouseenter", stopAutoplay);
+    slideshow.addEventListener("mouseleave", startAutoplay);
+  }
+
+  // Pause on keyboard focus regardless of pointer type — this doesn't
+  // have the touch-emulation problem above.
   slideshow.addEventListener("focusin", stopAutoplay);
   slideshow.addEventListener("focusout", startAutoplay);
 
