@@ -1,160 +1,103 @@
-<h1 align="center" style="position: relative;">
-  <br>
-    <img src="./assets/shoppy-x-ray.svg" alt="logo" width="200">
-  <br>
-  Shopify Skeleton Theme
-</h1>
+# Jerry
 
-A minimal, carefully structured Shopify theme designed to help you quickly get started. Designed with modularity, maintainability, and Shopify's best practices in mind.
+Jerry is a modern, conversion-focused Shopify Online Store 2.0 theme built for performance, accessibility, and merchant flexibility. It includes an AJAX cart drawer, predictive search, quick view, wishlist, a multi-slide hero carousel, responsive layouts, and extensive Theme Editor customization.
 
-<p align="center">
-  <a href="./LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
-  <a href="./actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Shopify/skeleton-theme/actions/workflows/ci.yml/badge.svg"></a>
-</p>
+## Installation
 
-## Getting started
+### Requirements
 
-### Prerequisites
+- A Shopify store on the Online Store 2.0 platform
+- [Shopify CLI](https://shopify.dev/docs/api/shopify-cli) 3.x or later, if installing via the command line
+- Shopify admin access
 
-Before starting, ensure you have the latest Shopify CLI installed:
+### Steps
 
-- [Shopify CLI](https://shopify.dev/docs/api/shopify-cli) – helps you download, upload, preview themes, and streamline your workflows
+1. In your Shopify admin, go to **Online Store → Themes**.
+2. Click **Add theme → Upload ZIP file** and select the Jerry theme package.
+3. Once uploaded, the theme appears under **Draft themes**. Click **Customize** to configure it, or **Publish** to make it your live theme.
+4. Alternatively, using Shopify CLI:
 
-If you use VS Code:
+   ```bash
+   shopify theme push
+   ```
 
-- [Shopify Liquid VS Code Extension](https://shopify.dev/docs/storefronts/themes/tools/shopify-liquid-vscode) – provides syntax highlighting, linting, inline documentation, and auto-completion specifically designed for Liquid templates
+After installing, visit **Online Store → Themes → Customize** to set your logo, colors, fonts, hero content, and navigation before publishing.
 
-### Clone
+## Theme features
 
-Clone this repository using Git or Shopify CLI:
+- **Hero slideshow** — up to 4 slides, each with its own image, heading, description, and buttons; autoplays with manual prev/next controls, crossfades smoothly, and pauses on hover/focus
+- **Shop by Category** — image grid section linking to collections
+- **Featured Collection** and **Product Recommendations** — merchant-selected or automatic product grids
+- **Testimonials** — star-rated customer quotes with optional avatars
+- **Product cards** — color swatches, star ratings, sale/new/bestseller/sold-out badges, quick view, and wishlist
+- **Quick View** — full add-to-cart flow (variants, quantity, images) without leaving the page
+- **Wishlist** — persistent, no account required
+- **Cart** — AJAX drawer and dedicated cart page, free-shipping progress bar, quantity controls
+- **Predictive search** — live results plus recent-search history
+- **Collection filtering and sorting** — price, availability, and product options
+- **Country/region selector** — lets shoppers switch markets and currency from the footer
+- **Customer accounts** — themed login, registration, account overview, order history, address book, and password reset/activation
+- **App blocks** — merchants can add app content to the product and footer sections via the theme editor
+- **Blog, article, FAQ, and contact page** templates
+- Fully responsive, with reduced-motion support throughout
 
-```bash
-git clone git@github.com:Shopify/skeleton-theme.git
-# or
-shopify theme init
-```
+## Theme settings
 
-### Preview
+Configured under **Theme settings** in the theme editor:
 
-Preview this theme using Shopify CLI:
+| Section | Controls |
+|---|---|
+| Typography | Primary, body, and logo fonts |
+| Layout | Page width, page margin, section spacing, card and base border radius |
+| Effects | Animation speed, shadow strength |
+| Breadcrumbs | Enable/disable globally or per template (product, collection, blog, page) |
+| Cart & Shipping | Free shipping threshold (drives the cart progress bar and announcement bar) |
+| Product Badges | Toggle New/Sale/Sold Out/Bestseller badges; New badge duration; bestseller tag |
+| Colors | Background, foreground, primary, secondary, accent, and border colors; input corner radius |
+| Buttons | Button background, text color, and radius |
+| Social media | Facebook, Instagram, YouTube, X links (shown in the footer) |
 
-```bash
-shopify theme dev
-```
+Each section (Hero, Shop by Category, Featured Collection, Testimonials, Footer, etc.) also has its own settings and blocks, editable independently from the theme editor.
 
-## Theme architecture
+## Supported Shopify features
 
-```bash
-.
-├── assets          # Stores static assets (CSS, JS, images, fonts, etc.)
-├── blocks          # Reusable, nestable, customizable UI components
-├── config          # Global theme settings and customization options
-├── layout          # Top-level wrappers for pages (layout templates)
-├── locales         # Translation files for theme internationalization
-├── sections        # Modular full-width page components
-├── snippets        # Reusable Liquid code or HTML fragments
-└── templates       # Templates combining sections to define page structures
-```
+- Online Store 2.0 — JSON templates, sections everywhere, app blocks on product and footer
+- Multi-language storefronts via `locales/en.default.json` (add additional locale files to translate)
+- Multi-currency and Shopify Markets, including a storefront country/currency switcher
+- Classic customer accounts (login, register, account, orders, addresses, password reset/activation)
+- Gift cards
+- Blog and articles
+- Metafields — product star ratings read from a `custom.rating` / `custom.rating_count` metafield when present
+- Search & Discovery app filters (availability, price, and product-option filtering on collection pages)
+- Full Theme Editor customization with configurable sections and blocks throughout
 
-To learn more, refer to the [theme architecture documentation](https://shopify.dev/docs/storefronts/themes/architecture).
+## Browser support
 
-### Templates
+Jerry supports the current and previous major version of:
 
-[Templates](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) control what's rendered on each type of page in a theme.
+- Chrome
+- Firefox
+- Safari (desktop and iOS)
+- Edge
 
-The Skeleton Theme scaffolds [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their store.
+JavaScript-dependent features (cart drawer, quick view, predictive search, wishlist, filters) degrade gracefully — core browsing and checkout remain functional with JavaScript disabled. All animations respect the operating system's reduced-motion setting.
 
-None of the template types are required, and not all of them are included in the Skeleton Theme. Refer to the [template types reference](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) for a full list.
+## Version
 
-### Sections
+Current version: **0.1.3**
 
-[Sections](https://shopify.dev/docs/storefronts/themes/architecture/sections) are Liquid files that allow you to create reusable modules of content that can be customized by merchants. They can also include blocks which allow merchants to add, remove, and reorder content within a section.
+## Author
 
-Sections are made customizable by including a `{% schema %}` in the body. For more information, refer to the [section schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/sections/section-schema).
+**Mano Studio**
 
-### Blocks
+## Support
 
-[Blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks) let developers create flexible layouts by breaking down sections into smaller, reusable pieces of Liquid. Each block has its own set of settings, and can be added, removed, and reordered within a section.
-
-Blocks are made customizable by including a `{% schema %}` in the body. For more information, refer to the [block schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/blocks/theme-blocks/schema).
-
-## Schemas
-
-When developing components defined by schema settings, we recommend these guidelines to simplify your code:
-
-- **Single property settings**: For settings that correspond to a single CSS property, use CSS variables:
-
-  ```liquid
-  <div class="collection" style="--gap: {{ block.settings.gap }}px">
-    ...
-  </div>
-
-  {% stylesheet %}
-    .collection {
-      gap: var(--gap);
-    }
-  {% endstylesheet %}
-
-  {% schema %}
-  {
-    "settings": [{
-      "type": "range",
-      "label": "gap",
-      "id": "gap",
-      "min": 0,
-      "max": 100,
-      "unit": "px",
-      "default": 0,
-    }]
-  }
-  {% endschema %}
-  ```
-
-- **Multiple property settings**: For settings that control multiple CSS properties, use CSS classes:
-
-  ```liquid
-  <div class="collection {{ block.settings.layout }}">
-    ...
-  </div>
-
-  {% stylesheet %}
-    .collection--full-width {
-      /* multiple styles */
-    }
-    .collection--narrow {
-      /* multiple styles */
-    }
-  {% endstylesheet %}
-
-  {% schema %}
-  {
-    "settings": [{
-      "type": "select",
-      "id": "layout",
-      "label": "layout",
-      "values": [
-        { "value": "collection--full-width", "label": "t:options.full" },
-        { "value": "collection--narrow", "label": "t:options.narrow" }
-      ]
-    }]
-  }
-  {% endschema %}
-  ```
-
-## CSS & JavaScript
-
-For CSS and JavaScript, we recommend using the [`{% stylesheet %}`](https://shopify.dev/docs/api/liquid/tags#stylesheet) and [`{% javascript %}`](https://shopify.dev/docs/api/liquid/tags/javascript) tags. They can be included multiple times, but the code will only appear once.
-
-### `critical.css`
-
-The Skeleton Theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
-
-## Contributing
-
-We're excited for your contributions to the Skeleton Theme! This repository aims to remain as lean, lightweight, and fundamental as possible, and we kindly ask your contributions to align with this intention.
-
-Visit our [CONTRIBUTING.md](./CONTRIBUTING.md) for a detailed overview of our process, guidelines, and recommendations.
+For support or questions, contact: [manojprabhu101@gmail.com](mailto:manojprabhu101@gmail.com)
 
 ## License
 
-Skeleton Theme is open-sourced under the [MIT](./LICENSE.md) License.
+Copyright © 2026 Mano Studio. All rights reserved.
+
+Jerry is proprietary software. Permission is granted only to customers who have legally purchased a valid license for Jerry to install and use this theme on Shopify stores covered by that license. No part of this theme may be copied, modified, distributed, sublicensed, reverse engineered, or resold without prior written permission from Mano Studio.
+
+Unauthorized distribution or resale of this software is strictly prohibited. See [LICENSE.md](./LICENSE.md) for the full terms.
