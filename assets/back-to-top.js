@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Back to Top Button
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("BackToTop");
 

@@ -1,6 +1,3 @@
-/* ==========================================================
-   Jerry Theme Product Variants
-========================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   const optionsWrap = document.getElementById("ProductOptions");
   const variantsJson = document.getElementById("ProductVariantsJson");

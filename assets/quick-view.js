@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Quick View
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("QuickViewModal");
   const content = document.getElementById("QuickViewContent");

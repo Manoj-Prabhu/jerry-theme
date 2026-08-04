@@ -1,9 +1,3 @@
-/* ==========================================================
-   Jerry Theme Scroll Reveal
-   Fades sections and product cards up as they enter the
-   viewport. Skipped entirely for prefers-reduced-motion.
-========================================================== */
-
 function initScrollReveal() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

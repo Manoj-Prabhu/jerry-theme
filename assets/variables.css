@@ -1,13 +1,5 @@
-/* ==========================================================
-   Jerry Theme Design Tokens
-   Mano Studio
-========================================================== */
-
 :root {
-  /* ===========================
-     Static Colors
-     (Theme colors come from css-variables.liquid)
-  =========================== */
+  /* Static colors (theme colors come from css-variables.liquid) */
 
   --color-surface: #f8fafc;
 
@@ -23,19 +15,14 @@
   --color-warning: #f59e0b;
   --color-error: #dc2626;
 
-  /* ===========================
-     Aliases
-     (Map legacy token names used across the theme
-     to the settings-driven variables from css-variables.liquid)
-  =========================== */
+  /* Aliases — map legacy token names used across the theme to the
+     settings-driven variables from css-variables.liquid */
 
   --color-text: var(--color-foreground);
   --font-family: var(--font-primary--family);
   --container-width: var(--page-width);
 
-  /* ===========================
-     Typography
-  =========================== */
+  /* Typography */
 
   --font-size-xs: 12px;
   --font-size-sm: 14px;
@@ -45,9 +32,7 @@
   --font-size-2xl: 30px;
   --font-size-3xl: 42px;
 
-  /* ===========================
-     Font Weight
-  =========================== */
+  /* Font weight */
 
   --font-light: 300;
   --font-normal: 400;
@@ -55,9 +40,7 @@
   --font-semibold: 600;
   --font-bold: 700;
 
-  /* ===========================
-     Spacing
-  =========================== */
+  /* Spacing */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -70,22 +53,17 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* ===========================
-     Default Radius Tokens
-     (Base scale driven by Theme Settings > Layout > Border radius)
-  =========================== */
+  /* Default radius tokens (base scale driven by Theme Settings > Layout >
+     Border radius) */
 
   --radius-sm: calc(var(--style-border-radius-base, 10px) * 0.6);
   --radius-md: var(--style-border-radius-base, 10px);
   --radius-lg: calc(var(--style-border-radius-base, 10px) * 1.6);
   --radius-xl: calc(var(--style-border-radius-base, 10px) * 2.4);
 
-  /* ===========================
-     Shadows
-     (Intensity driven by Theme Settings > Effects > Shadow strength.
-     The rgba() declarations are a fallback for browsers that don't
-     support calc() inside a color's alpha channel.)
-  =========================== */
+  /* Shadows (intensity driven by Theme Settings > Effects > Shadow
+     strength; the rgba() declarations are a fallback for browsers that
+     don't support calc() inside a color's alpha channel) */
 
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 2px 4px rgb(0 0 0 / calc(0.05 * var(--shadow-strength-multiplier, 1)));
@@ -94,10 +72,8 @@
   --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.12);
   --shadow-lg: 0 18px 40px rgb(0 0 0 / calc(0.12 * var(--shadow-strength-multiplier, 1)));
 
-  /* ===========================
-     Animation
-     (Speed driven by Theme Settings > Effects > Animation speed)
-  =========================== */
+  /* Animation (speed driven by Theme Settings > Effects > Animation
+     speed) */
 
   --transition-fast: calc(0.15s * var(--animation-speed-multiplier, 1)) ease;
   --transition: calc(0.25s * var(--animation-speed-multiplier, 1)) ease;

@@ -1,7 +1,3 @@
-/* ==========================================================
-   Recently Viewed Products
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const productContainer = document.querySelector(".j-product");
   if (!productContainer) return;

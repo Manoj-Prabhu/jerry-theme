@@ -1,10 +1,3 @@
-/**
- * ==========================================================
- * Jerry Header
- * Mano Studio
- * ==========================================================
- */
-
 "use strict";
 
 class JerryHeader {
@@ -15,9 +8,7 @@ class JerryHeader {
     this.initHeaderSearchToggle();
   }
 
-  /* ==========================================================
-     Announcement Bar
-  ========================================================== */
+  /* Announcement Bar */
 
   initAnnouncementBar(root = document) {
     const bar = root.querySelector(".j-announcement");
@@ -70,9 +61,7 @@ class JerryHeader {
     }
   }
 
-  /* ==========================================================
-     Sticky Header
-  ========================================================== */
+  /* Sticky Header */
 
   initStickyHeader() {
     const header = document.querySelector(".j-header--sticky");
@@ -116,9 +105,7 @@ class JerryHeader {
     });
   }
 
-  /* ==========================================================
-     Mobile Menu
-  ========================================================== */
+  /* Mobile Menu */
 
   initMobileMenu() {
     const toggle = document.querySelector(".j-menu-toggle");
@@ -228,9 +215,7 @@ class JerryHeader {
     });
   }
 
-  /* ==========================================================
-     Header Search Toggle
-  ========================================================== */
+  /* Header Search Toggle */
 
   initHeaderSearchToggle() {
     const toggle = document.querySelector(".j-header__search-toggle");

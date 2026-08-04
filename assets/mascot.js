@@ -1,13 +1,3 @@
-/* ==========================================================
-   Jerry Theme Mascot (Rive)
-
-   Requires:
-   - window.jerryMascotConfig (src, stateMachine) — set in
-     layout/theme.liquid, pointing at assets/mascot-cat.riv.
-   - The @rive-app/canvas runtime loaded as a prior <script> tag,
-     exposing the global `rive.Rive` constructor.
-========================================================== */
-
 (function () {
   const config = window.jerryMascotConfig;
   if (!config || !config.src) return;

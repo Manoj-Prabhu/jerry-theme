@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Collection Sorting
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const sortSelect = document.getElementById("SortBy");
 
@@ -13,9 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ==========================================================
-     Mobile Filter Drawer
-  ========================================================== */
+  /* Mobile Filter Drawer */
 
   const filterToggle = document.querySelector(".j-filter-toggle");
   const filterSidebar = document.getElementById("CollectionFilters");

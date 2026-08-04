@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Header
-========================================================== */
-
 /* Announcement Bar */
 
 .j-announcement {
@@ -113,9 +109,7 @@
   display: none;
 }
 
-/* ==========================================================
-   Sticky Header
-========================================================== */
+/* Sticky Header */
 
 .j-header--sticky {
   position: sticky;
@@ -303,9 +297,7 @@
   display: none;
 }
 
-/* ==========================================================
-   Predictive Search
-========================================================== */
+/* Predictive Search */
 
 .j-search-form {
   position: relative;
@@ -590,9 +582,7 @@
   display: none;
 }
 
-/* ==========================
-   Dropdown Navigation
-========================== */
+/* Dropdown Navigation */
 
 .j-nav-item {
   position: relative;
@@ -666,9 +656,7 @@
   color: var(--color-accent);
 }
 
-/* ==========================================================
-   Mega Menu
-========================================================== */
+/* Mega Menu */
 
 @media (min-width: 993px) {
   .j-nav-item--mega {
@@ -778,9 +766,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* ==========================================================
-   Nav Overlay (mobile drawer backdrop)
-========================================================== */
+/* Nav Overlay (mobile drawer backdrop) */
 
 .j-nav-overlay {
   display: none;
@@ -797,9 +783,7 @@
   opacity: 1;
 }
 
-/* ==========================================================
-   Responsive — Tablet / Mobile Navigation
-========================================================== */
+/* Responsive — Tablet / Mobile Navigation */
 
 @media (max-width: 992px) {
   .j-site-header {

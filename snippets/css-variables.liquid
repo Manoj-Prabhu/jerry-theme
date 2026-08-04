@@ -16,9 +16,7 @@
 
   :root {
 
-    /* ===============================
-       Typography
-    =============================== */
+    /* Typography */
 
     --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
     --font-primary--style: {{ settings.type_primary_font.style }};
@@ -32,17 +30,13 @@
     --font-logo--style: {{ settings.type_logo_font.style }};
     --font-logo--weight: {{ settings.type_logo_font.weight }};
 
-    /* ===============================
-       Layout
-    =============================== */
+    /* Layout */
 
     --page-width: {{ settings.max_page_width }};
     --page-margin: {{ settings.min_page_margin }}px;
     --section-spacing: {{ settings.section_spacing }}px;
 
-    /* ===============================
-       Colors
-    =============================== */
+    /* Colors */
 
     --color-background: {{ settings.background_color }};
     --color-foreground: {{ settings.foreground_color }};
@@ -51,25 +45,19 @@
     --color-accent: {{ settings.accent_color }};
     --color-border: {{ settings.border_color }};
 
-    /* ===============================
-       Radius
-    =============================== */
+    /* Radius */
 
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
     --style-border-radius-card: {{ settings.card_radius }}px;
     --style-border-radius-button: {{ settings.button_radius }}px;
     --style-border-radius-base: {{ settings.base_border_radius }}px;
 
-    /* ===============================
-       Buttons
-    =============================== */
+    /* Buttons */
 
     --button-background: {{ settings.button_bg }};
     --button-text: {{ settings.button_text }};
 
-    /* ===============================
-       Effects
-    =============================== */
+    /* Effects */
 
     --animation-speed-multiplier: {{ settings.animation_speed | divided_by: 100.0 }};
     --shadow-strength-multiplier: {{ settings.shadow_strength | divided_by: 100.0 }};

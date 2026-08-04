@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Recently Viewed
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("RecentlyViewedProducts");
 

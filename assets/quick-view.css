@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Quick View
-========================================================== */
-
 .j-quick-view-modal {
   position: fixed;
   inset: 0;
@@ -341,11 +337,7 @@
   margin: 0;
 }
 
-/* ==========================================================
-   Mascot slide-on-hover + button nudge
-   Add this to quick-view.css (replaces the existing
-   .j-quick-view__mascot rule's static positioning)
-========================================================== */
+/* Mascot slide-on-hover + button nudge */
 
 .j-quick-view__add-wrap {
   position: relative;

@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Sticky Add To Cart
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const stickyCart = document.getElementById("StickyCart");
   const addToCartButton = document.getElementById("AddToCartButton");

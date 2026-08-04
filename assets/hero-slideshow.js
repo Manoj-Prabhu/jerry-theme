@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Hero Slideshow
-========================================================== */
-
 function initHeroSlideshow(slideshow) {
   if (slideshow.dataset.heroSlideshowInitialized) return;
   slideshow.dataset.heroSlideshowInitialized = "true";
@@ -15,21 +11,14 @@ function initHeroSlideshow(slideshow) {
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
-  // Until this runs, the active slide is plain `position: static` (see
-  // hero.css) so the track already has the correct height straight from
-  // CSS — no collapsed-then-expand jump on first paint. This measures
-  // that same height, locks it in via inline style, and only then flips
-  // every slide (including the active one) to `position: absolute` via
-  // `.is-ready` — since the height is already pinned to match, that
-  // switch itself causes zero visible change, while enabling a jump-free
-  // crossfade for every slide change from here on.
+  // The active slide starts as `position: static` (see hero.css), so the
+  // track already has the right height from CSS alone before this runs —
+  // no collapsed-then-expand jump on first paint. This measures that
+  // height, locks it in, then adds `.is-ready` to switch every slide to
+  // `position: absolute` for a jump-free crossfade from here on.
   function updateHeight() {
-    // Batched into three passes (write / read / write) instead of
-    // write-read-write per slide — interleaving style writes with
-    // offsetHeight reads forces the browser to recompute layout
-    // synchronously on every iteration ("layout thrashing"). Doing all
-    // the writes first, then all the reads, then all the reverts costs
-    // one forced layout total instead of one per slide.
+    // Batched write / read / write instead of write-read-write per slide,
+    // to avoid a forced synchronous layout on every iteration.
     const originalVisibility = slides.map((slide) => slide.style.visibility);
 
     slides.forEach((slide) => {
@@ -59,10 +48,8 @@ function initHeroSlideshow(slideshow) {
     resizeTimer = setTimeout(updateHeight, 150);
   });
 
-  // In the theme editor, editing a Slide's text/image updates the DOM
-  // live (no full page reload), which would otherwise leave the height
-  // above stale. Recalculate whenever the slideshow's content actually
-  // changes, for any reason.
+  // Theme editor text/image edits update the DOM live, which would
+  // otherwise leave the height above stale.
   let mutationTimer = null;
   const observer = new MutationObserver(() => {
     clearTimeout(mutationTimer);
@@ -121,10 +108,8 @@ function initHeroSlideshow(slideshow) {
     timer = setInterval(next, autoplayDelay);
   }
 
-  // Each slide carries its own copy of the prev/next arrows (overlaid on
-  // its image), but only the active slide's copy is visible/clickable —
-  // delegate from the container so this works regardless of which
-  // slide's arrows were clicked.
+  // Each slide has its own copy of the prev/next arrows (overlaid on its
+  // image); delegate since only the active slide's copy is clickable.
   slideshow.addEventListener("click", (event) => {
     if (event.target.closest(".j-hero-slideshow__arrow--next")) {
       next();
@@ -135,51 +120,38 @@ function initHeroSlideshow(slideshow) {
     }
   });
 
-  // Pause on hover so a shopper reading a slide isn't interrupted — only
-  // wired up for devices with a real hover-capable pointer (a mouse).
-  // Touchscreens can fire a synthetic "mouseenter" on tap with no
-  // matching "mouseleave" afterward (there's no cursor to leave with),
-  // which would otherwise pause autoplay permanently until a manual
-  // interaction explicitly restarts it.
+  // Hover-pause only on real pointer devices — touchscreens can fire a
+  // "mouseenter" on tap with no matching "mouseleave", which would
+  // otherwise pause autoplay permanently.
   if (window.matchMedia("(hover: hover)").matches) {
     slideshow.addEventListener("mouseenter", stopAutoplay);
     slideshow.addEventListener("mouseleave", startAutoplay);
   }
 
-  // Pause on keyboard focus regardless of pointer type — this doesn't
-  // have the touch-emulation problem above.
   slideshow.addEventListener("focusin", stopAutoplay);
   slideshow.addEventListener("focusout", startAutoplay);
 
-  // Exposed so a bfcache restore (see the pageshow listener below) can
-  // restart autoplay without needing to re-run this whole init — the
-  // `heroSlideshowInitialized` guard at the top would otherwise skip it.
+  // Lets the bfcache pageshow handler below restart autoplay without
+  // re-running init (the initialized guard at the top would skip it).
   slideshow._heroSlideshowRestartAutoplay = startAutoplay;
 
   startAutoplay();
 }
 
 function initAllHeroSlideshows() {
-  document
-    .querySelectorAll(".j-hero-slideshow")
-    .forEach(initHeroSlideshow);
+  document.querySelectorAll(".j-hero-slideshow").forEach(initHeroSlideshow);
 }
 
 document.addEventListener("DOMContentLoaded", initAllHeroSlideshows);
 
-// The theme editor fully replaces a section's markup (fresh elements,
-// none of the state/listeners above attached) whenever a block is
-// added/removed/reordered, or the section is otherwise reloaded.
+// The theme editor replaces a section's markup wholesale on block
+// add/remove/reorder, leaving fresh elements with no listeners attached.
 document.addEventListener("shopify:section:load", (event) => {
   event.target.querySelectorAll(".j-hero-slideshow").forEach(initHeroSlideshow);
 });
 
-// A tab reused for repeat visits (e.g. clicking "View your online store"
-// from admin more than once) is often restored from the back/forward
-// cache instead of doing a fresh load — bfcache restores never fire
-// DOMContentLoaded, so the slideshow above would otherwise sit static
-// until a manual refresh. `pageshow` fires in both cases; only restart
-// autoplay when `persisted` is true so a normal first load isn't affected.
+// A reused tab (e.g. repeat "View your online store" clicks) is often
+// restored from the bfcache, which never fires DOMContentLoaded.
 window.addEventListener("pageshow", (event) => {
   if (!event.persisted) return;
 

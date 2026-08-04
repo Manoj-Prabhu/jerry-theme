@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Predictive Search
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("HeaderSearchForm");
   const input = document.getElementById("PredictiveSearchInput");
@@ -12,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jerry_recent_searches";
   const MAX_RECENT = 6;
 
-  /* ==========================================================
-     Recent Searches Storage
-  ========================================================== */
+  /* Recent Searches Storage */
 
   const getRecentSearches = () => {
     try {
@@ -64,9 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  /* ==========================================================
-     Open / Close State
-  ========================================================== */
+  /* Open / Close State */
 
   const openResults = () => {
     results.classList.add("is-open");
@@ -78,9 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.setAttribute("aria-expanded", "false");
   };
 
-  /* ==========================================================
-     Rendering
-  ========================================================== */
+  /* Rendering */
 
   const escapeHtml = (value) =>
     value.replace(
@@ -158,9 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  /* ==========================================================
-     Events
-  ========================================================== */
+  /* Events */
 
   input.addEventListener("input", () => {
     const query = input.value.trim();

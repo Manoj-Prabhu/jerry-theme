@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Wishlist
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jerry-wishlist";
 

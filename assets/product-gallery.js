@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Product Gallery
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const mainImage = document.getElementById("ProductMainImage");
   const thumbnails = document.querySelectorAll(".j-product-thumbnail");

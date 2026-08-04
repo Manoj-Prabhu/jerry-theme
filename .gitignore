@@ -12,6 +12,9 @@ node_modules/
 # Shopify CLI files
 .shopify/
 
+# Claude Code local tooling config
+.claude/
+
 ## Release files
 release
 *.zip

@@ -1,7 +1,3 @@
-/* ==========================================================
-   Jerry Theme Cart Drawer
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   const drawer = document.querySelector(".j-cart-drawer");
   const overlay = document.querySelector(".j-cart-overlay");
