@@ -94,7 +94,9 @@
   width: 520px;
   height: 520px;
   border-radius: 40px;
-  background: linear-gradient(135deg, #f8fafc, #eef6ff);
+  background: linear-gradient(135deg, #f8fafc, #eef6ff, #f0fdf4, #eef6ff);
+  background-size: 300% 300%;
+  animation: gradient-shift 12s ease-in-out infinite;
   overflow: hidden;
 }
 
@@ -108,7 +110,7 @@
   background: #22c55e22;
   top: 60px;
   left: 50px;
-  animation: float 6s ease-in-out infinite;
+  animation: float-pulse 7s ease-in-out infinite;
 }
 
 .floating-square {
@@ -119,7 +121,7 @@
   background: #3b82f622;
   right: 60px;
   bottom: 70px;
-  animation: float 8s ease-in-out infinite;
+  animation: float-rotate 9s ease-in-out infinite;
 }
 
 .floating-dot {
@@ -130,7 +132,7 @@
   background: var(--color-accent);
   top: 120px;
   right: 120px;
-  animation: float 5s ease-in-out infinite;
+  animation: float-orbit 6s ease-in-out infinite;
 }
 
 .j-hero__img {
@@ -149,17 +151,64 @@
 
 /* Animation */
 
-@keyframes float {
-  0% {
-    transform: translateY(0px);
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
   }
 
   50% {
-    transform: translateY(-18px);
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
   }
 
+  50% {
+    transform: translateY(-18px) scale(1.06);
+  }
+}
+
+@keyframes float-rotate {
+  0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(8deg);
+  }
+}
+
+@keyframes float-orbit {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(8px, -14px);
+  }
+
+  50% {
+    transform: translate(0, -20px);
+  }
+
+  75% {
+    transform: translate(-8px, -14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-hero__placeholder,
+  .floating-circle,
+  .floating-square,
+  .floating-dot {
+    animation: none;
   }
 }
 
