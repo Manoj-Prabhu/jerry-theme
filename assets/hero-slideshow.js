@@ -127,6 +127,11 @@ function initHeroSlideshow(slideshow) {
   slideshow.addEventListener("focusin", stopAutoplay);
   slideshow.addEventListener("focusout", startAutoplay);
 
+  // Exposed so a bfcache restore (see the pageshow listener below) can
+  // restart autoplay without needing to re-run this whole init — the
+  // `heroSlideshowInitialized` guard at the top would otherwise skip it.
+  slideshow._heroSlideshowRestartAutoplay = startAutoplay;
+
   startAutoplay();
 }
 
@@ -143,4 +148,22 @@ document.addEventListener("DOMContentLoaded", initAllHeroSlideshows);
 // added/removed/reordered, or the section is otherwise reloaded.
 document.addEventListener("shopify:section:load", (event) => {
   event.target.querySelectorAll(".j-hero-slideshow").forEach(initHeroSlideshow);
+});
+
+// A tab reused for repeat visits (e.g. clicking "View your online store"
+// from admin more than once) is often restored from the back/forward
+// cache instead of doing a fresh load — bfcache restores never fire
+// DOMContentLoaded, so the slideshow above would otherwise sit static
+// until a manual refresh. `pageshow` fires in both cases; only restart
+// autoplay when `persisted` is true so a normal first load isn't affected.
+window.addEventListener("pageshow", (event) => {
+  if (!event.persisted) return;
+
+  document.querySelectorAll(".j-hero-slideshow").forEach((slideshow) => {
+    if (typeof slideshow._heroSlideshowRestartAutoplay === "function") {
+      slideshow._heroSlideshowRestartAutoplay();
+    } else {
+      initHeroSlideshow(slideshow);
+    }
+  });
 });
