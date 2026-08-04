@@ -142,7 +142,7 @@
       window.jerryMascotConfig = {
         src: {{ 'mascot-cat.riv' | asset_url | json }},
         stateMachine: "State Machine 1",
-        riveUrl: "https://cdn.jsdelivr.net/npm/@rive-app/canvas@2/rive.min.js",
+        riveUrl: {{ 'rive.min.js' | asset_url | json }},
         scriptUrl: {{ 'mascot.js' | asset_url | json }},
       };
     </script>

@@ -94,6 +94,10 @@ Current version: **0.1.3**
 
 For support or questions, contact: [manojprabhu101@gmail.com](mailto:manojprabhu101@gmail.com)
 
+## Credits
+
+Jerry uses a small number of third-party assets under their respective open licenses — see [CREDITS.md](./CREDITS.md) for full attribution.
+
 ## License
 
 Copyright © 2026 Mano Studio. All rights reserved.
