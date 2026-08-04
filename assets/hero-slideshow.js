@@ -24,15 +24,27 @@ function initHeroSlideshow(slideshow) {
   // switch itself causes zero visible change, while enabling a jump-free
   // crossfade for every slide change from here on.
   function updateHeight() {
-    let maxHeight = 0;
+    // Batched into three passes (write / read / write) instead of
+    // write-read-write per slide — interleaving style writes with
+    // offsetHeight reads forces the browser to recompute layout
+    // synchronously on every iteration ("layout thrashing"). Doing all
+    // the writes first, then all the reads, then all the reverts costs
+    // one forced layout total instead of one per slide.
+    const originalVisibility = slides.map((slide) => slide.style.visibility);
 
     slides.forEach((slide) => {
-      const wasHidden = slide.style.visibility;
       slide.style.position = "static";
       slide.style.visibility = "hidden";
+    });
+
+    let maxHeight = 0;
+    slides.forEach((slide) => {
       maxHeight = Math.max(maxHeight, slide.offsetHeight);
+    });
+
+    slides.forEach((slide, index) => {
       slide.style.position = "";
-      slide.style.visibility = wasHidden;
+      slide.style.visibility = originalVisibility[index];
     });
 
     track.style.height = `${maxHeight}px`;
