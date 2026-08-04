@@ -15,10 +15,14 @@ function initHeroSlideshow(slideshow) {
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
-  // Every slide is always position:absolute (so switching slides never
-  // causes a layout jump), which means the track itself needs an
-  // explicit height — nothing is left in normal document flow to give
-  // it one automatically. Needed even for a single slide.
+  // Until this runs, the active slide is plain `position: static` (see
+  // hero.css) so the track already has the correct height straight from
+  // CSS — no collapsed-then-expand jump on first paint. This measures
+  // that same height, locks it in via inline style, and only then flips
+  // every slide (including the active one) to `position: absolute` via
+  // `.is-ready` — since the height is already pinned to match, that
+  // switch itself causes zero visible change, while enabling a jump-free
+  // crossfade for every slide change from here on.
   function updateHeight() {
     let maxHeight = 0;
 
@@ -35,6 +39,7 @@ function initHeroSlideshow(slideshow) {
   }
 
   updateHeight();
+  slideshow.classList.add("is-ready");
 
   let resizeTimer = null;
   window.addEventListener("resize", () => {

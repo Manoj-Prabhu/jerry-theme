@@ -32,13 +32,26 @@
     visibility 0s linear 0.8s;
 }
 
+/* Before JS runs, the active slide stays in normal document flow so the
+   track gets its height for free from CSS alone — this is what prevents
+   the hero from rendering collapsed (0px) on first paint and then
+   jumping open once JS measures it, which is a real, measured layout
+   shift (CLS), not just a cosmetic nitpick. Once JS has explicitly
+   locked in a height (see hero-slideshow.js), it adds `.is-ready` and
+   this rule stops applying, so every slide — including the active one —
+   switches to absolute for a jump-free crossfade between slides. */
 .j-hero-slideshow__slide.is-active {
+  position: static;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transition:
     opacity 0.8s ease,
     visibility 0s linear 0s;
+}
+
+.j-hero-slideshow.is-ready .j-hero-slideshow__slide.is-active {
+  position: absolute;
 }
 
 .j-hero-slideshow__arrow {
