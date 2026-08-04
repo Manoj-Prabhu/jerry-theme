@@ -186,6 +186,9 @@
     {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
       <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     {% endif %}
+    {% if template.name == 'index' %}
+      <script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
 
     <button
       type="button"

@@ -12,6 +12,83 @@
   padding: 140px var(--space-8);
 }
 
+/* ==========================================================
+   Slideshow
+========================================================== */
+
+.j-hero-slideshow__track {
+  position: relative;
+  transition: height 0.4s ease;
+}
+
+.j-hero-slideshow__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0.8s;
+}
+
+.j-hero-slideshow__slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0s;
+}
+
+.j-hero-slideshow__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.j-hero-slideshow__arrow--prev {
+  left: 16px;
+}
+
+.j-hero-slideshow__arrow--next {
+  right: 16px;
+}
+
+.j-hero-slideshow__arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.j-hero-slideshow__arrow:hover {
+  background: var(--color-accent);
+  color: var(--color-white);
+  transform: translateY(-50%) scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-hero-slideshow__slide {
+    transition: none;
+  }
+}
+
 /* Left Content */
 
 .j-hero__content {
@@ -84,15 +161,20 @@
 /* Right Side */
 
 .j-hero__image {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1 / 1;
+  margin: 0 0 0 auto;
 }
 
 .j-hero__placeholder {
   position: relative;
-  width: 520px;
-  height: 520px;
+  width: 100%;
+  height: 100%;
   border-radius: 40px;
   background: linear-gradient(135deg, #f8fafc, #eef6ff, #f0fdf4, #eef6ff);
   background-size: 300% 300%;
@@ -137,8 +219,8 @@
 
 .j-hero__img {
   width: 100%;
-  max-width: 560px;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
   border-radius: 32px;
   box-shadow: var(--shadow-lg);
@@ -229,11 +311,9 @@
     justify-content: center;
   }
 
-  .j-hero__placeholder {
-    width: 100%;
+  .j-hero__image {
     max-width: 420px;
-    height: 420px;
-    margin: auto;
+    margin: 0 auto;
   }
 
   .j-hero h1 {
@@ -254,7 +334,7 @@
     font-size: 16px;
   }
 
-  .j-hero__placeholder {
-    height: 280px;
+  .j-hero__image {
+    max-width: 280px;
   }
 }
