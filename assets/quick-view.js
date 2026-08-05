@@ -154,6 +154,24 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  let scrollLockY = 0;
+
+  function lockBodyScroll() {
+    scrollLockY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollLockY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+  }
+
+  function unlockBodyScroll() {
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    window.scrollTo(0, scrollLockY);
+  }
+
   function closeModal() {
     cleanupMascot();
     modal.classList.remove("is-open");
@@ -161,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentProduct = null;
     selectedVariant = null;
     selectedQuantity = 1;
+    unlockBodyScroll();
 
     const main = document.getElementById("MainContent");
     if (main) main.removeAttribute("aria-hidden");
@@ -563,6 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
 
         modal.classList.add("is-open");
+        lockBodyScroll();
 
         const main = document.getElementById("MainContent");
         if (main) main.setAttribute("aria-hidden", "true");

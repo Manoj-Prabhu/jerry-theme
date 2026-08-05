@@ -5,17 +5,19 @@
 >
   <div class="j-site-header">
 
-  <button
-    type="button"
-    class="j-menu-toggle"
-    aria-label="{{ 'header.menu_open' | t }}"
-    aria-expanded="false"
-    aria-controls="HeaderNav"
-  >
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+  {% if section.settings.menu.links != blank %}
+    <button
+      type="button"
+      class="j-menu-toggle"
+      aria-label="{{ 'header.menu_open' | t }}"
+      aria-expanded="false"
+      aria-controls="HeaderNav"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  {% endif %}
 
   <h2 class="header__title">
 

@@ -664,10 +664,6 @@
 /* Mega Menu */
 
 @media (min-width: 993px) {
-  .j-nav-item--mega {
-    position: static;
-  }
-
   .j-dropdown--mega {
     left: 50%;
     transform: translateX(-50%) translateY(10px) scale(0.98);
