@@ -18,8 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!filterToggle || !filterSidebar || !filterOverlay) return;
 
-  const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
-
   let lastFilterTrigger = null;
 
   const getFilterFocusable = () =>
@@ -82,8 +80,4 @@ document.addEventListener("DOMContentLoaded", () => {
   if (filterClose) {
     filterClose.addEventListener("click", closeFilters);
   }
-
-  window.addEventListener("resize", () => {
-    if (!isMobile()) closeFilters();
-  });
 });

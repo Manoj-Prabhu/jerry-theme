@@ -28,42 +28,73 @@
 
 @media (max-width: 640px) {
   .j-collection-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
   }
 }
 
-/* Collection Filters */
+/* Collection Filters
+
+   Filters always live behind the "Filters" toggle in the horizontal
+   toolbar, opening as a centered popup — there is no persistent sidebar
+   column at any screen size. */
 
 .j-collection-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 40px;
+  display: block;
 }
 
 .j-collection-sidebar {
-  position: sticky;
-  top: 100px;
-  align-self: start;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1060;
+
+  width: min(420px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.96);
+  transition:
+    transform var(--transition),
+    opacity var(--transition),
+    visibility var(--transition);
+}
+
+.j-collection-sidebar.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .j-collection-filters {
-  padding: 18px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: #fff;
+  position: relative;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6) var(--space-5);
+  background: linear-gradient(
+    135deg,
+    var(--color-sage) 0%,
+    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
+    var(--color-white) 75%
+  );
+  overflow: hidden;
 }
 
 .j-collection-filters__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--color-border);
 }
 
 .j-collection-filters__header h2 {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-bold);
 }
 
 .j-collection-filters__header-actions {
@@ -77,30 +108,46 @@
   color: var(--color-accent);
   font-weight: var(--font-semibold);
   text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.j-collection-filters__clear:hover {
+  color: var(--color-primary);
 }
 
 .j-collection-filters__close {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
-  background: transparent;
-  font-size: 16px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 15px;
   cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.j-collection-filters__close:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: rotate(90deg);
 }
 
 .j-filter {
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 14px;
-  margin-bottom: 14px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 10px;
 }
 
 .j-filter:last-of-type {
-  border-bottom: none;
   margin-bottom: 0;
-  padding-bottom: 0;
 }
 
 .j-filter summary {
@@ -119,6 +166,7 @@
 
 .j-filter summary::after {
   content: "";
+  flex-shrink: 0;
   width: 6px;
   height: 6px;
   border-right: 2px solid var(--color-text-light);
@@ -134,8 +182,8 @@
 .j-filter__values {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-top: 12px;
+  gap: 4px;
+  margin-top: 14px;
 }
 
 /* Checkbox Options */
@@ -144,9 +192,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 6px 8px;
+  margin-inline: -8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: var(--font-size-xs);
   color: var(--color-text);
+  transition: background var(--transition-fast);
+}
+
+.j-filter__option:hover {
+  background: #fff;
 }
 
 .j-filter__option input[type="checkbox"] {
@@ -187,6 +243,7 @@
   padding: 0 8px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+  background: #fff;
   transition: border-color var(--transition-fast);
 }
 
@@ -229,7 +286,7 @@
 }
 
 .j-filter-toggle {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
@@ -252,7 +309,8 @@
   position: fixed;
   inset: 0;
   z-index: 1050;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(2px);
   opacity: 0;
   transition: opacity var(--transition-fast);
 }
@@ -263,15 +321,6 @@
 }
 
 @media (max-width: 992px) {
-  .j-collection-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .j-collection-toolbar {
-    justify-content: space-between;
-    gap: 12px;
-  }
-
   .j-collection-toolbar label {
     white-space: nowrap;
     flex-shrink: 0;
@@ -289,44 +338,9 @@
   }
 
   .j-filter-toggle {
-    display: flex;
     flex-shrink: 0;
     padding: 8px 14px;
     font-size: var(--font-size-xs);
-  }
-
-  .j-collection-sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 1060;
-
-    width: min(360px, 85vw);
-    height: 100%;
-    overflow-y: auto;
-
-    visibility: hidden;
-    transform: translateX(100%);
-    transition:
-      transform var(--transition),
-      visibility var(--transition);
-  }
-
-  .j-collection-sidebar.is-open {
-    visibility: visible;
-    transform: translateX(0);
-  }
-
-  .j-collection-filters {
-    height: 100%;
-    border: none;
-    border-radius: 0;
-    box-shadow: var(--shadow-lg);
-    padding: var(--space-6) var(--space-4);
-  }
-
-  .j-collection-filters__close {
-    display: flex;
   }
 }
 
@@ -334,8 +348,9 @@
 
 .j-collection-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
