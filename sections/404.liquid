@@ -5,11 +5,15 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/404
 {% endcomment %}
 
-<h1>{{ '404.title' | t }}</h1>
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <h1>{{ '404.title' | t }}</h1>
 
-<p>
-  {{ '404.not_found' | t }}
-</p>
+    <p>
+      {{ '404.not_found' | t }}
+    </p>
+  </div>
+</div>
 
 <a href="{{ routes.all_products_collection_url }}">
   {{ '404.back_to_shopping' | t }}

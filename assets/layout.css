@@ -9,18 +9,6 @@
   padding-inline: var(--space-6);
 }
 
-.container-sm {
-  max-width: 960px;
-  margin-inline: auto;
-  padding-inline: var(--space-6);
-}
-
-.container-lg {
-  max-width: 1600px;
-  margin-inline: auto;
-  padding-inline: var(--space-6);
-}
-
 /* -------------------------
    Sections
 -------------------------- */
@@ -29,12 +17,38 @@
   padding-block: var(--space-16);
 }
 
-.section-sm {
-  padding-block: var(--space-10);
+/* -------------------------
+   Page Hero Band
+
+   Shared gradient band used to give every non-homepage template
+   (collection, blog, article, faq, contact, cart, 404, search,
+   list-collections, and the customer account pages) the same
+   page-title treatment as the homepage hero (see hero.css /
+   .j-hero-band). Applied with `full-width` on the outer element so
+   it bleeds edge-to-edge via the `.shopify-section > .full-width`
+   rule in critical.css, with an `__inner` wrapper to re-center the
+   title content within the normal content width.
+-------------------------- */
+
+.j-page-hero-band {
+  width: 100%;
+  padding: 48px 0;
 }
 
-.section-lg {
-  padding-block: 96px;
+.j-page-hero-band__inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+/* Only needed for pages where the <h1> sits directly in the band with no
+   wrapper div of its own (404, search, list-collections, login/register,
+   activate/reset password) and is followed by another element (a
+   description or subtext paragraph) — pages whose title lives inside its
+   own header block (e.g. .j-blog__header, .j-account__header) already
+   control their own internal spacing. */
+.j-page-hero-band__inner > h1:not(:last-child) {
+  margin-bottom: 12px;
 }
 
 /* -------------------------
@@ -46,24 +60,6 @@
   gap: var(--space-6);
 }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-6);
-}
-
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-6);
-}
-
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-6);
-}
-
 /* -------------------------
    Flex
 -------------------------- */
@@ -72,97 +68,16 @@
   display: flex;
 }
 
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-/* -------------------------
-   Alignment
--------------------------- */
-
-.items-center {
-  align-items: center;
-}
-
-.items-start {
-  align-items: flex-start;
-}
-
-.items-end {
-  align-items: flex-end;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
-/* -------------------------
-   Width Helpers
--------------------------- */
-
-.w-full {
-  width: 100%;
-}
-
-.h-full {
-  height: 100%;
-}
-
 /* -------------------------
    Responsive
 -------------------------- */
 
-@media (max-width: 1024px) {
-  .grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .grid-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
-  .container,
-  .container-sm,
-  .container-lg {
+  .container {
     padding-inline: var(--space-4);
   }
 
   .section {
     padding-block: var(--space-12);
-  }
-
-  .grid-2,
-  .grid-3,
-  .grid-4 {
-    grid-template-columns: 1fr;
-  }
-
-  .flex-between {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
   }
 }

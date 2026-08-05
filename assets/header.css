@@ -66,6 +66,11 @@
 
 /* Header */
 
+.j-site-header-wrapper {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-sand) 0%, #ffffff 65%);
+}
+
 .j-site-header {
   position: relative;
   max-width: var(--container-width);
@@ -115,7 +120,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: var(--color-white);
+  background: linear-gradient(135deg, var(--color-sand) 0%, #ffffff 65%);
 
   transition:
     top 0.25s ease,

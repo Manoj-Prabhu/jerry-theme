@@ -18,19 +18,23 @@
   endif
 %}
 
-<div class="j-cart-page container {% if cart.item_count == 0 %}is-empty{% endif %}">
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-cart-page__header">
 
-  <div class="j-cart-page__header">
+      <h1 class="j-cart-page__title">
+        {{ 'cart.title' | t }}
+      </h1>
 
-    <h1 class="j-cart-page__title">
-      {{ 'cart.title' | t }}
-    </h1>
+      <span class="j-cart-page__count">
+        {{ 'cart.item_count' | t: count: cart.item_count }}
+      </span>
 
-    <span class="j-cart-page__count">
-      {{ 'cart.item_count' | t: count: cart.item_count }}
-    </span>
-
+    </div>
   </div>
+</div>
+
+<div class="j-cart-page container {% if cart.item_count == 0 %}is-empty{% endif %}">
 
   {% if settings.free_shipping_threshold > 0 %}
     <div

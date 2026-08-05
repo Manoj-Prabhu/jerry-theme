@@ -4,22 +4,26 @@
 
 {% assign display_name = customer.first_name | default: customer.email %}
 
-<div class="page-width j-account">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-account__header">
+      <h1>{{ 'customers.account.welcome_html' | t: name: display_name }}</h1>
 
-  <div class="j-account__header">
-    <h1>{{ 'customers.account.welcome_html' | t: name: display_name }}</h1>
-
-    <div class="j-account__header-actions">
-      <a href="{{ routes.account_addresses_url }}" class="j-button-outline">
-        {{ 'customers.account.view_addresses' | t }}
-      </a>
-      <a href="{{ routes.account_logout_url }}" class="j-button-outline">
-        {{ 'customers.account.logout' | t }}
-      </a>
+      <div class="j-account__header-actions">
+        <a href="{{ routes.account_addresses_url }}" class="j-button-outline">
+          {{ 'customers.account.view_addresses' | t }}
+        </a>
+        <a href="{{ routes.account_logout_url }}" class="j-button-outline">
+          {{ 'customers.account.logout' | t }}
+        </a>
+      </div>
     </div>
   </div>
+</div>
+
+<div class="page-width j-account">
 
   <h2>{{ 'customers.account.order_history' | t }}</h2>
 

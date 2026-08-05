@@ -2,12 +2,16 @@
   Customer Account Activation
 {% endcomment %}
 
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <h1>{{ 'customers.activate_account.title' | t }}</h1>
+    <p class="j-account__subtext">{{ 'customers.activate_account.subtext' | t }}</p>
+  </div>
+</div>
+
 <div class="page-width j-account">
 
   <div class="j-account__narrow">
-
-    <h1>{{ 'customers.activate_account.title' | t }}</h1>
-    <p class="j-account__subtext">{{ 'customers.activate_account.subtext' | t }}</p>
 
     {% form 'activate_customer_password' %}
 

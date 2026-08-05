@@ -7,7 +7,11 @@
 
 {% render 'breadcrumbs' %}
 
-<h1>{{ 'search.title' | t }}</h1>
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <h1>{{ 'search.title' | t }}</h1>
+  </div>
+</div>
 
 <form action="{{ routes.search_url }}" method="get" role="search">
   <input

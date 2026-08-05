@@ -1,16 +1,20 @@
-<div class="j-faq page-width">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-faq__header">
 
-  <div class="j-faq__header">
+      <h1>{{ page.title }}</h1>
 
-    <h1>{{ page.title }}</h1>
+      {% if section.settings.subtitle != blank %}
+        <p>{{ section.settings.subtitle }}</p>
+      {% endif %}
 
-    {% if section.settings.subtitle != blank %}
-      <p>{{ section.settings.subtitle }}</p>
-    {% endif %}
-
+    </div>
   </div>
+</div>
+
+<div class="j-faq page-width">
 
   <div class="j-faq__items">
 

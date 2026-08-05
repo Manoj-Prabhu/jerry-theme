@@ -26,7 +26,6 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 32px;
 }
 
 .j-account__header h1 {
@@ -146,19 +145,6 @@
   color: #1b7a36;
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
-}
-
-.j-account__errors {
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  background: #fdecec;
-  color: #b3261e;
-  font-size: var(--font-size-sm);
-}
-
-.j-account__errors ul {
-  margin: 0;
-  padding-left: 18px;
 }
 
 /* Order history / order detail tables */

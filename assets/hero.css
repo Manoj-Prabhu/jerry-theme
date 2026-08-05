@@ -1,3 +1,8 @@
+.j-hero-band {
+  width: 100%;
+  background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
+}
+
 .j-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;

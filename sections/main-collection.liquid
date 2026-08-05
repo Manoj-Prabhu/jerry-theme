@@ -1,9 +1,7 @@
-<section class="j-collection">
+{% render 'breadcrumbs' %}
 
-  <div class="page-width">
-
-    {% render 'breadcrumbs' %}
-
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
     <div class="j-section-title">
       <h1>{{ collection.title }}</h1>
 
@@ -11,6 +9,12 @@
         <p>{{ collection.description }}</p>
       {% endif %}
     </div>
+  </div>
+</div>
+
+<section class="j-collection">
+
+  <div class="page-width">
 
     <div class="j-collection-layout">
 

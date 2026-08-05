@@ -1,6 +1,22 @@
-<div class="j-article page-width">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <header class="j-article__header">
+
+      <h1>{{ article.title }}</h1>
+
+      <div class="j-article__meta">
+        <span>{{ article.author }}</span>
+        <span>•</span>
+        <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
+      </div>
+
+    </header>
+  </div>
+</div>
+
+<div class="j-article page-width">
 
   {% if article.image %}
     <div class="j-article__hero">
@@ -16,18 +32,6 @@
       }}
     </div>
   {% endif %}
-
-  <header class="j-article__header">
-
-    <h1>{{ article.title }}</h1>
-
-    <div class="j-article__meta">
-      <span>{{ article.author }}</span>
-      <span>•</span>
-      <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
-    </div>
-
-  </header>
 
   <div class="j-article__content">
     {{ article.content }}

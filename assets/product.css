@@ -9,26 +9,6 @@
   align-items: start;
 }
 
-/* Images */
-
-.j-product__images {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.j-product__image {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-.j-product__image img {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-}
-
 /* Content */
 
 .j-product__title {

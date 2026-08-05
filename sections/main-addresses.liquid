@@ -2,16 +2,20 @@
   Customer Addresses
 {% endcomment %}
 
-<div class="page-width j-account">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
-
-  <div class="j-account__header">
-    <h1>{{ 'customers.addresses.title' | t }}</h1>
-    <a href="{{ routes.account_url }}" class="j-account__link">
-      {{ 'customers.addresses.back_to_account' | t }}
-    </a>
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-account__header">
+      <h1>{{ 'customers.addresses.title' | t }}</h1>
+      <a href="{{ routes.account_url }}" class="j-account__link">
+        {{ 'customers.addresses.back_to_account' | t }}
+      </a>
+    </div>
   </div>
+</div>
+
+<div class="page-width j-account">
 
   <button type="button" class="j-button" data-address-toggle="AddAddress">
     {{ 'customers.addresses.add_new' | t }}

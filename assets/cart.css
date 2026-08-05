@@ -321,9 +321,6 @@ html.j-scroll-lock body {
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 40px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .j-cart-page__title {

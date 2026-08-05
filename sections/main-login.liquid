@@ -2,15 +2,19 @@
   Customer Login
 {% endcomment %}
 
-<div class="page-width j-account">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <h1>{{ 'customers.login.title' | t }}</h1>
+  </div>
+</div>
+
+<div class="page-width j-account">
 
   <div class="j-account__narrow">
 
     <div id="login" class="j-account__panel">
-
-      <h1>{{ 'customers.login.title' | t }}</h1>
 
       {% form 'customer_login' %}
 

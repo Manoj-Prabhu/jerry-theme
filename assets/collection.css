@@ -8,12 +8,6 @@
   gap: var(--space-8);
 }
 
-.j-empty {
-  text-align: center;
-  color: var(--color-text-light);
-  padding: var(--space-16) 0;
-}
-
 /* Small desktop / tablet landscape — sidebar makes 4 columns too narrow */
 
 @media (min-width: 993px) and (max-width: 1300px) {

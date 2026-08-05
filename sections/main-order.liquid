@@ -2,16 +2,20 @@
   Customer Order Detail
 {% endcomment %}
 
-<div class="page-width j-account">
+{% render 'breadcrumbs' %}
 
-  {% render 'breadcrumbs' %}
-
-  <div class="j-account__header">
-    <h1>{{ 'customers.order.title_html' | t: name: order.name }}</h1>
-    <a href="{{ routes.account_url }}" class="j-account__link">
-      {{ 'customers.order.back_to_account' | t }}
-    </a>
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-account__header">
+      <h1>{{ 'customers.order.title_html' | t: name: order.name }}</h1>
+      <a href="{{ routes.account_url }}" class="j-account__link">
+        {{ 'customers.order.back_to_account' | t }}
+      </a>
+    </div>
   </div>
+</div>
+
+<div class="page-width j-account">
 
   <p class="j-account__subtext">
     {{ 'customers.order.date_html' | t: date: order.created_at | date: format: 'abbreviated_date' }}

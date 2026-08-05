@@ -2,6 +2,7 @@
   /* Static colors (theme colors come from css-variables.liquid) */
 
   --color-surface: #f8fafc;
+  --color-sand: #f5ede1;
 
   --color-white: #ffffff;
   --color-black: #000000;
@@ -12,7 +13,6 @@
      ~2.3:1 and ~3.8:1 against white, failing WCAG AA (4.5:1) for normal
      text. These pass at ~5:1 and ~4.8:1 while staying visually green/red. */
   --color-success: #15803d;
-  --color-warning: #f59e0b;
   --color-error: #dc2626;
 
   /* Aliases — map legacy token names used across the theme to the
@@ -34,9 +34,7 @@
 
   /* Font weight */
 
-  --font-light: 300;
   --font-normal: 400;
-  --font-medium: 500;
   --font-semibold: 600;
   --font-bold: 700;
 

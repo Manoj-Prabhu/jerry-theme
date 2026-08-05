@@ -42,6 +42,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Applied on every template except the homepage (which has its own hero
+   treatment) — see the body class set in layout/theme.liquid. */
+body.j-body--tinted {
+  background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
+}
+
 /* -------------------------
    Images & Media
 -------------------------- */

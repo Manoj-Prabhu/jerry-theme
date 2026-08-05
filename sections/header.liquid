@@ -1,8 +1,9 @@
 {% render 'announcement-bar' %}
 
 <header
-  class="j-site-header {% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
+  class="j-site-header-wrapper full-width {% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
+  <div class="j-site-header">
 
   <button
     type="button"
@@ -231,6 +232,7 @@
 
   </div>
 
+  </div>
 </header>
 
 {% schema %}

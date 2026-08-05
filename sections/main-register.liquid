@@ -2,13 +2,17 @@
   Customer Register
 {% endcomment %}
 
+{% render 'breadcrumbs' %}
+
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <h1>{{ 'customers.register.title' | t }}</h1>
+  </div>
+</div>
+
 <div class="page-width j-account">
 
-  {% render 'breadcrumbs' %}
-
   <div class="j-account__narrow">
-
-    <h1>{{ 'customers.register.title' | t }}</h1>
 
     {% form 'create_customer' %}
 

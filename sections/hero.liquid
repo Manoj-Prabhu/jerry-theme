@@ -3,6 +3,7 @@
   assign trust_blocks = section.blocks | where: 'type', 'trust_item'
 %}
 
+<div class="j-hero-band full-width">
 {% if slide_blocks.size > 0 %}
 
   <div
@@ -182,6 +183,7 @@
   </div>
 
 {% endif %}
+</div>
 
 {% schema %}
 {
