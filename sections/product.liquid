@@ -3,6 +3,7 @@
 {% endcomment %}
 
 {% assign current_variant = product.selected_or_first_available_variant %}
+{% assign main_image_alt = current_variant.featured_image.alt | default: product.title %}
 
 <div class="page-width">
   {% render 'breadcrumbs' %}
@@ -27,7 +28,7 @@
           fetchpriority: 'high',
           widths: '400, 600, 800, 1000',
           sizes: '(max-width: 768px) 100vw, 450px',
-          alt: current_variant.featured_image.alt | default: product.title
+          alt: main_image_alt
       }}
 
     </div>

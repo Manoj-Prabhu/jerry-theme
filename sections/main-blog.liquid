@@ -26,6 +26,8 @@
 
             {% if article.image %}
 
+              {% assign article_image_alt = article.image.alt | default: article.title %}
+
               <div class="j-blog-card__image">
 
                 {{
@@ -33,7 +35,7 @@
                   | image_url: width: 700
                   | image_tag:
                     loading: 'lazy',
-                    alt: article.image.alt | default: article.title
+                    alt: article_image_alt
                 }}
 
                 <span class="j-blog-card__date">
