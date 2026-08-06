@@ -70,39 +70,43 @@ class JerryHeader {
 
     let lastScroll = 0;
 
-    window.addEventListener("scroll", () => {
-      const currentScroll = window.pageYOffset;
+    window.addEventListener(
+      "scroll",
+      () => {
+        const currentScroll = window.pageYOffset;
 
-      /* Shadow */
+        /* Shadow */
 
-      if (currentScroll > 10) {
-        header.classList.add("is-scrolled");
-      } else {
-        header.classList.remove("is-scrolled");
-      }
+        if (currentScroll > 10) {
+          header.classList.add("is-scrolled");
+        } else {
+          header.classList.remove("is-scrolled");
+        }
 
-      /* Always visible at top */
+        /* Always visible at top */
 
-      if (currentScroll <= 0) {
-        header.classList.remove("is-hidden");
-        lastScroll = 0;
-        return;
-      }
+        if (currentScroll <= 0) {
+          header.classList.remove("is-hidden");
+          lastScroll = 0;
+          return;
+        }
 
-      /* Hide */
+        /* Hide */
 
-      if (currentScroll > lastScroll && currentScroll > 100) {
-        header.classList.add("is-hidden");
-      }
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          header.classList.add("is-hidden");
+        }
 
-      /* Show */
+        /* Show */
 
-      if (currentScroll < lastScroll) {
-        header.classList.remove("is-hidden");
-      }
+        if (currentScroll < lastScroll) {
+          header.classList.remove("is-hidden");
+        }
 
-      lastScroll = currentScroll;
-    });
+        lastScroll = currentScroll;
+      },
+      { passive: true },
+    );
   }
 
   /* Mobile Menu */

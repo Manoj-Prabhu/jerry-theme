@@ -18,7 +18,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.addEventListener("scroll", toggleStickyCart);
+  // Deferring the geometry read to the next animation frame means it runs
+  // after any other scroll listener's style writes (e.g. header.js's
+  // sticky-header classList toggle) have already been batched by the
+  // browser, instead of forcing a synchronous reflow mid-scroll-event.
+  let ticking = false;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        toggleStickyCart();
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+
   toggleStickyCart();
 
   stickyButton.addEventListener("click", async () => {

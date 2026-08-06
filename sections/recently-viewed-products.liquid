@@ -1,4 +1,12 @@
-{{ 'recently-viewed.css' | asset_url | stylesheet_tag }}
+{% # theme-check-disable AssetPreload %}
+{% comment %}
+  This section's content is entirely populated by JS after load (reading
+  localStorage, then fetching each product) — nothing above the fold
+  depends on this CSS, so it's loaded without blocking render.
+{% endcomment %}
+<link rel="preload" href="{{ 'recently-viewed.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>{{ 'recently-viewed.css' | asset_url | stylesheet_tag }}</noscript>
+{% # theme-check-enable AssetPreload %}
 
 <div class="j-recently-viewed">
 
