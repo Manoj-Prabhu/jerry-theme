@@ -19,10 +19,7 @@
 
         {% for product in recommendations.products %}
 
-          {% render 'product-card',
-            product: product,
-            show_quick_view: false
-          %}
+          {% render 'product-card', product: product %}
 
         {% endfor %}
 

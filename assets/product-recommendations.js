@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (window.JerryWishlist) {
         window.JerryWishlist.sync(container);
       }
+
+      if (window.JerryProductCardCycle) {
+        window.JerryProductCardCycle(container);
+      }
     } else {
       section.hidden = true;
     }

@@ -53,4 +53,68 @@ window.formatMoney = function formatMoney(cents, format) {
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Jerry Theme initialized");
+  window.JerryProductCardCycle();
 });
+
+/**
+ * Product cards with more than one image auto-cycle through them (no
+ * hover required). Only cards currently visible in the viewport run their
+ * interval, and the whole feature is skipped under prefers-reduced-motion.
+ *
+ * Exposed on window and re-callable: sections that inject product cards
+ * after page load (recommendations, recently viewed, predictive search)
+ * call it again, scoped to their own container, to pick up the new cards —
+ * the shared observer/timer map means already-cycling cards are unaffected.
+ */
+window.JerryProductCardCycle = (() => {
+  const CYCLE_MS = 1800;
+  const timers = new WeakMap();
+  let observer = null;
+
+  const advance = (container) => {
+    const images = container.querySelectorAll(".j-product-card__img");
+    const activeIndex = Array.from(images).findIndex((img) =>
+      img.classList.contains("is-active"),
+    );
+    const nextIndex = (activeIndex + 1) % images.length;
+
+    images[activeIndex]?.classList.remove("is-active");
+    images[nextIndex]?.classList.add("is-active");
+  };
+
+  const getObserver = () => {
+    if (observer) return observer;
+
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const container = entry.target;
+
+        if (entry.isIntersecting) {
+          if (timers.has(container)) return;
+          timers.set(
+            container,
+            setInterval(() => advance(container), CYCLE_MS),
+          );
+        } else if (timers.has(container)) {
+          clearInterval(timers.get(container));
+          timers.delete(container);
+        }
+      });
+    });
+
+    return observer;
+  };
+
+  return function scan(root = document) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const containers = root.querySelectorAll(
+      ".j-product-card__image[data-auto-cycle]",
+    );
+
+    if (!containers.length) return;
+
+    const obs = getObserver();
+    containers.forEach((container) => obs.observe(container));
+  };
+})();

@@ -567,33 +567,36 @@ document.addEventListener("DOMContentLoaded", () => {
   // Open
   // -------------------------
 
-  document.querySelectorAll(".j-quick-view-button").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const handle = button.dataset.handle;
+  // Delegated so Quick View buttons injected later (recommendations,
+  // recently viewed, predictive search) work without any extra rebinding.
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest(".j-quick-view-button");
+    if (!button) return;
 
-      try {
-        const response = await fetch(`/products/${handle}.js`);
-        const product = await response.json();
+    const handle = button.dataset.handle;
 
-        currentProduct = product;
-        selectedVariant =
-          product.variants.find((v) => v.available) || product.variants[0];
+    try {
+      const response = await fetch(`/products/${handle}.js`);
+      const product = await response.json();
 
-        render();
+      currentProduct = product;
+      selectedVariant =
+        product.variants.find((v) => v.available) || product.variants[0];
 
-        modal.classList.add("is-open");
-        lockBodyScroll();
+      render();
 
-        const main = document.getElementById("MainContent");
-        if (main) main.setAttribute("aria-hidden", "true");
+      modal.classList.add("is-open");
+      lockBodyScroll();
 
-        lastFocusedTrigger = button;
-        document.addEventListener("keydown", trapFocus);
+      const main = document.getElementById("MainContent");
+      if (main) main.setAttribute("aria-hidden", "true");
 
-        if (close) close.focus();
-      } catch (error) {
-        console.error(error);
-      }
-    });
+      lastFocusedTrigger = button;
+      document.addEventListener("keydown", trapFocus);
+
+      if (close) close.focus();
+    } catch (error) {
+      console.error(error);
+    }
   });
 });

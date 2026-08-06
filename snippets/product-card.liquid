@@ -2,33 +2,42 @@
 
   <a href="{{ product.url }}" class="j-product-card__link">
 
-    <div class="j-product-card__image">
+    <div class="j-product-card__image"{% if product.images.size > 1 %} data-auto-cycle{% endif %}>
 
       {% if product.featured_image %}
 
-        {% if priority %}
-          {{
-            product.featured_image
-            | image_url: width: 700
-            | image_tag:
-              class: 'j-product-card__img',
-              alt: product.title,
-              widths: '350, 500, 700',
-              sizes: '(max-width: 768px) 100vw, (max-width: 1100px) 50vw, 25vw',
-              fetchpriority: 'high'
-          }}
-        {% else %}
-          {{
-            product.featured_image
-            | image_url: width: 700
-            | image_tag:
-              loading: 'lazy',
-              class: 'j-product-card__img',
-              alt: product.title,
-              widths: '350, 500, 700',
-              sizes: '(max-width: 768px) 100vw, (max-width: 1100px) 50vw, 25vw'
-          }}
-        {% endif %}
+        {% assign card_images = product.images | slice: 0, 4 %}
+
+        {% for card_image in card_images %}
+          {% assign img_class = 'j-product-card__img' %}
+          {% if forloop.first %}
+            {% assign img_class = img_class | append: ' is-active' %}
+          {% endif %}
+
+          {% if forloop.first and priority %}
+            {{
+              card_image
+              | image_url: width: 700
+              | image_tag:
+                class: img_class,
+                alt: product.title,
+                widths: '350, 500, 700',
+                sizes: '(max-width: 768px) 100vw, (max-width: 1100px) 50vw, 25vw',
+                fetchpriority: 'high'
+            }}
+          {% else %}
+            {{
+              card_image
+              | image_url: width: 700
+              | image_tag:
+                loading: 'lazy',
+                class: img_class,
+                alt: product.title,
+                widths: '350, 500, 700',
+                sizes: '(max-width: 768px) 100vw, (max-width: 1100px) 50vw, 25vw'
+            }}
+          {% endif %}
+        {% endfor %}
 
       {% else %}
 

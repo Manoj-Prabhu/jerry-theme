@@ -17,6 +17,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch(`/products/${handle}.js`);
       const product = await response.json();
+      const strings = window.themeStrings || {};
+
+      const images = (product.images && product.images.length
+        ? product.images
+        : [product.featured_image]
+      ).slice(0, 4);
+
+      const imagesHtml = images
+        .map(
+          (src, index) => `
+              <img
+                src="${src}"
+                alt="${product.title}"
+                loading="lazy"
+                class="j-product-card__img${index === 0 ? " is-active" : ""}"
+              >
+            `,
+        )
+        .join("");
 
       container.innerHTML += `
         <div class="j-product-card">
@@ -26,19 +45,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             class="j-wishlist-button"
             data-handle="${product.handle}"
             data-product-title="${product.title}"
-            aria-label="${(window.themeStrings && window.themeStrings.addToWishlistHtml ? window.themeStrings.addToWishlistHtml : "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
+            aria-label="${(strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
           >
             ♡
           </button>
 
           <a href="/products/${product.handle}" class="j-product-card__link">
 
-            <div class="j-product-card__image">
-              <img
-                src="${product.featured_image}"
-                alt="${product.title}"
-                loading="lazy"
-              >
+            <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
+              ${imagesHtml}
             </div>
 
             <div class="j-product-card__content">
@@ -53,6 +68,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           </a>
 
+          <button
+            type="button"
+            class="j-quick-view-button"
+            data-handle="${product.handle}"
+            aria-haspopup="dialog"
+          >
+            ${strings.quickView || "Quick View"}
+          </button>
+
         </div>
       `;
     } catch (error) {
@@ -62,5 +86,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (window.JerryWishlist) {
     window.JerryWishlist.sync(container);
+  }
+
+  if (window.JerryProductCardCycle) {
+    window.JerryProductCardCycle(container);
   }
 });
