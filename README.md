@@ -23,6 +23,24 @@ Jerry is a modern, conversion-focused Shopify Online Store 2.0 theme built for p
 
 After installing, visit **Online Store → Themes → Customize** to set your logo, colors, fonts, hero content, and navigation before publishing.
 
+### Pushing code updates safely
+
+Content added through the Theme Editor (hero slides, featured collections, menu assignments, and other settings) is stored as data in `templates/*.json` and `config/settings_data.json` — not in the theme's code files. Running `shopify theme push` uploads your local copies of *all* files, including those, so if your local project doesn't have the latest Theme Editor changes, pushing will overwrite and remove them.
+
+To update the theme's code without losing live content:
+
+```bash
+shopify theme pull
+```
+
+Run this before every push to sync the live theme's current content/settings into your local files first. Then push normally — your code changes apply on top of the live content instead of replacing it.
+
+If you only changed code (not settings or templates) and want to skip the pull, you can instead exclude data files from the push directly:
+
+```bash
+shopify theme push --ignore="templates/*.json" --ignore="config/settings_data.json"
+```
+
 ## Theme features
 
 - **Hero slideshow** — up to 4 slides, each with its own image, heading, description, and buttons; autoplays with manual prev/next controls, crossfades smoothly, and pauses on hover/focus
