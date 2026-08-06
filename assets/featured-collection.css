@@ -65,7 +65,6 @@
 /* Highlight the whole card once it's been added to the wishlist */
 .j-product-card:has(.j-wishlist-button.is-active) {
   border-color: var(--color-gold);
-  background: color-mix(in srgb, var(--color-gold) 35%, white);
 }
 
 /* Image */
