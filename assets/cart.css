@@ -175,9 +175,14 @@ html.j-scroll-lock body {
   padding: 16px;
   margin-bottom: 14px;
 
-  border: 1px solid var(--color-rose);
+  border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-rose) 25%, transparent);
+  background: linear-gradient(
+    135deg,
+    var(--color-gold) 0%,
+    color-mix(in srgb, var(--color-gold) 50%, white) 45%,
+    var(--color-white) 80%
+  );
 
   transition:
     border-color var(--transition-fast),
@@ -308,6 +313,21 @@ html.j-scroll-lock body {
 @media (max-width: 768px) {
   .j-cart {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .j-cart-item {
+    flex-wrap: wrap;
+  }
+
+  .j-cart-item__image {
+    width: 100%;
+    height: 160px;
+  }
+
+  .j-cart-item__content {
+    flex-basis: 100%;
   }
 }
 
