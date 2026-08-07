@@ -7,17 +7,26 @@
 
 <div class="full-width j-page-hero-band">
   <div class="j-page-hero-band__inner">
-    <h1>{{ '404.title' | t }}</h1>
+    <div class="j-404">
 
-    <p>
-      {{ '404.not_found' | t }}
-    </p>
+      <svg class="j-404__icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <circle cx="28" cy="28" r="18" stroke="currentColor" stroke-width="3"/>
+        <path d="M41 41 L54 54" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M21 28h14M28 21v14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+
+      <h1>{{ '404.title' | t }}</h1>
+
+      <p class="j-404__subtext">{{ '404.not_found' | t }}</p>
+      <p class="j-404__detail">{{ '404.not_found_detail' | t }}</p>
+
+      <a href="{{ routes.all_products_collection_url }}" class="j-button j-404__button">
+        {{ '404.back_to_shopping' | t }}
+      </a>
+
+    </div>
   </div>
 </div>
-
-<a href="{{ routes.all_products_collection_url }}">
-  {{ '404.back_to_shopping' | t }}
-</a>
 
 {% schema %}
 {

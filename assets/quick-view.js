@@ -118,14 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }));
   }
 
-  function findVariantByImage(src) {
-    return currentProduct.variants.find(
-      (v) =>
-        v.featured_image &&
-        normalizeSrc(v.featured_image.src) === normalizeSrc(src),
-    );
-  }
-
   function colorKey(value) {
     return value.replace(/[\s-]/g, "").toLowerCase();
   }
@@ -401,16 +393,44 @@ document.addEventListener("DOMContentLoaded", () => {
     // Thumbnails
     content.querySelectorAll(".j-quick-view-thumbnail").forEach((thumb) => {
       thumb.addEventListener("click", () => {
-        const matchingVariant = findVariantByImage(thumb.dataset.image);
+        const imageSrc = thumb.dataset.image;
+        const sameImageVariants = currentProduct.variants.filter(
+          (v) =>
+            v.featured_image &&
+            normalizeSrc(v.featured_image.src) === normalizeSrc(imageSrc),
+        );
 
-        if (matchingVariant && matchingVariant.id !== selectedVariant.id) {
-          selectedVariant = matchingVariant;
-          render();
-          return;
+        if (sameImageVariants.length) {
+          // Only adopt the option(s) this image actually determines (e.g.
+          // Color) — if every variant sharing this image agrees on a given
+          // option index, that index is image-specific. Any other option
+          // (e.g. Size) keeps whatever the shopper already had selected,
+          // instead of jumping to whichever variant is first for this image.
+          const mergedOptions = selectedVariant.options.map(
+            (currentValue, index) => {
+              const isImageSpecific = sameImageVariants.every(
+                (v) => v.options[index] === sameImageVariants[0].options[index],
+              );
+              return isImageSpecific
+                ? sameImageVariants[0].options[index]
+                : currentValue;
+            },
+          );
+
+          const matchingVariant =
+            currentProduct.variants.find((v) =>
+              v.options.every((val, i) => val === mergedOptions[i]),
+            ) || sameImageVariants[0];
+
+          if (matchingVariant.id !== selectedVariant.id) {
+            selectedVariant = matchingVariant;
+            render();
+            return;
+          }
         }
 
         const mainImage = document.getElementById("QuickViewMainImage");
-        if (mainImage) mainImage.src = thumb.dataset.image;
+        if (mainImage) mainImage.src = imageSrc;
 
         content.querySelectorAll(".j-quick-view-thumbnail").forEach((t) => {
           t.classList.toggle("is-active", t === thumb);

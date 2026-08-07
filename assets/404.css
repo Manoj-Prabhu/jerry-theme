@@ -1,0 +1,33 @@
+.j-404 {
+  max-width: 480px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.j-404__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  color: var(--color-primary);
+}
+
+.j-404 h1 {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary);
+}
+
+.j-404__subtext {
+  margin-top: 8px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+}
+
+.j-404__detail {
+  margin-top: 8px;
+  color: var(--color-text-light);
+}
+
+.j-404__button {
+  margin-top: 32px;
+}

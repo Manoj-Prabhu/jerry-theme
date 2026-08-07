@@ -1,0 +1,34 @@
+/* Search Form (on the search results page itself, not the header dropdown) */
+
+.j-search-page-form {
+  display: flex;
+  gap: 12px;
+  max-width: 480px;
+  margin-top: 24px;
+}
+
+.j-search-page-form input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  font-size: var(--font-size-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.j-search-page-form input:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.j-search-page-count {
+  margin-top: 16px;
+  color: var(--color-text-light);
+}
+
+@media (max-width: 480px) {
+  .j-search-page-form {
+    flex-direction: column;
+  }
+}

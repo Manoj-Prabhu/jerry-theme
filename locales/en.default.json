@@ -2,6 +2,7 @@
   "404": {
     "title": "404",
     "not_found": "Page not found.",
+    "not_found_detail": "The page you're looking for doesn't exist or has been moved.",
     "back_to_shopping": "Back to shopping"
   },
   "breadcrumbs": {

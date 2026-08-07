@@ -108,6 +108,9 @@
     {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
       {{ 'collection.css' | asset_url | stylesheet_tag }}
     {% endif %}
+    {% if template.name == 'search' %}
+      {{ 'search.css' | asset_url | stylesheet_tag }}
+    {% endif %}
     {% if template.name == 'page' and template.suffix == 'contact' %}
       {{ 'contact.css' | asset_url | stylesheet_tag }}
     {% endif %}
@@ -120,6 +123,9 @@
     {% endif %}
     {% if template.name == 'customers' %}
       {{ 'customers.css' | asset_url | stylesheet_tag }}
+    {% endif %}
+    {% if template.name == '404' %}
+      {{ '404.css' | asset_url | stylesheet_tag }}
     {% endif %}
 
     {% # Social, title, etc. %}
