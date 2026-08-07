@@ -1,12 +1,48 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:general.footer",
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "menu_W38fjW": {
+          "type": "menu",
+          "settings": {
+            "menu": "shop"
+          }
+        },
+        "menu_AJWmBC": {
+          "type": "menu",
+          "settings": {
+            "menu": "company"
+          }
+        },
+        "menu_LirKCR": {
+          "type": "menu",
+          "settings": {
+            "menu": "support"
+          }
+        }
+      },
+      "block_order": [
+        "menu_W38fjW",
+        "menu_AJWmBC",
+        "menu_LirKCR"
+      ],
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "description": "Premium products crafted for modern living.",
+        "show_social_icons": true,
+        "show_payment_icons": true,
+        "show_localization_selector": true
       }
     }
   },
