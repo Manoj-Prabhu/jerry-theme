@@ -617,6 +617,16 @@ html.j-scroll-lock body {
   gap: 16px;
 }
 
+/* With only 1-2 items, the single full-width column reads best. Once a
+   3rd item is added, split into two columns instead of one long list. */
+@media (min-width: 993px) {
+  .j-cart-page__items:has(.j-cart-item:nth-child(3)) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+  }
+}
+
 .j-cart-page__items .j-cart-item {
   margin-bottom: 0;
   padding: 20px;
