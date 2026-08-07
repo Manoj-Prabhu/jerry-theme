@@ -167,13 +167,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Enter never navigates away — shoppers pick a result from the
+  // predictive dropdown instead of landing on the full search page.
   form.addEventListener("submit", (event) => {
-    if (!input.value.trim()) {
-      event.preventDefault();
-      return;
-    }
+    event.preventDefault();
 
-    saveRecentSearch(input.value);
+    if (input.value.trim()) {
+      saveRecentSearch(input.value);
+    }
   });
 
   results.addEventListener("click", (event) => {
