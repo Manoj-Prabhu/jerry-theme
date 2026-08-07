@@ -1,16 +1,235 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "main-faq",
+      "blocks": {
+        "category_orders": {
+          "type": "category",
+          "settings": {
+            "heading": "Orders"
+          }
+        },
+        "faq_place_order": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I place an order?",
+            "answer": "<p>Browse our products, select your preferred options (such as size or color), and click Add to Cart. Once you're ready, proceed to checkout and complete your payment securely.</p>"
+          }
+        },
+        "faq_modify_order": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I modify or cancel my order?",
+            "answer": "<p>If your order has not been processed or shipped, we may be able to modify or cancel it. Please contact us as soon as possible after placing your order.</p>"
+          }
+        },
+        "faq_track_order": {
+          "type": "faq",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "<p>Once your order is shipped, you'll receive a confirmation email with a tracking number and a link to track your package.</p>"
+          }
+        },
+        "category_shipping": {
+          "type": "category",
+          "settings": {
+            "heading": "Shipping"
+          }
+        },
+        "faq_ship_where": {
+          "type": "faq",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>We ship to most locations. Shipping availability and costs are calculated during checkout based on your delivery address.</p>"
+          }
+        },
+        "faq_ship_time": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Shipping times vary depending on your location and the selected shipping method. Estimated delivery times are displayed during checkout.</p>"
+          }
+        },
+        "faq_free_shipping": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer free shipping?",
+            "answer": "<p>Free shipping may be available on eligible orders or during promotional periods. Please check our current offers for details.</p>"
+          }
+        },
+        "category_payments": {
+          "type": "category",
+          "settings": {
+            "heading": "Payments"
+          }
+        },
+        "faq_payment_methods": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>We accept major credit and debit cards, UPI, digital wallets, net banking, and other secure payment methods available at checkout.</p>"
+          }
+        },
+        "faq_payment_secure": {
+          "type": "faq",
+          "settings": {
+            "question": "Is my payment information secure?",
+            "answer": "<p>Yes. All payments are processed through secure, encrypted payment gateways. We do not store your card details.</p>"
+          }
+        },
+        "category_returns": {
+          "type": "category",
+          "settings": {
+            "heading": "Returns & Refunds"
+          }
+        },
+        "faq_return_policy": {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>If you're not completely satisfied with your purchase, you can request a return within the eligible return period, provided the item is unused, in its original condition, and includes all original packaging.</p>"
+          }
+        },
+        "faq_request_return": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I request a return?",
+            "answer": "<p>Contact our customer support with your order number and the reason for your return. We'll guide you through the return process.</p>"
+          }
+        },
+        "faq_refund_time": {
+          "type": "faq",
+          "settings": {
+            "question": "When will I receive my refund?",
+            "answer": "<p>Once your returned item has been received and inspected, refunds are typically processed within 5–10 business days. Processing times may vary depending on your payment provider.</p>"
+          }
+        },
+        "category_products": {
+          "type": "category",
+          "settings": {
+            "heading": "Products"
+          }
+        },
+        "faq_product_look": {
+          "type": "faq",
+          "settings": {
+            "question": "Will the product look exactly like the pictures?",
+            "answer": "<p>We strive to display product colors and details as accurately as possible. However, slight variations may occur due to lighting, photography, or differences in screen settings.</p>"
+          }
+        },
+        "faq_product_size": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I choose the right size?",
+            "answer": "<p>Please refer to our Size Guide available on each product page. If you're unsure, feel free to contact us before placing your order.</p>"
+          }
+        },
+        "faq_product_warranty": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your products covered by a warranty?",
+            "answer": "<p>Warranty coverage depends on the product. If applicable, warranty information will be mentioned on the product page.</p>"
+          }
+        },
+        "category_account": {
+          "type": "category",
+          "settings": {
+            "heading": "Account"
+          }
+        },
+        "faq_account_needed": {
+          "type": "faq",
+          "settings": {
+            "question": "Do I need an account to place an order?",
+            "answer": "<p>No. You can check out as a guest. However, creating an account allows you to track orders, save addresses, and enjoy a faster checkout experience.</p>"
+          }
+        },
+        "faq_forgot_password": {
+          "type": "faq",
+          "settings": {
+            "question": "I forgot my password. What should I do?",
+            "answer": "<p>Click the Forgot Password link on the login page and follow the instructions to reset your password.</p>"
+          }
+        },
+        "category_support": {
+          "type": "category",
+          "settings": {
+            "heading": "Customer Support"
+          }
+        },
+        "faq_contact_support": {
+          "type": "faq",
+          "settings": {
+            "question": "How can I contact customer support?",
+            "answer": "<p>You can reach us via email, live chat, or the contact form on our website. Our support team will respond as quickly as possible during business hours.</p>"
+          }
+        },
+        "faq_support_hours": {
+          "type": "faq",
+          "settings": {
+            "question": "What are your customer support hours?",
+            "answer": "<p>Our support team is available Monday through Friday during regular business hours. Response times may vary during weekends and holidays.</p>"
+          }
+        },
+        "category_promotions": {
+          "type": "category",
+          "settings": {
+            "heading": "Promotions & Discounts"
+          }
+        },
+        "faq_multiple_codes": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use multiple discount codes?",
+            "answer": "<p>Only one discount code can usually be applied per order unless otherwise specified.</p>"
+          }
+        },
+        "faq_discount_not_working": {
+          "type": "faq",
+          "settings": {
+            "question": "Why isn't my discount code working?",
+            "answer": "<p>Your code may have expired, reached its usage limit, or not meet the promotion's terms and conditions. Double-check the requirements or contact our support team.</p>"
+          }
+        },
+        "note_still_need_help": {
+          "type": "note",
+          "settings": {
+            "heading": "Still Need Help?",
+            "content": "<p>If you couldn't find the answer you're looking for, we'd be happy to help. Please contact our customer support team with your order number (if applicable), and we'll get back to you as soon as possible.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "category_orders",
+        "faq_place_order",
+        "faq_modify_order",
+        "faq_track_order",
+        "category_shipping",
+        "faq_ship_where",
+        "faq_ship_time",
+        "faq_free_shipping",
+        "category_payments",
+        "faq_payment_methods",
+        "faq_payment_secure",
+        "category_returns",
+        "faq_return_policy",
+        "faq_request_return",
+        "faq_refund_time",
+        "category_products",
+        "faq_product_look",
+        "faq_product_size",
+        "faq_product_warranty",
+        "category_account",
+        "faq_account_needed",
+        "faq_forgot_password",
+        "category_support",
+        "faq_contact_support",
+        "faq_support_hours",
+        "category_promotions",
+        "faq_multiple_codes",
+        "faq_discount_not_working",
+        "note_still_need_help"
+      ],
       "settings": {}
     }
   },

@@ -1,5 +1,5 @@
 .j-faq {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 80px auto;
   padding: 0 var(--space-8);
 }
@@ -17,17 +17,72 @@
   color: var(--color-text-light);
 }
 
+/* Page body content (Online Store > Pages > FAQ) — a free-form
+   alternative/companion to the accordion blocks below, for merchants who
+   prefer writing their FAQ as one long rich-text document. */
+.j-faq__content {
+  margin-bottom: 48px;
+}
+
+.j-faq__content h2 {
+  margin-top: 40px;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.j-faq__content h2:first-child {
+  margin-top: 0;
+}
+
+.j-faq__content h3 {
+  margin-top: 20px;
+  margin-bottom: 6px;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.j-faq__content p {
+  margin-bottom: 16px;
+  line-height: 1.8;
+  color: var(--color-text-light);
+}
+
+/* Category groups fill column 1 top-to-bottom then column 2 (grid-auto-flow:
+   column), with an explicit row count (--faq-rows, set inline per the
+   actual number of categories) so matching rows share a height — that's
+   what makes headings in the same row line up across both columns, unlike
+   CSS multi-column which flows each column independently. */
 .j-faq__items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(var(--faq-rows, 4), auto);
+  grid-auto-flow: column;
+  column-gap: 32px;
+  row-gap: 12px;
+}
+
+.j-faq__group {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* Without this, opening a question in one column stretches the grid
+     row height to match, and the grid then stretches the OTHER column's
+     group in that same row to fill it too — even though nothing in it
+     opened. align-self: start keeps each group at its own natural
+     height regardless of what its row neighbor is doing. */
+  align-self: start;
 }
 
 .j-faq__item {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-white);
+  border: 1px solid var(--color-sage);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    var(--color-sage) 0%,
+    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
+    var(--color-white) 75%
+  );
   overflow: hidden;
+  margin-bottom: 12px;
   transition: box-shadow 0.3s ease;
 }
 
@@ -38,35 +93,96 @@
 .j-faq__question {
   list-style: none;
   cursor: pointer;
-  padding: 22px 24px;
-  font-size: 20px;
+  padding: 14px 40px 14px 18px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-primary);
   position: relative;
+  transition: background var(--transition-fast);
+}
+
+.j-faq__question:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .j-faq__question::-webkit-details-marker {
   display: none;
 }
 
+/* Chevron arrow, rotating smoothly from pointing down to pointing up
+   instead of swapping "+"/"−" text (content changes can't be animated). */
 .j-faq__question::after {
-  content: "+";
+  content: "";
   position: absolute;
-  right: 24px;
+  right: 18px;
   top: 50%;
-  transform: translateY(-50%);
-  font-size: 26px;
-  transition: transform 0.25s ease;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.3s ease;
 }
 
 .j-faq__item[open] .j-faq__question::after {
-  content: "−";
+  transform: translateY(-30%) rotate(-135deg);
 }
 
 .j-faq__answer {
-  padding: 0 24px 24px;
+  padding: 0 18px 16px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  line-height: 1.7;
+}
+
+.j-faq__category {
+  margin-bottom: 16px;
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+.j-faq__note {
+  margin-top: 32px;
+  padding: 24px;
+  border: 1px solid var(--color-orange);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-orange) 0%,
+    color-mix(in srgb, var(--color-orange) 35%, white) 35%,
+    var(--color-white) 75%
+  );
+}
+
+.j-faq__note-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.j-faq__note-heading::after {
+  content: "";
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(-45deg);
+}
+
+.j-faq__note p {
   color: var(--color-text-light);
   line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .j-faq__items {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
 }
 
 @media (max-width: 768px) {
