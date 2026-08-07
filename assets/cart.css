@@ -623,13 +623,17 @@ html.j-scroll-lock body {
   .j-cart-page__items:has(.j-cart-item:nth-child(3)) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    align-items: start;
+  }
+
+  .j-cart-page__items:has(.j-cart-item:nth-child(3)) .j-cart-item {
+    height: 100%;
+    min-height: 0;
   }
 }
 
 .j-cart-page__items .j-cart-item {
   margin-bottom: 0;
-  padding: 20px;
+  padding: 14px;
   border-radius: var(--radius-lg);
 }
 
@@ -639,8 +643,8 @@ html.j-scroll-lock body {
 }
 
 .j-cart-page__items .j-cart-item__image {
-  width: 96px;
-  height: 96px;
+  width: 72px;
+  height: 72px;
 }
 
 .j-cart-page__items .j-cart-item__content .j-cart-item__title {
