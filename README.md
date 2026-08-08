@@ -102,7 +102,7 @@ JavaScript-dependent features (cart drawer, quick view, predictive search, wishl
 
 ## Version
 
-Current version: **0.1.9**
+Current version: **1.0.0**
 
 ## Author
 

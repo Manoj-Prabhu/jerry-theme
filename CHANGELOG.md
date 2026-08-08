@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.9
+## 1.0.0
 
 Initial release
 
@@ -12,6 +12,7 @@ Initial release
 - Product Recommendations
 - Testimonials
 - Product Card Swatches & Ratings
+- Product Card Auto-Cycling Images
 - Product Badges (Sold Out / New)
 - AJAX Cart Drawer
 - Cart Free Shipping Progress Bar
@@ -28,6 +29,7 @@ Initial release
 - Customer Accounts
 - App Block Support
 - Country/Currency Selector
+- Newsletter Signup
 - Multi-language Support
 - Gift Cards
 - Blog & Articles
