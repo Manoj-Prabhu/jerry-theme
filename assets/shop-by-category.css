@@ -19,7 +19,10 @@
 }
 
 .j-shop-by-category__heading p {
-  color: var(--color-text-light);
+  /* Fixed color (not var(--color-text-light), which only clears ~4.5:1
+     against pure white — this section's background is a light accent
+     tint, and text-light measures under 4.5:1 against it). */
+  color: var(--color-text);
   margin-top: 8px;
 }
 
