@@ -27,7 +27,7 @@ The homepage hero supports up to 4 slides, each with its own image, small badge 
 A grid linking to your collections, each with its own image and title. Add up to 4 categories as blocks.
 
 ### Featured Collection / Product Recommendations
-Choose a collection to feature on your homepage, or let Shopify automatically recommend related products on product pages.
+Choose a collection to feature on your homepage, or let Shopify automatically recommend products on product pages. Add the **Product Recommendations** section twice to a product template to show both **Related** and **Complementary** products at once — set each instance's **Intent** setting accordingly. Complementary recommendations need real order history to populate, so they may not show results on a brand-new store yet.
 
 ### Testimonials
 Showcase customer reviews with a star rating, quote, name, and optional avatar photo. Add as many testimonial blocks as you like.
@@ -43,6 +43,12 @@ Showcase customer reviews with a star rating, quote, name, and optional avatar p
 - Products with multiple images automatically cycle through them on hover-free browsing (e.g. in collection grids).
 - **Sticky Add to Cart**: on product pages, a slim bar with the product name, price, and an Add to Cart button appears at the top once a shopper scrolls past the main add-to-cart button — no setup required.
 - **Recently Viewed Products**: a section that automatically shows the last few products a shopper looked at, based on their browsing history. Add it to any page as a section in the Theme Editor.
+- **Accelerated checkout** (Buy with Shop Pay, Apple Pay, etc.): shown automatically on every product's Add to Cart form whenever the variant is in stock. This is Shopify's native checkout button — its colors and layout are controlled by Shopify directly and can't be restyled, per Shopify's brand requirements.
+- **Unit pricing**: if a variant has a unit price set (Product → Pricing → "Unit price" in your Shopify admin), the price-per-unit (e.g. "$1.00/oz") is shown automatically beneath the price — on the product page, cart, and collection product cards.
+- **Compare-at price**: when a variant has a compare-at price higher than its price, the original price is shown struck through next to the sale price automatically.
+- **Local pickup availability**: if pickup is enabled for a location under **Settings → Locations** and the product has stock there, a "Pickup available at [location]" message appears automatically on the product page.
+- **Shop Pay Installments**: once Shopify Payments and Shop Pay are active on your store, an "as low as $X/mo" message appears automatically under eligible product prices — no theme setup required.
+- **Subscriptions / Selling Plans**: if a product has one or more selling plans (via Shopify's native subscriptions feature or a subscriptions app), a "Purchase options" selector automatically appears on the product page letting shoppers choose one-time purchase or a subscription plan. Nothing shows if the product has no selling plans.
 
 ---
 
@@ -59,6 +65,8 @@ Showcase customer reviews with a star rating, quote, name, and optional avatar p
 - The **cart drawer** slides in from the side after adding a product, showing a live order summary.
 - A **free shipping progress bar** shows shoppers how much more they need to spend to unlock free shipping — set your threshold in **Theme Settings → Cart**.
 - The dedicated **cart page** (`/cart`) mirrors the drawer with a full-page layout.
+- A **discount code field** on the cart page lets shoppers apply a code before heading to checkout.
+- **Accelerated checkout** (Buy with Shop Pay, etc.) appears next to the Checkout button automatically, same as on product pages.
 
 ---
 
@@ -97,6 +105,7 @@ Select the **Footer** section in the Theme Editor to configure:
 - **Description**: a short line of text about your store, shown next to your logo.
 - **Menu columns**: add up to 3 **Menu** blocks, each linking to one of your navigation menus (e.g. Shop, Company, Support) — add, remove, or reorder them freely.
 - **Social icons**: toggle on/off; icons appear automatically for any social links you've added under **Theme Settings → Social media**.
+- **Follow on Shop**: a "Follow on Shop" button appears automatically next to your social icons once the Shop app sales channel is installed and active — this is Shopify's native component and its styling can't be changed, per Shopify's brand requirements. It won't appear on a password-protected store; it shows once your store is live.
 - **Payment icons**: toggle on/off to show the payment methods your store accepts.
 - **Country/currency selector**: toggle on/off (see Navigation & Search above).
 - **Newsletter signup**: a built-in email subscription form is always shown in the footer, adding subscribers to your customer list automatically.
@@ -142,6 +151,7 @@ If you install an app that provides theme app blocks (e.g. reviews, loyalty, ups
 
 Click the gear icon (**Theme Settings**) at the bottom of the section list in the Theme Editor to access store-wide settings, organized into:
 
+- **General** — upload a favicon (the small icon shown in browser tabs).
 - **Typography** — fonts and sizing for headings and body text.
 - **Layout** — page width and spacing.
 - **Effects** — animation and visual effect toggles.

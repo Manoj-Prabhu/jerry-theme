@@ -42,4 +42,14 @@ Initial release
 - Back to Top Button
 - Accessibility (keyboard navigation and screen reader support)
 - Theme Settings
+- Favicon Setting
 - Responsive Layout
+- Accelerated Checkout (Buy with Shop Pay, Apple Pay, etc.) on Product and Cart Pages
+- Unit Pricing (product, cart, and product card)
+- Compare-at Price Display on Product Page
+- Local Pickup Availability
+- Shop Pay Installments
+- Subscriptions / Selling Plans Purchase Options
+- Complementary Product Recommendations
+- Cart Discount Code Field
+- Follow on Shop Button
