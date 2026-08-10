@@ -42,6 +42,31 @@ function initHeroSlideshow(slideshow) {
   updateHeight();
   slideshow.classList.add("is-ready");
 
+  // Non-first slides ship with data-src/data-srcset instead of real
+  // src/srcset (see hero.liquid) so the browser doesn't fetch every slide
+  // image upfront just because they geometrically overlap the viewport.
+  // Hydrate them once the browser is idle after the critical first paint,
+  // well before autoplay's first advance needs them.
+  function hydrateDeferredSlideImages() {
+    slides.forEach((slide) => {
+      const img = slide.querySelector("img[data-src]");
+      if (!img) return;
+
+      if (img.dataset.srcset) {
+        img.srcset = img.dataset.srcset;
+        img.removeAttribute("data-srcset");
+      }
+      img.src = img.dataset.src;
+      img.removeAttribute("data-src");
+    });
+  }
+
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(hydrateDeferredSlideImages, { timeout: 2000 });
+  } else {
+    setTimeout(hydrateDeferredSlideImages, 1000);
+  }
+
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);

@@ -16,15 +16,6 @@
 
     <div class="j-hero-slideshow__track">
       {% for block in slide_blocks %}
-        {% liquid
-          assign img_loading = 'lazy'
-          assign img_priority = 'auto'
-          if forloop.first
-            assign img_loading = 'eager'
-            assign img_priority = 'high'
-          endif
-        %}
-
         <div
           class="j-hero j-hero-slideshow__slide{% if forloop.first %} is-active{% endif %}"
           data-slide-index="{{ forloop.index0 }}"
@@ -68,17 +59,42 @@
           <div class="j-hero__image">
 
             {% if block.settings.image %}
-              {{
-                block.settings.image
-                | image_url: width: 1200
-                | image_tag:
-                  loading: img_loading,
-                  fetchpriority: img_priority,
-                  widths: '360, 480, 600, 760, 1000, 1200',
-                  sizes: '(max-width: 991px) 90vw, 560px',
-                  class: 'j-hero__img',
-                  alt: block.settings.heading
-              }}
+              {% if forloop.first %}
+                {{
+                  block.settings.image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'eager',
+                    fetchpriority: 'high',
+                    widths: '360, 480, 600, 760, 1000, 1200',
+                    sizes: '(max-width: 991px) 90vw, 560px',
+                    class: 'j-hero__img',
+                    alt: block.settings.heading
+                }}
+              {% else %}
+                {% comment %}
+                  Every slide sits at position: absolute; inset: 0 from
+                  first paint (see hero.css), all overlapping the same
+                  viewport-visible box the active slide occupies — so
+                  loading="lazy" never defers them; the browser considers
+                  them "in view" immediately and fetches all N slide images
+                  upfront. Withholding src/srcset (via data-src/data-srcset)
+                  until hero-slideshow.js hydrates them on idle avoids
+                  downloading slides the visitor may never scroll to.
+                {% endcomment %}
+                {% capture deferred_hero_image %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      widths: '360, 480, 600, 760, 1000, 1200',
+                      sizes: '(max-width: 991px) 90vw, 560px',
+                      class: 'j-hero__img',
+                      alt: block.settings.heading
+                  }}
+                {% endcapture %}
+                {{ deferred_hero_image | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' }}
+              {% endif %}
             {% else %}
               <div class="j-hero__placeholder">
                 <div class="floating-circle"></div>
