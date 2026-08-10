@@ -76,8 +76,10 @@
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm0 1.5c-3 0-6.5 1.5-6.5 4.5v.5h13v-.5c0-3-3.5-4.5-6.5-4.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
           </svg>
+          <label for="ContactName" class="visually-hidden">{{ 'contact.name' | t }}</label>
           <input
             type="text"
+            id="ContactName"
             name="contact[name]"
             placeholder="{{ 'contact.name' | t }}"
             required
@@ -89,8 +91,10 @@
             <rect x="2.5" y="4.5" width="15" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
             <path d="m3 5.5 7 5.5 7-5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          <label for="ContactEmail" class="visually-hidden">{{ 'contact.email' | t }}</label>
           <input
             type="email"
+            id="ContactEmail"
             name="contact[email]"
             placeholder="{{ 'contact.email' | t }}"
             required
@@ -101,8 +105,10 @@
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M5 3h2.2l1 3.6-1.6 1.4a9 9 0 0 0 4.4 4.4l1.4-1.6 3.6 1v2.2c0 1-.8 1.8-1.8 1.7A13.5 13.5 0 0 1 3.3 4.8C3.2 3.8 4 3 5 3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
           </svg>
+          <label for="ContactPhone" class="visually-hidden">{{ 'contact.phone' | t }}</label>
           <input
             type="tel"
+            id="ContactPhone"
             name="contact[phone]"
             placeholder="{{ 'contact.phone' | t }}"
           >
@@ -112,7 +118,9 @@
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v6A1.5 1.5 0 0 1 15.5 13H8l-3.5 3v-3H4.5A1.5 1.5 0 0 1 3 11.5v-6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
           </svg>
+          <label for="ContactMessage" class="visually-hidden">{{ 'contact.message' | t }}</label>
           <textarea
+            id="ContactMessage"
             name="contact[body]"
             rows="6"
             placeholder="{{ 'contact.message' | t }}"

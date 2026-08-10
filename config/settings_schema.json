@@ -8,6 +8,17 @@
     "theme_support_url": "https://docs.google.com/forms/d/e/1FAIpQLSfLI7316ezDx3ECzulggLQI0rqDFYsgVHtgEqngXYU1COyZAg/viewform"
   },
   {
+    "name": "t:general.general",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:general.favicon",
+        "info": "t:general.favicon_info"
+      }
+    ]
+  },
+  {
     "name": "Typography",
     "settings": [
       {

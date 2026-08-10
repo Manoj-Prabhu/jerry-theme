@@ -1,25 +1,95 @@
 document.addEventListener("DOMContentLoaded", () => {
   const optionsWrap = document.getElementById("ProductOptions");
   const variantsJson = document.getElementById("ProductVariantsJson");
+  const purchaseOptionsWrap = document.getElementById("ProductPurchaseOptions");
 
-  if (!optionsWrap || !variantsJson) return;
+  if (!variantsJson) return;
 
   const variants = JSON.parse(variantsJson.textContent);
-  const optionButtons = optionsWrap.querySelectorAll(
-    ".j-product__swatch, .j-product__pill",
-  );
+  const optionButtons = optionsWrap
+    ? optionsWrap.querySelectorAll(".j-product__swatch, .j-product__pill")
+    : [];
   const variantInput = document.getElementById("SelectedVariant");
   const price = document.getElementById("ProductPrice");
+  const unitPrice = document.getElementById("ProductUnitPrice");
   const stickyPrice = document.getElementById("StickyPrice");
   const mainImage = document.getElementById("ProductMainImage");
   const addToCartButton = document.getElementById("AddToCartButton");
-  const buyNowButton = document.getElementById("BuyNowButton");
   const stickyButton = document.getElementById("StickyAddToCart");
+  const comparePrice = document.getElementById("ProductComparePrice");
   const inventoryStatus = document.getElementById("ProductInventoryStatus");
   const quantityInput = document.getElementById("Quantity");
+  const sellingPlanInput = document.getElementById("SelectedSellingPlan");
   const LOW_STOCK_THRESHOLD = 3;
 
-  if (!optionButtons.length) return;
+  let currentVariant =
+    variants.find((variant) => variant.id === Number(variantInput.value)) ||
+    variants[0];
+
+  function getSelectedSellingPlanId() {
+    if (!purchaseOptionsWrap) return null;
+
+    const checked = purchaseOptionsWrap.querySelector(
+      'input[name="purchase_option"]:checked',
+    );
+
+    if (!checked || checked.value === "one_time") return null;
+
+    const select = purchaseOptionsWrap.querySelector(
+      `[data-selling-plan-group="${checked.value}"]`,
+    );
+
+    return select ? select.value : null;
+  }
+
+  function updatePriceDisplay() {
+    const planId = getSelectedSellingPlanId();
+
+    if (sellingPlanInput) {
+      sellingPlanInput.disabled = !planId;
+      sellingPlanInput.value = planId || "";
+    }
+
+    const planPrice =
+      planId && currentVariant.sellingPlanAllocations
+        ? currentVariant.sellingPlanAllocations[planId]
+        : null;
+
+    const displayPrice = planPrice || currentVariant.price;
+
+    if (price) price.textContent = displayPrice;
+    if (stickyPrice) stickyPrice.textContent = displayPrice;
+
+    if (comparePrice) {
+      comparePrice.hidden = Boolean(planId) || !currentVariant.compareAtPrice;
+    }
+  }
+
+  if (purchaseOptionsWrap) {
+    purchaseOptionsWrap.addEventListener("change", (event) => {
+      if (event.target.matches('input[name="purchase_option"]')) {
+        purchaseOptionsWrap
+          .querySelectorAll(".j-product__selling-plan-select")
+          .forEach((select) => {
+            select.disabled = select.dataset.sellingPlanGroup !== event.target.value;
+          });
+
+        purchaseOptionsWrap
+          .querySelectorAll(".j-product__purchase-option")
+          .forEach((label) => {
+            const radio = label.querySelector('input[name="purchase_option"]');
+            label.classList.toggle("is-active", radio.checked);
+          });
+      }
+
+      updatePriceDisplay();
+    });
+  }
+
+  if (!optionButtons.length) {
+    updatePriceDisplay();
+    return;
+  }
 
   function normalizeImageUrl(url) {
     try {
@@ -102,17 +172,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function selectVariant(variant) {
+    currentVariant = variant;
     variantInput.value = variant.id;
 
     updateInventoryStatus(variant);
     updateQuantityLimit(variant);
 
-    if (price) {
-      price.textContent = variant.price;
+    if (comparePrice) {
+      comparePrice.textContent = variant.compareAtPrice || "";
     }
 
-    if (stickyPrice) {
-      stickyPrice.textContent = variant.price;
+    updatePriceDisplay();
+
+    if (unitPrice) {
+      unitPrice.textContent = variant.unitPrice;
+      unitPrice.hidden = !variant.unitPrice;
     }
 
     if (mainImage && variant.image) {
@@ -129,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    [addToCartButton, buyNowButton, stickyButton].forEach((button) => {
+    [addToCartButton, stickyButton].forEach((button) => {
       if (button) {
         button.disabled = !variant.available;
       }
@@ -180,9 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "Unavailable";
         }
 
-        [buyNowButton, stickyButton].forEach((button) => {
-          if (button) button.disabled = true;
-        });
+        if (stickyButton) stickyButton.disabled = true;
 
         if (inventoryStatus) {
           inventoryStatus.hidden = true;

@@ -68,7 +68,7 @@
         </a>
       {% endunless %}
 
-      <form action="{{ routes.cart_url }}" method="post">
+      {% form 'cart', cart %}
         <input
           type="submit"
           name="checkout"
@@ -76,7 +76,11 @@
           value="{{ 'cart.checkout' | t }}"
           {% if cart.item_count == 0 %}disabled{% endif %}
         >
-      </form>
+
+        {% if cart.item_count > 0 %}
+          {{ form | payment_button }}
+        {% endif %}
+      {% endform %}
 
     </div>
 

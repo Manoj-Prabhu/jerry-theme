@@ -1,6 +1,10 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
+    {% if settings.favicon != blank %}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {% endif %}
+
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
     <script>
       window.themeMoneyFormat = {{ shop.money_format | json }};
@@ -158,6 +162,7 @@
       <script src="{{ 'product-variants.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'sticky-cart.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
     {% endif %}
     <div
       class="j-quick-view-modal"

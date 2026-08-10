@@ -228,10 +228,24 @@ html.j-scroll-lock body {
   line-height: 1.4;
 }
 
+.j-cart-item__content .j-cart-item__selling-plan {
+  margin-bottom: 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-normal);
+  color: var(--color-text-light);
+}
+
 .j-cart-item__content p {
   margin-bottom: 10px;
   font-weight: var(--font-semibold);
   color: var(--color-accent);
+}
+
+.j-cart-item__content .j-cart-item__unit-price {
+  margin-top: -6px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-normal);
+  color: var(--color-text-light);
 }
 
 .j-cart-item__content span {
@@ -337,7 +351,7 @@ html.j-scroll-lock body {
   .j-cart-item__content {
     flex-basis: 100%;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 12px;
   }
@@ -684,6 +698,51 @@ html.j-scroll-lock body {
   margin-top: -8px;
 }
 
+.j-cart-page__discounts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-block: 12px;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.j-cart-page__discount {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-success);
+}
+
+.j-cart-page__discount-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.j-cart-page__discount-form input {
+  flex: 1 1 140px;
+  min-width: 120px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.j-cart-page__summary .j-cart-page__discount-form .j-button {
+  flex: 1 1 auto;
+  width: auto;
+  padding: 10px 20px;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.j-cart-item__discounts {
+  margin-top: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-success);
+}
+
 .j-cart-page__summary .j-button {
   width: 100%;
 }
@@ -716,10 +775,16 @@ html.j-scroll-lock body {
 
 @media (max-width: 900px) {
   .j-cart-page__layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .j-cart-page__summary {
     position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .j-cart-page {
+    padding-inline: 20px;
   }
 }

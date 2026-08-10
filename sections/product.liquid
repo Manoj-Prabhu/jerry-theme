@@ -67,13 +67,33 @@
       {{ product.title }}
     </h1>
 
-    <p
-      class="j-product__price"
-      id="ProductPrice"
-      aria-live="polite"
-    >
-      {{ current_variant.price | money }}
+    <div class="j-product__price-row">
+      <p
+        class="j-product__price"
+        id="ProductPrice"
+        aria-live="polite"
+      >
+        {{ current_variant.price | money }}
+      </p>
+
+      <del
+        class="j-product__price-compare"
+        id="ProductComparePrice"
+        {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}
+      >
+        {{ current_variant.compare_at_price | money }}
+      </del>
+    </div>
+
+    <p class="j-product__unit-price" id="ProductUnitPrice" {% unless current_variant.unit_price_measurement %}hidden{% endunless %}>
+      {% if current_variant.unit_price_measurement %}
+        {{ current_variant.unit_price | money }}/{% if current_variant.unit_price_measurement.reference_value != 1 %}{{ current_variant.unit_price_measurement.reference_value }}{% endif %}{{ current_variant.unit_price_measurement.reference_unit }}
+      {% endif %}
     </p>
+
+    <div class="j-product__installments" id="ProductInstallments">
+      {{ current_variant.price | payment_terms }}
+    </div>
 
     {% assign low_stock_threshold = 3 %}
     {% assign is_low_stock = false %}
@@ -90,6 +110,17 @@
       {% if is_low_stock %}{{ 'product.low_stock_html' | t: count: current_variant.inventory_quantity }}{% endif %}
     </p>
 
+    {% if current_variant.store_availabilities.size > 0 %}
+      {% assign pickup_location = current_variant.store_availabilities.first %}
+      <div class="j-product__pickup" id="ProductPickupAvailability">
+        {% if pickup_location.available %}
+          <p>{{ 'product.pickup_available_html' | t: location: pickup_location.location.name }}</p>
+        {% else %}
+          <p>{{ 'product.pickup_unavailable_html' | t: location: pickup_location.location.name }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <div class="j-product__description">
       {{ product.description }}
     </div>
@@ -103,8 +134,58 @@
         value="{{ current_variant.id }}"
       >
 
-      {% if product.has_only_default_variant == false %}
+      {% if product.selling_plan_groups.size > 0 %}
+        <fieldset class="j-product__purchase-options" id="ProductPurchaseOptions">
+          <legend class="visually-hidden">{{ 'product.purchase_option' | t }}</legend>
 
+          <label class="j-product__purchase-option is-active">
+            <input type="radio" name="purchase_option" value="one_time" checked>
+            <span class="j-product__purchase-option-name">{{ 'product.one_time_purchase' | t }}</span>
+          </label>
+
+          {% for group in product.selling_plan_groups %}
+            <div class="j-product__purchase-option-group">
+              <label class="j-product__purchase-option">
+                <input
+                  type="radio"
+                  name="purchase_option"
+                  value="{{ group.id }}"
+                >
+                <span class="j-product__purchase-option-name">{{ group.name }}</span>
+              </label>
+
+              {% if group.selling_plans.size > 1 %}
+                <select
+                  class="j-product__selling-plan-select"
+                  data-selling-plan-group="{{ group.id }}"
+                  aria-label="{{ group.name | escape }}"
+                  disabled
+                >
+                  {% for plan in group.selling_plans %}
+                    <option value="{{ plan.id }}">{{ plan.name }}</option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                <input
+                  type="hidden"
+                  class="j-product__selling-plan-select"
+                  data-selling-plan-group="{{ group.id }}"
+                  value="{{ group.selling_plans.first.id }}"
+                >
+                <p class="j-product__selling-plan-description">
+                  {{ group.selling_plans.first.description | default: group.selling_plans.first.name }}
+                </p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </fieldset>
+
+        <input type="hidden" name="selling_plan" id="SelectedSellingPlan" disabled>
+      {% endif %}
+
+      {% if product.has_only_default_variant == false or product.selling_plan_groups.size > 0 %}
+
+        {% if product.has_only_default_variant == false %}
         <div class="j-product__options" id="ProductOptions">
 
           {% for option in product.options_with_values %}
@@ -160,13 +241,27 @@
           {% endfor %}
 
         </div>
+        {% endif %}
 
         {% capture variants_json %}[
           {% for variant in product.variants %}
+            {% capture unit_price %}
+              {%- if variant.unit_price_measurement -%}
+                {{ variant.unit_price | money }}/{% if variant.unit_price_measurement.reference_value != 1 %}{{ variant.unit_price_measurement.reference_value }}{% endif %}{{ variant.unit_price_measurement.reference_unit }}
+              {%- endif -%}
+            {% endcapture %}
+            {% capture selling_plan_allocations %}{
+              {% for allocation in variant.selling_plan_allocations %}
+                "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            }{% endcapture %}
             {
               "id": {{ variant.id }},
               "available": {{ variant.available }},
               "price": {{ variant.price | money | json }},
+              "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+              "unitPrice": {{ unit_price | strip | json }},
+              "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
               "options": {{ variant.options | json }},
               "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200 | json }},
               "inventoryManagement": {{ variant.inventory_management | json }},
@@ -210,21 +305,16 @@
         {% endif %}
       </button>
 
-      <button
-        type="submit"
-        class="j-button j-buy-now"
-        id="BuyNowButton"
-        {% unless current_variant.available %}disabled{% endunless %}
-      >
-        {{ 'product.buy_now' | t }}
-      </button>
-
       <p
         class="j-product__form-error"
         id="ProductFormError"
         role="alert"
         hidden
       ></p>
+
+      {% if current_variant.available %}
+        {{ form | payment_button }}
+      {% endif %}
 
     {% endform %}
 

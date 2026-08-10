@@ -1,3 +1,22 @@
+{% comment %}
+  Shared filter panel for both collection pages (sections/main-collection.liquid)
+  and the search results page (sections/search.liquid) — Shopify's `search`
+  object exposes the same filters/sort_by/results_count shape as `collection`
+  when performed with type=product, so this snippet accepts them as explicit
+  parameters instead of assuming a `collection` object is in scope.
+
+  Accepts:
+  - filters: a filters array (collection.filters or search.filters)
+  - sort_by: the current sort value (collection.sort_by or search.sort_by)
+  - clear_url: URL to reset all filters (collection.url or the search page's base URL)
+{% endcomment %}
+
+{% liquid
+  assign filters = filters | default: collection.filters
+  assign sort_by = sort_by | default: collection.sort_by
+  assign clear_url = clear_url | default: collection.url
+%}
+
 <div class="j-collection-filters">
 
   <div class="j-collection-filters__header">
@@ -6,16 +25,16 @@
 
     <div class="j-collection-filters__header-actions">
 
-      {% if collection.filters != empty %}
+      {% if filters != empty %}
         {% assign has_active_filters = false %}
-        {% for filter in collection.filters %}
+        {% for filter in filters %}
           {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
             {% assign has_active_filters = true %}
           {% endif %}
         {% endfor %}
 
         {% if has_active_filters %}
-          <a href="{{ collection.url }}" class="j-collection-filters__clear">
+          <a href="{{ clear_url }}" class="j-collection-filters__clear">
             {{ 'filters.clear_all' | t }}
           </a>
         {% endif %}
@@ -35,15 +54,26 @@
 
   <form id="CollectionFiltersForm">
 
-    {% if collection.sort_by %}
+    {% if sort_by %}
       <input
         type="hidden"
         name="sort_by"
-        value="{{ collection.sort_by }}"
+        value="{{ sort_by }}"
       >
     {% endif %}
 
-    {% for filter in collection.filters %}
+    {% comment %}
+      This form has no action, so it self-submits (GET) to the current
+      URL — on the search page that would otherwise drop the search term
+      and type params, since native form submission replaces the whole
+      query string rather than merging with it.
+    {% endcomment %}
+    {% if search.performed %}
+      <input type="hidden" name="q" value="{{ search.terms | escape }}">
+      <input type="hidden" name="type" value="product">
+    {% endif %}
+
+    {% for filter in filters %}
 
       {% assign filter_is_active = false %}
       {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}

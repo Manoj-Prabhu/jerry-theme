@@ -122,6 +122,11 @@
         </div>
       {% endif %}
 
+      {% comment %} Shop app follow button — colors/markup are managed by Shopify and must not be restyled. {% endcomment %}
+      <div class="j-footer__follow-on-shop">
+        {{ shop | login_button: action: 'follow' }}
+      </div>
+
       {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
         <div class="j-footer__payment">
           {% for type in shop.enabled_payment_types %}

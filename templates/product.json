@@ -13,9 +13,17 @@
       "type": "product",
       "settings": {}
     },
+    "product-recommendations-complementary": {
+      "type": "product-recommendations",
+      "settings": {
+        "intent": "complementary"
+      }
+    },
     "product-recommendations": {
       "type": "product-recommendations",
-      "settings": {}
+      "settings": {
+        "intent": "related"
+      }
     },
     "recently_viewed": {
       "type": "recently-viewed-products",
@@ -24,6 +32,7 @@
   },
   "order": [
     "main",
+    "product-recommendations-complementary",
     "product-recommendations",
     "recently_viewed"
   ]

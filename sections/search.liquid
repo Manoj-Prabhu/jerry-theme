@@ -41,23 +41,79 @@
 
     <div class="page-width">
 
-      {% paginate search.results by 20 %}
+      <div class="j-collection-layout">
 
-        <div class="j-product-grid">
+        <aside class="j-collection-sidebar" id="CollectionFilters">
+          {% render 'collection-filters', filters: search.filters, sort_by: search.sort_by, clear_url: routes.search_url %}
+        </aside>
 
-          {% for result in search.results %}
-            {% if result.object_type == 'product' %}
-              {% render 'product-card', product: result %}
+        <div class="j-filter-overlay"></div>
+
+        <div class="j-collection-content">
+
+          <div class="j-collection-toolbar">
+            <button
+              type="button"
+              class="j-filter-toggle"
+              aria-expanded="false"
+              aria-controls="CollectionFilters"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              {{ 'filters.title' | t }}
+            </button>
+
+            <form id="CollectionSortForm">
+              <label for="SortBy">
+                {{ 'collection.sort_by' | t }}
+              </label>
+
+              <div class="j-collection-sort">
+
+                <select
+                  id="SortBy"
+                  name="sort_by"
+                >
+                  {% for option in search.sort_options %}
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == search.sort_by %}selected{% endif %}
+                    >
+                      {{ option.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                <svg class="j-collection-sort__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+              </div>
+            </form>
+          </div>
+
+          {% paginate search.results by 20 %}
+
+            <div class="j-product-grid">
+
+              {% for result in search.results %}
+                {% if result.object_type == 'product' %}
+                  {% render 'product-card', product: result %}
+                {% endif %}
+              {% endfor %}
+
+            </div>
+
+            {% if paginate.pages > 1 %}
+              {{ paginate | default_pagination }}
             {% endif %}
-          {% endfor %}
+
+          {% endpaginate %}
 
         </div>
 
-        {% if paginate.pages > 1 %}
-          {{ paginate | default_pagination }}
-        {% endif %}
-
-      {% endpaginate %}
+      </div>
 
     </div>
 

@@ -25,7 +25,13 @@
   <div class="j-cart-item__content">
 
     <div class="j-cart-item__top">
-      <p class="j-cart-item__title">{{ item.product.title }}</p>
+      <div>
+        <p class="j-cart-item__title">{{ item.product.title }}</p>
+
+        {% if item.selling_plan_allocation %}
+          <p class="j-cart-item__selling-plan">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+        {% endif %}
+      </div>
 
       <button
         class="j-cart-remove"
@@ -45,6 +51,22 @@
     </div>
 
     <p>{{ item.final_price | money }}</p>
+
+    {% if item.unit_price_measurement %}
+      <p class="j-cart-item__unit-price">
+        {{ item.unit_price | money }}/{% if item.unit_price_measurement.reference_value != 1 %}{{ item.unit_price_measurement.reference_value }}{% endif %}{{ item.unit_price_measurement.reference_unit }}
+      </p>
+    {% endif %}
+
+    {% if item.line_level_discount_allocations.size > 0 %}
+      <ul class="j-cart-item__discounts">
+        {% for discount_allocation in item.line_level_discount_allocations %}
+          <li>
+            {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
     <div class="j-cart-item__quantity">
 

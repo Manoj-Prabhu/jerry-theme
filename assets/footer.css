@@ -326,6 +326,10 @@
   flex-shrink: 0;
 }
 
+.j-footer__follow-on-shop {
+  flex-shrink: 0;
+}
+
 .j-footer__social-link {
   display: flex;
   align-items: center;

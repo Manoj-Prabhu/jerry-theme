@@ -235,7 +235,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="j-cart-item__content">
 
             <div class="j-cart-item__top">
-              <p class="j-cart-item__title">${item.product_title}</p>
+              <div>
+                <p class="j-cart-item__title">${item.product_title}</p>
+
+                ${
+                  item.selling_plan_allocation
+                    ? `<p class="j-cart-item__selling-plan">${item.selling_plan_allocation.selling_plan.name}</p>`
+                    : ""
+                }
+              </div>
 
               <button
                 class="j-cart-remove"
@@ -255,6 +263,28 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <p>${formatMoney(item.final_price)}</p>
+
+            ${
+              item.unit_price_measurement
+                ? `<p class="j-cart-item__unit-price">
+                    ${formatMoney(item.unit_price)}/${item.unit_price_measurement.reference_value !== 1 ? item.unit_price_measurement.reference_value : ""}${item.unit_price_measurement.reference_unit}
+                  </p>`
+                : ""
+            }
+
+            ${
+              item.line_level_discount_allocations &&
+              item.line_level_discount_allocations.length
+                ? `<ul class="j-cart-item__discounts">
+                    ${item.line_level_discount_allocations
+                      .map(
+                        (allocation) =>
+                          `<li>${allocation.discount_application.title} (-${formatMoney(allocation.amount)})</li>`,
+                      )
+                      .join("")}
+                  </ul>`
+                : ""
+            }
 
             <div class="j-cart-item__quantity">
 
@@ -504,25 +534,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -------------------------
-  // Checkout Redirect
-  // -------------------------
-
-  function redirectToCheckout() {
-    const form = document.createElement("form");
-    form.action = "/cart";
-    form.method = "post";
-
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "checkout";
-    input.value = "Checkout";
-
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-  }
-
-  // -------------------------
   // AJAX Add To Cart
   // -------------------------
 
@@ -545,8 +556,6 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
 
       clearFormError();
-
-      const isBuyNow = event.submitter && event.submitter.id === "BuyNowButton";
 
       const variantId = Number(productForm.querySelector('[name="id"]').value);
       const quantity = Number(
@@ -587,11 +596,6 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
 
-        if (isBuyNow) {
-          redirectToCheckout();
-          return;
-        }
-
         await refreshCart();
         openCartDrawer();
       } catch (error) {
@@ -610,4 +614,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // is already server-rendered by Liquid on page load — refreshCart()
   // only needs to run after an actual mutation (add/remove/quantity
   // change), which each of those handlers already triggers itself.
+
+  // -------------------------
+  // Discount Code (cart page)
+  // -------------------------
+
+  const discountForm = document.getElementById("CartDiscountForm");
+
+  if (discountForm) {
+    discountForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const code = discountForm.querySelector("#CartDiscountCode").value.trim();
+      if (!code) return;
+
+      // Shopify's /discount/<code> route applies the code to the cart
+      // then redirects back to the given path — there's no native Liquid
+      // form for this, so a link/redirect is the documented approach.
+      window.location.href = `${window.Shopify?.routes?.root || "/"}discount/${encodeURIComponent(code)}?redirect=${encodeURIComponent("/cart")}`;
+    });
+  }
 });

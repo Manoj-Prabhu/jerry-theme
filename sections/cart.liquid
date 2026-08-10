@@ -99,11 +99,34 @@
 
       </div>
 
+      {% if cart.cart_level_discount_applications.size > 0 %}
+        <ul class="j-cart-page__discounts">
+          {% for discount_application in cart.cart_level_discount_applications %}
+            <li class="j-cart-page__discount">
+              <span>{{ 'cart.discount' | t }} ({{ discount_application.title }})</span>
+              <span>-{{ discount_application.total_allocated_amount | money }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
       <p class="j-cart-page__note">
         {{ 'cart.taxes_note' | t }}
       </p>
 
-      <form action="{{ routes.cart_url }}" method="post">
+      <form action="{{ routes.cart_url }}" method="get" class="j-cart-page__discount-form" id="CartDiscountForm">
+        <label for="CartDiscountCode" class="visually-hidden">{{ 'cart.discount_code' | t }}</label>
+        <input
+          type="text"
+          id="CartDiscountCode"
+          name="discount_code"
+          placeholder="{{ 'cart.discount_code' | t }}"
+          autocomplete="off"
+        >
+        <button type="submit" class="j-button">{{ 'cart.apply_discount' | t }}</button>
+      </form>
+
+      {% form 'cart', cart %}
         <input
           type="submit"
           name="checkout"
@@ -111,7 +134,11 @@
           value="{{ 'cart.checkout' | t }}"
           {% if cart.item_count == 0 %}disabled{% endif %}
         >
-      </form>
+
+        {% if cart.item_count > 0 %}
+          {{ form | payment_button }}
+        {% endif %}
+      {% endform %}
 
       <p class="j-cart-page__secure">
         {{ 'icon-lock.svg' | inline_asset_content }}
