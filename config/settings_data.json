@@ -1,5 +1,55 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": "Jerry",
+  "current": {
+    "favicon": "shopify://shop_images/genrate-fav-icon-for-my-store-with-colour-green.png",
+    "type_primary_font": "work_sans_n4",
+    "type_body_font": "work_sans_n4",
+    "type_logo_font": "poppins_n7",
+    "max_page_width": "90rem",
+    "min_page_margin": 20,
+    "section_spacing": 64,
+    "card_radius": 16,
+    "base_border_radius": 10,
+    "animation_speed": 100,
+    "shadow_strength": 100,
+    "show_breadcrumbs": true,
+    "show_breadcrumbs_product": true,
+    "show_breadcrumbs_collection": true,
+    "show_breadcrumbs_blog": true,
+    "show_breadcrumbs_page": true,
+    "free_shipping_threshold": 100,
+    "show_new_badge": true,
+    "new_badge_days": 30,
+    "show_sale_badge": true,
+    "show_sold_out_badge": true,
+    "show_bestseller_badge": true,
+    "bestseller_tag": "bestseller",
+    "background_color": "#FFFFFF",
+    "foreground_color": "#333333",
+    "primary_color": "#111827",
+    "secondary_color": "#F3F4F6",
+    "accent_color": "#15803D",
+    "border_color": "#E5E7EB",
+    "input_corner_radius": 4,
+    "button_bg": "#111827",
+    "button_text": "#FFFFFF",
+    "button_radius": 12,
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {}
+      }
+    },
+    "content_for_index": []
+  },
   "presets": {
     "Jerry": {
       "type_primary_font": "work_sans_n4",
