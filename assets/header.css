@@ -257,6 +257,28 @@
   width: 42px;
   height: 42px;
   flex-shrink: 0;
+  cursor: pointer;
+
+  /* Size the signed-in customer avatar to match the signed-out icon above,
+     so the header doesn't visibly change size once a customer logs in. */
+  --shopify-account-signed-in-avatar-size: 24px;
+}
+
+.j-header__account::part(signed-out-avatar) {
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+.j-header__account-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.j-header__account-icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .j-header__search-toggle {
@@ -956,6 +978,12 @@
   .j-header__account {
     width: 30px;
     height: 30px;
+    --shopify-account-signed-in-avatar-size: 18px;
+  }
+
+  .j-header__account-icon svg {
+    width: 18px;
+    height: 18px;
   }
 
   #CartCount,

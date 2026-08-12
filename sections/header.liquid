@@ -185,13 +185,15 @@
     </button>
 
     {% if shop.customer_accounts_enabled %}
-      <a
-        href="{{ routes.account_url }}"
+      <shopify-account
+        menu="customer-account-main-menu"
         class="j-header__account"
         aria-label="{{ 'header.account' | t }}"
       >
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </a>
+        <div slot="signed-out-avatar" class="j-header__account-icon">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </div>
+      </shopify-account>
     {% endif %}
 
     <button

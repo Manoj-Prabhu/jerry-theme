@@ -1,57 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const mainImage = document.getElementById("ProductMainImage");
+  const gallery = document.querySelector(".j-product__gallery");
   const thumbnails = document.querySelectorAll(".j-product-thumbnail");
+  const slides = document.querySelectorAll(".j-product__media-slide");
   const variantsJson = document.getElementById("ProductVariantsJson");
 
-  if (!mainImage || thumbnails.length === 0) return;
+  if (!gallery || thumbnails.length === 0) return;
 
   const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
 
-  function normalizeImageUrl(url) {
-    try {
-      const parsed = new URL(url, window.location.href);
-      return parsed.pathname + parsed.search;
-    } catch (error) {
-      return url;
-    }
+  function activateMedia(mediaId) {
+    slides.forEach((slide) => {
+      slide.classList.toggle("is-active", slide.dataset.mediaId === mediaId);
+    });
+
+    thumbnails.forEach((thumbnail) => {
+      thumbnail.classList.toggle(
+        "is-active",
+        thumbnail.dataset.mediaId === mediaId,
+      );
+    });
   }
 
   thumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", () => {
-      mainImage.classList.add("is-loading");
+      const mediaId = thumbnail.dataset.mediaId;
 
-      const newImage = new Image();
+      activateMedia(mediaId);
 
-      newImage.onload = () => {
-        mainImage.src = thumbnail.dataset.image;
-        mainImage.srcset = "";
-        mainImage.classList.remove("is-loading");
-      };
-
-      newImage.src = thumbnail.dataset.image;
-      thumbnails.forEach((item) => item.classList.remove("is-active"));
-
-      thumbnail.classList.add("is-active");
-
-      const targetImage = normalizeImageUrl(thumbnail.dataset.image);
-      const sameImageVariants = variants.filter(
-        (variant) => normalizeImageUrl(variant.image) === targetImage,
+      // Only sync an option index if this media implies a single value for
+      // it (e.g. Color, or the only option on a single-option product).
+      // If variants with other option values (e.g. different Sizes) share
+      // this same media, that index isn't media-specific — leave the
+      // user's current selection for it untouched.
+      const sameMediaVariants = variants.filter(
+        (variant) => String(variant.featuredMediaId) === mediaId,
       );
-      const matchingVariant = sameImageVariants[0];
+      const matchingVariant = sameMediaVariants[0];
 
       if (!matchingVariant) return;
 
-      // Only sync an option index if this image implies a single value for
-      // it (e.g. Color, or the only option on a single-option product).
-      // If variants with other option values (e.g. different Sizes) share
-      // this same image, that index isn't image-specific — leave the
-      // user's current selection for it untouched.
       matchingVariant.options.forEach((value, index) => {
-        const isImageSpecific = sameImageVariants.every(
+        const isMediaSpecific = sameMediaVariants.every(
           (variant) => variant.options[index] === value,
         );
 
-        if (!isImageSpecific) return;
+        if (!isMediaSpecific) return;
 
         const button = document.querySelector(
           `.j-product__swatch[data-option-index="${index}"][data-value="${CSS.escape(value)}"], .j-product__pill[data-option-index="${index}"][data-value="${CSS.escape(value)}"]`,
@@ -63,4 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  gallery.activateMedia = activateMedia;
 });

@@ -1,0 +1,22 @@
+<div class="j-custom-liquid container">
+  {{ section.settings.custom_liquid }}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Liquid code",
+      "info": "Add app snippets, custom HTML, or third-party embed code."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Liquid"
+    }
+  ]
+}
+{% endschema %}

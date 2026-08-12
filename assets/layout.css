@@ -2,7 +2,8 @@
    Container
 -------------------------- */
 
-.container {
+.container,
+.page-width {
   width: 100%;
   max-width: var(--container-width);
   margin-inline: auto;
@@ -73,7 +74,8 @@
 -------------------------- */
 
 @media (max-width: 768px) {
-  .container {
+  .container,
+  .page-width {
     padding-inline: var(--space-4);
   }
 

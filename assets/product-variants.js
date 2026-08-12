@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const price = document.getElementById("ProductPrice");
   const unitPrice = document.getElementById("ProductUnitPrice");
   const stickyPrice = document.getElementById("StickyPrice");
-  const mainImage = document.getElementById("ProductMainImage");
   const addToCartButton = document.getElementById("AddToCartButton");
   const stickyButton = document.getElementById("StickyAddToCart");
   const comparePrice = document.getElementById("ProductComparePrice");
@@ -89,15 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!optionButtons.length) {
     updatePriceDisplay();
     return;
-  }
-
-  function normalizeImageUrl(url) {
-    try {
-      const parsed = new URL(url, window.location.href);
-      return parsed.pathname + parsed.search;
-    } catch (error) {
-      return url;
-    }
   }
 
   const selectedOptions = [];
@@ -189,18 +179,12 @@ document.addEventListener("DOMContentLoaded", () => {
       unitPrice.hidden = !variant.unitPrice;
     }
 
-    if (mainImage && variant.image) {
-      mainImage.src = variant.image;
-      mainImage.srcset = "";
+    if (variant.featuredMediaId) {
+      const gallery = document.querySelector(".j-product__gallery");
 
-      const targetImage = normalizeImageUrl(variant.image);
-
-      document.querySelectorAll(".j-product-thumbnail").forEach((thumbnail) => {
-        thumbnail.classList.toggle(
-          "is-active",
-          normalizeImageUrl(thumbnail.dataset.image) === targetImage,
-        );
-      });
+      if (gallery && typeof gallery.activateMedia === "function") {
+        gallery.activateMedia(String(variant.featuredMediaId));
+      }
     }
 
     [addToCartButton, stickyButton].forEach((button) => {

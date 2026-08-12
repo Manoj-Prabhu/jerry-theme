@@ -11,43 +11,84 @@
 
 <div class="j-product">
 
-  <!-- Product Images -->
+  <!-- Product Media -->
   <div class="j-product__gallery">
 
     <div class="j-product__main-image">
 
       {% render 'product-badges', product: product %}
 
-      {{
-        current_variant.featured_image | default: product.featured_image
-        | image_url: width: 1000
-        | image_tag:
-          class: 'j-product-main-image',
-          id: 'ProductMainImage',
-          loading: 'eager',
-          fetchpriority: 'high',
-          widths: '400, 600, 800, 1000',
-          sizes: '(max-width: 768px) 100vw, 450px',
-          alt: main_image_alt
-      }}
+      {% assign current_media_id = current_variant.featured_media.id | default: product.featured_media.id %}
+
+      {% for media in product.media %}
+        {% liquid
+          assign is_active = false
+          if media.id == current_media_id
+            assign is_active = true
+          elsif current_media_id == blank and forloop.first
+            assign is_active = true
+          endif
+
+          assign media_loading = 'lazy'
+          assign media_priority = 'auto'
+          if is_active
+            assign media_loading = 'eager'
+            assign media_priority = 'high'
+          endif
+        %}
+
+        <div
+          class="j-product__media-slide {% if is_active %}is-active{% endif %}"
+          data-media-id="{{ media.id }}"
+        >
+          {% case media.media_type %}
+            {% when 'image' %}
+              {{
+                media
+                | image_url: width: 1000
+                | image_tag:
+                  class: 'j-product-main-image',
+                  loading: media_loading,
+                  fetchpriority: media_priority,
+                  widths: '400, 600, 800, 1000',
+                  sizes: '(max-width: 768px) 100vw, 450px',
+                  alt: media.alt | default: main_image_alt
+              }}
+            {% when 'video' %}
+              {{ media | video_tag: image_size: '1000x', controls: true }}
+            {% when 'external_video' %}
+              {{ media | external_video_tag: image_size: '1000x' }}
+            {% when 'model' %}
+              {{ media | model_viewer_tag: image_size: '1000x' }}
+            {% else %}
+              {{ media | media_tag: image_size: '1000x' }}
+          {% endcase %}
+        </div>
+      {% endfor %}
 
     </div>
 
     <div class="j-product__thumbnails">
 
-      {% assign current_image = current_variant.featured_image | default: product.featured_image %}
-
-      {% for image in product.images %}
+      {% for media in product.media %}
+        {% liquid
+          assign is_active = false
+          if media.id == current_media_id
+            assign is_active = true
+          elsif current_media_id == blank and forloop.first
+            assign is_active = true
+          endif
+        %}
 
         <button
           type="button"
-          class="j-product-thumbnail {% if image == current_image %}is-active{% endif %}"
-          data-image="{{ image | image_url: width: 1200 }}"
+          class="j-product-thumbnail {% if is_active %}is-active{% endif %}"
+          data-media-id="{{ media.id }}"
           aria-label="{{ product.title }} — view {{ forloop.index }}"
         >
 
           {{
-            image
+            media.preview_image
             | image_url: width: 150
             | image_tag: loading: 'lazy', alt: ''
           }}
@@ -204,17 +245,29 @@
 
                 <div class="j-product__swatches">
                   {% for value in option.values %}
-                    {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+                    {% assign color_key = value.name | remove: ' ' | remove: '-' | downcase %}
                     <button
                       type="button"
-                      class="j-product__swatch {% if value == selected_value %}is-active{% endif %}"
+                      class="j-product__swatch {% if value.name == selected_value %}is-active{% endif %}"
                       data-option-index="{{ option_index }}"
-                      data-value="{{ value | escape }}"
-                      aria-label="{{ value | escape }}"
-                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
-                      title="{{ value | escape }}"
+                      data-value="{{ value.name | escape }}"
+                      aria-label="{{ value.name | escape }}"
+                      aria-pressed="{% if value.name == selected_value %}true{% else %}false{% endif %}"
+                      title="{{ value.name | escape }}"
                     >
-                      <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
+                      {% if value.swatch.image %}
+                        <span
+                          class="j-product__swatch-inner"
+                          style="background-image: url({{ value.swatch.image | image_url: width: 60 }});"
+                        ></span>
+                      {% elsif value.swatch.color %}
+                        <span
+                          class="j-product__swatch-inner"
+                          style="background-color: {{ value.swatch.color.hex }};"
+                        ></span>
+                      {% else %}
+                        <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
+                      {% endif %}
                     </button>
                   {% endfor %}
                 </div>
@@ -225,12 +278,12 @@
                   {% for value in option.values %}
                     <button
                       type="button"
-                      class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
+                      class="j-product__pill {% if value.name == selected_value %}is-active{% endif %}"
                       data-option-index="{{ option_index }}"
-                      data-value="{{ value | escape }}"
-                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
+                      data-value="{{ value.name | escape }}"
+                      aria-pressed="{% if value.name == selected_value %}true{% else %}false{% endif %}"
                     >
-                      {{ value }}
+                      {{ value.name }}
                     </button>
                   {% endfor %}
                 </div>
@@ -264,6 +317,7 @@
               "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
               "options": {{ variant.options | json }},
               "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200 | json }},
+              "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
               "inventoryManagement": {{ variant.inventory_management | json }},
               "inventoryQuantity": {{ variant.inventory_quantity | json }},
               "inventoryPolicy": {{ variant.inventory_policy | json }}

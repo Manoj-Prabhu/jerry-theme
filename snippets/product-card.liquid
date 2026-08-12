@@ -122,11 +122,17 @@
         {% assign swatch_limit = 4 %}
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
-            {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+            {% assign color_key = value.name | remove: ' ' | remove: '-' | downcase %}
             <span
               class="j-product-card__swatch"
-              style="background-color: {{ color_key }};"
-              title="{{ value | escape }}"
+              title="{{ value.name | escape }}"
+              {% if value.swatch.image %}
+                style="background-image: url({{ value.swatch.image | image_url: width: 30 }});"
+              {% elsif value.swatch.color %}
+                style="background-color: {{ value.swatch.color.hex }};"
+              {% else %}
+                style="background-color: {{ color_key }};"
+              {% endif %}
             ></span>
           {% endfor %}
           {% assign remaining_colors = color_option.values.size | minus: swatch_limit %}
