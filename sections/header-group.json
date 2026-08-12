@@ -35,7 +35,7 @@
         "auto_rotate": true,
         "rotation_speed": 5,
         "show_close": false,
-        "announcement_background": "#111827",
+        "announcement_background": "#14110F",
         "announcement_text_color": "#ffffff",
         "announcement_alignment": "center"
       }

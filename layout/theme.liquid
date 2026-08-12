@@ -54,7 +54,11 @@
 
     {% unless settings.type_primary_font.system? %}
       {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-      {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+
+      {% assign primary_font_bold = settings.type_primary_font | font_modify: 'weight', 'bold' %}
+      {% if primary_font_bold != blank %}
+        {{ primary_font_bold | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+      {% endif %}
     {% endunless %}
 
     {% unless settings.type_logo_font.system? %}
@@ -149,6 +153,7 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'text-reveal.js' | asset_url }}" defer="defer"></script>
     <script>
       window.jerryMascotConfig = {
         src: {{ 'mascot-cat.riv' | asset_url | json }},

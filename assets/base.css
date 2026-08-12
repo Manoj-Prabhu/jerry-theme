@@ -28,7 +28,7 @@ html {
 -------------------------- */
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--font-body--family);
   font-size: var(--font-size-md);
   font-weight: var(--font-normal);
   line-height: 1.6;
@@ -146,8 +146,53 @@ h6 {
   line-height: 1.2;
 }
 
+/* Anton (the primary/display font) is a heavy poster-style face meant for
+   large, high-impact headlines — it gets clunky and hard to read at smaller
+   sizes like product card titles. Reserve it for h1 (hero, page titles) and
+   use the more legible logo font (bold, geometric, still confident) for
+   every smaller heading level. */
 h1 {
+  font-family: var(--font-primary--family);
   font-size: var(--font-size-3xl);
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-logo--family);
+}
+
+/* Text Reveal (see assets/text-reveal.js) */
+
+.j-text-reveal__word-wrap {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.j-text-reveal__word {
+  display: inline-block;
+  opacity: 0;
+  /* Slightly shrunk and dropped, so the reveal transition below has room
+     to overshoot past its final size/position and settle back — that
+     overshoot is what reads as a springy "bounce" rather than a flat fade. */
+  transform: scale(0.5) translateY(0.3em);
+  transition:
+    opacity 0.35s ease,
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.j-text-reveal.is-revealed .j-text-reveal__word {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-text-reveal__word {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 h2 {

@@ -3,14 +3,33 @@
     Load all font variants with display: swap
   {% endcomment %}
 
+  {% liquid
+    assign primary_font_bold = settings.type_primary_font | font_modify: 'weight', 'bold'
+    assign primary_font_italic = settings.type_primary_font | font_modify: 'style', 'italic'
+    assign primary_font_bold_italic = primary_font_bold | font_modify: 'style', 'italic'
+
+    assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+    assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+  %}
+
   {{ settings.type_primary_font | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {% if primary_font_bold != blank %}
+    {{ primary_font_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if primary_font_bold_italic != blank %}
+    {{ primary_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if primary_font_italic != blank %}
+    {{ primary_font_italic | font_face: font_display: 'swap' }}
+  {% endif %}
 
   {{ settings.type_body_font | font_face: font_display: 'swap' }}
-  {{ settings.type_body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
-  {{ settings.type_body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {% if body_font_bold != blank %}
+    {{ body_font_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if body_font_italic != blank %}
+    {{ body_font_italic | font_face: font_display: 'swap' }}
+  {% endif %}
 
   {{ settings.type_logo_font | font_face: font_display: 'swap' }}
 

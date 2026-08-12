@@ -8,8 +8,8 @@
   justify-content: center;
   gap: var(--space-2);
   padding: 14px 28px;
-  background: var(--color-primary);
-  color: #fff;
+  background: var(--button-background);
+  color: var(--button-text);
   border: none;
   border-radius: var(--style-border-radius-button);
   font-size: var(--font-size-md);
@@ -25,15 +25,15 @@
     box-shadow var(--transition);
 }
 
-/* Ensure links inside buttons stay white */
+/* Ensure links inside buttons keep the configured button text color */
 .j-button,
 .j-button:visited {
-  color: #fff;
+  color: var(--button-text);
 }
 
 .j-button:hover {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--button-text);
   transform: translateY(-2px) scale(1.01);
   box-shadow: var(--shadow-md);
 }

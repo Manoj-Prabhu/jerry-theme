@@ -23,7 +23,6 @@
      settings-driven variables from css-variables.liquid */
 
   --color-text: var(--color-foreground);
-  --font-family: var(--font-primary--family);
   --container-width: var(--page-width);
 
   /* Typography */
@@ -33,8 +32,8 @@
   --font-size-md: 16px;
   --font-size-lg: 18px;
   --font-size-xl: 22px;
-  --font-size-2xl: 30px;
-  --font-size-3xl: 42px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 52px;
 
   /* Font weight */
 

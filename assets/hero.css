@@ -104,7 +104,7 @@
 /* Left Content */
 
 .j-hero__content {
-  max-width: 600px;
+  max-width: 650px;
 }
 
 .j-hero__badge {
@@ -112,7 +112,7 @@
   padding: 8px 16px;
   border-radius: 999px;
   background: #ecfdf5;
-  /* Fixed shade (not var(--color-success)) — guarantees 4.5:1+ against this
+  /* Fixed shade (not var(--color-accent)) — guarantees 4.5:1+ against this
      badge's own light background regardless of theme accent settings. */
   color: #0f5132;
   font-weight: 600;
@@ -120,17 +120,26 @@
 }
 
 .j-hero h1 {
-  font-size: 64px;
+  font-size: 40px;
   line-height: 1.05;
+  letter-spacing: -0.01em;
   margin-bottom: 24px;
   color: var(--color-primary);
 }
 
-.j-hero h1 span {
-  /* Fixed shade (not var(--color-accent)) — the hero background is a
-     gradient from #d8b4fe to white, and var(--color-accent) only passes
-     contrast against the white end. This shade passes against both. */
-  color: #0f5132;
+.j-hero h1 .j-hero__highlight {
+  /* Scoped to the specific highlight class, not a generic "span" type
+     selector — text-reveal.js wraps every individual word (including
+     ones outside this highlight) in its own <span>, and a type selector
+     would incorrectly match those too, turning the whole heading green
+     once the animation script runs.
+
+     Heading text this large qualifies as "large text" under WCAG, which
+     only needs 3:1 contrast (not the 4.5:1 normal-text minimum) — that
+     relaxed threshold leaves room for a genuinely vivid, clearly-green
+     shade instead of a near-black one, while still passing against the
+     darkest point of the hero's gradient background. */
+  color: #0a6030;
 }
 
 .j-hero p {
@@ -349,7 +358,7 @@
   }
 
   .j-hero h1 {
-    font-size: 48px;
+    font-size: 40px;
   }
 }
 
@@ -359,7 +368,7 @@
   }
 
   .j-hero h1 {
-    font-size: 34px;
+    font-size: 28px;
   }
 
   .j-hero p {

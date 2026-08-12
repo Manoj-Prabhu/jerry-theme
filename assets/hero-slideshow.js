@@ -88,12 +88,26 @@ function initHeroSlideshow(slideshow) {
     attributeFilter: ["src", "srcset"],
   });
 
-  if (slides.length < 2) return;
-
   let currentIndex = slides.findIndex((slide) =>
     slide.classList.contains("is-active"),
   );
   if (currentIndex < 0) currentIndex = 0;
+
+  // Lets listeners (e.g. the hero heading's initials-cluster reveal in
+  // text-reveal.js) replay per-slide effects every time a slide becomes
+  // active — including the one that's active from first paint, not just
+  // slides reached via goToSlide.
+  function announceActiveSlide() {
+    document.dispatchEvent(
+      new CustomEvent("heroSlideActivated", {
+        detail: { slide: slides[currentIndex] },
+      }),
+    );
+  }
+
+  announceActiveSlide();
+
+  if (slides.length < 2) return;
 
   let timer = null;
 
@@ -110,6 +124,7 @@ function initHeroSlideshow(slideshow) {
     slides[nextIndex].removeAttribute("inert");
 
     currentIndex = nextIndex;
+    announceActiveSlide();
   }
 
   function next() {
