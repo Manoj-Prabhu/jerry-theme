@@ -42,6 +42,10 @@
     "button_bg": "#111827",
     "button_text": "#FFFFFF",
     "button_radius": 12,
+    "facebook": "https://www.facebook.com/",
+    "instagram": "https://www.instagram.com/?hl=en",
+    "youtube": "https://www.youtube.com/",
+    "x": "https://x.com/",
     "sections": {
       "cart-drawer": {
         "type": "cart-drawer",
