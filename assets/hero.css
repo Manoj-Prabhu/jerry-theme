@@ -4,13 +4,37 @@
 }
 
 .j-hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 80px;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 140px var(--space-8);
+  overflow: hidden;
+  /* Scales with viewport width instead of a fixed height, so very wide
+     windows get a proportionally taller banner — a fixed height at large
+     widths creates an extremely wide-and-short crop shape that forces
+     object-fit: cover to zoom in and cut off most of the photo. */
+  min-height: clamp(430px, 40vw, 640px);
+  padding: 70px var(--space-8);
+}
+
+/* Dark scrim over the full-bleed image/video — darkest behind the text on
+   the left, fading to transparent by the right so the photo itself still
+   reads clearly. A pseudo-element instead of an extra element, so this
+   needed no changes to hero.liquid's markup at all. */
+.j-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.45) 20%,
+    rgba(0, 0, 0, 0.32) 38%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.08) 72%,
+    rgba(0, 0, 0, 0) 90%
+  );
 }
 
 /* Slideshow */
@@ -53,17 +77,38 @@
   position: absolute;
 }
 
-.j-hero-slideshow__arrow {
+/* A direct child of the slide (sibling to .j-hero__content, not nested
+   inside .j-hero__image) with its own z-index above the content's — the
+   arrows previously sat inside .j-hero__image's lower stacking context,
+   so the text block could sit visually and interactively on top of them,
+   making the prev arrow unclickable wherever it overlapped the
+   description text.
+
+   The trust row (Free Shipping / Easy Returns / Secure Checkout) stays in
+   its natural in-flow position inside .j-hero__content — it isn't pulled
+   out to a shared row — so its vertical position varies slide to slide
+   depending on how much text that slide's heading/description wrap to.
+   --hero-trust-offset is a custom property hero-slideshow.js measures and
+   sets per slide (the trust row's distance from the slide's bottom edge),
+   so these arrows track wherever that row actually lands instead of
+   sitting at a fixed offset that would only line up by coincidence. */
+.j-hero-slideshow__arrows {
   position: absolute;
-  top: 50%;
-  z-index: 2;
+  right: 24px;
+  bottom: var(--hero-trust-offset, 24px);
+  z-index: 3;
+  display: flex;
+  gap: 12px;
+}
+
+.j-hero-slideshow__arrow {
+  position: static;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
   flex-shrink: 0;
-  transform: translateY(-50%);
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
@@ -76,23 +121,15 @@
     transform 0.2s ease;
 }
 
-.j-hero-slideshow__arrow--prev {
-  left: 16px;
-}
-
-.j-hero-slideshow__arrow--next {
-  right: 16px;
-}
-
 .j-hero-slideshow__arrow svg {
   width: 18px;
   height: 18px;
 }
 
 .j-hero-slideshow__arrow:hover {
-  background: var(--color-accent);
-  color: var(--color-white);
-  transform: translateY(-50%) scale(1.08);
+  background: #f0c14b;
+  color: #1a1a1a;
+  transform: scale(1.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -101,20 +138,31 @@
   }
 }
 
-/* Left Content */
+/* Content — sits above both the media (z-index: 0) and the scrim
+   (z-index: 1) defined on .j-hero above. */
 
 .j-hero__content {
-  max-width: 650px;
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
 }
 
 .j-hero__badge {
   display: inline-block;
   padding: 8px 16px;
   border-radius: 999px;
-  background: #ecfdf5;
-  /* Fixed shade (not var(--color-accent)) — guarantees 4.5:1+ against this
-     badge's own light background regardless of theme accent settings. */
-  color: #0f5132;
+  /* Translucent + blurred instead of a solid white/mint pill — a solid
+     light pill read as a leftover from the old light-gradient hero once
+     everything else moved to sitting directly on the photo/video. This
+     glass treatment matches the overlay aesthetic instead of looking
+     pasted on top of it. */
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(240, 193, 75, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Same gold used for the heading highlight — ties the badge to the rest
+     of the hero's accent color instead of introducing a separate one. */
+  color: #f0c14b;
   font-weight: 600;
   margin-bottom: 24px;
 }
@@ -124,32 +172,40 @@
   line-height: 1.05;
   letter-spacing: -0.01em;
   margin-bottom: 24px;
-  color: var(--color-primary);
+  /* White, not var(--color-primary) — the heading now sits directly over
+     a photo/video with a dark scrim behind it, not the old light gradient
+     background, so it needs light text instead of dark. */
+  color: #fff;
+  /* A video's brightness shifts frame to frame (unlike a curated static
+     photo), so the scrim gradient alone isn't a reliable enough contrast
+     guarantee here — this shadow holds legibility even against a bright
+     frame passing directly behind the text. */
+  text-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.7),
+    0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .j-hero h1 .j-hero__highlight {
   /* Scoped to the specific highlight class, not a generic "span" type
      selector — text-reveal.js wraps every individual word (including
      ones outside this highlight) in its own <span>, and a type selector
-     would incorrectly match those too, turning the whole heading green
-     once the animation script runs.
+     would incorrectly match those too, turning the whole heading this
+     color once the animation script runs.
 
-     Heading text this large qualifies as "large text" under WCAG, which
-     only needs 3:1 contrast (not the 4.5:1 normal-text minimum) — that
-     relaxed threshold leaves room for a genuinely vivid, clearly-green
-     shade instead of a near-black one, while still passing against the
-     darkest point of the hero's gradient background. */
-  color: #0a6030;
+     A light, warm gold (not var(--color-accent), which is a dark shade
+     meant for light backgrounds) — the darkest point of the scrim is
+     near-black, so a dark gold would have the same "reads as invisible
+     against a similarly dark backdrop" problem the original light-gradient
+     hero had, just inverted. */
+  color: #f0c14b;
 }
 
 .j-hero p {
   font-size: 20px;
-  /* Fixed color (not var(--color-text-light)) for the same reason as the
-     heading span above — text-light only clears 4.5:1 against white, not
-     against the gradient's purple end where this paragraph also sits. */
-  color: var(--color-text);
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 40px;
   line-height: 1.8;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
 }
 
 .j-hero__buttons {
@@ -158,16 +214,18 @@
   gap: 20px;
 }
 
-/* The hero background is a gradient, not a flat color — give the outline
-   button its own opaque background so its contrast is guaranteed rather
-   than dependent on whichever part of the gradient it happens to sit on. */
+/* Both buttons already have their own opaque backgrounds (see
+   assets/components.css) — .j-button uses --button-background/text, and
+   .j-button-outline gets a white background + dark border here — so both
+   stay legible regardless of where they land on the photo underneath. */
 .j-hero__buttons .j-button-outline {
   background: var(--color-white);
-  border-color: var(--color-primary);
+  border-color: var(--color-white);
 }
 
 .j-hero__buttons .j-button-outline:hover {
   background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* Trust Row */
@@ -185,13 +243,14 @@
   gap: 10px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 .j-hero__trust-icon {
   display: flex;
   flex-shrink: 0;
-  color: var(--color-accent);
+  color: #f0c14b;
 }
 
 .j-hero__trust-icon svg {
@@ -199,24 +258,22 @@
   height: 20px;
 }
 
-/* Right Side */
+/* Media — the full-bleed background behind the scrim and content (see the
+   z-index stack set up on .j-hero and .j-hero__content above). Previously
+   a floating card on the right half of a two-column layout; now fills the
+   entire hero, which is the actual structural change from that split
+   layout to a single unified image/video-plus-text block. */
 
 .j-hero__image {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 560px;
-  aspect-ratio: 1 / 1;
-  margin: 0 0 0 auto;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .j-hero__placeholder {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 40px;
   background: linear-gradient(135deg, #f8fafc, #eef6ff, #f0fdf4, #eef6ff);
   background-size: 300% 300%;
   animation: gradient-shift 12s ease-in-out infinite;
@@ -258,18 +315,12 @@
   animation: float-orbit 6s ease-in-out infinite;
 }
 
-.j-hero__img {
+.j-hero__img,
+.j-hero__video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 32px;
-  box-shadow: var(--shadow-lg);
-  transition: transform 0.4s ease;
-}
-
-.j-hero__img:hover {
-  transform: translateY(-8px);
 }
 
 /* Animation */
@@ -339,22 +390,7 @@
 
 @media (max-width: 991px) {
   .j-hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 60px;
-  }
-
-  .j-hero__content {
-    margin: auto;
-  }
-
-  .j-hero__buttons {
-    justify-content: center;
-  }
-
-  .j-hero__image {
-    max-width: 420px;
-    margin: 0 auto;
+    min-height: 550px;
   }
 
   .j-hero h1 {
@@ -364,7 +400,21 @@
 
 @media (max-width: 480px) {
   .j-hero {
-    padding: 80px var(--space-4);
+    min-height: 470px;
+    padding: 50px var(--space-4);
+  }
+
+  /* The left-to-right scrim leaves the right ~20% of the image untouched
+     so the photo reads clearly there on wide screens — but a narrow phone
+     doesn't have enough width for that untouched zone to matter, and the
+     lighter coverage risks the text losing contrast against a bright part
+     of the image. A flatter, more uniform dark scrim is more reliable here. */
+  .j-hero::before {
+    background: rgba(0, 0, 0, 0.65);
+  }
+
+  .j-hero__content {
+    max-width: 100%;
   }
 
   .j-hero h1 {
@@ -373,9 +423,5 @@
 
   .j-hero p {
     font-size: 16px;
-  }
-
-  .j-hero__image {
-    max-width: 280px;
   }
 }

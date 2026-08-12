@@ -39,26 +39,67 @@ function initHeroSlideshow(slideshow) {
     track.style.height = `${maxHeight}px`;
   }
 
+  // The trust row (Free Shipping / Easy Returns / Secure Checkout) stays
+  // in its natural in-flow position inside .j-hero__content — its
+  // vertical position varies slide to slide depending on how much that
+  // slide's heading/description wrap to. The arrows are a separate,
+  // absolutely-positioned element (so they can sit out past the text
+  // column near the media's edge), so a fixed CSS offset would only line
+  // the two up by coincidence. This measures each slide's actual trust
+  // row position and writes it as a CSS variable the arrows read (see
+  // hero.css), so the arrows always land level with the trust row instead
+  // of drifting away from it.
+  function alignArrowsForSlide(slide) {
+    const trust = slide.querySelector(".j-hero__trust");
+    const arrowsWrap = slide.querySelector(".j-hero-slideshow__arrows");
+    if (!trust || !arrowsWrap) return;
+
+    const slideRect = slide.getBoundingClientRect();
+    const trustRect = trust.getBoundingClientRect();
+    const trustCenter = trustRect.top + trustRect.height / 2;
+    const arrowHeight = arrowsWrap.offsetHeight || 40;
+    const offset = slideRect.bottom - trustCenter - arrowHeight / 2;
+
+    arrowsWrap.style.setProperty("--hero-trust-offset", `${Math.max(offset, 0)}px`);
+  }
+
+  function alignAllArrows() {
+    slides.forEach(alignArrowsForSlide);
+  }
+
   updateHeight();
+  alignAllArrows();
   slideshow.classList.add("is-ready");
 
   // Non-first slides ship with data-src/data-srcset instead of real
   // src/srcset (see hero.liquid) so the browser doesn't fetch every slide
-  // image upfront just because they geometrically overlap the viewport.
-  // Hydrate them once the browser is idle after the critical first paint,
-  // well before autoplay's first advance needs them.
-  function hydrateDeferredSlideImages() {
-    slides.forEach((slide) => {
-      const img = slide.querySelector("img[data-src]");
-      if (!img) return;
-
+  // image (or, worse, video) upfront just because they geometrically
+  // overlap the viewport. Hydrate them once the browser is idle after the
+  // critical first paint, well before autoplay's first advance needs them.
+  function hydrateSlide(slide) {
+    const img = slide.querySelector("img[data-src]");
+    if (img) {
       if (img.dataset.srcset) {
         img.srcset = img.dataset.srcset;
         img.removeAttribute("data-srcset");
       }
       img.src = img.dataset.src;
       img.removeAttribute("data-src");
-    });
+    }
+
+    const videoSource = slide.querySelector("video source[data-src]");
+    if (videoSource) {
+      const video = videoSource.closest("video");
+      videoSource.src = videoSource.dataset.src;
+      videoSource.removeAttribute("data-src");
+      // Changing a <source>'s src after the fact needs an explicit load()
+      // for the <video> to actually pick it up.
+      if (video) video.load();
+    }
+  }
+
+  function hydrateDeferredSlideImages() {
+    slides.forEach(hydrateSlide);
   }
 
   if (typeof window.requestIdleCallback === "function") {
@@ -67,18 +108,54 @@ function initHeroSlideshow(slideshow) {
     setTimeout(hydrateDeferredSlideImages, 1000);
   }
 
+  // At most one hero video should ever be playing at a time — pause
+  // whichever slide is being left, and (after making sure its source is
+  // actually hydrated) play whichever slide is becoming active. Never
+  // autoplays for visitors who prefer reduced motion; the video just sits
+  // on its poster frame instead.
+  function pauseSlideVideo(slide) {
+    const video = slide.querySelector("video");
+    if (video) video.pause();
+  }
+
+  function playSlideVideo(slide) {
+    if (prefersReducedMotion) return;
+
+    const video = slide.querySelector("video");
+    if (!video) return;
+
+    if (video.querySelector("source[data-src]")) hydrateSlide(slide);
+
+    // load() is async; play() can be called immediately after regardless,
+    // the browser queues it correctly once the new source is ready.
+    const playResult = video.play();
+    if (playResult && typeof playResult.catch === "function") {
+      // Autoplay can be blocked by the browser in some contexts (e.g. low
+      // power mode) — that's fine, the poster frame is a reasonable
+      // fallback and isn't worth surfacing as an error.
+      playResult.catch(() => {});
+    }
+  }
+
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(updateHeight, 150);
+    resizeTimer = setTimeout(() => {
+      updateHeight();
+      alignAllArrows();
+    }, 150);
   });
 
   // Theme editor text/image edits update the DOM live, which would
-  // otherwise leave the height above stale.
+  // otherwise leave the height (and the trust-row-aligned arrow offset)
+  // stale.
   let mutationTimer = null;
   const observer = new MutationObserver(() => {
     clearTimeout(mutationTimer);
-    mutationTimer = setTimeout(updateHeight, 50);
+    mutationTimer = setTimeout(() => {
+      updateHeight();
+      alignAllArrows();
+    }, 50);
   });
   observer.observe(slideshow, {
     childList: true,
@@ -107,6 +184,11 @@ function initHeroSlideshow(slideshow) {
 
   announceActiveSlide();
 
+  // The initial slide's video (if any) has the autoplay attribute directly
+  // in its HTML, which the browser honors regardless of the visitor's
+  // motion preference — pause it immediately if they prefer reduced motion.
+  if (prefersReducedMotion) pauseSlideVideo(slides[currentIndex]);
+
   if (slides.length < 2) return;
 
   let timer = null;
@@ -114,6 +196,8 @@ function initHeroSlideshow(slideshow) {
   function goToSlide(index) {
     const nextIndex = (index + slides.length) % slides.length;
     if (nextIndex === currentIndex) return;
+
+    pauseSlideVideo(slides[currentIndex]);
 
     slides[currentIndex].classList.remove("is-active");
     slides[currentIndex].setAttribute("aria-hidden", "true");
@@ -124,6 +208,7 @@ function initHeroSlideshow(slideshow) {
     slides[nextIndex].removeAttribute("inert");
 
     currentIndex = nextIndex;
+    playSlideVideo(slides[nextIndex]);
     announceActiveSlide();
   }
 

@@ -4,14 +4,13 @@
 %}
 
 <div class="j-hero-band full-width">
-{% if slide_blocks.size > 0 %}
 
   <div
     class="j-hero-slideshow"
     data-autoplay="3000"
     role="region"
     aria-roledescription="carousel"
-    aria-label="{{ section.settings.heading | default: 'Hero' }}"
+    aria-label="Hero"
   >
 
     <div class="j-hero-slideshow__track">
@@ -58,7 +57,47 @@
 
           <div class="j-hero__image">
 
-            {% if block.settings.image %}
+            {% if block.settings.video %}
+
+              {% comment %}
+                Only the first/active slide's video is eager + autoplaying.
+                Other slides get their <source> deferred the same way
+                images are (data-src, hydrated on idle) — a video file is
+                far heavier than an image, so downloading N of them
+                upfront for slides the visitor may never reach is worse
+                here than it ever was for photos. hero-slideshow.js starts
+                playback only once a slide actually becomes active, and
+                pauses it again when the slide is left, so at most one
+                hero video is ever playing at a time.
+              {% endcomment %}
+
+              {% if forloop.first %}
+                {{
+                  block.settings.video
+                  | video_tag:
+                    image_size: '1200x',
+                    class: 'j-hero__video',
+                    muted: true,
+                    loop: true,
+                    playsinline: true,
+                    autoplay: true
+                }}
+              {% else %}
+                {% capture deferred_hero_video %}
+                  {{
+                    block.settings.video
+                    | video_tag:
+                      image_size: '1200x',
+                      class: 'j-hero__video',
+                      muted: true,
+                      loop: true,
+                      playsinline: true
+                  }}
+                {% endcapture %}
+                {{ deferred_hero_video | replace: ' src=', ' data-src=' }}
+              {% endif %}
+
+            {% elsif block.settings.image %}
               {% if forloop.first %}
                 {{
                   block.settings.image
@@ -103,7 +142,10 @@
               </div>
             {% endif %}
 
-            {% if slide_blocks.size > 1 %}
+          </div>
+
+          {% if slide_blocks.size > 1 %}
+            <div class="j-hero-slideshow__arrows">
               <button
                 type="button"
                 class="j-hero-slideshow__arrow j-hero-slideshow__arrow--prev"
@@ -123,9 +165,8 @@
                   <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-            {% endif %}
-
-          </div>
+            </div>
+          {% endif %}
 
         </div>
       {% endfor %}
@@ -133,131 +174,12 @@
 
   </div>
 
-{% else %}
-
-  <div class="j-hero">
-
-    <div class="j-hero__content">
-
-      <span class="j-hero__badge">
-        {{ section.settings.badge }}
-      </span>
-
-      <h1>
-        {{ section.settings.heading }}
-        <span class="j-hero__highlight">{{ section.settings.highlight_heading }}</span>
-      </h1>
-
-      <p>
-        {{ section.settings.description }}
-      </p>
-
-      <div class="j-hero__buttons">
-        <a
-          href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
-          class="j-button"
-        >
-          {{ section.settings.button_label }}
-        </a>
-
-        <a
-          href="{{ section.settings.secondary_link | default: routes.all_products_collection_url }}"
-          class="j-button j-button-outline"
-        >
-          {{ section.settings.secondary_label }}
-        </a>
-      </div>
-
-      {% render 'hero-trust', trust_blocks: trust_blocks %}
-
-    </div>
-
-    <div class="j-hero__image">
-
-      {% if section.settings.image %}
-        {{
-          section.settings.image
-          | image_url: width: 1200
-          | image_tag:
-            loading: 'eager',
-            fetchpriority: 'high',
-            widths: '360, 480, 600, 760, 1000, 1200',
-            sizes: '(max-width: 991px) 90vw, 560px',
-            class: 'j-hero__img',
-            alt: section.settings.heading
-        }}
-      {% else %}
-        <div class="j-hero__placeholder">
-          <div class="floating-circle"></div>
-          <div class="floating-square"></div>
-          <div class="floating-dot"></div>
-        </div>
-      {% endif %}
-
-    </div>
-
-  </div>
-
-{% endif %}
 </div>
 
 {% schema %}
 {
   "name": "Hero",
-  "settings": [
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Image",
-      "info": "Used only when no Slide blocks are added below."
-    },
-    {
-      "type": "text",
-      "id": "badge",
-      "label": "Badge",
-      "default": "Premium Lifestyle Collection"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Discover Your"
-    },
-    {
-      "type": "text",
-      "id": "highlight_heading",
-      "label": "Highlighted Heading",
-      "default": "Next Favorite"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless."
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Primary Button",
-      "default": "Shop Now"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "Primary Button Link"
-    },
-    {
-      "type": "text",
-      "id": "secondary_label",
-      "label": "Secondary Button",
-      "default": "Explore"
-    },
-    {
-      "type": "url",
-      "id": "secondary_link",
-      "label": "Secondary Button Link"
-    }
-  ],
+  "settings": [],
   "blocks": [
     {
       "type": "slide",
@@ -266,7 +188,14 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "Image",
+          "info": "Ignored if a video is set below."
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Plays muted and looping. Overrides the image when set."
         },
         {
           "type": "text",
@@ -346,6 +275,7 @@
     {
       "name": "Hero",
       "blocks": [
+        { "type": "slide" },
         {
           "type": "trust_item",
           "settings": { "icon": "shipping", "text": "Free Shipping" }
