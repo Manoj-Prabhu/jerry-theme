@@ -3,6 +3,30 @@
   background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
 }
 
+/* Pulls the hero up to extend behind the header instead of starting just
+   below it — matches .j-site-header's own height at each breakpoint (see
+   header.css) so the hero's top edge tucks exactly under the header's
+   bottom edge with no gap and no overlap past it. This is what makes the
+   header's hover-reveal effect (see .j-body--home .j-site-header-wrapper
+   in header.css) actually have hero media behind it to reveal — without
+   this, the header would just be see-through onto empty space. Scoped to
+   the homepage only, since only it has this hero section. */
+.j-body--home .j-hero-band {
+  margin-top: -80px;
+}
+
+@media (max-width: 992px) {
+  .j-body--home .j-hero-band {
+    margin-top: -70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .j-body--home .j-hero-band {
+    margin-top: -64px;
+  }
+}
+
 .j-hero {
   position: relative;
   display: flex;
@@ -19,7 +43,14 @@
 /* Dark scrim over the full-bleed image/video — darkest behind the text on
    the left, fading to transparent by the right so the photo itself still
    reads clearly. A pseudo-element instead of an extra element, so this
-   needed no changes to hero.liquid's markup at all. */
+   needed no changes to hero.liquid's markup at all.
+
+   Kept deliberately light — the heading/description/trust text all
+   carry their own text-shadow (see below) as the primary legibility
+   mechanism now, the same balance a reference site landed on (photo
+   reads bright and clear, scrim barely visible), rather than relying on
+   a heavy scrim to do that work and dulling the photo/video underneath
+   in the process. */
 .j-hero::before {
   content: "";
   position: absolute;
@@ -28,11 +59,11 @@
   pointer-events: none;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.45) 20%,
-    rgba(0, 0, 0, 0.32) 38%,
-    rgba(0, 0, 0, 0.18) 55%,
-    rgba(0, 0, 0, 0.08) 72%,
+    rgba(0, 0, 0, 0.32) 0%,
+    rgba(0, 0, 0, 0.24) 20%,
+    rgba(0, 0, 0, 0.16) 38%,
+    rgba(0, 0, 0, 0.09) 55%,
+    rgba(0, 0, 0, 0.04) 72%,
     rgba(0, 0, 0, 0) 90%
   );
 }
@@ -84,18 +115,16 @@
    making the prev arrow unclickable wherever it overlapped the
    description text.
 
-   The trust row (Free Shipping / Easy Returns / Secure Checkout) stays in
-   its natural in-flow position inside .j-hero__content — it isn't pulled
-   out to a shared row — so its vertical position varies slide to slide
-   depending on how much text that slide's heading/description wrap to.
-   --hero-trust-offset is a custom property hero-slideshow.js measures and
-   sets per slide (the trust row's distance from the slide's bottom edge),
-   so these arrows track wherever that row actually lands instead of
-   sitting at a fixed offset that would only line up by coincidence. */
+   Fixed position on every slide, deliberately not tracking the trust
+   row's actual position (an earlier version of this did) — the trust
+   row shifts up/down slightly slide to slide depending on how much that
+   slide's heading/description wraps to, which made the arrows visibly
+   hop to a different spot on every slide change. A consistent, always-
+   in-the-same-place position reads as more intentional. */
 .j-hero-slideshow__arrows {
   position: absolute;
   right: 24px;
-  bottom: var(--hero-trust-offset, 24px);
+  bottom: 24px;
   z-index: 3;
   display: flex;
   gap: 12px;
@@ -214,18 +243,35 @@
   gap: 20px;
 }
 
-/* Both buttons already have their own opaque backgrounds (see
-   assets/components.css) — .j-button uses --button-background/text, and
-   .j-button-outline gets a white background + dark border here — so both
-   stay legible regardless of where they land on the photo underneath. */
+/* Both buttons transparent by default — a white border and white text is
+   enough to read against the scrim/text-shadow already doing the
+   legibility work for the rest of the hero (see .j-hero::before and the
+   heading/description text-shadow above) — and both turn solid gold on
+   hover, matching the accent color used elsewhere in the hero (badge,
+   heading highlight, trust icons). Dark text on hover since gold is a
+   light color; white would lose contrast against it. */
+.j-hero__buttons .j-button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+}
+
+.j-hero__buttons .j-button:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
 .j-hero__buttons .j-button-outline {
-  background: var(--color-white);
-  border-color: var(--color-white);
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
 }
 
 .j-hero__buttons .j-button-outline:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
 }
 
 /* Trust Row */
@@ -391,6 +437,11 @@
 @media (max-width: 991px) {
   .j-hero {
     min-height: 550px;
+    /* Same reasoning as the 480px breakpoint below — the header overlaps
+       ~70px here (see .j-body--home .j-hero-band above), which used to
+       exactly equal the default 70px padding-top with zero margin for
+       error. */
+    padding-top: 90px;
   }
 
   .j-hero h1 {
@@ -401,16 +452,29 @@
 @media (max-width: 480px) {
   .j-hero {
     min-height: 470px;
-    padding: 50px var(--space-4);
+    /* Top padding is deliberately larger than the sides/bottom — the
+       header overlaps the hero's top ~64px on this breakpoint (see
+       .j-body--home .j-hero-band above), and .j-hero's content is
+       vertically centered via flex, which only guarantees *at least*
+       padding-top worth of clearance above it (more if the content is
+       short, but never less once the content stack is tall enough to
+       fill the available space). 50px < 64px meant a long badge/heading
+       could end up tucked right under the header on some slides; 84px
+       keeps it clear with room to spare. */
+    padding: 84px var(--space-4) 50px;
   }
 
   /* The left-to-right scrim leaves the right ~20% of the image untouched
      so the photo reads clearly there on wide screens — but a narrow phone
-     doesn't have enough width for that untouched zone to matter, and the
-     lighter coverage risks the text losing contrast against a bright part
-     of the image. A flatter, more uniform dark scrim is more reliable here. */
+     doesn't have enough width for that untouched zone to matter, so this
+     stays flat/uniform rather than a gradient. Kept much lighter than an
+     earlier version of this (0.65) — that made the whole photo/video read
+     as a dark, muddy overlay rather than a background you could actually
+     see, especially now that the heading/description/trust text already
+     carry their own text-shadow for contrast (see below) and don't need
+     the scrim to do all of that work by itself. */
   .j-hero::before {
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.22);
   }
 
   .j-hero__content {
@@ -425,16 +489,16 @@
     font-size: 16px;
   }
 
-  /* Centered below the trust row instead of right-aligned beside it — on
-     this narrow a screen the trust row wraps to two lines (see
-     .j-hero__trust above), so keeping the arrows pinned to the right
-     edge would run them into that wrapped text. hero-slideshow.js
-     measures the trust row's actual bottom edge for --hero-trust-offset
-     at this breakpoint instead of its vertical center (the desktop
-     behavior), so the two changes work together. */
+  /* Centered instead of right-aligned — on this narrow a screen the
+     trust row wraps to two lines (see .j-hero__trust above) and can run
+     close to the right edge, so keeping the arrows pinned there too
+     risked crowding it. Still a fixed bottom offset, same as desktop
+     (see .j-hero-slideshow__arrows above) — just recentered
+     horizontally for this breakpoint. */
   .j-hero-slideshow__arrows {
     right: auto;
     left: 50%;
+    bottom: 16px;
     transform: translateX(-50%);
   }
 }

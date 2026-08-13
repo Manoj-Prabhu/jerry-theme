@@ -9,16 +9,12 @@
     style="
     --announcement-bg: {{ section.settings.announcement_background }};
     --announcement-color: {{ section.settings.announcement_text_color }};
-    --announcement-align: {{ section.settings.announcement_alignment }};
     "
-    data-height
-    data-autoplay="{{ section.settings.auto_rotate }}"
-    data-speed="{{ section.settings.rotation_speed }}"
+    data-marquee
   >
 
-    <div class="container">
-
-      <div class="j-announcement__slider">
+    <div class="j-announcement__slider">
+      <div class="j-announcement__track">
 
         {% liquid
           assign free_shipping_amount = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
@@ -35,7 +31,7 @@
           %}
 
           <div
-            class="j-announcement__item{% if forloop.first %} is-active{% endif %}"
+            class="j-announcement__item"
             {{ block.shopify_attributes }}
           >
 
@@ -61,7 +57,6 @@
         {% endfor %}
 
       </div>
-
     </div>
 
     {% if section.settings.show_close %}

@@ -106,18 +106,36 @@ function playTextReveal(heading, delay = 50) {
 // the letter-by-letter build clearly visible against an already-visible slide.
 const HERO_SLIDE_CROSSFADE_MS = 800;
 
-function initHeroTextReveal() {
-  const headings = document.querySelectorAll(".j-hero h1");
+// Badge and description get the same word-by-word reveal section titles
+// already use elsewhere (prepareTextReveal), not the heading's
+// letter-by-letter build — a whole paragraph animating letter by letter
+// would take far too long to finish. A small stagger around the
+// heading's own delay (badge just before, description just after) reads
+// as one coordinated reveal rather than three unrelated elements
+// animating independently.
+const HERO_BADGE_DELAY_MS = HERO_SLIDE_CROSSFADE_MS - 100;
+const HERO_DESCRIPTION_DELAY_MS = HERO_SLIDE_CROSSFADE_MS + 150;
 
-  if (!headings.length) return;
+function initHeroTextReveal() {
+  const slides = document.querySelectorAll(".j-hero");
+
+  if (!slides.length) return;
+
+  const headings = document.querySelectorAll(".j-hero h1");
+  const badges = document.querySelectorAll(".j-hero__badge");
+  const descriptions = document.querySelectorAll(".j-hero p");
 
   headings.forEach(prepareHeroTextReveal);
+  badges.forEach(prepareTextReveal);
+  descriptions.forEach(prepareTextReveal);
 
   // Multi-slide hero: replay the reveal every time a slide becomes active
   // (dispatched by hero-slideshow.js), not just once on page load.
   document.addEventListener("heroSlideActivated", (event) => {
-    const heading = event.detail.slide.querySelector("h1");
-    playTextReveal(heading, HERO_SLIDE_CROSSFADE_MS);
+    const slide = event.detail.slide;
+    playTextReveal(slide.querySelector(".j-hero__badge"), HERO_BADGE_DELAY_MS);
+    playTextReveal(slide.querySelector("h1"), HERO_SLIDE_CROSSFADE_MS);
+    playTextReveal(slide.querySelector("p"), HERO_DESCRIPTION_DELAY_MS);
   });
 
   // Single, non-slideshow hero (or the initially active slide before any
@@ -125,16 +143,19 @@ function initHeroTextReveal() {
   const observer = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          playTextReveal(entry.target, HERO_SLIDE_CROSSFADE_MS);
-          obs.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+
+        const slide = entry.target;
+        playTextReveal(slide.querySelector(".j-hero__badge"), HERO_BADGE_DELAY_MS);
+        playTextReveal(slide.querySelector("h1"), HERO_SLIDE_CROSSFADE_MS);
+        playTextReveal(slide.querySelector("p"), HERO_DESCRIPTION_DELAY_MS);
+        obs.unobserve(slide);
       });
     },
     { threshold: 0.2 },
   );
 
-  headings.forEach((heading) => observer.observe(heading));
+  slides.forEach((slide) => observer.observe(slide));
 }
 
 function initSectionTitleReveal() {

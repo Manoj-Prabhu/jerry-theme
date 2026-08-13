@@ -6,56 +6,87 @@ class JerryHeader {
     this.initStickyHeader();
     this.initMobileMenu();
     this.initHeaderSearchToggle();
+    this.initHeroRevealOnNavHover();
   }
 
-  /* Announcement Bar */
+  /* Hero Reveal on Nav Hover (homepage only — see header.css/hero.css) */
+
+  initHeroRevealOnNavHover() {
+    if (!document.body.classList.contains("j-body--home")) return;
+
+    const header = document.querySelector(".j-site-header-wrapper");
+    const nav = document.getElementById("HeaderNav");
+
+    if (!header || !nav) return;
+
+    // Delegated to the whole nav (not each individual link) so moving
+    // between adjacent links doesn't flicker the effect off and back on
+    // — it only toggles when the cursor actually enters/leaves the nav
+    // as a whole.
+    nav.addEventListener("mouseenter", () => {
+      header.classList.add("is-nav-hovering");
+    });
+    nav.addEventListener("mouseleave", () => {
+      header.classList.remove("is-nav-hovering");
+    });
+  }
+
+  /* Announcement Bar — continuous scrolling ticker. The scroll itself is
+     a pure CSS animation (see .j-announcement__track in header.css) that
+     travels from just past the bar's right edge to just past its left
+     edge — this measures the bar's and track's actual rendered widths to
+     express those two edges as real pixel offsets (a fixed percentage
+     can't express "just off-screen" for content of unknown length), and
+     turns the total travel distance into a duration so the scroll speed
+     (px/second) — not the loop duration — stays visually consistent
+     regardless of how much announcement text there is. */
 
   initAnnouncementBar(root = document) {
     const bar = root.querySelector(".j-announcement");
 
     if (!bar) return;
 
-    const items = bar.querySelectorAll(".j-announcement__item");
+    const track = bar.querySelector(".j-announcement__track");
     const closeButton = bar.querySelector(".j-announcement__close");
-    const isAutoplay = bar.dataset.autoplay === "true";
-    const speedSeconds = Number(bar.dataset.speed) || 5;
 
-    let activeIndex = Array.from(items).findIndex((item) =>
-      item.classList.contains("is-active"),
-    );
+    if (!track) return;
 
-    if (activeIndex < 0) activeIndex = 0;
+    // Roughly how many pixels of ticker scroll past per second — higher
+    // is faster. Kept as a constant rather than a merchant setting since
+    // it needs to combine with the measured distance below to produce a
+    // sensible duration; exposing it as a raw "speed" setting alone
+    // (the old fade-cycle's rotation_speed) wouldn't account for that.
+    const PIXELS_PER_SECOND = 70;
 
-    let rotationTimer = null;
+    const setMarqueePosition = () => {
+      const barWidth = bar.getBoundingClientRect().width;
+      const trackWidth = track.getBoundingClientRect().width;
+      if (barWidth <= 0 || trackWidth <= 0) return;
 
-    const rotate = () => {
-      items[activeIndex].classList.remove("is-active");
-      activeIndex = (activeIndex + 1) % items.length;
-      items[activeIndex].classList.add("is-active");
+      const startX = barWidth;
+      const endX = -trackWidth;
+      const distance = startX - endX;
+      const duration = Math.max(distance / PIXELS_PER_SECOND, 6);
+
+      bar.style.setProperty("--marquee-start", `${startX}px`);
+      bar.style.setProperty("--marquee-end", `${endX}px`);
+      bar.style.setProperty("--marquee-duration", `${duration}s`);
+      bar.setAttribute("data-marquee-ready", "true");
     };
 
-    const startRotation = () => {
-      if (!rotationTimer && isAutoplay && items.length > 1) {
-        rotationTimer = window.setInterval(rotate, speedSeconds * 1000);
-      }
-    };
+    setMarqueePosition();
 
-    const stopRotation = () => {
-      if (rotationTimer) {
-        clearInterval(rotationTimer);
-        rotationTimer = null;
-      }
-    };
-
-    startRotation();
-
-    bar.addEventListener("mouseenter", stopRotation);
-    bar.addEventListener("mouseleave", startRotation);
+    // Re-measures on resize/font-load-driven reflow — stale start/end
+    // offsets computed at a different viewport width would either clip
+    // the entrance/exit or leave an oddly long gap.
+    if (typeof ResizeObserver === "function") {
+      new ResizeObserver(setMarqueePosition).observe(bar);
+    } else {
+      window.addEventListener("resize", setMarqueePosition);
+    }
 
     if (closeButton) {
       closeButton.addEventListener("click", () => {
-        stopRotation();
-
         bar.remove();
       });
     }

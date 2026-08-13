@@ -39,46 +39,7 @@ function initHeroSlideshow(slideshow) {
     track.style.height = `${maxHeight}px`;
   }
 
-  // The trust row (Free Shipping / Easy Returns / Secure Checkout) stays
-  // in its natural in-flow position inside .j-hero__content — its
-  // vertical position varies slide to slide depending on how much that
-  // slide's heading/description wrap to. The arrows are a separate,
-  // absolutely-positioned element (so they can sit out past the text
-  // column near the media's edge), so a fixed CSS offset would only line
-  // the two up by coincidence. This measures each slide's actual trust
-  // row position and writes it as a CSS variable the arrows read (see
-  // hero.css), so the arrows always land level with the trust row instead
-  // of drifting away from it.
-  function alignArrowsForSlide(slide) {
-    const trust = slide.querySelector(".j-hero__trust");
-    const arrowsWrap = slide.querySelector(".j-hero-slideshow__arrows");
-    if (!trust || !arrowsWrap) return;
-
-    const slideRect = slide.getBoundingClientRect();
-    const trustRect = trust.getBoundingClientRect();
-    const arrowHeight = arrowsWrap.offsetHeight || 40;
-
-    // On mobile the trust row wraps to two lines (see hero.css), so
-    // centering the arrows on it — the desktop behavior — lands them
-    // overlapping the wrapped text instead of beside it. Below 480px the
-    // arrows sit just under the trust row's bottom edge and centered
-    // horizontally instead (see the matching max-width: 480px rule in
-    // hero.css), so this measures from that edge rather than the row's
-    // vertical center.
-    const isMobile = window.matchMedia("(max-width: 480px)").matches;
-    const offset = isMobile
-      ? slideRect.bottom - trustRect.bottom - arrowHeight - 6
-      : slideRect.bottom - (trustRect.top + trustRect.height / 2) - arrowHeight / 2;
-
-    arrowsWrap.style.setProperty("--hero-trust-offset", `${Math.max(offset, 0)}px`);
-  }
-
-  function alignAllArrows() {
-    slides.forEach(alignArrowsForSlide);
-  }
-
   updateHeight();
-  alignAllArrows();
   slideshow.classList.add("is-ready");
 
   // Non-first slides ship with data-src/data-srcset instead of real
@@ -150,22 +111,15 @@ function initHeroSlideshow(slideshow) {
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      updateHeight();
-      alignAllArrows();
-    }, 150);
+    resizeTimer = setTimeout(updateHeight, 150);
   });
 
   // Theme editor text/image edits update the DOM live, which would
-  // otherwise leave the height (and the trust-row-aligned arrow offset)
-  // stale.
+  // otherwise leave the height stale.
   let mutationTimer = null;
   const observer = new MutationObserver(() => {
     clearTimeout(mutationTimer);
-    mutationTimer = setTimeout(() => {
-      updateHeight();
-      alignAllArrows();
-    }, 50);
+    mutationTimer = setTimeout(updateHeight, 50);
   });
   observer.observe(slideshow, {
     childList: true,
@@ -255,14 +209,12 @@ function initHeroSlideshow(slideshow) {
     }
   });
 
-  // Hover-pause only on real pointer devices — touchscreens can fire a
-  // "mouseenter" on tap with no matching "mouseleave", which would
-  // otherwise pause autoplay permanently.
-  if (window.matchMedia("(hover: hover)").matches) {
-    slideshow.addEventListener("mouseenter", stopAutoplay);
-    slideshow.addEventListener("mouseleave", startAutoplay);
-  }
-
+  // No hover-pause here (unlike smaller inline carousels) — the hero
+  // spans nearly the full viewport width/height, so a visitor's cursor is
+  // almost always resting somewhere over it just from normal browsing,
+  // not necessarily an intent to pause. Pausing on that made autoplay
+  // look broken/stuck for anyone whose mouse happened to sit over the
+  // hero, only ever advancing when they explicitly clicked an arrow.
   slideshow.addEventListener("focusin", stopAutoplay);
   slideshow.addEventListener("focusout", startAutoplay);
 

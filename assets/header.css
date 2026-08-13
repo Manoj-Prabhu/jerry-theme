@@ -1,11 +1,12 @@
-/* Announcement Bar */
+/* Announcement Bar — a continuous breaking-news-style scrolling ticker
+   rather than the fade-between-messages behavior this used to have. */
 
 .j-announcement {
   position: relative;
   padding: 10px 0;
   background: var(--announcement-bg);
   color: var(--announcement-color);
-  text-align: var(--announcement-align);
+  overflow: hidden;
 }
 
 .j-announcement a {
@@ -18,23 +19,86 @@
 }
 
 .j-announcement__text:hover {
-  color: var(--color-accent);
+  color: #f0c14b;
 }
 
-.j-announcement.has-close .container {
+.j-announcement.has-close .j-announcement__slider {
   padding-right: 32px;
 }
 
-/* .j-announcement__slider text-align is inherited from the inline style on .j-announcement */
-
-.j-announcement__item {
-  display: none;
-  align-items: center;
-  gap: 8px;
+.j-announcement__slider {
+  position: relative;
+  width: 100%;
+  height: 1.4em;
 }
 
-.j-announcement__item.is-active {
+/* Enters fully off-screen past the bar's right edge and exits fully past
+   its left edge — true edge-to-edge motion across the full page width,
+   rather than a gapless loop. --marquee-start/--marquee-end are set by
+   header.js from the bar's and track's actual measured widths (a fixed
+   percentage/em value can't express "just past the right edge" for
+   content of unknown length), and --marquee-duration is scaled to the
+   total travel distance so the scroll speed — not the loop duration —
+   stays visually consistent regardless of how much announcement text
+   there is. Restarting the animation naturally leaves a gap of empty bar
+   between one pass exiting and the next entering, which is the point —
+   a gapless loop would need a duplicated track instead (an earlier
+   version of this worked that way). */
+.j-announcement[data-marquee-ready] .j-announcement__track {
+  animation: j-announcement-marquee var(--marquee-duration, 12s) linear infinite;
+}
+
+/* Pauses the scroll under the cursor so a message can actually be read
+   (or a link clicked) instead of chasing text that keeps moving. */
+.j-announcement:hover .j-announcement__track {
+  animation-play-state: paused;
+}
+
+.j-announcement__track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  transform: translateX(var(--marquee-start, 100%));
+}
+
+.j-announcement__item {
   display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* A visible separator between messages within one pass — without one,
+   back-to-back messages would run into each other with nothing between
+   them. */
+.j-announcement__item:not(:last-child)::after {
+  content: "•";
+  margin: 0 var(--space-8);
+  opacity: 0.5;
+}
+
+@keyframes j-announcement-marquee {
+  from {
+    transform: translateX(var(--marquee-start, 100%));
+  }
+
+  to {
+    transform: translateX(var(--marquee-end, -100%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-announcement[data-marquee-ready] .j-announcement__track {
+    animation: none;
+    /* Without the scroll animation, leaving the track parked off-screen
+       (its default position pre-animation) would show an empty bar with
+       no message at all. */
+    position: static;
+    transform: none;
+  }
 }
 
 .j-announcement__close {
@@ -67,8 +131,143 @@
 /* Header */
 
 .j-site-header-wrapper {
+  position: relative;
+  /* Above the hero's pulled-up top strip (see .j-body--home .j-hero-band
+     below) regardless of whether sticky is enabled — .j-header--sticky
+     already sets its own z-index while stuck, but this covers the
+     unstuck/non-sticky state too. */
+  z-index: 900;
   width: 100%;
   background: linear-gradient(135deg, var(--color-sand) 0%, #ffffff 65%);
+  transition: background 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+/* Homepage-only, at the very top of the page — the header is fully
+   transparent (no tint, no blur) so the hero media playing behind it
+   (see .j-body--home .j-hero-band, which pulls the hero up under the
+   header) shows through crisply by default. Hovering any nav link
+   "reveals" the actual solid header (see .is-nav-hovering below) instead
+   of the other way around. Only applies here: the header overlaps the
+   hero's top edge, which only exists as a suitable backdrop on the
+   homepage — every other page keeps the header solid/opaque in normal
+   flow, unaffected. */
+.j-body--home .j-site-header-wrapper {
+  background: transparent;
+}
+
+/* White instead of the theme's normal dark logo/nav/icon colors — sitting
+   directly on the hero photo/video needs light text, the same reasoning
+   as the hero's own heading text (see hero.css). Only the elements with
+   their own explicit color (logo, nav links, search toggle) need
+   overriding here; the account/cart/wishlist icons have no color of
+   their own and inherit it from .j-site-header below. Excluded once
+   hovering or scrolled, where they fall back to their normal dark colors
+   against the solid backing. */
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-site-header {
+  color: #fff;
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-logo,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-nav-link,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-header__search-toggle,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-header__account,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-header__wishlist,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-header__cart {
+  /* <button> elements (wishlist/cart) don't inherit color from an
+     ancestor by default in the browser's own base stylesheet — the
+     .j-site-header rule above setting color: #fff was silently ignored
+     by them for that reason, so they need their own explicit override
+     here rather than relying on inheritance like the plain text/link
+     elements above do. */
+  color: #fff;
+  /* Applied per-element here (logo/nav-link/icons) instead of once on
+     the shared .j-site-header container above — filter on an ancestor
+     creates a new containing block for any position: fixed descendant,
+     which broke the mobile nav drawer (#HeaderNav, itself position:
+     fixed) into rendering clipped to the header's own small bounding box
+     instead of covering the full viewport like it's supposed to. None of
+     these leaf elements contain that fixed-position drawer, so applying
+     it here can't trap it again. */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 1px 6px rgba(0, 0, 0, 0.35));
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-menu-toggle
+  span {
+  /* The hamburger's bars are painted via background, not color/
+     currentColor, so none of the color overrides above reach them —
+     they need their own explicit override on that property instead. */
+  background: #fff;
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  #WishlistCount {
+  /* Gold instead of the theme's normal green accent — ties the count
+     badge to the same gold-by-default treatment as the rest of the
+     transparent header (logo mark, search icon). A richer gradient plus
+     a subtle glow and a thin white ring, rather than a flat fill, so it
+     reads clearly against both the wishlist icon's white circle and
+     whatever part of the hero happens to be behind it. Falls back to the
+     original green automatically once the header goes solid (hover/
+     scrolled), since this rule stops matching then. */
+  background: linear-gradient(135deg, #f7d374 0%, #d69a2d 100%);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* The mobile nav drawer (#HeaderNav.is-open) always has its own solid
+   white background (see .header__menu below), regardless of whether the
+   header itself is transparent or solid — but .j-nav-link still matched
+   the transparent-state white-text rule above whenever the header
+   hadn't gone solid yet (i.e. every time, since opening the drawer is
+   usually the very first interaction), rendering the nav links white
+   text on a white drawer and making the whole thing look blank. The
+   #HeaderNav id gives this enough specificity to win over that rule
+   unconditionally. */
+#HeaderNav.is-open .j-nav-link {
+  color: var(--color-text);
+  /* The transparent-state legibility drop-shadow (meant for text sitting
+     directly on the hero video) also needs clearing here — left as-is it
+     still shows as a stray shadow behind text that's now sitting on the
+     drawer's plain solid background, where it was never needed. */
+  filter: none;
+}
+
+/* Solid the moment either the nav is hovered, or the page has scrolled
+   past the hero — .is-scrolled is already toggled by
+   initStickyHeader()'s scroll listener in header.js. Without the
+   scrolled condition, the header would stay transparent while
+   sticky-floating over every section below the hero (Shop by Category,
+   Featured Collection, etc.), which have their own light backgrounds the
+   white header text would disappear against.
+
+   Fully solid, flat white — a fade-to-transparent gradient here (an
+   earlier version of this) left a visible seam where the fading
+   blur/opacity trailed off against the hero media below it, reading as
+   a "double layer" artifact rather than a clean reveal. */
+.j-body--home .j-site-header-wrapper.is-nav-hovering,
+.j-body--home .j-site-header-wrapper.is-scrolled {
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .j-site-header {
@@ -168,11 +367,11 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--style-border-radius-card, 8px);
-  background: linear-gradient(
-    135deg,
-    var(--color-accent) 0%,
-    color-mix(in srgb, var(--color-accent) 65%, #000) 100%
-  );
+  /* Gold by default, switching to the theme's original green accent on
+     hover (see .j-logo:hover below) — a small "reveal" consistent with
+     the gold-by-default/accent-on-interaction pattern used elsewhere
+     (search icon, buttons). */
+  background: linear-gradient(135deg, #f0c14b 0%, #b8873a 100%);
   color: #fff;
   font-family: var(--font-logo--family, sans-serif);
   font-style: var(--font-logo--style, normal);
@@ -180,6 +379,18 @@
   font-size: 1rem;
   letter-spacing: 0.03em;
   line-height: 1;
+  box-shadow: 0 4px 10px rgba(240, 193, 75, 0.45);
+  transition:
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+.j-logo:hover .j-logo-mark {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    color-mix(in srgb, var(--color-accent) 65%, #000) 100%
+  );
   box-shadow: 0 4px 10px
     color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
@@ -379,6 +590,65 @@
 .j-search-form input:focus ~ .j-search-form__icon,
 .j-search-form input:not(:placeholder-shown) ~ .j-search-form__icon {
   color: var(--color-accent);
+}
+
+/* Homepage-only, while the header is transparent (see .j-site-header-
+   wrapper above) — the search field's normal solid var(--color-surface)
+   background was the one remaining opaque block sitting on top of the
+   hero video, standing out against everything else around it that's
+   already showing the media through. Translucent instead, in the same
+   spirit as the transparent header itself. Reverts to the field's normal
+   solid white the moment it's actually hovered/focused (typing needs a
+   properly readable field regardless of what state the header is in),
+   and falls back entirely once the header itself goes solid (hover/
+   scroll), where the field's original var(--color-surface) styling
+   already reads fine against a solid backing. */
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form input {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form__icon {
+  color: #f0c14b;
+}
+
+/* Focus keeps the same glass look too now — only the border tints toward
+   the accent color as a focus indicator, background/text stay the
+   translucent glass style through every interaction state (idle, hover,
+   focus, typed). Reverts entirely once the header itself goes solid
+   (nav hover / scrolled), same as everything else here. */
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form input:focus {
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form input:focus
+  ~ .j-search-form__icon,
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form input:not(:placeholder-shown)
+  ~ .j-search-form__icon {
+  /* Gold here too, not the original green accent — while the header is
+     still in its transparent default state, the icon should stay gold
+     regardless of whether the field is idle, focused, or has text typed
+     into it. It only reverts to the theme's normal accent color once the
+     header itself goes solid (hover/scrolled), via the un-scoped rule
+     above. */
+  color: #f0c14b;
 }
 
 .j-predictive-search {
@@ -855,15 +1125,26 @@
 
     visibility: hidden;
     transform: translateX(-100%);
+    /* visibility gets its own explicit 0s transition with a delay
+       matching the transform's duration, instead of sharing
+       var(--transition) directly — without an explicit delay, browsers
+       can flip visibility at inconsistent points in the transition
+       across rapid open/close/reopen cycles, which showed up as the
+       drawer getting stuck rendering half-open on a second open. Same
+       explicit-delay technique already used for the hero slideshow's
+       crossfade (see .j-hero-slideshow__slide in hero.css). */
     transition:
       transform var(--transition),
-      visibility var(--transition);
+      visibility 0s linear 0.25s;
     overflow-y: auto;
   }
 
   .header__menu.is-open {
     visibility: visible;
     transform: translateX(0);
+    transition:
+      transform var(--transition),
+      visibility 0s linear 0s;
   }
 
   .j-menu-close {

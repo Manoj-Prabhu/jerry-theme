@@ -142,7 +142,7 @@
     {{ content_for_header }}
   </head>
 
-  <body{% unless template.name == 'index' %} class="j-body--tinted"{% endunless %}>
+  <body class="{% if template.name == 'index' %}j-body--home{% else %}j-body--tinted{% endif %}">
     {% sections 'header-group' %}
     <main id="MainContent" class="j-main">
       {{ content_for_layout }}

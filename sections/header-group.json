@@ -31,12 +31,9 @@
         "enable_sticky_header": true,
         "menu": "main-menu",
         "show_announcement": true,
-        "auto_rotate": true,
-        "rotation_speed": 5,
         "show_close": false,
         "announcement_background": "#14110F",
-        "announcement_text_color": "#ffffff",
-        "announcement_alignment": "center"
+        "announcement_text_color": "#ffffff"
       }
     }
   },
