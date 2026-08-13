@@ -424,4 +424,17 @@
   .j-hero p {
     font-size: 16px;
   }
+
+  /* Centered below the trust row instead of right-aligned beside it — on
+     this narrow a screen the trust row wraps to two lines (see
+     .j-hero__trust above), so keeping the arrows pinned to the right
+     edge would run them into that wrapped text. hero-slideshow.js
+     measures the trust row's actual bottom edge for --hero-trust-offset
+     at this breakpoint instead of its vertical center (the desktop
+     behavior), so the two changes work together. */
+  .j-hero-slideshow__arrows {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }

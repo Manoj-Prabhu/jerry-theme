@@ -117,7 +117,7 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/person-dressed-in-black-holds-two-weights-in-each-hand.jpg",
-            "title": "New Arrivals",
+            "title": "Just In",
             "link": ""
           }
         },
@@ -125,7 +125,7 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/pink-lip-gloss.jpg",
-            "title": "Best Sellers",
+            "title": "Fan Favorites",
             "link": ""
           }
         },
@@ -133,7 +133,7 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/laughter-in-the-sun.jpg",
-            "title": "Accessories",
+            "title": "Finishing Touches",
             "link": ""
           }
         },
@@ -141,7 +141,15 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/studded-flats.jpg",
-            "title": "Sale",
+            "title": "Style Steals",
+            "link": ""
+          }
+        },
+        "cat-5": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/designer-at-work.jpg",
+            "title": "Editor's Picks",
             "link": ""
           }
         }
@@ -150,7 +158,8 @@
         "cat-1",
         "cat-2",
         "cat-3",
-        "cat-4"
+        "cat-4",
+        "cat-5"
       ],
       "settings": {
         "heading": "Shop by Category",

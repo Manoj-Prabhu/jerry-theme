@@ -56,9 +56,19 @@ function initHeroSlideshow(slideshow) {
 
     const slideRect = slide.getBoundingClientRect();
     const trustRect = trust.getBoundingClientRect();
-    const trustCenter = trustRect.top + trustRect.height / 2;
     const arrowHeight = arrowsWrap.offsetHeight || 40;
-    const offset = slideRect.bottom - trustCenter - arrowHeight / 2;
+
+    // On mobile the trust row wraps to two lines (see hero.css), so
+    // centering the arrows on it — the desktop behavior — lands them
+    // overlapping the wrapped text instead of beside it. Below 480px the
+    // arrows sit just under the trust row's bottom edge and centered
+    // horizontally instead (see the matching max-width: 480px rule in
+    // hero.css), so this measures from that edge rather than the row's
+    // vertical center.
+    const isMobile = window.matchMedia("(max-width: 480px)").matches;
+    const offset = isMobile
+      ? slideRect.bottom - trustRect.bottom - arrowHeight - 6
+      : slideRect.bottom - (trustRect.top + trustRect.height / 2) - arrowHeight / 2;
 
     arrowsWrap.style.setProperty("--hero-trust-offset", `${Math.max(offset, 0)}px`);
   }

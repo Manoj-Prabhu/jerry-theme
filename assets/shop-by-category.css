@@ -1,8 +1,7 @@
 .j-shop-by-category {
   width: 100%;
   box-sizing: border-box;
-  background: #f0fdf4;
-  background: color-mix(in srgb, var(--color-accent) 6%, white);
+  background: #e4d9f0;
   padding: 80px 0;
 }
 
@@ -26,19 +25,92 @@
   margin-top: 8px;
 }
 
+/* Horizontal scroll-snap row instead of a fixed grid — lets merchants add
+   more categories than comfortably fit one row without them shrinking
+   into an ever-narrower grid, and gives shoppers a swipe/drag-to-browse
+   interaction (native touch/trackpad scrolling for free; shop-by-
+   category.js adds mouse click-and-drag on desktop). Scrollbar is hidden
+   since scroll-snap + drag already communicates "more content this way"
+   without needing a visible scrollbar as well.
+
+   Fills the full container width (no artificial max-width) — the
+   infinite loop in shop-by-category.js clones the card set three times,
+   so total scrollable content is always at least 3x a single set's
+   width regardless of category count, which is virtually guaranteed to
+   overflow any container on its own. An earlier, narrower max-width was
+   only needed to force overflow before that looping existed; keeping it
+   now just wastes space as empty margins on either side of the row. */
 .j-shop-by-category__grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  display: flex;
+  align-items: center;
   gap: 24px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--space-8);
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Room for the centered card to scale up (see shop-by-category.js)
+     without its grown edges getting clipped by the row's own box —
+     overflow-x: auto forces overflow-y to compute as auto too (never
+     visible) once any content actually overflows vertically, so this
+     padding keeps that overflow from ever happening instead of relying
+     on overflow-y: visible alone. */
+  padding-block: 24px;
+  /* Depth for the cards' rotateY tilt (see shop-by-category.js) — without
+     a perspective on the shared parent, rotateY renders as a flat
+     horizontal squash instead of an actual 3D tilt away from the
+     viewer. */
+  perspective: 1200px;
+}
+
+.j-shop-by-category__grid::-webkit-scrollbar {
+  display: none;
+}
+
+.j-shop-by-category__grid.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+/* Autoplay nudges scrollLeft by a fraction of a pixel every frame — even
+   proximity snapping can fight increments that small and hold the row
+   still instead of letting it drift, so snapping is fully suspended for
+   as long as shop-by-category.js is actively driving the scroll. */
+.j-shop-by-category__grid.is-autoplay-moving {
+  scroll-snap-type: none;
 }
 
 .j-category-card {
   display: flex;
   flex-direction: column;
+  flex: 0 0 280px;
   gap: 16px;
+  scroll-snap-align: start;
   text-decoration: none;
   color: var(--color-text);
+  /* Dragging selects the card's text/image by default like any other
+     content — this suppresses that so a drag reads as a scroll gesture,
+     not a text-selection one. */
+  user-select: none;
+  -webkit-user-select: none;
+  /* --card-scale and --card-rotate are set per card by
+     shop-by-category.js on every scroll — whichever card sits centered
+     in the row grows larger and sits flat, while cards further to either
+     side shrink and tilt away in 3D, for a coverflow-style effect as you
+     scroll. */
+  transform: scale(var(--card-scale, 1)) rotateY(var(--card-rotate, 0deg));
+  transform-origin: center center;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.j-category-card img {
+  /* Prevents the native browser drag-to-copy-image ghost, which would
+     otherwise compete with our own drag-to-scroll handling. */
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 .j-category-card__image {
@@ -76,10 +148,15 @@
   text-align: center;
   font-weight: var(--font-semibold);
   font-size: var(--font-size-md);
+  transition: color 0.2s ease;
+}
+
+.j-category-card:hover .j-category-card__title {
+  color: #b8873a;
 }
 
 @media (max-width: 600px) {
-  .j-shop-by-category__grid {
-    grid-template-columns: repeat(2, 1fr);
+  .j-category-card {
+    flex-basis: clamp(140px, 50vw, 200px);
   }
 }
