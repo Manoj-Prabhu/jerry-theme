@@ -16,6 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/woman-wearing-aviator-glasses.jpg",
+            "video": "shopify://files/videos/6121375-uhd_4096_2160_25fps.mp4",
             "badge": "Premium Lifestyle Collection",
             "heading": "Discover Your",
             "highlight_heading": "Next Favorite",
@@ -30,10 +31,11 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/the-man-in-the-hat.jpg",
-            "badge": "Premium Lifestyle Collection",
-            "heading": "Discover Your",
-            "highlight_heading": "Next Favorite",
-            "description": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless.",
+            "video": "shopify://files/videos/7203592-uhd_3840_2160_25fps.mp4",
+            "badge": "Timeless Fashion Collection",
+            "heading": "Wear Your",
+            "highlight_heading": "Confidence",
+            "description": "Premium clothing designed with impeccable detail, refined comfort, and effortless elegance.",
             "button_label": "Shop Now",
             "button_link": "",
             "secondary_label": "Explore",
@@ -44,10 +46,11 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/friends-drinking-coffee.jpg",
-            "badge": "Premium Lifestyle Collection",
+            "video": "shopify://files/videos/9477455-uhd_4096_2160_25fps.mp4",
+            "badge": "Elevated Clothing Collection",
             "heading": "Discover Your",
-            "highlight_heading": "Next Favorite",
-            "description": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless.",
+            "highlight_heading": "Signature Style",
+            "description": "Thoughtfully curated pieces designed for effortless style, exceptional comfort, and timeless appeal.",
             "button_label": "Shop Now",
             "button_link": "",
             "secondary_label": "Explore",
@@ -57,11 +60,11 @@
         "slide_3fq7fc": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/designer-at-work.jpg",
-            "badge": "Premium Lifestyle Collection",
-            "heading": "Discover Your",
-            "highlight_heading": "Next Favorite",
-            "description": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless.",
+            "image": "shopify://shop_images/pexels-ron-lach-9256867.jpg",
+            "badge": "The Essential Collection",
+            "heading": "Find Your",
+            "highlight_heading": "Everyday Favorites",
+            "description": "Clean silhouettes, quality fabrics, and effortless style made for modern living.",
             "button_label": "Shop Now",
             "button_link": "",
             "secondary_label": "Explore",
@@ -99,16 +102,7 @@
         "trust-2",
         "trust-3"
       ],
-      "settings": {
-        "badge": "Premium Lifestyle Collection",
-        "heading": "Discover Your",
-        "highlight_heading": "Next Favorite",
-        "description": "Carefully selected products crafted for modern living. Simple. Elegant. Timeless.",
-        "button_label": "Shop Now",
-        "button_link": "",
-        "secondary_label": "Explore",
-        "secondary_link": ""
-      }
+      "settings": {}
     },
     "shop_by_category": {
       "type": "shop-by-category",
@@ -148,7 +142,7 @@
         "cat-5": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/designer-at-work.jpg",
+            "image": "shopify://shop_images/two-woman-hold-hands-outside-while-facing-each-other.jpg",
             "title": "Editor's Picks",
             "link": ""
           }

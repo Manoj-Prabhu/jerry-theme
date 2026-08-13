@@ -17,7 +17,6 @@
         "announcement_7YwnLb": {
           "type": "announcement",
           "settings": {
-            "icon": "🚚",
             "text": "Free shipping on orders over [amount]",
             "link": "",
             "use_free_shipping_amount": true
