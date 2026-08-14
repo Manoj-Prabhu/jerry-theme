@@ -58,12 +58,50 @@ document.addEventListener("DOMContentLoaded", () => {
   // (predictive search results, product recommendations, etc.)
   window.JerryWishlist = { sync: syncWishlistButtons };
 
+  // Saved handles never expire on their own — if a merchant deletes a
+  // product (or a whole test catalog) after a visitor wishlisted it, that
+  // handle just sits in localStorage forever, inflating the header count
+  // for a product that no longer exists. Cross-checking against the
+  // store's actual product list on load prunes anything stale, so the
+  // count only ever reflects products that still exist. Runs at most once
+  // per day per visitor (not on every page load) since it costs a network
+  // request; failures are silent and leave the existing wishlist alone.
+  const PRUNE_CHECK_KEY = "jerry-wishlist-pruned-at";
+  const PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+  function pruneWishlistAgainstCatalog() {
+    const wishlist = getWishlist();
+    if (wishlist.length === 0) return;
+
+    const lastPruned = Number(localStorage.getItem(PRUNE_CHECK_KEY)) || 0;
+    if (Date.now() - lastPruned < PRUNE_INTERVAL_MS) return;
+
+    fetch("/products.json?limit=250&fields=handle")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!data || !Array.isArray(data.products)) return;
+
+        const validHandles = new Set(data.products.map((p) => p.handle));
+        const pruned = wishlist.filter((handle) => validHandles.has(handle));
+
+        if (pruned.length !== wishlist.length) {
+          saveWishlist(pruned);
+          syncWishlistButtons();
+          updateWishlistCount();
+        }
+
+        localStorage.setItem(PRUNE_CHECK_KEY, String(Date.now()));
+      })
+      .catch(() => {});
+  }
+
   // The initial DOM scan isn't needed for first paint (buttons render in
   // their default "not wishlisted" state either way) — deferring it to
   // idle time keeps it off the critical main-thread work during load.
   const runInitialSync = () => {
     syncWishlistButtons();
     updateWishlistCount();
+    pruneWishlistAgainstCatalog();
   };
 
   if ("requestIdleCallback" in window) {
