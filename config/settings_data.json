@@ -51,7 +51,7 @@
         "type": "cart-drawer",
         "settings": {
           "empty_cart_heading": "You should definitely check out",
-          "empty_cart_collection": "premium-lifestyle-collection"
+          "empty_cart_collection": "the-essential-collection"
         }
       }
     },
