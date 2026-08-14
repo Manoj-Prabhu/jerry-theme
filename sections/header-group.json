@@ -14,16 +14,52 @@
     "header": {
       "type": "header",
       "blocks": {
-        "announcement_7YwnLb": {
+        "announcement_89MjQd": {
+          "type": "announcement",
+          "settings": {
+            "text": "Get 20% off when you spend $250+",
+            "link": "",
+            "use_free_shipping_amount": false
+          }
+        },
+        "announcement_C7qBTM": {
+          "type": "announcement",
+          "settings": {
+            "text": "Use code WELCOME10 to save 10%",
+            "link": "",
+            "use_free_shipping_amount": false
+          }
+        },
+        "announcement_aM4UL9": {
+          "type": "announcement",
+          "settings": {
+            "text": "Enjoy a free gift with every purchase",
+            "link": "",
+            "use_free_shipping_amount": false
+          }
+        },
+        "announcement_XxdX4G": {
           "type": "announcement",
           "settings": {
             "text": "Free shipping on orders over [amount]",
             "link": "",
             "use_free_shipping_amount": true
           }
+        },
+        "announcement_7YwnLb": {
+          "type": "announcement",
+          "settings": {
+            "text": "Buy More, Save More",
+            "link": "",
+            "use_free_shipping_amount": false
+          }
         }
       },
       "block_order": [
+        "announcement_89MjQd",
+        "announcement_C7qBTM",
+        "announcement_aM4UL9",
+        "announcement_XxdX4G",
         "announcement_7YwnLb"
       ],
       "settings": {
@@ -32,7 +68,7 @@
         "menu": "main-menu",
         "show_announcement": true,
         "show_close": false,
-        "announcement_background": "#14110F",
+        "announcement_background": "#14110f",
         "announcement_text_color": "#ffffff"
       }
     }

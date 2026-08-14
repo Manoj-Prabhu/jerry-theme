@@ -25,7 +25,7 @@
     "show_breadcrumbs_collection": true,
     "show_breadcrumbs_blog": true,
     "show_breadcrumbs_page": true,
-    "free_shipping_threshold": 100,
+    "free_shipping_threshold": 1000,
     "show_new_badge": true,
     "new_badge_days": 30,
     "show_sale_badge": true,
