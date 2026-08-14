@@ -205,13 +205,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const emptyText = strings.cartEmpty || "Your cart is empty.";
       const continueText = strings.cartContinueShopping || "Continue Shopping";
 
+      // Suggested-collection card (see cart-drawer.liquid) is optional —
+      // only present when the store has a collection to point to.
+      const suggestionUrl = cartItems.dataset.suggestionUrl;
+      const suggestionHtml = suggestionUrl
+        ? `
+        <div class="j-cart__suggestion">
+          <p class="j-cart__suggestion-heading">${cartItems.dataset.suggestionHeading || ""}</p>
+          <a href="${suggestionUrl}" class="j-cart__suggestion-card">
+            ${
+              cartItems.dataset.suggestionImage
+                ? `<img class="j-cart__suggestion-image" src="${cartItems.dataset.suggestionImage}" alt="" loading="lazy">`
+                : ""
+            }
+            <span class="j-cart__suggestion-title">${cartItems.dataset.suggestionTitle || ""}</span>
+          </a>
+        </div>
+      `
+        : "";
+
       cartItems.innerHTML = `
+        <div class="j-cart__empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
         <p class="j-cart__empty">
           ${emptyText}
         </p>
-        <a href="${continueUrl}" class="j-button j-cart__continue">
+        <a href="${continueUrl}" class="j-button j-button-outline j-cart__continue">
           ${continueText}
         </a>
+        ${suggestionHtml}
       `;
     } else {
       const removeTemplate = strings.cartRemoveItemHtml || "Remove __TITLE__";

@@ -71,7 +71,7 @@ html.j-scroll-lock body {
   width: 420px;
   max-width: 100%;
   height: 100%;
-  background: var(--color-white);
+  background: #fdf0e2;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -86,6 +86,7 @@ html.j-scroll-lock body {
 /* Header */
 
 .j-cart__header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,8 +94,21 @@ html.j-scroll-lock body {
   border-bottom: 1px solid var(--color-border);
 }
 
+/* Thin gold accent under the header, tying the drawer back to the same
+   gold accent used across the rest of the redesign. */
+.j-cart__header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #f0c14b;
+}
+
 .j-cart__header h2 {
   font-size: var(--font-size-xl);
+  letter-spacing: 0.01em;
 }
 
 .j-cart__close {
@@ -117,8 +131,8 @@ html.j-scroll-lock body {
 }
 
 .j-cart__close:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
+  background: #f0c14b;
+  color: #1a1a1a;
   transform: rotate(90deg);
 }
 
@@ -130,16 +144,108 @@ html.j-scroll-lock body {
   padding: 24px;
 }
 
+.j-cart__empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin: 24px auto 0;
+  border-radius: 50%;
+  background: rgba(240, 193, 75, 0.12);
+  color: #b8860b;
+}
+
+.j-cart__empty-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
 .j-cart__empty {
   text-align: center;
   color: var(--color-text-light);
-  margin-top: 40px;
+  margin-top: 12px;
 }
 
 .j-cart__continue {
   display: flex;
   width: fit-content;
   margin: 20px auto 0;
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  color: #1a1a1a !important;
+}
+
+.j-cart__continue:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a !important;
+}
+
+/* Empty-cart suggested collection */
+
+.j-cart__suggestion {
+  margin: 28px auto 0;
+  max-width: 280px;
+}
+
+.j-cart__suggestion-heading {
+  margin-bottom: 12px;
+  color: #b8860b;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.j-cart__suggestion-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.j-cart__suggestion-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.j-cart__suggestion-image,
+.j-cart__suggestion-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-cart__suggestion-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-cart__suggestion-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 55%);
+}
+
+.j-cart__suggestion-title {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  color: #fff;
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-md);
 }
 
 /* Footer */
@@ -158,12 +264,38 @@ html.j-scroll-lock body {
   font-weight: var(--font-semibold);
 }
 
+.j-cart__subtotal strong {
+  color: #b8860b;
+}
+
 .j-cart__footer form {
   display: flex;
 }
 
 .j-cart__footer .j-button {
   width: 100%;
+}
+
+.j-cart-view-link {
+  border-color: #f0c14b;
+  color: var(--color-primary);
+}
+
+.j-cart-view-link:not(.is-disabled):hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+.j-cart-checkout-button {
+  background: #1a1a1a;
+  color: #f0c14b;
+  border: none;
+}
+
+.j-cart-checkout-button:not(:disabled):hover {
+  background: #f0c14b;
+  color: #1a1a1a;
 }
 
 /* Cart Item */

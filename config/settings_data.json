@@ -49,7 +49,10 @@
     "sections": {
       "cart-drawer": {
         "type": "cart-drawer",
-        "settings": {}
+        "settings": {
+          "empty_cart_heading": "You should definitely check out",
+          "empty_cart_collection": "premium-lifestyle-collection"
+        }
       }
     },
     "content_for_index": []
