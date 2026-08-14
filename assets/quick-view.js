@@ -593,6 +593,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = event.target.closest(".j-quick-view-button");
     if (!button) return;
 
+    // The button now sits inside the product card's <a> (nested in
+    // .j-product-card__image, alongside the wishlist button) so it can be
+    // positioned as an overlay directly on the image — without this, the
+    // click would also bubble up as a navigation to the product page.
+    event.preventDefault();
+    event.stopPropagation();
+
     const handle = button.dataset.handle;
 
     try {

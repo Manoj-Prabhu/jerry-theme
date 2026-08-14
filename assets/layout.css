@@ -52,6 +52,16 @@
   margin-bottom: 12px;
 }
 
+/* These are plain page titles (Products, Contact, etc.), not a hero
+   headline — the heavy poster-style Anton face (used site-wide for h1 via
+   base.css) reads as too loud here, so this scope swaps in the lighter
+   logo font at a reduced weight instead of overriding h1 globally. */
+.j-page-hero-band__inner h1 {
+  font-family: var(--font-logo--family);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-2xl);
+}
+
 /* -------------------------
    Grid
 -------------------------- */

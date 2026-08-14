@@ -229,6 +229,7 @@
     "remove_from_wishlist_html": "Remove {{ title }} from Wishlist",
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
+    "description": "Description",
     "read_more": "Read more",
     "read_less": "Read less",
     "view_full_details": "View full details",

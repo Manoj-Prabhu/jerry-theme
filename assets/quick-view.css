@@ -25,18 +25,26 @@
   max-height: 90vh;
   overflow-x: hidden;
   overflow-y: auto;
-  background: linear-gradient(
-    135deg,
-    var(--color-rose) 0%,
-    color-mix(in srgb, var(--color-rose) 50%, white) 45%,
-    var(--color-white) 80%
-  );
+  background: linear-gradient(135deg, #ffffff 0%, #f5eefc 40%, #ddc8f7 100%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: var(--space-8);
 
   opacity: 0;
   animation: j-quick-view-in 0.25s ease forwards;
+}
+
+/* Thin gold accent along the top, tying the modal back to the same gold
+   accent used across the rest of the redesign. */
+.j-quick-view-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #f0c14b;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 @keyframes j-quick-view-in {
@@ -74,8 +82,8 @@
 }
 
 .j-quick-view-close:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
+  background: #f0c14b;
+  color: #1a1a1a;
   transform: rotate(90deg);
 }
 
@@ -143,7 +151,7 @@
 
 .j-quick-view-thumbnail:hover,
 .j-quick-view-thumbnail.is-active {
-  border-color: var(--color-accent);
+  border-color: #f0c14b;
 }
 
 /* Details */
@@ -173,7 +181,7 @@
 }
 
 .j-quick-view__price .sale {
-  color: var(--color-accent);
+  color: #b8860b;
 }
 
 .j-quick-view__price del {
@@ -243,7 +251,7 @@
 }
 
 .j-quick-view-swatch.is-active {
-  border-color: var(--color-primary);
+  border-color: #f0c14b;
 }
 
 .j-quick-view-swatch.is-sold-out {
@@ -278,13 +286,13 @@
 }
 
 .j-quick-view-variant-button:hover {
-  border-color: var(--color-primary);
+  border-color: #1a1a1a;
 }
 
 .j-quick-view-variant-button.is-active {
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary);
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
 }
 
 .j-quick-view-variant-button.is-sold-out,
@@ -516,6 +524,13 @@
 .j-quick-view-add {
   width: 100%;
   margin-bottom: var(--space-3);
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.j-quick-view-add:hover {
+  background: #f0c14b;
+  color: #1a1a1a;
 }
 
 .j-quick-view__form-error {
@@ -549,7 +564,7 @@
   background: none;
   padding: 0;
   margin-bottom: var(--space-5);
-  color: var(--color-accent);
+  color: #b8860b;
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
   cursor: pointer;
@@ -581,24 +596,57 @@
    Quick View Trigger Button (product card)
 -------------------------- */
 
+/* Nested directly inside .j-product-card__image (see product-card.liquid)
+   so it can be positioned relative to just the image, not the whole card
+   — the card's total height also includes the price/title below the
+   image, so anchoring to the card itself would put this at an
+   inconsistent offset from the image's actual bottom edge per product. */
 .j-quick-view-button {
-  width: calc(100% - 36px);
-  margin: 0 18px 18px;
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
   padding: 10px;
   border: 1px solid var(--color-primary);
-  background: transparent;
+  background: #fff;
   color: var(--color-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
   white-space: nowrap;
   cursor: pointer;
   border-radius: var(--radius-md);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
   transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease,
+    transform 0.25s ease,
     background var(--transition-fast),
     color var(--transition-fast);
 }
 
+.j-product-card:hover .j-quick-view-button,
+.j-product-card:focus-within .j-quick-view-button {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Touch devices have no hover state to reveal this on — keep it visible
+   by default there rather than making it unreachable. */
+@media (hover: none) {
+  .j-quick-view-button {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+
 .j-quick-view-button:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
 }

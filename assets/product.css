@@ -1,6 +1,19 @@
+/* margin: 0 (not `auto`) on the sides — this section is already a grid
+   item inside .shopify-section's own centering grid (grid-column: 2,
+   pre-sized to the theme's content-width track; see critical.css). Auto
+   margins on a grid item are special-cased by the CSS Grid spec: they
+   make the item shrink-to-fit its own content and center within the
+   track instead of stretching to fill it. That was invisible normally
+   (content was wide enough to fill the track anyway), but became a
+   visible bug once the description became a collapsible <details> —
+   collapsing it lowered the row's max-content width below the track
+   width, so the whole section would visibly shrink and re-center itself
+   every time it was toggled. max-width alone still caps the width; the
+   grid item stretches to fill (and centers within) its track by default
+   without auto margins fighting that. */
 .j-product {
   max-width: var(--container-width);
-  margin: 80px auto;
+  margin: 80px 0;
   padding: 0 var(--space-8);
 
   display: grid;
@@ -26,7 +39,7 @@
 .j-product__price {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: #b8860b;
 }
 
 .j-product__price-compare {
@@ -80,22 +93,88 @@
   margin-bottom: 24px;
   padding: 8px 14px;
 
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: var(--radius-md);
-  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0;
+  background: rgba(59, 130, 246, 0.1);
 
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--color-text);
+  color: #1a1a1a;
 }
 
 .j-product__pickup p {
   margin: 0;
+  color: #1a1a1a;
 }
 
+/* Same sage gradient card treatment as the FAQ page's accordion items
+   (see .j-faq__item in faq.css), for a consistent look between the two
+   accordion patterns on the site. */
 .j-product__description {
   margin-bottom: 32px;
+  border: 1px solid var(--color-sage);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    var(--color-sage) 0%,
+    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
+    var(--color-white) 75%
+  );
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.j-product__description[open] {
+  box-shadow: var(--shadow-md);
+}
+
+.j-product__description-toggle {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 5px 20px 5px 13px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary);
+  transition: background var(--transition-fast);
+}
+
+.j-product__description-toggle:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.j-product__description-toggle::-webkit-details-marker {
+  display: none;
+}
+
+/* Chevron arrow, rotating from pointing down to pointing up instead of
+   swapping "+"/"−" text (content changes can't be animated) — same
+   treatment as the FAQ page's accordion, for a consistent pattern. */
+.j-product__description-toggle::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #b8860b;
+  border-bottom: 2px solid #b8860b;
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.3s ease;
+}
+
+.j-product__description[open] .j-product__description-toggle::after {
+  transform: translateY(-30%) rotate(-135deg);
+}
+
+.j-product__description[open] .j-product__description-toggle {
+  border-bottom: 1px solid var(--color-sage);
+}
+
+.j-product__description-content {
+  padding: 16px 18px;
   line-height: 1.7;
+  color: var(--color-text-light);
 }
 
 /* Purchase Options (Selling Plans) */
@@ -304,7 +383,7 @@
 
 .j-product-thumbnail:hover,
 .j-product-thumbnail.is-active {
-  border-color: var(--color-accent);
+  border-color: #f0c14b;
 }
 
 .j-product-main-image {
@@ -317,18 +396,27 @@
 
 /* Product Options (Swatches & Pills) */
 
+/* Each option (Color, Size, ...) sits side by side sharing one row —
+   Color on the left, Size on the right — rather than each stacked as
+   its own full-width row. */
 .j-product__options {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 20px 40px;
   margin: 24px 0;
+}
+
+/* Label + swatches/size pills inline together within each option. */
+.j-product__option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .j-product__option-header {
   display: flex;
   align-items: baseline;
   gap: 6px;
-  margin-bottom: 12px;
 }
 
 .j-product__option-header label {
@@ -370,19 +458,23 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 1px solid var(--color-border);
+  /* A fixed, more visible ring than the theme's default light gray
+     border — pale swatch colors (cream/ivory/white) are otherwise hard
+     to tell apart from the white background around them. */
+  border: 1.5px solid rgba(0, 0, 0, 0.2);
   background: var(--color-border);
   background-size: cover;
   background-position: center;
+}
+
+.j-product__swatch.is-active .j-product__swatch-inner {
+  border: 2px solid #1a1a1a;
 }
 
 .j-product__swatch:hover {
   transform: translateY(-2px);
 }
 
-.j-product__swatch.is-active {
-  border-color: var(--color-primary);
-}
 
 .j-product__swatch.is-sold-out {
   cursor: not-allowed;
@@ -529,7 +621,7 @@
 
 .j-sticky-cart__info #StickyPrice {
   margin: 2px 0 0;
-  color: var(--color-accent);
+  color: #b8860b;
   font-weight: var(--font-semibold);
   font-size: var(--font-size-sm);
 }

@@ -40,20 +40,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       container.innerHTML += `
         <div class="j-product-card">
 
-          <button
-            type="button"
-            class="j-wishlist-button"
-            data-handle="${product.handle}"
-            data-product-title="${product.title}"
-            aria-label="${(strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
-          >
-            ♡
-          </button>
-
           <a href="/products/${product.handle}" class="j-product-card__link">
 
             <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
               ${imagesHtml}
+
+              <button
+                type="button"
+                class="j-wishlist-button"
+                data-handle="${product.handle}"
+                data-product-title="${product.title}"
+                aria-label="${(strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
+              >
+                ♡
+              </button>
+
+              <button
+                type="button"
+                class="j-quick-view-button"
+                data-handle="${product.handle}"
+                aria-haspopup="dialog"
+              >
+                ${strings.quickView || "Quick View"}
+              </button>
+
             </div>
 
             <div class="j-product-card__content">
@@ -67,15 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
 
           </a>
-
-          <button
-            type="button"
-            class="j-quick-view-button"
-            data-handle="${product.handle}"
-            aria-haspopup="dialog"
-          >
-            ${strings.quickView || "Quick View"}
-          </button>
 
         </div>
       `;

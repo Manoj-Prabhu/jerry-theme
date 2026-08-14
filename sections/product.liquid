@@ -162,9 +162,14 @@
       </div>
     {% endif %}
 
-    <div class="j-product__description">
-      {{ product.description }}
-    </div>
+    {% if product.description != blank %}
+      <details class="j-product__description">
+        <summary class="j-product__description-toggle">{{ 'product.description' | t }}</summary>
+        <div class="j-product__description-content">
+          {{ product.description }}
+        </div>
+      </details>
+    {% endif %}
 
     {% form 'product', product, class: 'product-form j-product-form' %}
 
@@ -245,15 +250,15 @@
 
                 <div class="j-product__swatches">
                   {% for value in option.values %}
-                    {% assign color_key = value.name | remove: ' ' | remove: '-' | downcase %}
+                    {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
                     <button
                       type="button"
-                      class="j-product__swatch {% if value.name == selected_value %}is-active{% endif %}"
+                      class="j-product__swatch {% if value == selected_value %}is-active{% endif %}"
                       data-option-index="{{ option_index }}"
-                      data-value="{{ value.name | escape }}"
-                      aria-label="{{ value.name | escape }}"
-                      aria-pressed="{% if value.name == selected_value %}true{% else %}false{% endif %}"
-                      title="{{ value.name | escape }}"
+                      data-value="{{ value | escape }}"
+                      aria-label="{{ value | escape }}"
+                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
+                      title="{{ value | escape }}"
                     >
                       {% if value.swatch.image %}
                         <span
@@ -263,7 +268,7 @@
                       {% elsif value.swatch.color %}
                         <span
                           class="j-product__swatch-inner"
-                          style="background-color: {{ value.swatch.color.hex }};"
+                          style="background-color: {{ value.swatch.color }};"
                         ></span>
                       {% else %}
                         <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
@@ -367,7 +372,9 @@
       ></p>
 
       {% if current_variant.available %}
-        {{ form | payment_button }}
+        <div class="j-product__payment-button" style="--shopify-payment-button-color-scheme: dark;">
+          {{ form | payment_button }}
+        </div>
       {% endif %}
 
     {% endform %}

@@ -47,6 +47,28 @@
 
       {% render 'product-badges', product: product %}
 
+      <button
+        type="button"
+        class="j-wishlist-button"
+        data-handle="{{ product.handle }}"
+        data-product-title="{{ product.title | escape }}"
+        aria-label="{{ 'product.add_to_wishlist_html' | t: title: product.title | escape }}"
+        aria-pressed="false"
+      >
+        ♡
+      </button>
+
+      {% unless show_quick_view == false %}
+        <button
+          type="button"
+          class="j-quick-view-button"
+          data-handle="{{ product.handle }}"
+          aria-haspopup="dialog"
+        >
+          {{ 'product.quick_view' | t }}
+        </button>
+      {% endunless %}
+
     </div>
 
     <div class="j-product-card__content">
@@ -122,14 +144,14 @@
         {% assign swatch_limit = 4 %}
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
-            {% assign color_key = value.name | remove: ' ' | remove: '-' | downcase %}
+            {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
             <span
               class="j-product-card__swatch"
-              title="{{ value.name | escape }}"
+              title="{{ value | escape }}"
               {% if value.swatch.image %}
                 style="background-image: url({{ value.swatch.image | image_url: width: 30 }});"
               {% elsif value.swatch.color %}
-                style="background-color: {{ value.swatch.color.hex }};"
+                style="background-color: {{ value.swatch.color }};"
               {% else %}
                 style="background-color: {{ color_key }};"
               {% endif %}
@@ -147,27 +169,5 @@
     </div>
 
   </a>
-
-  <button
-    type="button"
-    class="j-wishlist-button"
-    data-handle="{{ product.handle }}"
-    data-product-title="{{ product.title | escape }}"
-    aria-label="{{ 'product.add_to_wishlist_html' | t: title: product.title | escape }}"
-    aria-pressed="false"
-  >
-    ♡
-  </button>
-
-  {% unless show_quick_view == false %}
-    <button
-      type="button"
-      class="j-quick-view-button"
-      data-handle="{{ product.handle }}"
-      aria-haspopup="dialog"
-    >
-      {{ 'product.quick_view' | t }}
-    </button>
-  {% endunless %}
 
 </div>

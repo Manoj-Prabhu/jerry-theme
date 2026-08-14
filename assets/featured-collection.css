@@ -92,19 +92,22 @@
 
 /* Product Card */
 
+/* The card itself is just a layout container now — the visual "card"
+   chrome (border, shadow, rounded corners) lives on .j-product-card__image
+   below, since the image is meant to fully cover its own card-like box
+   while price/title sit as plain text underneath, not enclosed with it.
+
+   The wishlist/quick-view buttons are nested directly inside
+   .j-product-card__image in the markup (see product-card.liquid) rather
+   than positioned relative to the whole card — the card's total height
+   includes the price/title below the image, so anchoring them to the
+   card itself would put them at an inconsistent offset from the image's
+   actual bottom edge depending on how tall that text happens to render. */
 .j-product-card {
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  overflow: hidden;
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
 }
 
 .j-product-card__link {
@@ -113,32 +116,35 @@
   flex: 1;
 }
 
-.j-product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-  border-color: transparent;
-}
-
-/* Highlight the whole card once it's been added to the wishlist */
-.j-product-card:has(.j-wishlist-button.is-active) {
-  border-color: var(--color-gold);
-}
-
 /* Image */
 
 .j-product-card__image {
   position: relative;
-  aspect-ratio: 4 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.35s ease,
+    outline-color 0.35s ease;
+}
+
+.j-product-card:hover .j-product-card__image {
+  box-shadow: 0 16px 32px rgba(240, 193, 75, 0.2);
+  outline: 2px solid #f0c14b;
+  outline-offset: -2px;
+}
+
+/* Highlight the image once the product's been added to the wishlist */
+.j-product-card:has(.j-wishlist-button.is-active) .j-product-card__image {
+  outline: 2px solid var(--color-gold);
+  outline-offset: -2px;
 }
 
 .j-product-card__image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition:
     transform 0.35s ease,
     opacity 0.5s ease;
@@ -154,9 +160,9 @@
    any layout-shift risk. */
 .j-product-card__image[data-auto-cycle] img {
   position: absolute;
-  inset: 16px;
-  width: calc(100% - 32px);
-  height: calc(100% - 32px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
 }
 
@@ -190,7 +196,7 @@
 }
 
 .j-product-badge--sale {
-  background: var(--color-accent);
+  background: #dc2626;
 }
 
 .j-product-badge--new {
@@ -205,10 +211,11 @@
   background: #6b7280;
 }
 
-/* Content */
-
+/* Content — plain text below the image "card", not enclosed in its own
+   box, so it visually reads as separate from the image rather than
+   another panel stacked inside the same card. */
 .j-product-card__content {
-  padding: 18px;
+  padding: 14px 2px 0;
 }
 
 .j-product-card__content h2 {
@@ -217,12 +224,17 @@
   margin-bottom: 8px;
   overflow-wrap: normal;
   word-break: normal;
+  transition: color 0.25s ease;
 
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.j-product-card:hover .j-product-card__content h2 {
+  color: #b8860b;
 }
 
 /* Rating */
@@ -255,7 +267,7 @@
   width: var(--fill, 0%);
   overflow: hidden;
   white-space: nowrap;
-  color: var(--color-accent);
+  color: #f0c14b;
 }
 
 .j-product-card__rating-count {
@@ -272,11 +284,17 @@
   margin-top: 8px;
 }
 
+/* Pale swatch colors (cream/ivory/white variants, or the fallback guess
+   from an option name that doesn't map to a real Shopify swatch — see
+   product-card.liquid) are otherwise indistinguishable from the white
+   card background with only the theme's default light gray border. A
+   fixed, more visible ring keeps every swatch readable as its own circle
+   regardless of how light its actual fill color is. */
 .j-product-card__swatch {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1px solid var(--color-border);
+  border: 1.5px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 0 1px #fff;
   background-size: cover;
   background-position: center;
@@ -307,7 +325,7 @@
 }
 
 .j-product-card__price .sale {
-  color: var(--color-accent);
+  color: #dc2626;
 }
 
 /* Responsive */
@@ -324,17 +342,12 @@
     gap: var(--space-4);
   }
 
-  .j-product-card {
+  .j-product-card__image {
     border-radius: 14px;
   }
 
-  .j-product-card__image {
-    aspect-ratio: 4 / 3;
-    padding: 10px;
-  }
-
   .j-product-card__content {
-    padding: 10px 12px;
+    padding: 10px 2px 0;
   }
 
   .j-product-card__content h2 {
@@ -373,8 +386,9 @@
   }
 
   .j-quick-view-button {
-    width: calc(100% - 24px);
-    margin: 0 12px 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
     padding: 8px;
     font-size: var(--font-size-xs);
   }
@@ -425,9 +439,21 @@
    own redesign.
 -------------------------- */
 
+/* Restores the pre-redesign flex layout for this section specifically —
+   the shared base rule above was changed to CSS Grid (with
+   .j-product-card__link set to `display: contents`) so the base card's
+   Quick View button could overlay the image while price/title sit in a
+   separate row below. This section's cards work completely differently
+   (full-bleed image behind overlaid text, no separate row for
+   price/title — see .j-product-card__link / __image / __content below),
+   which depends on the old flex + `position: relative` + `margin-top:
+   auto` behavior, so it's reinstated here rather than adapted to grid. */
 .j-featured-collection .j-product-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid transparent;
   border-radius: 26px;
-  border-color: transparent;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   transition:
     transform 0.35s ease,
@@ -468,6 +494,9 @@
    here since it's the direct parent this image is absolutely
    positioned against. */
 .j-featured-collection .j-product-card__link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   position: relative;
   min-height: 520px;
 }
@@ -478,6 +507,20 @@
   z-index: 0;
   aspect-ratio: auto;
   padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Neutralizes the shared base rule's per-image hover shadow/outline
+   (see .j-product-card:hover .j-product-card__image above) — this
+   section already shows hover state via the card's own border/shadow
+   (see .j-featured-collection .j-product-card:hover above), so the same
+   effect doubling up on the image itself underneath would be redundant
+   (and mostly invisible anyway, clipped by the card's overflow: hidden). */
+.j-featured-collection .j-product-card:hover .j-product-card__image,
+.j-featured-collection .j-product-card:has(.j-wishlist-button.is-active) .j-product-card__image {
+  box-shadow: none;
+  outline: none;
 }
 
 .j-featured-collection .j-product-card__image img {
@@ -520,6 +563,7 @@
   position: relative;
   z-index: 2;
   margin-top: auto;
+  padding: 18px;
   color: #fff;
 }
 
