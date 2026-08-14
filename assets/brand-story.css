@@ -1,0 +1,204 @@
+.j-brand-story {
+  width: 100%;
+  background: var(--color-white);
+  padding: 96px 0;
+  overflow: hidden;
+}
+
+.j-brand-story__inner {
+  box-sizing: border-box;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 72px;
+}
+
+/* Image position is content order, not just visual order — swapping via
+   `order` alone would leave screen readers hearing the text before the
+   image it's about when the image is set to the right. */
+.j-brand-story__inner--right .j-brand-story__media {
+  order: 2;
+}
+
+.j-brand-story__inner--right .j-brand-story__content {
+  order: 1;
+}
+
+.j-brand-story__media {
+  position: relative;
+  margin: 18px;
+  aspect-ratio: 4 / 5;
+}
+
+/* `inset` (not top/left + width/height) so the frame is offset evenly on
+   all four sides — the earlier top/left-only offset left the frame
+   sticking out past the image on two edges while being hidden behind it
+   on the other two, reading as a broken double layer instead of a frame. */
+.j-brand-story__media::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border: 2px solid #f0c14b;
+  border-radius: var(--radius-lg);
+  z-index: 0;
+}
+
+/* Slides stack directly on top of each other and crossfade — with only
+   one Image block (or the no-image placeholder) this just renders as a
+   normal static image, since there's nothing else to fade against.
+   overflow: hidden here (not on the media box) clips the incoming
+   slide's scale-in below, without also clipping the offset gold frame
+   drawn on the media box's ::before. Both the fade and the scale are
+   driven by the same class toggle (see brand-story.js), so they're
+   always in lockstep — nothing keeps animating on its own timer once a
+   slide is swapped out, which is what made an earlier version of this
+   (a continuous Ken Burns zoom) snap awkwardly mid-transition. */
+.j-brand-story__slide {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  transition: opacity 1.2s ease;
+}
+
+.j-brand-story__slide.is-active {
+  z-index: 2;
+  opacity: 1;
+}
+
+.j-brand-story__image,
+.j-brand-story__media-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+
+.j-brand-story__image {
+  transform: scale(1.08);
+  transition: transform 1.2s ease;
+}
+
+.j-brand-story__slide.is-active .j-brand-story__image {
+  transform: scale(1);
+}
+
+.j-brand-story__media-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-brand-story__slide,
+  .j-brand-story__image {
+    transition: none;
+  }
+}
+
+.j-brand-story__eyebrow {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #b8860b;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.j-brand-story__heading {
+  margin: 0 0 20px;
+  font-size: var(--font-size-3xl);
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.j-brand-story__body {
+  color: var(--color-text-light);
+  line-height: 1.75;
+}
+
+.j-brand-story__body p {
+  margin: 0 0 16px;
+}
+
+.j-brand-story__body p:last-child {
+  margin-bottom: 0;
+}
+
+.j-brand-story__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin: 40px 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-sage, rgba(0, 0, 0, 0.1));
+}
+
+.j-brand-story__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.j-brand-story__stat-number {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-semibold, 600);
+  color: var(--color-text);
+}
+
+.j-brand-story__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.j-brand-story__button {
+  border-color: #f0c14b;
+  color: var(--color-primary);
+}
+
+.j-brand-story__button:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+@media (max-width: 900px) {
+  .j-brand-story {
+    padding: 64px 0;
+  }
+
+  .j-brand-story__inner,
+  .j-brand-story__inner--right {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .j-brand-story__inner--right .j-brand-story__media,
+  .j-brand-story__inner--right .j-brand-story__content {
+    order: unset;
+  }
+
+  .j-brand-story__media {
+    margin: 14px;
+  }
+
+  .j-brand-story__media::before {
+    inset: -14px;
+  }
+
+  .j-brand-story__heading {
+    font-size: var(--font-size-2xl);
+  }
+
+  .j-brand-story__stats {
+    gap: var(--space-6);
+  }
+}

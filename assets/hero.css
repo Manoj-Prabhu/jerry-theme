@@ -253,6 +253,7 @@
 .j-hero__buttons .j-button {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 0;
   color: #fff;
 }
 
@@ -265,6 +266,7 @@
 .j-hero__buttons .j-button-outline {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.7);
+  border-radius: 0;
   color: #fff;
 }
 

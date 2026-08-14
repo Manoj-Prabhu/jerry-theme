@@ -1,0 +1,184 @@
+{% comment %}
+  Brand Story — editorial image + narrative block, with an optional row
+  of stats (e.g. "Est. 2020", "40+ Countries"). Sits between Featured
+  Collection and Testimonials on the homepage.
+
+  The image side supports up to 4 "Image" blocks — with 2+ added, it
+  becomes an auto-rotating crossfade slideshow (see brand-story.js);
+  with 0 or 1, it just renders as a static image/placeholder.
+{% endcomment %}
+
+{% liquid
+  assign image_blocks = section.blocks | where: 'type', 'image'
+  assign stat_blocks = section.blocks | where: 'type', 'stat'
+%}
+
+<section class="j-brand-story full-width">
+  <div class="j-brand-story__inner j-brand-story__inner--{{ section.settings.image_position }}">
+
+    <div
+      class="j-brand-story__media"
+      {% if image_blocks.size > 1 %}
+        data-slideshow
+        data-slideshow-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
+      {% endif %}
+    >
+      {% if image_blocks.size > 0 %}
+        {% for block in image_blocks %}
+          {% if block.settings.image != blank %}
+            <div
+              class="j-brand-story__slide{% if forloop.first %} is-active{% endif %}"
+              {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
+              {{ block.shopify_attributes }}
+            >
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-brand-story__image'
+              }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <div class="j-brand-story__media-placeholder">{{ 'image' | placeholder_svg_tag: 'j-brand-story__placeholder-svg' }}</div>
+      {% endif %}
+    </div>
+
+    <div class="j-brand-story__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <span class="j-brand-story__eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="j-brand-story__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="j-brand-story__body">{{ section.settings.body }}</div>
+      {% endif %}
+
+      {% if stat_blocks.size > 0 %}
+        <div class="j-brand-story__stats">
+          {% for block in stat_blocks %}
+            <div class="j-brand-story__stat" {{ block.shopify_attributes }}>
+              <span class="j-brand-story__stat-number">{{ block.settings.number }}</span>
+              <span class="j-brand-story__stat-label">{{ block.settings.label }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="j-button j-button-outline j-brand-story__button"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Slideshow speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "info": "Only used when 2 or more Image blocks are added."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted With Purpose"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "2020"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Est."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Brand Story",
+      "blocks": [
+        { "type": "image" },
+        { "type": "stat", "settings": { "number": "2020", "label": "Est." } },
+        { "type": "stat", "settings": { "number": "40+", "label": "Countries" } },
+        { "type": "stat", "settings": { "number": "10K+", "label": "Happy Customers" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

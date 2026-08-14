@@ -184,7 +184,8 @@
       "prev": "Prev",
       "next": "Next"
     },
-    "back_to_top": "Back to top"
+    "back_to_top": "Back to top",
+    "view_all": "View All"
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",

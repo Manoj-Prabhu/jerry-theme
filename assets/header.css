@@ -75,9 +75,10 @@
    back-to-back messages would run into each other with nothing between
    them. */
 .j-announcement__item:not(:last-child)::after {
-  content: "•";
+  content: "★";
   margin: 0 var(--space-8);
-  opacity: 0.5;
+  color: #f0c14b;
+  opacity: 0.85;
 }
 
 @keyframes j-announcement-marquee {

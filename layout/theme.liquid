@@ -108,6 +108,7 @@
     {% if template.name == 'index' %}
       {{ 'hero.css' | asset_url | stylesheet_tag }}
       {{ 'shop-by-category.css' | asset_url | stylesheet_tag }}
+      {{ 'brand-story.css' | asset_url | stylesheet_tag }}
       {{ 'testimonials.css' | asset_url | stylesheet_tag }}
     {% endif %}
     {% if template.name == 'product' %}
@@ -201,11 +202,13 @@
     <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'shop-by-category.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'featured-collection.js' | asset_url }}" defer="defer"></script>
     {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
       <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     {% endif %}
     {% if template.name == 'index' %}
       <script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'brand-story.js' | asset_url }}" defer="defer"></script>
     {% endif %}
 
     <button

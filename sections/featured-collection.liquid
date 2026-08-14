@@ -13,6 +13,15 @@
       {% endfor %}
     </div>
 
+    <div class="j-featured-collection__view-all">
+      <a href="{{ selected_collection.url }}" class="j-button j-button-outline">
+        {{ 'general.view_all' | t }}
+        <svg class="j-featured-collection__view-all-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
   {% else %}
     <p style="text-align:center;">
       Select a collection in the Theme Editor.

@@ -166,7 +166,81 @@
         "heading": "Featured Collection",
         "description": "Hand-picked products you'll love.",
         "collection": "automated-collection",
-        "products_to_show": 4
+        "products_to_show": 2
+      }
+    },
+    "brand_story": {
+      "type": "brand-story",
+      "blocks": {
+        "img-1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/woman-wearing-aviator-glasses.jpg"
+          }
+        },
+        "img-2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/the-man-in-the-hat.jpg"
+          }
+        },
+        "img-3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/friends-drinking-coffee.jpg"
+          }
+        },
+        "img-4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/pexels-ron-lach-9256867.jpg"
+          }
+        },
+        "img-5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/laughter-in-the-sun.jpg"
+          }
+        },
+        "stat-1": {
+          "type": "stat",
+          "settings": {
+            "number": "2020",
+            "label": "Est."
+          }
+        },
+        "stat-2": {
+          "type": "stat",
+          "settings": {
+            "number": "40+",
+            "label": "Countries"
+          }
+        },
+        "stat-3": {
+          "type": "stat",
+          "settings": {
+            "number": "10K+",
+            "label": "Happy Customers"
+          }
+        }
+      },
+      "block_order": [
+        "img-1",
+        "img-2",
+        "img-3",
+        "img-4",
+        "img-5",
+        "stat-1",
+        "stat-2",
+        "stat-3"
+      ],
+      "settings": {
+        "image_position": "left",
+        "eyebrow": "Our Story",
+        "heading": "Crafted With Purpose",
+        "body": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>",
+        "button_label": "Learn More",
+        "button_link": ""
       }
     },
     "testimonials": {
@@ -215,6 +289,7 @@
     "hero",
     "shop_by_category",
     "featured_collection",
+    "brand_story",
     "testimonials"
   ]
 }

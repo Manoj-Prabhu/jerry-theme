@@ -1,8 +1,18 @@
 /* Section */
 
 .j-featured-collection {
+  /* No margin: 0 auto here — this section is already a grid item inside
+     .shopify-section's own centering grid (grid-column: 2, pre-sized to
+     the theme's content-width track; see critical.css). Auto margins on
+     a grid item are special-cased by the CSS Grid spec: they make the
+     item shrink-to-fit its own content and center within the track
+     instead of stretching to fill it — which was collapsing this
+     section down to whatever narrow width its content (specifically the
+     product grid's auto-fit columns) happened to compute, instead of
+     the intended ~1400px content width. max-width alone is enough; the
+     grid item still stretches to fill (and centers within) its track by
+     default without the auto margins fighting that. */
   max-width: var(--container-width);
-  margin: 0 auto;
   padding: 120px var(--space-8);
 }
 
@@ -27,10 +37,57 @@
 
 /* Product Grid */
 
+/* auto-fit + a capped column width instead of a fixed repeat(4, 1fr) —
+   with products_to_show now commonly set to 2, a fixed 4-column grid
+   would leave two empty tracks and squash the 2 real cards off to one
+   side. This centers however many cards there are (2, 4, up to the
+   section's max of 12) at a consistent card width instead.
+
+   The minmax() minimum is deliberately not 0 — auto-fit with a zero
+   minimum is a known problematic combination that can make the browser
+   miscompute how many tracks actually fit, collapsing to a single
+   narrow column instead of the expected side-by-side layout. min(100%,
+   280px) keeps a sensible floor per card while still shrinking to fit
+   on very narrow screens. */
 .j-product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 520px));
+  justify-content: center;
+  gap: 64px;
+}
+
+.j-featured-collection__view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.j-featured-collection__view-all .j-button-outline {
+  border-color: #f0c14b;
+  border-radius: 0;
+  color: var(--color-primary);
+}
+
+.j-featured-collection__view-all .j-button-outline:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+.j-featured-collection__view-all-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  transition: translate 0.25s ease;
+}
+
+/* Nudges the arrow further right on hover — a small motion cue rather
+   than a static icon, reinforcing the "go to" action. translate, not
+   transform: this button doesn't use transform for anything else, but
+   staying consistent with the same independent-property approach used
+   for the product cards' scroll animation elsewhere in this file. */
+.j-featured-collection__view-all .j-button-outline:hover .j-featured-collection__view-all-arrow {
+  translate: 4px 0;
 }
 
 /* Product Card */
@@ -130,10 +187,6 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
-}
-
-.j-product-badge__icon {
-  font-weight: 700;
 }
 
 .j-product-badge--sale {
@@ -361,4 +414,283 @@
 
 .j-wishlist-button.is-active {
   color: #e63946;
+}
+
+/* -------------------------
+   Featured Collection — gold-accented card treatment
+   Scoped to .j-featured-collection specifically, not the shared
+   .j-product-card base above — that same component is reused on
+   collection pages, search results, and product recommendations, which
+   should keep their plain default styling untouched by this section's
+   own redesign.
+-------------------------- */
+
+.j-featured-collection .j-product-card {
+  border-radius: 26px;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.j-featured-collection .j-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(240, 193, 75, 0.28);
+  border-color: #f0c14b;
+}
+
+.j-featured-collection .j-product-card:has(.j-wishlist-button.is-active) {
+  border-color: #f0c14b;
+}
+
+/* Scroll-scrubbed slide-in — featured-collection.js sets the CSS
+   `translate` property directly (inline style) on every scroll frame,
+   computed from each card's live position in the viewport, rather than
+   toggling a class for a CSS transition to animate once.
+   `translate` deliberately, not `transform` — this card already
+   animates `transform: translateY(-8px)` on hover (see above), and
+   `translate` is a separate, independent CSS property that composes
+   with `transform` automatically instead of overwriting it, so the
+   scroll-driven horizontal offset and the hover lift can both be
+   active at once without fighting over the same property. Nothing here
+   is listed in this card's `transition` (above), so translate changes
+   apply on every frame immediately — exactly what scrubbing needs —
+   without needing to fight the shared scroll-reveal.js's own
+   transition on `transform` for these same elements. */
+
+/* Full-bleed image — fills the entire card behind the title/price
+   rather than sitting in its own boxed-off area above the text, similar
+   treatment to the hero section's photo+text overlay. .j-product-card
+   already establishes the positioning context (position: relative from
+   the shared base rule above); .j-product-card__link needs its own
+   here since it's the direct parent this image is absolutely
+   positioned against. */
+.j-featured-collection .j-product-card__link {
+  position: relative;
+  min-height: 520px;
+}
+
+.j-featured-collection .j-product-card__image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  aspect-ratio: auto;
+  padding: 0;
+}
+
+.j-featured-collection .j-product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-featured-collection .j-product-card__image[data-auto-cycle] img {
+  position: absolute;
+  inset: 0;
+}
+
+/* Dark gradient behind the overlaid text — without it, dark product
+   titles/prices would lose contrast against a light product photo, the
+   same reasoning as the hero's own scrim over its background image. */
+.j-featured-collection .j-product-card__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Concentrated in roughly the bottom third only, not a long smooth
+     fade across most of the photo — on a light/white product studio
+     shot (very common for e-commerce, unlike the hero's curated
+     lifestyle photos) a tall gradient reads as a visible gray smear
+     across the image rather than a subtle scrim. */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.6) 18%,
+    rgba(0, 0, 0, 0) 40%
+  );
+}
+
+/* Sits on top of the image + scrim (z-index: 0 / 1 above) instead of
+   below it in normal flow, pinned to the bottom of the card via the
+   parent's flex column + margin-top: auto. */
+.j-featured-collection .j-product-card__content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  color: #fff;
+}
+
+.j-featured-collection .j-product-card__content h2 {
+  color: #fff;
+}
+
+.j-featured-collection .j-product-card__price,
+.j-featured-collection .j-product-card__unit-price {
+  display: none;
+}
+
+.j-featured-collection .j-product-badge--new {
+  background: #dc2626;
+  color: #fff;
+  /* text-shadow only, not combined with -webkit-text-stroke — stacking
+     both at once (an earlier version of this) doubled up and read as a
+     muddy, blurry outline rather than a crisp one. A tighter single-
+     layer shadow set instead. */
+  text-shadow:
+    -0.5px -0.5px 0 #000,
+    0.5px -0.5px 0 #000,
+    -0.5px 0.5px 0 #000,
+    0.5px 0.5px 0 #000;
+}
+
+.j-featured-collection .j-product-badge--sale {
+  background: #b8873a;
+}
+
+/* Ribbon/flag-tag shape instead of the base rounded-rect pill — a
+   pointed notch cut into the right edge via clip-path, like a classic
+   price tag. Wider left padding balances the notch visually (the point
+   eats into the right side, so text needs a bit more room on the left
+   to stay centered-looking) and a bit more right padding so the text
+   doesn't run into the point itself. */
+.j-featured-collection .j-product-badge {
+  padding: 6px 20px 6px 12px;
+  border-radius: 0;
+  clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);
+}
+
+.j-featured-collection .j-star::before {
+  color: #f0c14b;
+}
+
+.j-featured-collection .j-wishlist-button:hover {
+  color: #b8873a;
+}
+
+.j-featured-collection .j-quick-view-button {
+  /* Pulled out of normal flow — the base component renders this as a
+     block-level bar below the image (its own white strip), which was
+     the "card doesn't finish cleanly" look. Positioned as an overlay
+     instead, hidden until the card is hovered, so the card ends right
+     after the price with no permanent extra strip. */
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 3;
+  margin: 0;
+  width: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #f0c14b;
+  opacity: 0;
+  visibility: hidden;
+  /* A bigger slide distance than an earlier, subtler version of this
+     (8px), with a springy overshoot easing on the way in — the button
+     rises past its final position slightly and settles back, instead of
+     a flat linear-feeling slide. */
+  transform: translateY(28px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s ease,
+    visibility 0s linear 0.35s,
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.j-featured-collection .j-product-card:hover .j-quick-view-button,
+.j-featured-collection .j-product-card:focus-within .j-quick-view-button {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    visibility 0s linear 0s;
+}
+
+/* Touch devices have no real hover state to reveal this with — an
+   earlier version of this made it permanently visible there instead,
+   but the reveal is now driven by tapping the card once (see
+   featured-collection.js, which toggles .is-tapped and intercepts that
+   first tap's navigation), so it can stay hidden-until-interaction here
+   too rather than always showing. */
+.j-featured-collection .j-product-card.is-tapped .j-quick-view-button {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.j-featured-collection .j-quick-view-button:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+.j-featured-collection .j-star {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.j-featured-collection .j-product-card__rating-count {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Bigger presentation on mobile specifically than the shared card's own
+   mobile shrink (see the max-width: 768px block above) — this section
+   only ever shows a couple of cards at a time, so there's room to keep
+   them larger instead of shrinking to fit many in a row. */
+@media (max-width: 768px) {
+  .j-featured-collection .j-product-card__content {
+    padding: 16px 18px;
+  }
+
+  .j-featured-collection .j-product-card__content h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .j-featured-collection .j-quick-view-button {
+    padding: 10px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Below 600px, the auto-fit grid (see .j-product-grid above) was
+   shrinking both cards down to fit side by side — cramped and hard to
+   read. Swipeable one-at-a-time carousel instead: one full-width card
+   visible by default, the next reachable with a horizontal swipe/scroll,
+   same scroll-snap technique Shop by Category already uses. Scoped to
+   .j-featured-collection specifically, not the shared .j-product-grid
+   rules above, so collection/search pages keep their own grid layout. */
+@media (max-width: 600px) {
+  .j-featured-collection .j-product-grid {
+    display: flex;
+    grid-template-columns: none;
+    /* Overrides the base (desktop) rule's justify-content: center —
+       centering *overflowing* flex content shifts the whole content
+       block so it's centered as a group, which pushed card 1 off-screen
+       to the left instead of starting at the visible left edge like a
+       normal scroll container should. */
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-4);
+    gap: var(--space-4);
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .j-featured-collection .j-product-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .j-featured-collection .j-product-card {
+    /* Full width — one card fully visible at a time, not an 88% peek of
+       the next one. */
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
 }
