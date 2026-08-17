@@ -423,3 +423,4 @@ document.addEventListener("shopify:section:load", (event) => {
     .querySelectorAll(".j-shop-by-category__grid")
     .forEach(initShopByCategoryDrag);
 });
+// cache-bust: force a new asset fingerprint after CDN kept serving a stale copy
