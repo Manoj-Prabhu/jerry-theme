@@ -102,6 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
       );
   }
 
+  // Product JS API images (product.media[].preview_image.src /
+  // product.images[]) are original, full-resolution CDN URLs — rendering
+  // them directly downloads multi-MB originals for a modal-sized image.
+  // Shopify's CDN supports resizing any file URL on the fly via a `width`
+  // query param.
+  function resizeImageUrl(src, width) {
+    const separator = src.includes("?") ? "&" : "?";
+    return `${src}${separator}width=${width}`;
+  }
+
   function getProductImages(product) {
     if (product.media && product.media.length) {
       return product.media
@@ -215,7 +225,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="j-quick-view__gallery">
 
           <div class="j-quick-view__main-image">
-            <img id="QuickViewMainImage" src="${mainImage}" alt="${product.title}">
+            <img
+              id="QuickViewMainImage"
+              src="${resizeImageUrl(mainImage, 600)}"
+              srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(mainImage, width)} ${width}w`).join(", ")}"
+              sizes="(max-width: 700px) 90vw, 420px"
+              alt="${product.title}"
+            >
           </div>
 
           ${
@@ -230,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   class="j-quick-view-thumbnail ${normalizeSrc(image.src) === normalizeSrc(mainImage) ? "is-active" : ""}"
                   data-image="${image.src}"
                 >
-                  <img src="${image.src}" alt="${product.title} ${index + 1}">
+                  <img src="${resizeImageUrl(image.src, 120)}" alt="${product.title} ${index + 1}">
                 </button>
               `,
                 )
@@ -430,7 +446,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const mainImage = document.getElementById("QuickViewMainImage");
-        if (mainImage) mainImage.src = imageSrc;
+        if (mainImage) {
+          mainImage.src = resizeImageUrl(imageSrc, 600);
+          mainImage.srcset = [300, 450, 600, 800]
+            .map((width) => `${resizeImageUrl(imageSrc, width)} ${width}w`)
+            .join(", ");
+        }
 
         content.querySelectorAll(".j-quick-view-thumbnail").forEach((t) => {
           t.classList.toggle("is-active", t === thumb);

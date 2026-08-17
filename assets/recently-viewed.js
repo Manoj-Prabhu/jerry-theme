@@ -1,3 +1,16 @@
+// The Product JS API (/products/{handle}.js) returns original,
+// full-resolution CDN image URLs with no size applied — rendering those
+// directly as <img src> downloaded 1-3 MB originals for what displays as a
+// 240x240 card thumbnail (flagged by Lighthouse's "Improve image delivery").
+// Shopify's CDN supports resizing any file URL on the fly via a `width`
+// query param, so this builds a proper srcset from it instead.
+function resizeImageUrl(src, width) {
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}width=${width}`;
+}
+
+const RECENTLY_VIEWED_IMAGE_WIDTHS = [200, 350, 500, 700];
+
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("RecentlyViewedProducts");
 
@@ -25,16 +38,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       ).slice(0, 4);
 
       const imagesHtml = images
-        .map(
-          (src, index) => `
+        .map((src, index) => {
+          const srcset = RECENTLY_VIEWED_IMAGE_WIDTHS.map(
+            (width) => `${resizeImageUrl(src, width)} ${width}w`,
+          ).join(", ");
+
+          return `
               <img
-                src="${src}"
+                src="${resizeImageUrl(src, 350)}"
+                srcset="${srcset}"
+                sizes="(max-width: 1100px) 50vw, 25vw"
                 alt="${product.title}"
                 loading="lazy"
                 class="j-product-card__img${index === 0 ? " is-active" : ""}"
               >
-            `,
-        )
+            `;
+        })
         .join("");
 
       container.innerHTML += `
