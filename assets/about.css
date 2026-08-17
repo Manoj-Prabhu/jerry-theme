@@ -22,7 +22,6 @@
 
 .j-about-story {
   width: 100%;
-  background: var(--color-white);
   padding: 96px 0;
   overflow: hidden;
 }
@@ -56,6 +55,7 @@
   aspect-ratio: 4 / 5;
 }
 
+/* Same offset gold frame as the homepage's Brand Story image. */
 .j-about-story__media::before {
   content: "";
   position: absolute;
@@ -141,15 +141,20 @@
   color: var(--color-text-light);
 }
 
+/* Same treatment as the Contact page's submit button, the cart drawer's
+   Continue Shopping, and the product page's Add to Cart — white with a
+   black border, gold fill on hover. */
 .j-about-story__button {
-  border-color: #f0c14b;
-  color: var(--color-primary);
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  color: #1a1a1a !important;
 }
 
 .j-about-story__button:hover {
   background: #f0c14b;
   border-color: #f0c14b;
-  color: #1a1a1a;
+  color: #1a1a1a !important;
 }
 
 /* -------------------------
