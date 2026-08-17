@@ -97,6 +97,7 @@ function initShopByCategoryAutoScroll(grid) {
   let isPointerActive = false;
   let currentSpeed = 0;
   let lastTimestamp = null;
+  let rafId = null;
 
   grid.addEventListener("mouseenter", () => {
     isHovering = true;
@@ -115,7 +116,7 @@ function initShopByCategoryAutoScroll(grid) {
   });
 
   function tick(timestamp) {
-    requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
 
     if (lastTimestamp === null) {
       lastTimestamp = timestamp;
@@ -152,7 +153,38 @@ function initShopByCategoryAutoScroll(grid) {
     }
   }
 
-  requestAnimationFrame(tick);
+  function startTicking() {
+    if (rafId !== null) return;
+    lastTimestamp = null;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function stopTicking() {
+    if (rafId === null) return;
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  // This row sits below the hero, off-screen at page load on most
+  // viewports — running the tick loop from load onward burned main-thread
+  // time (and triggered layout on every frame via the scrollLeft write)
+  // animating a section nobody could see yet. Gating it to only run while
+  // actually in view removes that load-time cost with no visible
+  // difference for real visitors, since it was never seen moving before
+  // it scrolled into view anyway.
+  const visibilityObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startTicking();
+        } else {
+          stopTicking();
+        }
+      });
+    },
+    { threshold: 0 },
+  );
+  visibilityObserver.observe(grid);
 }
 
 function initAllShopByCategoryAutoScroll() {
