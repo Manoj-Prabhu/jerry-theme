@@ -34,7 +34,7 @@
    without needing a visible scrollbar as well.
 
    Fills the full container width (no artificial max-width) — the
-   infinite loop in shop-by-category.js clones the card set three times,
+   infinite loop in shop-by-category-v2.js clones the card set three times,
    so total scrollable content is always at least 3x a single set's
    width regardless of category count, which is virtually guaranteed to
    overflow any container on its own. An earlier, narrower max-width was
@@ -51,14 +51,14 @@
   cursor: grab;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  /* Room for the centered card to scale up (see shop-by-category.js)
+  /* Room for the centered card to scale up (see shop-by-category-v2.js)
      without its grown edges getting clipped by the row's own box —
      overflow-x: auto forces overflow-y to compute as auto too (never
      visible) once any content actually overflows vertically, so this
      padding keeps that overflow from ever happening instead of relying
      on overflow-y: visible alone. */
   padding-block: 24px;
-  /* Depth for the cards' rotateY tilt (see shop-by-category.js) — without
+  /* Depth for the cards' rotateY tilt (see shop-by-category-v2.js) — without
      a perspective on the shared parent, rotateY renders as a flat
      horizontal squash instead of an actual 3D tilt away from the
      viewer. */
@@ -77,7 +77,7 @@
 /* Autoplay nudges scrollLeft by a fraction of a pixel every frame — even
    proximity snapping can fight increments that small and hold the row
    still instead of letting it drift, so snapping is fully suspended for
-   as long as shop-by-category.js is actively driving the scroll. */
+   as long as shop-by-category-v2.js is actively driving the scroll. */
 .j-shop-by-category__grid.is-autoplay-moving {
   scroll-snap-type: none;
 }
@@ -96,7 +96,7 @@
   user-select: none;
   -webkit-user-select: none;
   /* --card-scale and --card-rotate are set per card by
-     shop-by-category.js on every scroll — whichever card sits centered
+     shop-by-category-v2.js on every scroll — whichever card sits centered
      in the row grows larger and sits flat, while cards further to either
      side shrink and tilt away in 3D, for a coverflow-style effect as you
      scroll. */

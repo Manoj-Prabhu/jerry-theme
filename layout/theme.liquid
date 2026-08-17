@@ -216,7 +216,16 @@
         template via the theme editor, this script would need to be added
         there too.
       {% endcomment %}
-      <script src="{{ 'shop-by-category.js' | asset_url }}" defer="defer"></script>
+      {% comment %}
+        Renamed from shop-by-category.js to shop-by-category-v2.js —
+        Cloudflare's CDN in front of this store was caching the old
+        filename's URL for hours regardless of content changes pushed to
+        it (appears to ignore the asset_url version query string for this
+        path), so repeated fixes to that file weren't reaching real
+        visitors or Lighthouse. A new filename is a new cache key,
+        guaranteed to bypass whatever was serving the stale copy.
+      {% endcomment %}
+      <script src="{{ 'shop-by-category-v2.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'brand-story.js' | asset_url }}" defer="defer"></script>
     {% endif %}
