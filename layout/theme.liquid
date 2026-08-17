@@ -201,12 +201,22 @@
 
     <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'shop-by-category.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'featured-collection.js' | asset_url }}" defer="defer"></script>
     {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
       <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     {% endif %}
     {% if template.name == 'index' %}
+      {% comment %}
+        shop-by-category.js was previously loaded on every page — that
+        section only exists on the homepage per templates/index.json, so
+        it was pure unused JS weight everywhere else (flagged by
+        Lighthouse's "Reduce unused JavaScript"). Scoped the same way
+        hero-slideshow.js and brand-story.js already are below. If a
+        merchant ever adds a Shop by Category section to a different
+        template via the theme editor, this script would need to be added
+        there too.
+      {% endcomment %}
+      <script src="{{ 'shop-by-category.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'brand-story.js' | asset_url }}" defer="defer"></script>
     {% endif %}

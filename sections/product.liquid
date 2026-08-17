@@ -45,7 +45,7 @@
             {% when 'image' %}
               {{
                 media
-                | image_url: width: 1000
+                | image_url: width: 1000, format: 'webp'
                 | image_tag:
                   class: 'j-product-main-image',
                   loading: media_loading,
@@ -103,7 +103,7 @@
             class="j-product-thumbnail {% if is_active %}is-active{% endif %}"
             data-media-id="{{ media.id }}"
             aria-label="{{ product.title }} — view {{ forloop.index }}"
-            style="background-image: url({{ media.preview_image | image_url: width: 150 }});"
+            style="background-image: url({{ media.preview_image | image_url: width: 150, format: 'webp' }});"
           ></button>
 
         {% endfor %}
@@ -301,7 +301,7 @@
                       {% if value.swatch.image %}
                         <span
                           class="j-product__swatch-inner"
-                          style="background-image: url({{ value.swatch.image | image_url: width: 60 }});"
+                          style="background-image: url({{ value.swatch.image | image_url: width: 60, format: 'webp' }});"
                         ></span>
                       {% elsif value.swatch.color %}
                         <span
@@ -359,7 +359,7 @@
               "unitPrice": {{ unit_price | strip | json }},
               "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
               "options": {{ variant.options | json }},
-              "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200 | json }},
+              "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200, format: 'webp' | json }},
               "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
               "inventoryManagement": {{ variant.inventory_management | json }},
               "inventoryQuantity": {{ variant.inventory_quantity | json }},
@@ -462,7 +462,7 @@
     <div class="j-sticky-cart__image">
       {{
         current_variant.featured_image | default: product.featured_image
-        | image_url: width: 100
+        | image_url: width: 100, format: 'webp'
         | image_tag: alt: product.title, loading: 'lazy'
       }}
     </div>
