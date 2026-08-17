@@ -265,10 +265,22 @@ function initShopByCategoryScale(grid) {
   grid.dataset.scaleInitialized = "true";
 
   let ticking = false;
+  let lastUpdateTime = 0;
+  // Continuous auto-scroll (see initShopByCategoryAutoScroll above) fires
+  // a native "scroll" event on nearly every animation frame, which drove
+  // this at the same ~60fps rate for as long as the row kept drifting —
+  // a coverflow scale/rotate effect doesn't need that much precision to
+  // read as smooth, and this measures every card's position via
+  // getBoundingClientRect() on every update, so capping it well below
+  // 60fps meaningfully cuts the layout-read cost this was accumulating
+  // continuously in the background.
+  const MIN_UPDATE_INTERVAL_MS = 40; // ~25fps ceiling
   const scheduleUpdate = (focusX) => {
     if (ticking) return;
+    if (performance.now() - lastUpdateTime < MIN_UPDATE_INTERVAL_MS) return;
     ticking = true;
     requestAnimationFrame(() => {
+      lastUpdateTime = performance.now();
       updateCardScales(grid, focusX);
       ticking = false;
     });
