@@ -193,9 +193,20 @@ function updateCardScales(grid, focusX) {
   // centered at the row's edge is as far from focus as this effect goes.
   const maxDistance = gridRect.width / 2;
 
-  cards.forEach((card) => {
+  // Read phase — measure every card's position before writing any
+  // styles. Reading a card's rect right after writing a previous card's
+  // style (the old shape of this loop) forces the browser to
+  // synchronously recompute layout on every iteration, since the write
+  // invalidates the geometry the next read needs — that's the "Forced
+  // reflow" Lighthouse flags. Batching all the reads first, then all the
+  // writes, means no read in this function ever follows a write.
+  const measurements = Array.from(cards, (card) => {
     const cardRect = card.getBoundingClientRect();
-    const cardCenter = cardRect.left + cardRect.width / 2;
+    return { card, cardCenter: cardRect.left + cardRect.width / 2 };
+  });
+
+  // Write phase — no geometry reads below this point.
+  measurements.forEach(({ card, cardCenter }) => {
     const offset = cardCenter - center;
     const distance = Math.abs(offset);
     const proximity = Math.max(0, 1 - distance / maxDistance);
