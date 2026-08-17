@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/pexels-ron-lach-9256867.jpg",
-            "video": "shopify://files/videos/6764958-uhd_3840_2160_25fps.mp4",
+            "video": "shopify://files/videos/slide1.mp4",
             "badge": "The Essential Collection",
             "heading": "Find Your",
             "highlight_heading": "Everyday Favorites",
@@ -31,7 +31,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/woman-wearing-aviator-glasses.jpg",
-            "video": "shopify://files/videos/6121375-uhd_4096_2160_25fps.mp4",
+            "video": "shopify://files/videos/slide2.mp4",
             "badge": "Premium Lifestyle Collection",
             "heading": "Discover Your",
             "highlight_heading": "Next Favorite",
@@ -46,7 +46,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/friends-drinking-coffee.jpg",
-            "video": "shopify://files/videos/9477455-uhd_4096_2160_25fps.mp4",
+            "video": "shopify://files/videos/slide3.mp4",
             "badge": "Elevated Clothing Collection",
             "heading": "Discover Your",
             "highlight_heading": "Signature Style",
@@ -61,7 +61,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/the-man-in-the-hat.jpg",
-            "video": "shopify://files/videos/7203592-uhd_3840_2160_25fps.mp4",
+            "video": "shopify://files/videos/slide4.mp4",
             "badge": "Timeless Fashion Collection",
             "heading": "Wear Your",
             "highlight_heading": "Confidence",
