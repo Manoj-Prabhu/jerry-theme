@@ -71,7 +71,7 @@
                   {{
                     suggested_collection.featured_image
                     | image_url: width: 480
-                    | image_tag: loading: 'lazy', widths: '240, 360, 480', class: 'j-cart__suggestion-image'
+                    | image_tag: loading: 'lazy', widths: '240, 360, 480', class: 'j-cart__suggestion-image', alt: ''
                   }}
                 {% else %}
                   <div class="j-cart__suggestion-placeholder">{{ 'collection' | placeholder_svg_tag: 'j-cart__suggestion-placeholder-svg' }}</div>

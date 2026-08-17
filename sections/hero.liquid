@@ -55,7 +55,16 @@
 
           </div>
 
-          <div class="j-hero__image">
+          {% comment %}
+            aria-hidden — this is purely decorative background media (the
+            actual slide content — heading, description, CTA — is marked
+            up separately as real text below), and it's always muted with
+            no spoken audio, so a captions track wouldn't convey anything
+            a screen reader user needs. Hiding it from assistive tech
+            entirely is the correct treatment here, rather than adding a
+            captions track with nothing meaningful to caption.
+          {% endcomment %}
+          <div class="j-hero__image" aria-hidden="true">
 
             {% if block.settings.video %}
 
