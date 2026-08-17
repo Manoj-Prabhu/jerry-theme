@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -9,22 +18,39 @@
       "blocks": {
         "stat_est": {
           "type": "stat",
-          "settings": { "number": "2020", "label": "Est." }
+          "settings": {
+            "number": "2020",
+            "label": "Est."
+          }
         },
         "stat_countries": {
           "type": "stat",
-          "settings": { "number": "40+", "label": "Countries" }
+          "settings": {
+            "number": "40+",
+            "label": "Countries"
+          }
         },
         "stat_customers": {
           "type": "stat",
-          "settings": { "number": "10K+", "label": "Happy Customers" }
+          "settings": {
+            "number": "10K+",
+            "label": "Happy Customers"
+          }
         }
       },
-      "block_order": ["stat_est", "stat_countries", "stat_customers"],
+      "block_order": [
+        "stat_est",
+        "stat_countries",
+        "stat_customers"
+      ],
       "settings": {
+        "image_position": "left",
+        "image": "shopify://shop_images/woman-stands-in-her-store-with-folded-arms.jpg",
         "eyebrow": "How We Started",
         "heading": "From a Small Idea to a Studio",
-        "body": "<p>Mano Studio began with a simple frustration: too many everyday products were built to be replaced, not kept. We set out to make the opposite — pieces chosen for their materials, their maker, and how they hold up years later, not just how they photograph on day one.</p><p>Today that same standard runs through everything we carry. We work directly with a small number of makers we trust, test what we sell before it reaches you, and stand behind every order with real support — not a chatbot.</p>"
+        "body": "<p>Mano Studio began with a simple frustration: too many everyday products were built to be replaced, not kept. We set out to make the opposite — pieces chosen for their materials, their maker, and how they hold up years later, not just how they photograph on day one.</p><p>Today that same standard runs through everything we carry. We work directly with a small number of makers we trust, test what we sell before it reaches you, and stand behind every order with real support — not a chatbot.</p>",
+        "button_label": "Shop Now",
+        "button_link": ""
       }
     },
     "values": {
@@ -63,9 +89,21 @@
           }
         }
       },
-      "block_order": ["value_quality", "value_sustainability", "value_craftsmanship", "value_community"],
-      "settings": {}
+      "block_order": [
+        "value_quality",
+        "value_sustainability",
+        "value_craftsmanship",
+        "value_community"
+      ],
+      "settings": {
+        "eyebrow": "What We Stand For",
+        "heading": "Our Values"
+      }
     }
   },
-  "order": ["main", "story", "values"]
+  "order": [
+    "main",
+    "story",
+    "values"
+  ]
 }
