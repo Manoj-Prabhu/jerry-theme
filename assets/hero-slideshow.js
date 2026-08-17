@@ -45,9 +45,8 @@ function initHeroSlideshow(slideshow) {
   // Non-first slides ship with data-src/data-srcset instead of real
   // src/srcset (see hero.liquid) so the browser doesn't fetch every slide
   // image (or, worse, video) upfront just because they geometrically
-  // overlap the viewport. Hydrate them once the browser is idle after the
-  // critical first paint, well before autoplay's first advance needs them.
-  function hydrateSlide(slide) {
+  // overlap the viewport.
+  function hydrateSlideImage(slide) {
     const img = slide.querySelector("img[data-src]");
     if (img) {
       if (img.dataset.srcset) {
@@ -57,7 +56,9 @@ function initHeroSlideshow(slideshow) {
       img.src = img.dataset.src;
       img.removeAttribute("data-src");
     }
+  }
 
+  function hydrateSlideVideo(slide) {
     const videoSource = slide.querySelector("video source[data-src]");
     if (videoSource) {
       const video = videoSource.closest("video");
@@ -69,14 +70,40 @@ function initHeroSlideshow(slideshow) {
     }
   }
 
+  function hydrateSlide(slide) {
+    hydrateSlideImage(slide);
+    hydrateSlideVideo(slide);
+  }
+
+  // Images only here — they're light, so preloading every slide's image
+  // up front avoids any blank/loading gap on a crossfade. Videos are
+  // deliberately NOT included: each one can be several MB, and hydrating
+  // every hero video shortly after load (the previous behavior of this
+  // function) meant the page was downloading 3-4 full videos within a
+  // couple of seconds regardless of whether autoplay ever reached them —
+  // a large, mostly-wasted chunk of the page's total network payload.
+  // Videos hydrate progressively instead — see hydrateUpcomingVideo below,
+  // which only ever keeps one slide's video a step ahead of playback.
   function hydrateDeferredSlideImages() {
-    slides.forEach(hydrateSlide);
+    slides.forEach(hydrateSlideImage);
   }
 
   if (typeof window.requestIdleCallback === "function") {
     window.requestIdleCallback(hydrateDeferredSlideImages, { timeout: 2000 });
   } else {
     setTimeout(hydrateDeferredSlideImages, 1000);
+  }
+
+  // Hydrates (and lets the browser start buffering) the NEXT slide's
+  // video while the current one is still showing — a middle ground
+  // between loading every video upfront (expensive) and only starting a
+  // slide's own download at the exact moment it becomes active (a
+  // visible stutter/black-frame risk, since a multi-MB video won't be
+  // ready instantly). autoplayDelay is several seconds, which is ample
+  // lead time for this to finish before it's actually needed.
+  function hydrateUpcomingVideo() {
+    const nextIndex = (currentIndex + 1) % slides.length;
+    hydrateSlideVideo(slides[nextIndex]);
   }
 
   // At most one hero video should ever be playing at a time — pause
@@ -148,6 +175,14 @@ function initHeroSlideshow(slideshow) {
 
   announceActiveSlide();
 
+  // Give the second slide's video a head start now, rather than waiting
+  // for the first autoplay transition to trigger it.
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(hydrateUpcomingVideo, { timeout: 2000 });
+  } else {
+    setTimeout(hydrateUpcomingVideo, 1000);
+  }
+
   // The initial slide's video (if any) has the autoplay attribute directly
   // in its HTML, which the browser honors regardless of the visitor's
   // motion preference — pause it immediately if they prefer reduced motion.
@@ -174,6 +209,9 @@ function initHeroSlideshow(slideshow) {
     currentIndex = nextIndex;
     playSlideVideo(slides[nextIndex]);
     announceActiveSlide();
+    // Queue the slide after this one up next, keeping exactly one video
+    // hydrated ahead of playback at any given time.
+    hydrateUpcomingVideo();
   }
 
   function next() {

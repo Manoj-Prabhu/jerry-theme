@@ -29,15 +29,18 @@ function initShopByCategoryLoop(grid) {
     });
   }
 
+  // Read this BEFORE inserting the clones below, while the grid still
+  // only contains the original set — scrollWidth at that point already
+  // equals exactly one set's width, with no division needed. Reading it
+  // afterward (dividing by 3) would force the browser to synchronously
+  // lay out the two freshly-inserted clone sets just to answer this one
+  // query, which is the "Forced reflow" Lighthouse flagged here.
+  const setWidth = grid.scrollWidth;
+
   cloneSet()
     .reverse()
     .forEach((clone) => grid.insertBefore(clone, grid.firstChild));
   cloneSet().forEach((clone) => grid.appendChild(clone));
-
-  // One set's width — transforms (the coverflow scale/rotate) don't
-  // affect layout, so this stays accurate regardless of which card is
-  // currently focused/scaled up.
-  const setWidth = grid.scrollWidth / 3;
 
   // Starts the visitor inside the middle (real) set, at the same
   // position the row would have opened at before looping existed — no

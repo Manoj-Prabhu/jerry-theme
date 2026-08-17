@@ -81,16 +81,27 @@
               {% endcomment %}
 
               {% if forloop.first %}
-                {{
-                  block.settings.video
-                  | video_tag:
-                    image_size: '1200x',
-                    class: 'j-hero__video',
-                    muted: true,
-                    loop: true,
-                    playsinline: true,
-                    autoplay: true
-                }}
+                {% comment %}
+                  fetchpriority="high" — this is the LCP element on the
+                  homepage, but video_tag doesn't accept fetchpriority as
+                  a filter parameter (unlike image_tag, which does), so
+                  it's injected into the generated markup directly. Same
+                  post-processing approach already used below for the
+                  deferred slides' src -> data-src swap.
+                {% endcomment %}
+                {% capture eager_hero_video %}
+                  {{
+                    block.settings.video
+                    | video_tag:
+                      image_size: '1200x',
+                      class: 'j-hero__video',
+                      muted: true,
+                      loop: true,
+                      playsinline: true,
+                      autoplay: true
+                  }}
+                {% endcapture %}
+                {{ eager_hero_video | replace: '<video ', '<video fetchpriority="high" ' }}
               {% else %}
                 {% capture deferred_hero_video %}
                   {{
