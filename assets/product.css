@@ -44,7 +44,10 @@
   padding: 18px;
   border: 1px solid #1a1a1a;
   border-radius: var(--radius-lg);
-  background: #e6e6e6;
+  /* Warm cream/ivory instead of gray — ties into the gold accents used
+     throughout this card (price, chevron, active states) and pairs
+     better with the page's lavender background than a neutral gray did. */
+  background: linear-gradient(135deg, #fdf8ee 0%, #f5ecd7 50%, #fbf5e8 100%);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
@@ -349,14 +352,14 @@
   border: 1px solid #b7dfc2;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: #e8f7ec;
+  background: transparent;
 }
 
 .j-product__qty-control button {
   width: 36px;
   height: 36px;
   border: none;
-  background: #e8f7ec;
+  background: transparent;
   color: #1a1a1a;
   font-size: 16px;
   cursor: pointer;
@@ -364,7 +367,7 @@
 }
 
 .j-product__qty-control button:hover {
-  background: #d3f0dc;
+  background: rgba(183, 223, 194, 0.35);
 }
 
 .j-product__qty-control input[type="number"] {
@@ -375,7 +378,7 @@
   border-left: 1px solid #b7dfc2;
   border-right: 1px solid #b7dfc2;
   border-radius: 0;
-  background: #e8f7ec;
+  background: transparent;
   color: #1a1a1a;
   text-align: center;
   font-size: 1rem;
@@ -410,6 +413,8 @@
   background: #fff;
   border: 1px solid #1a1a1a;
   border-radius: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
   color: #1a1a1a !important;
 }
 
@@ -427,41 +432,21 @@
     grid-template-columns: 1fr;
     gap: 40px;
   }
-
-  /* The side-by-side thumbnail column is too cramped on narrow screens —
-     back to thumbnails below the image, in a horizontal row. */
-  .j-product__gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .j-product__thumbnails {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-self: stretch;
-    max-height: none;
-    overflow-y: visible;
-    padding-right: 0;
-  }
 }
 
 /* Product Gallery */
 
-/* Thumbnails in a vertical column beside the main image, on the right
-   (the markup already puts the main image first, thumbnails after, so
-   plain column order already gives this — no reversal needed).
-
-   The image track is `1fr` (flexible) and the thumbnail track is `auto`
-   (sized exactly to the thumbnails' own width) — a fixed pixel track for
-   the image (as this used previously) doesn't adapt when the thumbnail
-   size changes, so a wider thumbnail can overflow past its leftover
-   space into the content column next to it. `auto` always fits exactly,
-   no overflow possible, and the image simply takes whatever's left. */
+/* Desktop: main image + a vertical thumbnail column beside it (`auto`
+   track, sized to the thumbnails' own width so they can never overflow
+   into the content column next to it — see .j-product-thumbnail below).
+   Mobile switches this to a single column via the media query further
+   down, with dot indicators instead of thumbnails (see .j-product__dots). */
 .j-product__gallery {
   display: grid;
-  width: 100%;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  width: 100%;
   min-width: 0;
 }
 
@@ -472,6 +457,8 @@
   position: relative;
   min-width: 0;
   aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .j-product__main-image img {
@@ -511,42 +498,129 @@
   border: none;
 }
 
+/* Vertical column beside the main image — arrows above/below the
+   scrollable thumbnail list. */
+.j-product__thumbnails-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  gap: 10px;
+}
+
 .j-product__thumbnails {
   display: flex;
   flex-direction: column;
-  justify-self: center;
-  align-self: center;
   width: fit-content;
-  margin: 0 auto;
-  gap: 14px;
-  max-height: 700px;
+  gap: 10px;
+  max-height: 500px;
   overflow-y: auto;
+  scroll-behavior: smooth;
   padding-right: 2px;
+  /* Hide the native scrollbar — the arrow buttons are the intended way
+     to scroll this list; a thin native bar alongside them reads as
+     redundant clutter. */
+  scrollbar-width: none;
 }
 
-.j-product-thumbnail {
+.j-product__thumbnails::-webkit-scrollbar {
+  display: none;
+}
+
+.j-product__thumb-scroll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  width: 160px;
-  height: 160px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.j-product__thumb-scroll svg {
+  width: 16px;
+  height: 16px;
+}
+
+.j-product__thumb-scroll:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+/* Toggled by product-gallery.js — hidden entirely when there aren't
+   enough thumbnails to scroll, and faded out at whichever end of the
+   list is already fully in view. */
+.j-product__thumb-scroll[hidden] {
+  display: none;
+}
+
+.j-product__thumb-scroll:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Rendered as a background-image on the button itself (see
+   product.liquid), not a nested <img> — the visible size is then purely
+   the button's own box, with no possibility of an inner replaced
+   element rendering at its own intrinsic/HTML-attribute size instead of
+   the size this CSS specifies. */
+.j-product-thumbnail {
+  flex: 0 0 76px;
+  width: 76px;
+  height: 76px;
   border: 2px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
-  background: none;
+  background-color: var(--color-surface);
+  background-size: cover;
+  background-position: center;
   padding: 0;
   transition: border-color 0.25s ease;
-}
-
-.j-product-thumbnail img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .j-product-thumbnail:hover,
 .j-product-thumbnail.is-active {
   border-color: #f0c14b;
+}
+
+/* Mobile-only dot indicators (see .j-product__thumbnails-wrap above,
+   which is desktop-only — see the media query below). Hidden by default;
+   the mobile media query below flips which one shows. */
+.j-product__dots {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.j-product__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-border);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.j-product__dot.is-active {
+  background: #f0c14b;
+  transform: scale(1.3);
 }
 
 .j-product-main-image {
@@ -810,6 +884,31 @@
   font-size: var(--font-size-sm);
 }
 
+/* Gallery — mobile. This has to come after the base .j-product__gallery /
+   .j-product__thumbnails-wrap / .j-product__dots rules earlier in this
+   file: those are unconditional (not wrapped in a media query) with the
+   same specificity as these overrides, so if this block appeared earlier
+   in the file, the later unconditional rules would win the cascade tie
+   and silently cancel this out even while the media query is active. */
+@media (max-width: 768px) {
+  /* Single column — no side-by-side room for a thumbnail column on a
+     narrow screen. */
+  .j-product__gallery {
+    grid-template-columns: 1fr;
+  }
+
+  /* Dots instead of thumbnails on mobile — a thumbnail strip (in any
+     orientation) doesn't have anywhere good to go at this width without
+     either shrinking illegibly small or eating into the photo. */
+  .j-product__thumbnails-wrap {
+    display: none;
+  }
+
+  .j-product__dots {
+    display: flex;
+  }
+}
+
 @media (max-width: 768px) {
   .j-sticky-cart {
     padding: var(--space-2) var(--space-4);
@@ -823,5 +922,66 @@
   #StickyAddToCart {
     padding: 10px 18px;
     font-size: var(--font-size-sm);
+  }
+}
+
+/* Info card — mobile. At the very end of the file on purpose: this has
+   to come after every base rule it overrides (.j-product__content,
+   __title, __pickup, __options, __option, __swatch, __pill, etc.), all
+   unconditional and scattered throughout this file — putting this
+   anywhere earlier risks the same cascade-order bug already hit once
+   with the gallery/dots mobile rules above (an unconditional rule later
+   in the file wins a specificity tie over a media query earlier in it,
+   even while that media query is active). */
+@media (max-width: 768px) {
+  .j-product__content {
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .j-product__title {
+    font-size: var(--font-size-xl);
+  }
+
+  .j-product__price {
+    font-size: 1.5rem;
+  }
+
+  .j-product__pickup {
+    font-size: var(--font-size-xs);
+  }
+
+  /* Color and Size no longer forced onto one row — on a narrow screen
+     that squeezed the Size pills down to barely-tappable widths. Each
+     option gets its own full-width row instead, wrapping onto a second
+     line if the swatches/pills don't fit. */
+  .j-product__options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .j-product__option {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .j-product__swatch {
+    width: 34px;
+    height: 34px;
+  }
+
+  .j-product__pill {
+    min-width: 38px;
+    height: 38px;
+  }
+
+  .j-product__qty-control button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .j-product__qty-control input[type="number"] {
+    height: 32px;
   }
 }

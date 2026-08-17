@@ -68,36 +68,82 @@
 
     </div>
 
-    <div class="j-product__thumbnails">
+    {% comment %}
+      Desktop: vertical thumbnail column beside the main image (see
+      .j-product__gallery's grid columns in product.css). Hidden on
+      mobile in favor of the dot indicators below instead — a narrow
+      screen doesn't have room for a thumbnail strip.
+    {% endcomment %}
+    <div class="j-product__thumbnails-wrap">
 
-      {% for media in product.media %}
-        {% liquid
-          assign is_active = false
-          if media.id == current_media_id
-            assign is_active = true
-          elsif current_media_id == blank and forloop.first
-            assign is_active = true
-          endif
-        %}
+      <button
+        type="button"
+        class="j-product__thumb-scroll j-product__thumb-scroll--up"
+        aria-label="{{ 'product.scroll_thumbnails_up' | t }}"
+      >
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M5 12.5 10 7.5 15 12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
-        <button
-          type="button"
-          class="j-product-thumbnail {% if is_active %}is-active{% endif %}"
-          data-media-id="{{ media.id }}"
-          aria-label="{{ product.title }} — view {{ forloop.index }}"
-        >
+      <div class="j-product__thumbnails">
 
-          {{
-            media.preview_image
-            | image_url: width: 150
-            | image_tag: loading: 'lazy', alt: ''
-          }}
+        {% for media in product.media %}
+          {% liquid
+            assign is_active = false
+            if media.id == current_media_id
+              assign is_active = true
+            elsif current_media_id == blank and forloop.first
+              assign is_active = true
+            endif
+          %}
 
-        </button>
+          <button
+            type="button"
+            class="j-product-thumbnail {% if is_active %}is-active{% endif %}"
+            data-media-id="{{ media.id }}"
+            aria-label="{{ product.title }} — view {{ forloop.index }}"
+            style="background-image: url({{ media.preview_image | image_url: width: 150 }});"
+          ></button>
 
-      {% endfor %}
+        {% endfor %}
+
+      </div>
+
+      <button
+        type="button"
+        class="j-product__thumb-scroll j-product__thumb-scroll--down"
+        aria-label="{{ 'product.scroll_thumbnails_down' | t }}"
+      >
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
     </div>
+
+    {% if product.media.size > 1 %}
+      {% comment %} Mobile only — see .j-product__dots in product.css. {% endcomment %}
+      <div class="j-product__dots">
+        {% for media in product.media %}
+          {% liquid
+            assign is_active = false
+            if media.id == current_media_id
+              assign is_active = true
+            elsif current_media_id == blank and forloop.first
+              assign is_active = true
+            endif
+          %}
+
+          <button
+            type="button"
+            class="j-product__dot {% if is_active %}is-active{% endif %}"
+            data-media-id="{{ media.id }}"
+            aria-label="{{ product.title }} — view {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
 
   </div>
 

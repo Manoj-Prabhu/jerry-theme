@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   products = products.filter((item) => item !== handle);
   // Add current product first
   products.unshift(handle);
-  // Keep only last 8
+  // Keep only last 4
   products = products.slice(0, 4);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
 });

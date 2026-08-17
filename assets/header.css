@@ -139,7 +139,10 @@
      unstuck/non-sticky state too. */
   z-index: 900;
   width: 100%;
-  background: linear-gradient(135deg, var(--color-sand) 0%, #ffffff 65%);
+  /* Plain white — the gold-tinted gradient is reserved for the homepage
+     hero-overlay header state (see .j-body--home overrides below); every
+     other page just wants a clean, unobtrusive white header. */
+  background: #ffffff;
   transition: background 0.35s ease, backdrop-filter 0.35s ease;
 }
 
@@ -320,7 +323,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, var(--color-sand) 0%, #ffffff 65%);
+  background: #ffffff;
 
   transition:
     top 0.25s ease,

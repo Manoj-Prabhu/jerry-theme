@@ -230,6 +230,8 @@
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
     "description": "Description",
+    "scroll_thumbnails_up": "Scroll thumbnails up",
+    "scroll_thumbnails_down": "Scroll thumbnails down",
     "read_more": "Read more",
     "read_less": "Read less",
     "view_full_details": "View full details",

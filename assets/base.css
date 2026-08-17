@@ -51,9 +51,17 @@ body {
 }
 
 /* Applied on every template except the homepage (which has its own hero
-   treatment) — see the body class set in layout/theme.liquid. */
+   treatment) and product pages (see .j-body--product below) — see the
+   body class set in layout/theme.liquid. */
 body.j-body--tinted {
-  background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
+  background: linear-gradient(135deg, #f7ecd0 0%, #ffffff 75%);
+}
+
+/* Product pages — a warm blush/peach gradient instead of the generic
+   lavender tint, to pair with the info card's cream/gold styling
+   (see .j-product__content in product.css) rather than clash with it. */
+body.j-body--product {
+  background: linear-gradient(135deg, #fbe4d8 0%, #ffffff 75%);
 }
 
 /* -------------------------

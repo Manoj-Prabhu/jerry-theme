@@ -145,6 +145,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* top, not the center default — these are mostly full-body/portrait
+     shots, and a dead-center crop on a shorter card aspect ratio cuts
+     heads off. Anchoring to the top keeps faces in frame instead. */
+  object-position: top;
   transition:
     transform 0.35s ease,
     opacity 0.5s ease;
@@ -536,6 +540,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
 }
 
 .j-featured-collection .j-product-card__image[data-auto-cycle] img {
