@@ -18,7 +18,12 @@
 }
 
 .j-testimonials__heading p {
-  color: var(--color-text-light);
+  /* var(--color-text-light) against this section's background
+     (var(--color-secondary), a merchant-configurable color — #F3F4F6 by
+     default) computes to ~4.39:1, just under the 4.5:1 WCAG AA minimum
+     for normal text. var(--color-text) is reliably dark enough regardless
+     of what the merchant sets --color-secondary to. */
+  color: var(--color-text);
   margin-top: 8px;
 }
 

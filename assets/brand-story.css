@@ -106,7 +106,12 @@
 .j-brand-story__eyebrow {
   display: inline-block;
   margin-bottom: 16px;
-  color: #b8860b;
+  /* #b8860b (the gold used decoratively elsewhere) only computes to
+     ~3.25:1 against this section's white background — well under the
+     4.5:1 WCAG AA minimum for normal text at this size/weight. Darkened
+     just for this text usage; #7a5c0a clears ~6.25:1 while still reading
+     as gold/bronze. */
+  color: #7a5c0a;
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
   text-transform: uppercase;
