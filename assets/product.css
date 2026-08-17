@@ -602,25 +602,42 @@
   display: none;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
+/* The button itself is a full 24x24px touch target (Lighthouse/WCAG
+   2.5.8 minimum), even though it visually reads as a small 8px dot — the
+   dot is drawn via ::after, centered inside the larger invisible hit
+   area, rather than making the button itself that small and hard to tap
+   accurately on mobile. */
 .j-product__dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.j-product__dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--color-border);
-  cursor: pointer;
+  transform: translate(-50%, -50%);
   transition:
     background 0.2s ease,
     transform 0.2s ease;
 }
 
-.j-product__dot.is-active {
+.j-product__dot.is-active::after {
   background: #f0c14b;
-  transform: scale(1.3);
+  transform: translate(-50%, -50%) scale(1.3);
 }
 
 .j-product-main-image {
