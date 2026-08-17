@@ -17,7 +17,7 @@
           {% if forloop.first and priority %}
             {{
               card_image
-              | image_url: width: 700
+              | image_url: width: 700, format: 'webp'
               | image_tag:
                 class: img_class,
                 alt: product.title,
@@ -28,7 +28,7 @@
           {% else %}
             {{
               card_image
-              | image_url: width: 700
+              | image_url: width: 700, format: 'webp'
               | image_tag:
                 loading: 'lazy',
                 class: img_class,
