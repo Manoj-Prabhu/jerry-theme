@@ -1,0 +1,149 @@
+{% comment %}
+  About page — image + narrative block with an optional row of stats.
+  Same visual language as the homepage's Brand Story section (gold-framed
+  image, gold eyebrow/stats/button), but a separate, self-contained
+  section — About-page CSS only loads for template.suffix == 'about' (see
+  layout/theme.liquid), so this can't share the homepage section's
+  instance without also loading brand-story.css on every page.
+{% endcomment %}
+
+{% liquid
+  assign stat_blocks = section.blocks | where: 'type', 'stat'
+%}
+
+<section class="j-about-story full-width">
+  <div class="j-about-story__inner j-about-story__inner--{{ section.settings.image_position }}">
+
+    <div class="j-about-story__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: section.settings.heading
+        }}
+      {% else %}
+        <div class="j-about-story__media-placeholder">{{ 'image' | placeholder_svg_tag: 'j-about-story__placeholder-svg' }}</div>
+      {% endif %}
+    </div>
+
+    <div class="j-about-story__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <span class="j-about-story__eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="j-about-story__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="j-about-story__body">{{ section.settings.body }}</div>
+      {% endif %}
+
+      {% if stat_blocks.size > 0 %}
+        <div class="j-about-story__stats">
+          {% for block in stat_blocks %}
+            <div class="j-about-story__stat" {{ block.shopify_attributes }}>
+              <span class="j-about-story__stat-number">{{ block.settings.number }}</span>
+              <span class="j-about-story__stat-label">{{ block.settings.label }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="j-button j-button-outline j-about-story__button"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Story",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted With Purpose"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "2020"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Est."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "About Story",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "2020", "label": "Est." } },
+        { "type": "stat", "settings": { "number": "40+", "label": "Countries" } },
+        { "type": "stat", "settings": { "number": "10K+", "label": "Happy Customers" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

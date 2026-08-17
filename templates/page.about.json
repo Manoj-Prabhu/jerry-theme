@@ -1,0 +1,67 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-about",
+      "settings": {}
+    },
+    "story": {
+      "type": "about-story",
+      "blocks": {
+        "stat_est": {
+          "type": "stat",
+          "settings": { "number": "2020", "label": "Est." }
+        },
+        "stat_countries": {
+          "type": "stat",
+          "settings": { "number": "40+", "label": "Countries" }
+        },
+        "stat_customers": {
+          "type": "stat",
+          "settings": { "number": "10K+", "label": "Happy Customers" }
+        }
+      },
+      "block_order": ["stat_est", "stat_countries", "stat_customers"],
+      "settings": {}
+    },
+    "values": {
+      "type": "about-values",
+      "blocks": {
+        "value_quality": {
+          "type": "value",
+          "settings": {
+            "icon": "quality",
+            "heading": "Quality First",
+            "text": "We choose every material and maker carefully, so what you get is built to last."
+          }
+        },
+        "value_sustainability": {
+          "type": "value",
+          "settings": {
+            "icon": "sustainability",
+            "heading": "Sustainably Made",
+            "text": "Thoughtful sourcing and low-waste production, from idea to shelf."
+          }
+        },
+        "value_craftsmanship": {
+          "type": "value",
+          "settings": {
+            "icon": "craftsmanship",
+            "heading": "Real Craftsmanship",
+            "text": "Every piece is made by hand or with care by people who know the trade."
+          }
+        },
+        "value_community": {
+          "type": "value",
+          "settings": {
+            "icon": "community",
+            "heading": "Community First",
+            "text": "We build with our customers, not just for them — your feedback shapes what we make next."
+          }
+        }
+      },
+      "block_order": ["value_quality", "value_sustainability", "value_craftsmanship", "value_community"],
+      "settings": {}
+    }
+  },
+  "order": ["main", "story", "values"]
+}

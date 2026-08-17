@@ -1,0 +1,31 @@
+{% comment %}
+  About page hero — same page-title-band treatment as Contact/Blog/FAQ
+  (see .j-page-hero-band in layout.css), with the page's own rich text
+  content (edited in Shopify admin under Content > Pages) as the intro
+  paragraph underneath the title.
+{% endcomment %}
+
+{% render 'breadcrumbs' %}
+
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-about__header">
+
+      <h1>{{ page.title }}</h1>
+
+      {% if page.content != blank %}
+        <div class="j-about__intro">
+          {{ page.content }}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main About",
+  "settings": []
+}
+{% endschema %}

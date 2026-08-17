@@ -47,12 +47,24 @@
 .j-blog-card__image {
   position: relative;
   overflow: hidden;
+  background: var(--color-surface);
 }
 
 .j-blog-card__image img {
   width: 100%;
-  height: 170px;
-  object-fit: cover;
+  /* A fixed 170px height didn't scale with the card's own width across
+     breakpoints (3-col desktop vs. 1-col mobile), so the image read as
+     disproportionately short and cramped once cards got wider on smaller
+     grids. An aspect-ratio keeps the image a consistent, more prominent
+     shape at any card width instead. */
+  aspect-ratio: 4 / 3;
+  height: auto;
+  /* object-fit: cover was cropping tall/narrow article photos (e.g.
+     product shots) down to a sliver, since it fills the box by cropping
+     whichever dimension overflows. contain shows the full image instead,
+     letterboxing on the surface-color background above rather than
+     cutting content off. */
+  object-fit: contain;
   display: block;
   transition: transform 0.4s ease;
 }

@@ -1,0 +1,281 @@
+/* -------------------------
+   Hero (page title + intro)
+-------------------------- */
+
+.j-about__header {
+  text-align: center;
+}
+
+.j-about__header h1 {
+  margin-bottom: 12px;
+}
+
+.j-about__intro {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+}
+
+/* -------------------------
+   Story (image + narrative + stats)
+-------------------------- */
+
+.j-about-story {
+  width: 100%;
+  background: var(--color-white);
+  padding: 96px 0;
+  overflow: hidden;
+}
+
+.j-about-story__inner {
+  box-sizing: border-box;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 72px;
+}
+
+/* Image position is content order, not just visual order — swapping via
+   `order` alone would leave screen readers hearing the text before the
+   image it's about when the image is set to the right. */
+.j-about-story__inner--right .j-about-story__media {
+  order: 2;
+}
+
+.j-about-story__inner--right .j-about-story__content {
+  order: 1;
+}
+
+.j-about-story__media {
+  position: relative;
+  margin: 18px;
+  aspect-ratio: 4 / 5;
+}
+
+.j-about-story__media::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border: 2px solid #f0c14b;
+  border-radius: var(--radius-lg);
+  z-index: 0;
+}
+
+.j-about-story__image,
+.j-about-story__media-placeholder {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+
+.j-about-story__media-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-about-story__eyebrow {
+  display: inline-block;
+  margin-bottom: 16px;
+  /* Same darkened gold used for brand-story's eyebrow — #b8860b only
+     computes to ~3.25:1 against a white background, under the 4.5:1 WCAG
+     AA minimum; #7a5c0a clears ~6.25:1 while still reading as gold. */
+  color: #7a5c0a;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.j-about-story__heading {
+  margin: 0 0 20px;
+  font-size: var(--font-size-3xl);
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.j-about-story__body {
+  color: var(--color-text-light);
+  line-height: 1.75;
+}
+
+.j-about-story__body p {
+  margin: 0 0 16px;
+}
+
+.j-about-story__body p:last-child {
+  margin-bottom: 0;
+}
+
+.j-about-story__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin: 40px 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-sage, rgba(0, 0, 0, 0.1));
+}
+
+.j-about-story__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.j-about-story__stat-number {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-semibold, 600);
+  color: var(--color-text);
+}
+
+.j-about-story__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.j-about-story__button {
+  border-color: #f0c14b;
+  color: var(--color-primary);
+}
+
+.j-about-story__button:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
+/* -------------------------
+   Values grid
+-------------------------- */
+
+.j-about-values {
+  width: 100%;
+  background: var(--color-surface);
+  padding: 96px 0;
+}
+
+.j-about-values__inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+.j-about-values__header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 56px;
+}
+
+.j-about-values__eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #7a5c0a;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.j-about-values__heading {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text);
+}
+
+.j-about-values__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-8);
+}
+
+.j-about-values__card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.j-about-values__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.j-about-values__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  background: rgba(240, 193, 75, 0.15);
+  color: #7a5c0a;
+}
+
+.j-about-values__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.j-about-values__card-heading {
+  margin-bottom: 8px;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.j-about-values__card-text {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .j-about-story {
+    padding: 64px 0;
+  }
+
+  .j-about-story__inner,
+  .j-about-story__inner--right {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .j-about-story__inner--right .j-about-story__media,
+  .j-about-story__inner--right .j-about-story__content {
+    order: unset;
+  }
+
+  .j-about-story__media {
+    margin: 14px;
+  }
+
+  .j-about-story__media::before {
+    inset: -14px;
+  }
+
+  .j-about-story__heading {
+    font-size: var(--font-size-2xl);
+  }
+
+  .j-about-story__stats {
+    gap: var(--space-6);
+  }
+
+  .j-about-values {
+    padding: 64px 0;
+  }
+
+  .j-about-values__header {
+    margin-bottom: 40px;
+  }
+}

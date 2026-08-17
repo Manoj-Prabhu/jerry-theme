@@ -123,6 +123,9 @@
     {% if template.name == 'page' and template.suffix == 'contact' %}
       {{ 'contact.css' | asset_url | stylesheet_tag }}
     {% endif %}
+    {% if template.name == 'page' and template.suffix == 'about' %}
+      {{ 'about.css' | asset_url | stylesheet_tag }}
+    {% endif %}
     {% if template.name == 'blog' or template.name == 'article' %}
       {{ 'blog.css' | asset_url | stylesheet_tag }}
       {{ 'article.css' | asset_url | stylesheet_tag }}

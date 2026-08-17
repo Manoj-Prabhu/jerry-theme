@@ -33,18 +33,21 @@
   justify-content: center;
   padding: var(--space-10);
   border-radius: var(--radius-lg);
-  background: var(--color-primary);
-  color: var(--color-white);
+  /* Same gold gradient used for the header's account/menu accents and
+     brand-story CTAs elsewhere in the theme, paired with dark text —
+     white text on this gold doesn't clear contrast, dark does. */
+  background: linear-gradient(135deg, #f0c14b 0%, #b8873a 100%);
+  color: #1a1a1a;
 }
 
 .j-contact__aside h2 {
-  color: var(--color-white);
+  color: #1a1a1a;
   font-size: var(--font-size-2xl);
   margin-bottom: var(--space-4);
 }
 
 .j-contact__aside p {
-  color: rgba(255, 255, 255, .75);
+  color: rgba(26, 26, 26, .75);
   line-height: 1.7;
   margin-bottom: var(--space-8);
 }
@@ -67,17 +70,14 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: var(--color-accent);
+  color: #1a1a1a;
 }
 
 .j-contact__form {
-  background: linear-gradient(
-    135deg,
-    var(--color-sage) 0%,
-    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
-    var(--color-white) 75%
-  );
-  border: 1px solid var(--color-sage);
+  /* Cream/gold gradient matching the product info card elsewhere in the
+     theme, instead of the previous sage-green treatment. */
+  background: linear-gradient(135deg, #fdf8ee 0%, #f5ecd7 50%, #fbf5e8 100%);
+  border: 1px solid #1a1a1a;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: var(--space-8);
@@ -136,24 +136,37 @@
 
 .j-contact__field input:hover,
 .j-contact__field textarea:hover {
-  border-color: var(--color-primary);
+  border-color: #b8873a;
 }
 
 .j-contact__field input:focus,
 .j-contact__field textarea:focus {
   outline: none;
   background: var(--color-white);
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, .15);
+  border-color: #f0c14b;
+  box-shadow: 0 0 0 3px rgba(240, 193, 75, .25);
 }
 
 .j-contact__field:focus-within svg {
-  color: var(--color-accent);
+  color: #b8873a;
 }
 
 .j-contact__submit {
   width: 100%;
   margin-top: 6px;
+  /* Same treatment as the cart drawer's Continue Shopping button and the
+     product page's Add to Cart button — white with a black border, gold
+     fill on hover. */
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  color: #1a1a1a !important;
+}
+
+.j-contact__submit:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a !important;
 }
 
 .j-contact__success {
