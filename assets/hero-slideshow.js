@@ -260,7 +260,21 @@ function initHeroSlideshow(slideshow) {
   // re-running init (the initialized guard at the top would skip it).
   slideshow._heroSlideshowRestartAutoplay = startAutoplay;
 
-  startAutoplay();
+  // Starting the autoplay timer immediately competes with the page's own
+  // critical-path loading: each slide advance during the initial load
+  // triggers a fresh video download (see hydrateUpcomingVideo), and under
+  // throttled/slow conditions those downloads don't finish within one
+  // autoplayDelay interval, so they pile up — several videos' worth of
+  // network traffic in flight before the page has even finished loading,
+  // inflating total payload and main-thread work in exactly the window
+  // LCP/TBT are measured in. Waiting for the window load event keeps the
+  // same autoplay behavior for real visitors while keeping the initial
+  // load free of extra slide-driven downloads.
+  if (document.readyState === "complete") {
+    startAutoplay();
+  } else {
+    window.addEventListener("load", startAutoplay, { once: true });
+  }
 }
 
 function initAllHeroSlideshows() {
