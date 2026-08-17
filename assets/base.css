@@ -21,6 +21,14 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Reserves the vertical scrollbar's width permanently, instead of the
+     browser only allocating it once content actually overflows. Without
+     this, any interaction that changes page height enough to cross the
+     scrollbar threshold (e.g. opening the product description accordion)
+     shifts the viewport's available width by the scrollbar's ~15-17px,
+     which ripples into any `fr`-based layout (like the product page's
+     image/content grid) as a small, easily-misread-as-a-bug resize. */
+  scrollbar-gutter: stable;
 }
 
 /* -------------------------

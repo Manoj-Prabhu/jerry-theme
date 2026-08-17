@@ -159,16 +159,8 @@
         {% else %}
           <p>{{ 'product.pickup_unavailable_html' | t: location: pickup_location.location.name }}</p>
         {% endif %}
+        <span class="j-product__pickup-cross" aria-hidden="true">✕</span>
       </div>
-    {% endif %}
-
-    {% if product.description != blank %}
-      <details class="j-product__description">
-        <summary class="j-product__description-toggle">{{ 'product.description' | t }}</summary>
-        <div class="j-product__description-content">
-          {{ product.description }}
-        </div>
-      </details>
     {% endif %}
 
     {% form 'product', product, class: 'product-form j-product-form' %}
@@ -283,12 +275,12 @@
                   {% for value in option.values %}
                     <button
                       type="button"
-                      class="j-product__pill {% if value.name == selected_value %}is-active{% endif %}"
+                      class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
                       data-option-index="{{ option_index }}"
-                      data-value="{{ value.name | escape }}"
-                      aria-pressed="{% if value.name == selected_value %}true{% else %}false{% endif %}"
+                      data-value="{{ value | escape }}"
+                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
                     >
-                      {{ value.name }}
+                      {{ value }}
                     </button>
                   {% endfor %}
                 </div>
@@ -342,14 +334,32 @@
         {% assign quantity_max = current_variant.inventory_quantity %}
       {% endif %}
 
-      <input
-        id="Quantity"
-        type="number"
-        name="quantity"
-        min="1"
-        {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
-        value="1"
-      >
+      <div class="j-product__qty-control">
+        <button
+          type="button"
+          class="j-product__qty-minus"
+          aria-label="{{ 'cart.decrease_quantity' | t }}"
+        >
+          −
+        </button>
+
+        <input
+          id="Quantity"
+          type="number"
+          name="quantity"
+          min="1"
+          {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
+          value="1"
+        >
+
+        <button
+          type="button"
+          class="j-product__qty-plus"
+          aria-label="{{ 'cart.increase_quantity' | t }}"
+        >
+          +
+        </button>
+      </div>
 
       <button
         type="submit"
@@ -379,14 +389,21 @@
 
     {% endform %}
 
-    <div class="j-product__blocks">
-      {% for block in section.blocks %}
-        {% case block.type %}
-          {% when '@app' %}
+    {% if product.description != blank %}
+      <details class="j-product__description">
+        <summary class="j-product__description-toggle">{{ 'product.description' | t }}</summary>
+        <div class="j-product__description-content">
+          {{ product.description }}
+        </div>
+      </details>
+    {% endif %}
+
+    <div class="j-product__blocks">{%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
             {% render block %}
-        {% endcase %}
-      {% endfor %}
-    </div>
+        {%- endcase -%}
+      {%- endfor -%}</div>
 
   </div>
   <div

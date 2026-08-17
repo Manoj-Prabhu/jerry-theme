@@ -13,19 +13,44 @@
    without auto margins fighting that. */
 .j-product {
   max-width: var(--container-width);
-  margin: 80px 0;
+  margin: 50px 0;
   padding: 0 var(--space-8);
 
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: 60px;
+  /* start, not stretch — stretch tied the gallery/image's height to the
+     info card's height, which meant opening the description (making the
+     card taller) also visibly resized the image, since it was matching
+     the card rather than having a size of its own. The image now has a
+     fixed aspect-ratio below and is never affected by anything in the
+     content column. */
   align-items: start;
 }
 
 /* Content */
 
+/* A soft glass card behind the whole info column, so it reads as a
+   distinct panel instead of floating directly on the page's plain
+   gradient background. Sized to its own content (.j-product uses
+   align-items: start, not stretch) — justify-content: flex-start, not
+   space-between, so the card's height is exactly what its content
+   needs instead of distributing extra space between sections. */
+.j-product__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #1a1a1a;
+  border-radius: var(--radius-lg);
+  background: #e6e6e6;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
 .j-product__title {
-  margin-bottom: 20px;
+  margin-bottom: 6px;
+  font-size: var(--font-size-2xl);
 }
 
 .j-product__price-row {
@@ -87,19 +112,27 @@
 
 .j-product__pickup {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 
-  margin-bottom: 24px;
-  padding: 8px 14px;
+  margin-bottom: 8px;
+  padding: 5px 14px;
 
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 0;
-  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(240, 193, 75, 0.5);
+  border-radius: 999px;
+  background: rgba(240, 193, 75, 0.15);
 
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: #1a1a1a;
+}
+
+.j-product__pickup-cross {
+  flex-shrink: 0;
+  color: #b8860b;
+  font-size: 12px;
+  line-height: 1;
 }
 
 .j-product__pickup p {
@@ -107,19 +140,18 @@
   color: #1a1a1a;
 }
 
-/* Same sage gradient card treatment as the FAQ page's accordion items
-   (see .j-faq__item in faq.css), for a consistent look between the two
-   accordion patterns on the site. */
+/* Clean white card with a gold accent bar down the left edge, instead of
+   the sage-green FAQ gradient — that read as mismatched against this
+   page's own purple/lavender backdrop and gold accents used everywhere
+   else on the product page. */
 .j-product__description {
-  margin-bottom: 32px;
-  border: 1px solid var(--color-sage);
+  margin-top: 12px;
+  margin-bottom: 0;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid #f0c14b;
   border-radius: var(--radius-md);
-  background: linear-gradient(
-    135deg,
-    var(--color-sage) 0%,
-    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
-    var(--color-white) 75%
-  );
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 }
@@ -130,9 +162,12 @@
 
 .j-product__description-toggle {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   list-style: none;
   cursor: pointer;
-  padding: 5px 20px 5px 13px;
+  padding: 14px 40px 14px 16px;
   font-size: var(--font-size-md);
   font-weight: var(--font-semibold);
   color: var(--color-primary);
@@ -140,16 +175,29 @@
 }
 
 .j-product__description-toggle:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--color-surface);
 }
 
 .j-product__description-toggle::-webkit-details-marker {
   display: none;
 }
 
+/* Small document icon before the label, so the toggle reads as "more
+   info available" rather than a plain unlabeled bar. */
+.j-product__description-toggle::before {
+  content: "";
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #b8860b;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 3.5h7l3 3v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z' stroke='%23000' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7 10h6M7 13h6M7 7h2' stroke='%23000' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 3.5h7l3 3v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z' stroke='%23000' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7 10h6M7 13h6M7 7h2' stroke='%23000' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
 /* Chevron arrow, rotating from pointing down to pointing up instead of
-   swapping "+"/"−" text (content changes can't be animated) — same
-   treatment as the FAQ page's accordion, for a consistent pattern. */
+   swapping "+"/"−" text (content changes can't be animated). */
 .j-product__description-toggle::after {
   content: "";
   position: absolute;
@@ -168,11 +216,11 @@
 }
 
 .j-product__description[open] .j-product__description-toggle {
-  border-bottom: 1px solid var(--color-sage);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .j-product__description-content {
-  padding: 16px 18px;
+  padding: 18px;
   line-height: 1.7;
   color: var(--color-text-light);
 }
@@ -274,15 +322,14 @@
 .product-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 8px;
 }
 
 .product-form label {
   font-weight: 600;
 }
 
-.product-form select,
-.product-form input[type="number"] {
+.product-form select {
   width: 100%;
   padding: 14px;
 
@@ -292,8 +339,84 @@
   font-size: 1rem;
 }
 
+/* Quantity stepper — minus/plus buttons around the number input, instead
+   of a bare full-width native number field with its own tiny spinner
+   arrows. */
+.j-product__qty-control {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  border: 1px solid #b7dfc2;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #e8f7ec;
+}
+
+.j-product__qty-control button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #e8f7ec;
+  color: #1a1a1a;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.j-product__qty-control button:hover {
+  background: #d3f0dc;
+}
+
+.j-product__qty-control input[type="number"] {
+  width: 48px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-left: 1px solid #b7dfc2;
+  border-right: 1px solid #b7dfc2;
+  border-radius: 0;
+  background: #e8f7ec;
+  color: #1a1a1a;
+  text-align: center;
+  font-size: 1rem;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.j-product__qty-control input[type="number"]::-webkit-outer-spin-button,
+.j-product__qty-control input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.j-product__payment-button {
+  margin-top: 8px;
+}
+
 .product-form .j-button {
   width: 100%;
+}
+
+.product-form .j-button:hover {
+  background: #f0c14b;
+  color: #1a1a1a;
+}
+
+/* Same treatment as "Continue Shopping" in the cart drawer (see
+   .j-cart__continue in cart.css) — white/black outline by default,
+   sharp corners, fills gold on hover. */
+#AddToCartButton {
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  color: #1a1a1a !important;
+}
+
+#AddToCartButton:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a !important;
 }
 
 
@@ -304,32 +427,62 @@
     grid-template-columns: 1fr;
     gap: 40px;
   }
+
+  /* The side-by-side thumbnail column is too cramped on narrow screens —
+     back to thumbnails below the image, in a horizontal row. */
+  .j-product__gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .j-product__thumbnails {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-self: stretch;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
 }
 
 /* Product Gallery */
 
+/* Thumbnails in a vertical column beside the main image, on the right
+   (the markup already puts the main image first, thumbnails after, so
+   plain column order already gives this — no reversal needed).
+
+   The image track is `1fr` (flexible) and the thumbnail track is `auto`
+   (sized exactly to the thumbnails' own width) — a fixed pixel track for
+   the image (as this used previously) doesn't adapt when the thumbnail
+   size changes, so a wider thumbnail can overflow past its leftover
+   space into the content column next to it. `auto` always fits exactly,
+   no overflow possible, and the image simply takes whatever's left. */
 .j-product__gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
   min-width: 0;
 }
 
+/* Fixed aspect-ratio, not a height tied to the content column — the
+   image has a size of its own and is never affected by anything
+   happening in the info card (e.g. opening the description). */
 .j-product__main-image {
   position: relative;
-  max-width: 450px;
-  width: 100%;
+  min-width: 0;
   aspect-ratio: 1 / 1;
-  margin: 0 auto;
-  overflow: hidden;
 }
 
 .j-product__main-image img {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  object-fit: cover;
   display: block;
 }
 
@@ -360,11 +513,21 @@
 
 .j-product__thumbnails {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-self: center;
+  align-self: center;
+  width: fit-content;
+  margin: 0 auto;
+  gap: 14px;
+  max-height: 700px;
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .j-product-thumbnail {
+  flex-shrink: 0;
+  width: 160px;
+  height: 160px;
   border: 2px solid transparent;
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -376,8 +539,8 @@
 
 .j-product-thumbnail img {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -402,8 +565,8 @@
 .j-product__options {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px 40px;
-  margin: 24px 0;
+  gap: 10px 40px;
+  margin: 8px 0;
 }
 
 /* Label + swatches/size pills inline together within each option. */
@@ -475,6 +638,10 @@
   transform: translateY(-2px);
 }
 
+.j-product__swatch:hover .j-product__swatch-inner {
+  border-color: #f0c14b;
+}
+
 
 .j-product__swatch.is-sold-out {
   cursor: not-allowed;
@@ -500,32 +667,43 @@
   gap: 10px;
 }
 
+/* Rounded-square, not a circle/full pill — reads clearer for letter
+   sizes (L/M/S) than a circle, and distinguishes this from the round
+   color swatches above so the two option types aren't visually
+   ambiguous. */
 .j-product__pill {
-  min-width: 48px;
-  padding: 10px 18px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   border: 1px solid var(--color-border);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
 
   background: var(--color-background);
   color: var(--color-text);
   font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .j-product__pill:hover {
-  border-color: var(--color-primary);
+  border-color: #f0c14b;
+  transform: translateY(-2px);
 }
 
 .j-product__pill.is-active {
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary);
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
 }
 
 .j-product__pill.is-sold-out {

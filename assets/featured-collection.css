@@ -501,10 +501,19 @@
   min-height: 520px;
 }
 
+/* No z-index here (was 0) — an explicit z-index on a positioned element
+   creates its own stacking context, which would trap the wishlist/quick-
+   view buttons nested inside this image (see product-card.liquid) below
+   .j-product-card__content's z-index: 2 overlay text, regardless of
+   their own z-index — they'd render underneath it and become
+   unclickable/hidden behind the title. Leaving this at the default
+   z-index: auto lets the image stay visually behind the content (it has
+   no explicit z-index, so it still loses to content's z-index: 2) while
+   letting its button children compete directly in the shared stacking
+   context and correctly render above the text. */
 .j-featured-collection .j-product-card__image {
   position: absolute;
   inset: 0;
-  z-index: 0;
   aspect-ratio: auto;
   padding: 0;
   border-radius: 0;
