@@ -31,9 +31,11 @@
 
           assign media_loading = 'lazy'
           assign media_priority = 'auto'
+          assign media_preload = false
           if is_active
             assign media_loading = 'eager'
             assign media_priority = 'high'
+            assign media_preload = true
           endif
         %}
 
@@ -50,6 +52,7 @@
                   class: 'j-product-main-image',
                   loading: media_loading,
                   fetchpriority: media_priority,
+                  preload: media_preload,
                   widths: '400, 600, 800, 1000',
                   sizes: '(max-width: 768px) 100vw, 450px',
                   alt: media.alt | default: main_image_alt
