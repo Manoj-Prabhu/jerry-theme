@@ -10,15 +10,25 @@ function initScrollReveal() {
   // product page's sticky add-to-cart bar) are skipped: animating a
   // transform on the section would create a new containing block and
   // break that descendant's fixed positioning relative to the viewport.
+  //
+  // The New Products section is also skipped: its heading row was
+  // reproducibly going invisible at mobile widths after this reveal
+  // animation ran (fixed only by forcing a style recalc in devtools —
+  // e.g. toggling an unrelated CSS property off and on), regardless of
+  // which layout approach (flex, inline-flex, plain inline-block) it
+  // used internally. That points at this transition-driven opacity/
+  // transform animation itself interacting badly with that section's
+  // layout at narrow widths, not a bug in the section's own CSS.
+  const skipSelector = ".j-sticky-cart, .j-new-products";
   const sectionTargets = "CSS" in window && CSS.supports("selector(:has(*))")
     ? Array.from(
         document.querySelectorAll(
-          "#MainContent > .shopify-section:not(:has(.j-sticky-cart))",
+          `#MainContent > .shopify-section:not(:has(${skipSelector}))`,
         ),
       )
     : Array.from(
         document.querySelectorAll("#MainContent > .shopify-section"),
-      ).filter((el) => !el.querySelector(".j-sticky-cart"));
+      ).filter((el) => !el.querySelector(skipSelector));
   const cardTargets = Array.from(
     document.querySelectorAll(".j-product-card, .j-card"),
   );

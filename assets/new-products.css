@@ -1,7 +1,17 @@
 .j-new-products {
+  /* No margin: 0 auto here — this section is a grid item inside
+     .shopify-section's own centering grid (grid-column: 2, pre-sized to
+     the theme's content-width track; see critical.css and the same note
+     in featured-collection.css). Auto margins on a grid item make it
+     shrink-to-fit its own content instead of stretching to the track's
+     width — and because the horizontal photo strip below has
+     non-shrinking flex cards, "shrink-to-fit" resolved to the strip's
+     full max-content width (all cards side by side), blowing the whole
+     section out far past the viewport on mobile and pushing the
+     centered heading text off-screen. max-width alone keeps the section
+     centered and capped without triggering that shrink-to-fit sizing. */
   max-width: var(--container-width);
   padding: 80px var(--space-8);
-  margin: 0 auto;
 }
 
 /* Heading */
@@ -12,21 +22,21 @@
 }
 
 .j-new-products__heading-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
+  /* No flexbox at all on this row — flex, inline-flex, justify-content:
+     center, and width: fit-content each independently reproduced the
+     same bug in testing (content invisible on mobile after the
+     scroll-reveal fade-in animation ran, only recovering when the
+     property was toggled off in devtools). Falling back to inline-block
+     children + vertical-align, centered via the parent's plain
+     text-align: center, avoids every flex-sizing code path that
+     triggered it. */
   margin-bottom: 8px;
-  /* Centers the row itself as a group (instead of justify-content:
-     center, which was making the row's content invisible in testing for
-     reasons that didn't reproduce in isolated devtools inspection —
-     width: fit-content + auto margins achieves the same centered
-     layout through the parent's text-align: center context instead). */
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .j-new-products__heading-row h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 var(--space-2);
   font-size: var(--font-size-2xl);
   color: var(--color-primary);
 }
@@ -38,7 +48,8 @@
 }
 
 .j-new-products__arrow {
-  display: flex;
+  display: inline-flex;
+  vertical-align: middle;
   align-items: center;
   justify-content: center;
   width: 28px;
@@ -157,20 +168,23 @@
   }
 
   .j-new-products__board {
-    /* The section itself drops its horizontal padding here so the board
-       can bleed edge-to-edge (matching the reference lookbook layout),
-       with the padding moved onto the board's own scroll content
-       instead — scroll-padding-left keeps the first card's edge aligned
-       with the heading above it rather than touching the screen edge. */
+    /* Exactly 2 cards visible at a time on mobile — the prev/next
+       arrows (see new-products.js) page between sets of 2 rather than
+       free-scrolling, so scroll-snap-type is mandatory to always land
+       on a clean 2-up view instead of stopping mid-card. Padding only
+       on the left (none on the right) so the 2 cards' flex-basis, sized
+       against the content box, exactly fills to the box's right edge
+       instead of leaving a sliver of the 3rd card peeking through the
+       right padding. */
+    gap: var(--space-2);
+    scroll-snap-type: x mandatory;
     padding-left: var(--space-6);
-    padding-right: var(--space-6);
     scroll-padding-left: var(--space-6);
   }
 
   .j-new-products__card {
-    /* Wider than half the viewport but not full-width — enough of the
-       next card peeks in on the right to read as "swipe for more"
-       rather than looking like a single static photo. */
-    flex-basis: 82vw;
+    /* Two cards per row: each takes half the row width minus half the
+       gap between them. */
+    flex-basis: calc((100% - var(--space-2)) / 2);
   }
 }

@@ -53,11 +53,12 @@ function initNewProducts(section) {
   if (!board || !prevButton || !nextButton) return;
 
   function stepDistance() {
-    const card = board.querySelector(".j-new-products__card");
-    // Falls back to a fixed guess if there's ever no card to measure
-    // (shouldn't happen — the board only renders with a collection
-    // selected — but avoids a NaN scroll step if it ever does).
-    return card ? card.getBoundingClientRect().width + 2 : 480;
+    // Scrolls by one full visible page (however many cards currently
+    // fit — 2 on mobile per the flex-basis in new-products.css, more on
+    // wider screens) rather than a single card, so each arrow click
+    // reveals the next complete set instead of leaving a card half-cut
+    // at the edge.
+    return board.clientWidth || 480;
   }
 
   function updateArrowState() {
