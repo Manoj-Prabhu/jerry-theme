@@ -23,7 +23,9 @@
 }
 
 .j-blog-card {
-  background: var(--color-white);
+  /* Same silver gradient used for the homepage's Shop by Category
+     background. */
+  background: linear-gradient(135deg, #f2f2f2 0%, #cfcfcf 50%, #e8e8e8 100%);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -47,25 +49,25 @@
 .j-blog-card__image {
   position: relative;
   overflow: hidden;
-  background: var(--color-surface);
 }
 
 .j-blog-card__image img {
   width: 100%;
-  /* A fixed 170px height didn't scale with the card's own width across
-     breakpoints (3-col desktop vs. 1-col mobile), so the image read as
-     disproportionately short and cramped once cards got wider on smaller
-     grids. An aspect-ratio keeps the image a consistent, more prominent
-     shape at any card width instead. */
-  aspect-ratio: 4 / 3;
+  /* No fixed aspect-ratio box: a wide/short box cropped tall article
+     photos down to a sliver with object-fit: cover, and switching to
+     contain just traded that for gray letterbox bars on either side of
+     narrower/taller photos instead. Letting height follow the image's
+     own natural aspect ratio avoids both for any normal photo — it shows
+     completely, at its own proportions, nothing added or cut off. The
+     max-height + cover combination only ever kicks in for unusually tall
+     outliers, as a cap rather than the default behavior, so it doesn't
+     dominate the row. Cards in the same row may end up different
+     heights when article photos have different proportions, which is
+     normal for a photo grid like this. */
   height: auto;
-  /* object-fit: cover was cropping tall/narrow article photos (e.g.
-     product shots) down to a sliver, since it fills the box by cropping
-     whichever dimension overflows. contain shows the full image instead,
-     letterboxing on the surface-color background above rather than
-     cutting content off. */
-  object-fit: contain;
   display: block;
+  max-height: 480px;
+  object-fit: cover;
   transition: transform 0.4s ease;
 }
 
@@ -108,7 +110,7 @@
 }
 
 .j-blog-card:hover .j-blog-card__content h2 {
-  color: var(--color-accent);
+  color: #b8873a;
 }
 
 .j-blog-card__meta {
@@ -143,7 +145,7 @@
 }
 
 .j-blog-card:hover .j-blog-card__link {
-  color: var(--color-accent);
+  color: #b8873a;
 }
 
 .j-blog-card:hover .j-blog-card__link svg {

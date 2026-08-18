@@ -457,8 +457,8 @@ a.j-pagination__item:hover {
 }
 
 .j-pagination__item--current {
-  background: var(--color-accent);
-  color: #fff;
+  background: #f0c14b;
+  color: #1a1a1a;
   font-weight: var(--font-semibold);
 }
 
@@ -485,8 +485,8 @@ a.j-pagination__item:hover {
 }
 
 .j-pagination__arrow:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  border-color: #f0c14b;
+  color: #b8873a;
 }
 
 .j-pagination__arrow.is-disabled {
