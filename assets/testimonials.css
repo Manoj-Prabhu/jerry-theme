@@ -2,108 +2,192 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--color-secondary);
-  padding: 80px 0;
 }
 
-.j-testimonials__inner {
-  box-sizing: border-box;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 var(--space-8);
+/* Slideshow */
+
+.j-testimonials__track {
+  position: relative;
+  transition: height 0.4s ease;
 }
 
-.j-testimonials__heading {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.j-testimonials__heading p {
-  /* var(--color-text-light) against this section's background
-     (var(--color-secondary), a merchant-configurable color — #F3F4F6 by
-     default) computes to ~4.39:1, just under the 4.5:1 WCAG AA minimum
-     for normal text. var(--color-text) is reliably dark enough regardless
-     of what the merchant sets --color-secondary to. */
-  color: var(--color-text);
-  margin-top: 8px;
-}
-
-.j-testimonials__grid {
-  width: 100%;
+.j-testimonials__slide {
+  position: absolute;
+  inset: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0.8s;
 }
 
-.j-testimonial-card {
+/* Same "static until measured, then absolute" approach as the hero
+   slideshow (see hero.css/hero-slideshow.js) — keeps the active slide
+   in normal flow until JS has locked in the track's height, avoiding a
+   collapsed-then-expand jump (CLS) on first paint. */
+.j-testimonials__slide.is-active {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0s;
+}
+
+.j-testimonials__slideshow.is-ready .j-testimonials__slide.is-active {
+  position: absolute;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-testimonials__slide {
+    transition: none;
+  }
+}
+
+/* Content (left) */
+
+.j-testimonials__content {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   gap: 16px;
-  padding: var(--space-8);
-  border: 1px solid var(--color-sage);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(
-    135deg,
-    var(--color-sage) 0%,
-    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
-    var(--color-white) 75%
-  );
+  max-width: 480px;
+  padding: 80px var(--space-8);
+  margin: 0 auto 0 0;
 }
 
-.j-testimonial-card__stars {
+.j-testimonials__eyebrow {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.j-testimonials__stars {
   display: flex;
   gap: 2px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1;
 }
 
-.j-testimonial-card__quote {
+.j-testimonials__quote {
   margin: 0;
   color: var(--color-text);
-  line-height: 1.7;
+  font-size: var(--font-size-xl);
+  line-height: 1.5;
   font-style: normal;
 }
 
-.j-testimonial-card__author {
+.j-testimonials__author {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: auto;
+  gap: 10px;
 }
 
-.j-testimonial-card__avatar {
+.j-testimonials__avatar {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-surface);
 }
 
-.j-testimonial-card__avatar img {
+.j-testimonials__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.j-testimonial-card__avatar-initial {
-  font-weight: var(--font-semibold);
-  color: var(--color-text-light);
-}
-
-.j-testimonial-card__author-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.j-testimonial-card__name {
-  font-weight: var(--font-semibold);
-  color: var(--color-text);
-}
-
-.j-testimonial-card__role {
+.j-testimonials__avatar-initial {
   font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
   color: var(--color-text-light);
+}
+
+.j-testimonials__author-line {
+  color: var(--color-text-light);
+}
+
+.j-testimonials__nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.j-testimonials__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.j-testimonials__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.j-testimonials__arrow:hover {
+  color: var(--color-text);
+  border-color: var(--color-text);
+}
+
+/* Media (right) */
+
+.j-testimonials__media {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.j-testimonials__media img,
+.j-testimonials__media-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-testimonials__media-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .j-testimonials__slide {
+    grid-template-columns: 1fr;
+  }
+
+  .j-testimonials__content {
+    max-width: none;
+    padding: 48px var(--space-6) 32px;
+    order: 2;
+  }
+
+  .j-testimonials__media {
+    min-height: 320px;
+    order: 1;
+  }
 }
