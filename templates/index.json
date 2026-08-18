@@ -245,6 +245,15 @@
         "button_link": "shopify://pages/about-us"
       }
     },
+    "new_products": {
+      "type": "new-products",
+      "settings": {
+        "heading": "New Arrivals",
+        "description": "",
+        "collection": "",
+        "products_to_show": 6
+      }
+    },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
@@ -292,6 +301,7 @@
     "shop_by_category",
     "featured_collection",
     "brand_story",
+    "new_products",
     "testimonials"
   ]
 }

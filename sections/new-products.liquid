@@ -1,0 +1,121 @@
+{% comment %}
+  New Products — minimal, editorial "lookbook" strip: a centered heading
+  with inline prev/next arrows and a "View all" link, then a horizontally
+  scrollable row of large, edge-to-edge product photos with just the
+  existing badge tags (New/Sale/Bestseller) overlaid — no card borders,
+  no title/price text under each photo.
+{% endcomment %}
+
+<section class="j-new-products">
+
+  <div class="j-new-products__heading">
+
+    <div class="j-new-products__heading-row">
+      <button type="button" class="j-new-products__arrow j-new-products__arrow--prev" aria-label="{{ 'general.pagination.prev' | t }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <h2>{{ section.settings.heading }}</h2>
+
+      <button type="button" class="j-new-products__arrow j-new-products__arrow--next" aria-label="{{ 'general.pagination.next' | t }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {% if section.settings.description != blank %}
+      <p>{{ section.settings.description }}</p>
+    {% endif %}
+
+    {% assign selected_collection = collections[section.settings.collection] %}
+    {% if selected_collection != blank %}
+      <a href="{{ selected_collection.url }}" class="j-new-products__view-all">
+        {{ 'general.view_all' | t }}
+      </a>
+    {% endif %}
+
+  </div>
+
+  {% if selected_collection != blank %}
+
+    <div class="j-new-products__board" data-new-products-board>
+      {% for product in selected_collection.products limit: section.settings.products_to_show %}
+        <a href="{{ product.url }}" class="j-new-products__card" aria-label="{{ product.title | escape }}">
+
+          {% if product.featured_image %}
+            {% assign card_images = product.images | slice: 0, 4 %}
+            {% for card_image in card_images %}
+              {% assign card_img_class = 'j-new-products__image' %}
+              {% if forloop.first %}
+                {% assign card_img_class = card_img_class | append: ' is-active' %}
+              {% endif %}
+              {{
+                card_image
+                | image_url: width: 900, format: 'webp'
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '500, 700, 900',
+                  sizes: '(max-width: 700px) 60vw, 480px',
+                  class: card_img_class,
+                  alt: card_image.alt | default: product.title
+              }}
+            {% endfor %}
+          {% else %}
+            <div class="j-new-products__media-placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
+          {% endif %}
+
+          {% render 'product-badges', product: product %}
+
+        </a>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <p style="text-align:center;">
+      Select a collection in the Theme Editor.
+    </p>
+  {% endif %}
+
+</section>
+
+{% schema %}
+{
+  "name": "New Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Tip: use an automated collection sorted by \"Newest arrivals\" to keep this section current on its own."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Products"
+    }
+  ]
+}
+{% endschema %}

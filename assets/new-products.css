@@ -1,0 +1,169 @@
+.j-new-products {
+  max-width: var(--container-width);
+  padding: 80px var(--space-8);
+  margin: 0 auto;
+}
+
+/* Heading */
+
+.j-new-products__heading {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.j-new-products__heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: 8px;
+}
+
+.j-new-products__heading-row h2 {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+}
+
+.j-new-products__heading p {
+  max-width: 650px;
+  margin: 0 auto 8px;
+  color: var(--color-text-light);
+}
+
+.j-new-products__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-light);
+  transition: color var(--transition-fast);
+}
+
+.j-new-products__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.j-new-products__arrow:hover {
+  color: #b8873a;
+}
+
+.j-new-products__arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.j-new-products__view-all {
+  display: inline-block;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.j-new-products__view-all:hover {
+  color: #b8873a;
+}
+
+/* Board — edge-to-edge photos, no card borders, badges are the only
+   overlay. A thin gap (not 0) keeps adjacent photos from visually
+   merging into one image at a glance. */
+
+.j-new-products__board {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.j-new-products__board::-webkit-scrollbar {
+  display: none;
+}
+
+.j-new-products__card {
+  position: relative;
+  flex: 1 0 min(480px, 60vw);
+  scroll-snap-align: start;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* Stacked, not swapped in/out of the DOM — every image for a product
+   sits absolutely on top of the others, and .is-active (toggled in
+   new-products.js on hover, see below) is the only one visible at a
+   time. Letting the browser cross-fade opacity between two already-
+   loaded <img> elements is far smoother than anything driven by
+   swapping a single <img>'s src. */
+.j-new-products__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.j-new-products__image.is-active {
+  opacity: 1;
+}
+
+.j-new-products__media-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.j-new-products__card:hover .j-new-products__image.is-active {
+  transform: scale(1.04);
+}
+
+.j-new-products__media-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* .j-product-badges (see featured-collection.css) is already
+   position: absolute globally — .j-new-products__card's own
+   position: relative above is what anchors it to each photo here,
+   same role .j-product-card__image plays for the grid cards. */
+
+@media (max-width: 640px) {
+  .j-new-products {
+    padding: 40px 0 48px;
+  }
+
+  .j-new-products__heading {
+    padding: 0 var(--space-6);
+    margin-bottom: 24px;
+  }
+
+  .j-new-products__heading-row h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .j-new-products__board {
+    /* The section itself drops its horizontal padding here so the board
+       can bleed edge-to-edge (matching the reference lookbook layout),
+       with the padding moved onto the board's own scroll content
+       instead — scroll-padding-left keeps the first card's edge aligned
+       with the heading above it rather than touching the screen edge. */
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+    scroll-padding-left: var(--space-6);
+  }
+
+  .j-new-products__card {
+    /* Wider than half the viewport but not full-width — enough of the
+       next card peeks in on the right to read as "swipe for more"
+       rather than looking like a single static photo. */
+    flex-basis: 82vw;
+  }
+}
