@@ -250,7 +250,7 @@
       "settings": {
         "heading": "New Arrivals",
         "description": "",
-        "collection": "",
+        "collection": "traditional-cultural-collection",
         "products_to_show": 6
       }
     },
