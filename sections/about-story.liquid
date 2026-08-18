@@ -55,6 +55,7 @@
         <a
           href="{{ section.settings.button_link | default: '#' }}"
           class="j-button j-button-outline j-about-story__button"
+          aria-label="{{ section.settings.button_label }} at {{ shop.name }}"
         >
           {{ section.settings.button_label }}
         </a>

@@ -70,9 +70,18 @@
       {% endif %}
 
       {% if section.settings.button_label != blank %}
+        {% comment %}
+          aria-label — "Learn More" alone isn't descriptive out of
+          context (flagged by Lighthouse's "Links do not have descriptive
+          text"); screen reader users often scan a page's links in
+          isolation from surrounding text, so the accessible name spells
+          out what it actually leads to while the visible button keeps
+          its shorter label.
+        {% endcomment %}
         <a
           href="{{ section.settings.button_link | default: '#' }}"
           class="j-button j-button-outline j-brand-story__button"
+          aria-label="{{ section.settings.button_label }} about {{ shop.name }}"
         >
           {{ section.settings.button_label }}
         </a>
