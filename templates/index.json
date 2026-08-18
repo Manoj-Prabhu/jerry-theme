@@ -262,8 +262,9 @@
           "settings": {
             "rating": 5,
             "quote": "This shop exceeded my expectations. Fast shipping, great quality, and excellent customer service.",
-            "name": "Jane Doe",
-            "role": "Verified Buyer"
+            "image": "shopify://shop_images/pexels-arif-15827759.jpg",
+            "name": "Jancy Rose",
+            "role": "Mumbai"
           }
         },
         "review-2": {
@@ -271,8 +272,9 @@
           "settings": {
             "rating": 5,
             "quote": "Beautifully made products and the packaging felt so premium. Will definitely order again.",
+            "image": "shopify://shop_images/pexels-minan1398-1003979.jpg",
             "name": "Alex Rivera",
-            "role": "Verified Buyer"
+            "role": "Houston"
           }
         },
         "review-3": {
@@ -280,8 +282,9 @@
           "settings": {
             "rating": 4,
             "quote": "Great selection and easy checkout. Delivery was quicker than expected too.",
-            "name": "Sam Chen",
-            "role": "Verified Buyer"
+            "image": "shopify://shop_images/pexels-introspectivedsgn-4061551.jpg",
+            "name": "Sam John",
+            "role": "Hobart"
           }
         }
       },
