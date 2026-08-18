@@ -2,6 +2,14 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--color-secondary);
+  /* The content column has its own 80px top/bottom padding, but the
+     media column stretches (align-items: stretch) to match that same
+     height with no padding of its own — so without this, the product
+     photo runs flush to the very bottom of the section, landing right
+     against the footer's background with no visual break between them.
+     This padding keeps this section's own background showing as a
+     clear gap below the photo before the footer starts. */
+  padding: 48px 0;
 }
 
 /* Slideshow */
