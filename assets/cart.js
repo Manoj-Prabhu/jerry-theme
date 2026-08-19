@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p class="j-cart__empty">
           ${emptyText}
         </p>
-        <a href="${continueUrl}" class="j-button j-button-outline j-cart__continue">
+        <a href="${continueUrl}" class="j-button j-button-outline--gold j-cart__continue">
           ${continueText}
         </a>
         ${suggestionHtml}

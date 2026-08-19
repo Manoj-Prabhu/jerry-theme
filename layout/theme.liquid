@@ -156,6 +156,13 @@
     {% sections 'footer-group' %}
 
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {% comment %}
+      Shared engine used by the hero, testimonials, and brand story
+      slideshows — loaded unconditionally (rather than gated to specific
+      templates like those scripts are) since testimonials can now be
+      added to any page via the theme editor, not just the homepage.
+    {% endcomment %}
+    <script src="{{ 'crossfade-slideshow.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'text-reveal.js' | asset_url }}" defer="defer"></script>
@@ -232,8 +239,6 @@
       <script src="{{ 'shop-by-category-v2.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'brand-story.js' | asset_url }}" defer="defer"></script>
-      <script src="{{ 'new-products.js' | asset_url }}" defer="defer"></script>
-      <script src="{{ 'testimonials.js' | asset_url }}" defer="defer"></script>
     {% endif %}
 
     <button

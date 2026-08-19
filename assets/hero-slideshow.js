@@ -1,46 +1,9 @@
-function initHeroSlideshow(slideshow) {
-  if (slideshow.dataset.heroSlideshowInitialized) return;
-  slideshow.dataset.heroSlideshowInitialized = "true";
+function initHeroSlideshow(root) {
+  if (root.dataset.heroSlideshowInitialized) return;
+  root.dataset.heroSlideshowInitialized = "true";
 
-  const track = slideshow.querySelector(".j-hero-slideshow__track");
-  const slides = Array.from(
-    slideshow.querySelectorAll(".j-hero-slideshow__slide"),
-  );
-  const autoplayDelay = Number(slideshow.dataset.autoplay) || 5000;
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-
-  // The active slide starts as `position: static` (see hero.css), so the
-  // track already has the right height from CSS alone before this runs —
-  // no collapsed-then-expand jump on first paint. This measures that
-  // height, locks it in, then adds `.is-ready` to switch every slide to
-  // `position: absolute` for a jump-free crossfade from here on.
-  function updateHeight() {
-    // Batched write / read / write instead of write-read-write per slide,
-    // to avoid a forced synchronous layout on every iteration.
-    const originalVisibility = slides.map((slide) => slide.style.visibility);
-
-    slides.forEach((slide) => {
-      slide.style.position = "static";
-      slide.style.visibility = "hidden";
-    });
-
-    let maxHeight = 0;
-    slides.forEach((slide) => {
-      maxHeight = Math.max(maxHeight, slide.offsetHeight);
-    });
-
-    slides.forEach((slide, index) => {
-      slide.style.position = "";
-      slide.style.visibility = originalVisibility[index];
-    });
-
-    track.style.height = `${maxHeight}px`;
-  }
-
-  updateHeight();
-  slideshow.classList.add("is-ready");
+  const track = root.querySelector(".j-hero-slideshow__track");
+  const autoplayDelay = Number(root.dataset.autoplay) || 5000;
 
   // Non-first slides ship with data-src/data-srcset instead of real
   // src/srcset (see hero.liquid) so the browser doesn't fetch every slide
@@ -85,13 +48,7 @@ function initHeroSlideshow(slideshow) {
   // Videos hydrate progressively instead — see hydrateUpcomingVideo below,
   // which only ever keeps one slide's video a step ahead of playback.
   function hydrateDeferredSlideImages() {
-    slides.forEach(hydrateSlideImage);
-  }
-
-  if (typeof window.requestIdleCallback === "function") {
-    window.requestIdleCallback(hydrateDeferredSlideImages, { timeout: 2000 });
-  } else {
-    setTimeout(hydrateDeferredSlideImages, 1000);
+    slideshow.slides.forEach(hydrateSlideImage);
   }
 
   // Hydrates (and lets the browser start buffering) the NEXT slide's
@@ -102,8 +59,8 @@ function initHeroSlideshow(slideshow) {
   // ready instantly). autoplayDelay is several seconds, which is ample
   // lead time for this to finish before it's actually needed.
   function hydrateUpcomingVideo() {
-    const nextIndex = (currentIndex + 1) % slides.length;
-    hydrateSlideVideo(slides[nextIndex]);
+    const nextIndex = (slideshow.currentIndex + 1) % slideshow.slides.length;
+    hydrateSlideVideo(slideshow.slides[nextIndex]);
   }
 
   // At most one hero video should ever be playing at a time — pause
@@ -117,7 +74,7 @@ function initHeroSlideshow(slideshow) {
   }
 
   function playSlideVideo(slide) {
-    if (prefersReducedMotion) return;
+    if (slideshow.prefersReducedMotion) return;
 
     const video = slide.querySelector("video");
     if (!video) return;
@@ -135,130 +92,52 @@ function initHeroSlideshow(slideshow) {
     }
   }
 
-  let resizeTimer = null;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(updateHeight, 150);
-  });
-
-  // Theme editor text/image edits update the DOM live, which would
-  // otherwise leave the height stale.
-  let mutationTimer = null;
-  const observer = new MutationObserver(() => {
-    clearTimeout(mutationTimer);
-    mutationTimer = setTimeout(updateHeight, 50);
-  });
-  observer.observe(slideshow, {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: true,
-    attributeFilter: ["src", "srcset"],
-  });
-
-  let currentIndex = slides.findIndex((slide) =>
-    slide.classList.contains("is-active"),
-  );
-  if (currentIndex < 0) currentIndex = 0;
-
   // Lets listeners (e.g. the hero heading's initials-cluster reveal in
   // text-reveal.js) replay per-slide effects every time a slide becomes
   // active — including the one that's active from first paint, not just
-  // slides reached via goToSlide.
-  function announceActiveSlide() {
+  // slides reached via arrow/autoplay navigation.
+  function announceActiveSlide(slide) {
     document.dispatchEvent(
-      new CustomEvent("heroSlideActivated", {
-        detail: { slide: slides[currentIndex] },
-      }),
+      new CustomEvent("heroSlideActivated", { detail: { slide } }),
     );
   }
 
-  announceActiveSlide();
+  const slideshow = createCrossfadeSlideshow(root, {
+    slideSelector: ".j-hero-slideshow__slide",
+    track,
+    autoplayDelay,
+    arrowSelector: {
+      prev: ".j-hero-slideshow__arrow--prev",
+      next: ".j-hero-slideshow__arrow--next",
+    },
+    onChange(prevSlide, nextSlide) {
+      pauseSlideVideo(prevSlide);
+      playSlideVideo(nextSlide);
+      announceActiveSlide(nextSlide);
+      // Queue the slide after this one up next, keeping exactly one video
+      // hydrated ahead of playback at any given time.
+      hydrateUpcomingVideo();
+    },
+  });
 
-  // Give the second slide's video a head start now, rather than waiting
-  // for the first autoplay transition to trigger it.
   if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(hydrateDeferredSlideImages, { timeout: 2000 });
+    // Give the second slide's video a head start now, rather than waiting
+    // for the first autoplay transition to trigger it.
     window.requestIdleCallback(hydrateUpcomingVideo, { timeout: 2000 });
   } else {
+    setTimeout(hydrateDeferredSlideImages, 1000);
     setTimeout(hydrateUpcomingVideo, 1000);
   }
+
+  announceActiveSlide(slideshow.slides[slideshow.currentIndex]);
 
   // The initial slide's video (if any) has the autoplay attribute directly
   // in its HTML, which the browser honors regardless of the visitor's
   // motion preference — pause it immediately if they prefer reduced motion.
-  if (prefersReducedMotion) pauseSlideVideo(slides[currentIndex]);
-
-  if (slides.length < 2) return;
-
-  let timer = null;
-
-  function goToSlide(index) {
-    const nextIndex = (index + slides.length) % slides.length;
-    if (nextIndex === currentIndex) return;
-
-    pauseSlideVideo(slides[currentIndex]);
-
-    slides[currentIndex].classList.remove("is-active");
-    slides[currentIndex].setAttribute("aria-hidden", "true");
-    slides[currentIndex].setAttribute("inert", "");
-
-    slides[nextIndex].classList.add("is-active");
-    slides[nextIndex].removeAttribute("aria-hidden");
-    slides[nextIndex].removeAttribute("inert");
-
-    currentIndex = nextIndex;
-    playSlideVideo(slides[nextIndex]);
-    announceActiveSlide();
-    // Queue the slide after this one up next, keeping exactly one video
-    // hydrated ahead of playback at any given time.
-    hydrateUpcomingVideo();
+  if (slideshow.prefersReducedMotion) {
+    pauseSlideVideo(slideshow.slides[slideshow.currentIndex]);
   }
-
-  function next() {
-    goToSlide(currentIndex + 1);
-  }
-
-  function prev() {
-    goToSlide(currentIndex - 1);
-  }
-
-  function stopAutoplay() {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-  }
-
-  function startAutoplay() {
-    if (prefersReducedMotion) return;
-    stopAutoplay();
-    timer = setInterval(next, autoplayDelay);
-  }
-
-  // Each slide has its own copy of the prev/next arrows (overlaid on its
-  // image); delegate since only the active slide's copy is clickable.
-  slideshow.addEventListener("click", (event) => {
-    if (event.target.closest(".j-hero-slideshow__arrow--next")) {
-      next();
-      startAutoplay();
-    } else if (event.target.closest(".j-hero-slideshow__arrow--prev")) {
-      prev();
-      startAutoplay();
-    }
-  });
-
-  // No hover-pause here (unlike smaller inline carousels) — the hero
-  // spans nearly the full viewport width/height, so a visitor's cursor is
-  // almost always resting somewhere over it just from normal browsing,
-  // not necessarily an intent to pause. Pausing on that made autoplay
-  // look broken/stuck for anyone whose mouse happened to sit over the
-  // hero, only ever advancing when they explicitly clicked an arrow.
-  slideshow.addEventListener("focusin", stopAutoplay);
-  slideshow.addEventListener("focusout", startAutoplay);
-
-  // Lets the bfcache pageshow handler below restart autoplay without
-  // re-running init (the initialized guard at the top would skip it).
-  slideshow._heroSlideshowRestartAutoplay = startAutoplay;
 
   // Starting the autoplay timer immediately competes with the page's own
   // critical-path loading: each slide advance during the initial load
@@ -271,34 +150,12 @@ function initHeroSlideshow(slideshow) {
   // same autoplay behavior for real visitors while keeping the initial
   // load free of extra slide-driven downloads.
   if (document.readyState === "complete") {
-    startAutoplay();
+    slideshow.startAutoplay();
   } else {
-    window.addEventListener("load", startAutoplay, { once: true });
+    window.addEventListener("load", slideshow.startAutoplay, { once: true });
   }
+
+  return slideshow;
 }
 
-function initAllHeroSlideshows() {
-  document.querySelectorAll(".j-hero-slideshow").forEach(initHeroSlideshow);
-}
-
-document.addEventListener("DOMContentLoaded", initAllHeroSlideshows);
-
-// The theme editor replaces a section's markup wholesale on block
-// add/remove/reorder, leaving fresh elements with no listeners attached.
-document.addEventListener("shopify:section:load", (event) => {
-  event.target.querySelectorAll(".j-hero-slideshow").forEach(initHeroSlideshow);
-});
-
-// A reused tab (e.g. repeat "View your online store" clicks) is often
-// restored from the bfcache, which never fires DOMContentLoaded.
-window.addEventListener("pageshow", (event) => {
-  if (!event.persisted) return;
-
-  document.querySelectorAll(".j-hero-slideshow").forEach((slideshow) => {
-    if (typeof slideshow._heroSlideshowRestartAutoplay === "function") {
-      slideshow._heroSlideshowRestartAutoplay();
-    } else {
-      initHeroSlideshow(slideshow);
-    }
-  });
-});
+initCrossfadeSlideshowSections(".j-hero-slideshow", initHeroSlideshow);

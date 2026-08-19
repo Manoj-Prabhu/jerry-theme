@@ -144,19 +144,6 @@
 /* Same treatment as the Contact page's submit button, the cart drawer's
    Continue Shopping, and the product page's Add to Cart — white with a
    black border, gold fill on hover. */
-.j-about-story__button {
-  background: #fff;
-  border: 1px solid #1a1a1a;
-  border-radius: 0;
-  color: #1a1a1a !important;
-}
-
-.j-about-story__button:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a !important;
-}
-
 /* -------------------------
    Values grid
 -------------------------- */

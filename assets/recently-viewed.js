@@ -5,6 +5,7 @@
 // Shopify's CDN supports resizing any file URL on the fly via a `width`
 // query param, so this builds a proper srcset from it instead.
 function resizeImageUrl(src, width) {
+  if (!src) return "";
   const separator = src.includes("?") ? "&" : "?";
   return `${src}${separator}width=${width}`;
 }
@@ -32,10 +33,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const product = await response.json();
       const strings = window.themeStrings || {};
 
-      const images = (product.images && product.images.length
-        ? product.images
-        : [product.featured_image]
-      ).slice(0, 4);
+      const images = (
+        product.images && product.images.length
+          ? product.images
+          : [product.featured_image]
+      )
+        .filter(Boolean)
+        .slice(0, 4);
 
       const imagesHtml = images
         .map((src, index) => {

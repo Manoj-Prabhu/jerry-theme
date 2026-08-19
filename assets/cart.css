@@ -171,16 +171,6 @@ html.j-scroll-lock body {
   display: flex;
   width: fit-content;
   margin: 20px auto 0;
-  background: #fff;
-  border: 1px solid #1a1a1a;
-  border-radius: 0;
-  color: #1a1a1a !important;
-}
-
-.j-cart__continue:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a !important;
 }
 
 /* Empty-cart suggested collection */

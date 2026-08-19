@@ -76,6 +76,27 @@
   border-color: var(--color-primary);
 }
 
+/* White/black-border variant that fills gold on hover — used by the
+   product page's Add to Cart button, the cart drawer's Continue Shopping
+   button, the About page's story button, and the Contact page's submit
+   button. Use instead of .j-button-outline, not alongside it. */
+.j-button-outline--gold {
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  color: #1a1a1a;
+}
+
+.j-button-outline--gold:visited {
+  color: #1a1a1a;
+}
+
+.j-button-outline--gold:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
+}
+
 /* -------------------------
    Card
 -------------------------- */

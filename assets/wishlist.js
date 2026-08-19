@@ -69,6 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const PRUNE_CHECK_KEY = "jerry-wishlist-pruned-at";
   const PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
+  // A single /products.json request only ever returns one page (max 250
+  // products) — stores with a larger catalog would have anything past the
+  // first page wrongly pruned as "deleted". Checking each wishlisted
+  // handle individually via /products/{handle}.js instead scales with the
+  // wishlist size (typically a handful of items) rather than the catalog
+  // size, and needs no pagination.
   function pruneWishlistAgainstCatalog() {
     const wishlist = getWishlist();
     if (wishlist.length === 0) return;
@@ -76,13 +82,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const lastPruned = Number(localStorage.getItem(PRUNE_CHECK_KEY)) || 0;
     if (Date.now() - lastPruned < PRUNE_INTERVAL_MS) return;
 
-    fetch("/products.json?limit=250&fields=handle")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (!data || !Array.isArray(data.products)) return;
-
-        const validHandles = new Set(data.products.map((p) => p.handle));
-        const pruned = wishlist.filter((handle) => validHandles.has(handle));
+    Promise.all(
+      wishlist.map((handle) =>
+        fetch(`/products/${handle}.js`).then(
+          (response) => response.ok,
+          () => true, // network error: assume it still exists, don't prune
+        ),
+      ),
+    )
+      .then((results) => {
+        const pruned = wishlist.filter((_handle, index) => results[index]);
 
         if (pruned.length !== wishlist.length) {
           saveWishlist(pruned);

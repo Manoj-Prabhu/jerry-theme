@@ -154,19 +154,6 @@
 .j-contact__submit {
   width: 100%;
   margin-top: 6px;
-  /* Same treatment as the cart drawer's Continue Shopping button and the
-     product page's Add to Cart button — white with a black border, gold
-     fill on hover. */
-  background: #fff;
-  border: 1px solid #1a1a1a;
-  border-radius: 0;
-  color: #1a1a1a !important;
-}
-
-.j-contact__submit:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a !important;
 }
 
 .j-contact__success {

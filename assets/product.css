@@ -410,18 +410,8 @@
    .j-cart__continue in cart.css) — white/black outline by default,
    sharp corners, fills gold on hover. */
 #AddToCartButton {
-  background: #fff;
-  border: 1px solid #1a1a1a;
-  border-radius: 0;
   padding-top: 12px;
   padding-bottom: 12px;
-  color: #1a1a1a !important;
-}
-
-#AddToCartButton:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a !important;
 }
 
 

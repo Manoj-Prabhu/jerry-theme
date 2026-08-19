@@ -113,7 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     thumbList.addEventListener("scroll", updateArrowState, { passive: true });
-    window.addEventListener("resize", updateArrowState);
+
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateArrowState, 150);
+    });
 
     updateArrowState();
   }

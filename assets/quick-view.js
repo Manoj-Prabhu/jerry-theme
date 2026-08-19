@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Shopify's CDN supports resizing any file URL on the fly via a `width`
   // query param.
   function resizeImageUrl(src, width) {
+    if (!src) return "";
     const separator = src.includes("?") ? "&" : "?";
     return `${src}${separator}width=${width}`;
   }

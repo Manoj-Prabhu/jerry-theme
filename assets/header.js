@@ -82,7 +82,11 @@ class JerryHeader {
     if (typeof ResizeObserver === "function") {
       new ResizeObserver(setMarqueePosition).observe(bar);
     } else {
-      window.addEventListener("resize", setMarqueePosition);
+      let resizeTimer = null;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setMarqueePosition, 150);
+      });
     }
 
     if (closeButton) {
