@@ -103,22 +103,30 @@
         </div>
       {% endif %}
 
+      {% assign card_price_html = product.price | money %}
+
       <div class="j-product-card__price">
 
         {% if product.compare_at_price > product.price %}
 
           <span class="sale">
-            {{ product.price | money }}
+            {% if product.price_varies %}{{ 'product.from_price_html' | t: price: card_price_html }}{% else %}{{ card_price_html }}{% endif %}
           </span>
 
           <del>
             {{ product.compare_at_price | money }}
           </del>
 
+        {% elsif product.price_varies %}
+
+          <span>
+            {{ 'product.from_price_html' | t: price: card_price_html }}
+          </span>
+
         {% else %}
 
           <span>
-            {{ product.price | money }}
+            {{ card_price_html }}
           </span>
 
         {% endif %}

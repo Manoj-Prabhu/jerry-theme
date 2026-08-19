@@ -76,6 +76,10 @@
         <div class="j-collection-grid">
 
           {% paginate collection.products by 8, window_size: 1000 %}
+            {% if collection.products.size == 0 %}
+              <p class="j-collection-empty">{{ 'collection.empty' | t }}</p>
+            {% endif %}
+
             {% for product in collection.products %}
 
               {% render 'product-card', product: product, priority: forloop.first %}

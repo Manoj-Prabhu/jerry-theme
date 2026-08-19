@@ -260,6 +260,8 @@ html.j-scroll-lock body {
 
 .j-cart__footer form {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .j-cart__footer .j-button {
@@ -354,6 +356,14 @@ html.j-scroll-lock body {
   margin-bottom: 8px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-normal);
+  color: var(--color-text-light);
+}
+
+.j-cart-item__options {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-xs);
   color: var(--color-text-light);
 }
 
@@ -857,6 +867,28 @@ html.j-scroll-lock body {
   padding: 10px 20px;
   font-size: var(--font-size-sm);
   white-space: nowrap;
+}
+
+.j-cart-page__note-field {
+  margin-top: 16px;
+}
+
+.j-cart-page__note-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.j-cart-page__note-field textarea {
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  resize: vertical;
 }
 
 .j-cart-item__discounts {

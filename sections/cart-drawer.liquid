@@ -59,7 +59,7 @@
           <p class="j-cart__empty">
             {{ 'cart.empty' | t }}
           </p>
-          <a href="{{ routes.all_products_collection_url }}" class="j-button j-button-outline j-cart__continue">
+          <a href="{{ routes.all_products_collection_url }}" class="j-button j-button-outline--gold j-cart__continue">
             {{ 'cart.continue_shopping' | t }}
           </a>
 
@@ -116,6 +116,17 @@
       {% endunless %}
 
       {% form 'cart', cart %}
+        {% if cart.item_count > 0 %}
+          <div class="j-cart-page__note-field">
+            <label for="CartDrawerNote">{{ 'cart.notes' | t }}</label>
+            <textarea
+              id="CartDrawerNote"
+              name="note"
+              placeholder="{{ 'cart.notes_placeholder' | t }}"
+            >{{ cart.note }}</textarea>
+          </div>
+        {% endif %}
+
         <input
           type="submit"
           name="checkout"

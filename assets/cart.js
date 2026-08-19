@@ -265,6 +265,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="j-cart-item__title">${item.product_title}</p>
 
                 ${
+                  item.product_has_only_default_variant
+                    ? ""
+                    : `<ul class="j-cart-item__options">${item.options_with_values
+                        .map((option) => `<li>${option.name}: ${option.value}</li>`)
+                        .join("")}</ul>`
+                }
+
+                ${
                   item.selling_plan_allocation
                     ? `<p class="j-cart-item__selling-plan">${item.selling_plan_allocation.selling_plan.name}</p>`
                     : ""

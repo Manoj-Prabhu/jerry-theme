@@ -8,6 +8,13 @@
   gap: var(--space-8);
 }
 
+.j-collection-empty {
+  grid-column: 1 / -1;
+  padding: var(--space-8) 0;
+  text-align: center;
+  color: var(--color-text-light);
+}
+
 /* Small desktop / tablet landscape — sidebar makes 4 columns too narrow */
 
 @media (min-width: 993px) and (max-width: 1300px) {

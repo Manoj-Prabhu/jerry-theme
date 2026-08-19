@@ -37,6 +37,19 @@
       };
     </script>
 
+    {% comment %}
+      Shared engine used by the hero, testimonials, and brand story
+      slideshows — loaded here in <head> (rather than down by the other
+      deferred scripts near the closing body tag) because those sections'
+      own <script defer> tags for hero-slideshow.js/testimonials.js/
+      brand-story.js render as part of the page's main content, which
+      comes before the end of <body> in document order. Deferred scripts
+      run in document order, so this has to appear earlier in the HTML
+      than any of them, or they'd call createCrossfadeSlideshow() before
+      it's defined.
+    {% endcomment %}
+    <script src="{{ 'crossfade-slideshow.js' | asset_url }}" defer="defer"></script>
+
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
@@ -156,13 +169,6 @@
     {% sections 'footer-group' %}
 
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
-    {% comment %}
-      Shared engine used by the hero, testimonials, and brand story
-      slideshows — loaded unconditionally (rather than gated to specific
-      templates like those scripts are) since testimonials can now be
-      added to any page via the theme editor, not just the homepage.
-    {% endcomment %}
-    <script src="{{ 'crossfade-slideshow.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'text-reveal.js' | asset_url }}" defer="defer"></script>

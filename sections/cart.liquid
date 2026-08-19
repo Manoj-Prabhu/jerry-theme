@@ -75,7 +75,7 @@
         <p class="j-cart__empty">
           {{ 'cart.empty' | t }}
         </p>
-        <a href="{{ routes.all_products_collection_url }}" class="j-button j-cart__continue">
+        <a href="{{ routes.all_products_collection_url }}" class="j-button j-button-outline--gold j-cart__continue">
           {{ 'cart.continue_shopping' | t }}
         </a>
       {% else %}
@@ -127,6 +127,15 @@
       </form>
 
       {% form 'cart', cart %}
+        <div class="j-cart-page__note-field">
+          <label for="CartNote">{{ 'cart.notes' | t }}</label>
+          <textarea
+            id="CartNote"
+            name="note"
+            placeholder="{{ 'cart.notes_placeholder' | t }}"
+          >{{ cart.note }}</textarea>
+        </div>
+
         <input
           type="submit"
           name="checkout"
