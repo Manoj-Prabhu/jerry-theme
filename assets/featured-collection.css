@@ -586,7 +586,8 @@
 }
 
 .j-featured-collection .j-product-card__price,
-.j-featured-collection .j-product-card__unit-price {
+.j-featured-collection .j-product-card__unit-price,
+.j-featured-collection .j-product-card__swatches {
   display: none;
 }
 
