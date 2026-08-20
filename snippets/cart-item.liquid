@@ -58,7 +58,12 @@
       </button>
     </div>
 
-    <p>{{ item.final_price | money }}</p>
+    <p>
+      {% if item.original_price > item.final_price %}
+        <s class="j-cart-item__original-price">{{ item.original_price | money }}</s>
+      {% endif %}
+      {{ item.final_price | money }}
+    </p>
 
     {% if item.unit_price_measurement %}
       <p class="j-cart-item__unit-price">
@@ -87,7 +92,7 @@
         −
       </button>
 
-      <span>{{ item.quantity }}</span>
+      <span class="j-cart-item-qty">{{ item.quantity }}</span>
 
       <button
         class="j-cart-qty-plus"

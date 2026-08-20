@@ -92,6 +92,15 @@
   font-size: var(--font-size-xl);
   line-height: 1.5;
   font-style: normal;
+
+  /* Bounds wildly different quote lengths between blocks to the same
+     6 lines, so the JS-measured slide height (see updateHeight in
+     crossfade-slideshow.js) stays roughly stable across autoplay
+     transitions instead of visibly jumping. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
 }
 
 .j-testimonials__author {

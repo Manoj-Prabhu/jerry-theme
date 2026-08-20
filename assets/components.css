@@ -76,22 +76,32 @@
   border-color: var(--color-primary);
 }
 
-/* White/black-border variant that fills gold on hover — used by the
-   product page's Add to Cart button, the cart drawer's Continue Shopping
-   button, the About page's story button, and the Contact page's submit
-   button. Use instead of .j-button-outline, not alongside it. */
+/* Outline variant that fills with the merchant's accent color on hover —
+   used by the product page's Add to Cart button, the cart drawer's
+   Continue Shopping button, the About page's story button, and the
+   Contact page's submit button. Use instead of .j-button-outline, not
+   alongside it. Driven by the same button/accent theme settings as the
+   rest of the button system (border radius, button color, accent color)
+   rather than fixed colors/corners, so it responds to the merchant's
+   customization like every other button does. */
 .j-button-outline--gold {
-  background: #fff;
-  border: 1px solid #1a1a1a;
-  border-radius: 0;
-  color: #1a1a1a;
+  background: var(--color-background);
+  border: 1px solid var(--button-background);
+  border-radius: var(--style-border-radius-button);
+  color: var(--button-background);
 }
 
 .j-button-outline--gold:visited {
-  color: #1a1a1a;
+  color: var(--button-background);
 }
 
 .j-button-outline--gold:hover {
+  /* Fixed gold (not var(--color-accent), which is merchant-configurable
+     and used as text color in many other components — it's required to
+     stay a dark, high-contrast shade for those, so it can't safely double
+     as a light gold fill here). Text stays dark, not var(--button-text),
+     since white-on-gold fails contrast (~1.7:1); black-on-gold passes
+     comfortably (~10:1). Same gold already used in hero.css. */
   background: #f0c14b;
   border-color: #f0c14b;
   color: #1a1a1a;

@@ -294,8 +294,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   background: transparent;
@@ -469,8 +469,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   cursor: pointer;
 
@@ -500,8 +500,8 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   background: transparent;
@@ -514,8 +514,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
 }
 
@@ -857,8 +857,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   font-size: 22px;
 }
@@ -1260,16 +1260,13 @@
   }
 
   .header__icons {
-    gap: 6px;
+    gap: 2px;
   }
 
-  .j-header__search-toggle,
-  .j-header__wishlist,
-  .j-header__cart {
-    width: 30px;
-    height: 30px;
-  }
-
+  /* Icon glyphs shrink for visual density on very narrow screens, but the
+     buttons themselves keep their 44x44 tappable area (set in the base
+     rules above) rather than shrinking below the accessible tap-target
+     minimum — the icon is just centered in more of its own padding. */
   .header__icons svg,
   .j-header__search-toggle svg {
     width: 18px;
@@ -1277,8 +1274,6 @@
   }
 
   .j-header__account {
-    width: 30px;
-    height: 30px;
     --shopify-account-signed-in-avatar-size: 18px;
   }
 
@@ -1296,7 +1291,5 @@
 
   .j-menu-toggle {
     gap: 4px;
-    width: 26px;
-    height: 26px;
   }
 }

@@ -83,7 +83,11 @@
 }
 
 .j-new-products__view-all:hover {
-  color: #b8873a;
+  /* A deeper gold/amber, not the theme's lighter #f0c14b gold used
+     elsewhere for dark-background/button contexts — as plain text on a
+     white background, that lighter gold only reaches ~1.7:1 contrast,
+     well under the 4.5:1 WCAG minimum. This shade passes at ~5:1. */
+  color: #8a6d00;
 }
 
 /* Board — edge-to-edge photos, no card borders, badges are the only

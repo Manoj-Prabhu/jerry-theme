@@ -208,6 +208,7 @@
   },
   "localization": {
     "country_label": "Country/region",
+    "language_label": "Language",
     "shipping_to": "Shipping to",
     "update": "Update"
   },

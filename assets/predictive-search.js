@@ -126,10 +126,19 @@ document.addEventListener("DOMContentLoaded", () => {
     openResults();
   };
 
+  // Cancels the previous in-flight request whenever a new one starts, so a
+  // slower response to an earlier (shorter) query can't land after — and
+  // overwrite — the results for what the shopper has since typed.
+  let searchAbortController = null;
+
   const runPredictiveSearch = async (query) => {
+    if (searchAbortController) searchAbortController.abort();
+    searchAbortController = new AbortController();
+
     try {
       const response = await fetch(
         `/search/suggest?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&section_id=predictive-search`,
+        { signal: searchAbortController.signal },
       );
 
       const html = await response.text();
@@ -144,21 +153,28 @@ document.addEventListener("DOMContentLoaded", () => {
         openResults();
       }
     } catch (error) {
+      if (error.name === "AbortError") return;
       console.error(error);
     }
   };
 
   /* Events */
 
+  // Debounced so a fast typer doesn't fire a request per keystroke.
+  let searchDebounceTimer = null;
+
   input.addEventListener("input", () => {
     const query = input.value.trim();
 
     if (query.length < 2) {
+      clearTimeout(searchDebounceTimer);
+      if (searchAbortController) searchAbortController.abort();
       renderRecentSearches();
       return;
     }
 
-    runPredictiveSearch(query);
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => runPredictiveSearch(query), 200);
   });
 
   input.addEventListener("focus", () => {

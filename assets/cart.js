@@ -296,7 +296,14 @@ document.addEventListener("DOMContentLoaded", () => {
               </button>
             </div>
 
-            <p>${formatMoney(item.final_price)}</p>
+            <p>
+              ${
+                item.original_price > item.final_price
+                  ? `<s class="j-cart-item__original-price">${formatMoney(item.original_price)}</s>`
+                  : ""
+              }
+              ${formatMoney(item.final_price)}
+            </p>
 
             ${
               item.unit_price_measurement
@@ -331,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 −
               </button>
 
-              <span>${item.quantity}</span>
+              <span class="j-cart-item-qty">${item.quantity}</span>
 
               <button
                 class="j-cart-qty-plus"
@@ -443,6 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const quantity = Number(minusButton.dataset.quantity);
 
       if (quantity > 1) {
+        optimisticallySetQuantity(minusButton, quantity - 1);
         updateCartQuantity(minusButton.dataset.key, quantity - 1);
       }
       return;
@@ -452,9 +460,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (plusButton) {
       const quantity = Number(plusButton.dataset.quantity);
 
+      optimisticallySetQuantity(plusButton, quantity + 1);
       updateCartQuantity(plusButton.dataset.key, quantity + 1);
     }
   });
+
+  // Updates the visible quantity the instant a +/- button is clicked,
+  // rather than leaving the old number on screen for the full network
+  // round-trip — refreshCart() (called at the end of updateCartQuantity)
+  // still re-renders with the authoritative server value right after, so
+  // this is purely about removing the perceived lag, not the source of
+  // truth.
+  function optimisticallySetQuantity(button, quantity) {
+    const qtyEl = button
+      .closest(".j-cart-item__quantity")
+      ?.querySelector(".j-cart-item-qty");
+    if (qtyEl) qtyEl.textContent = quantity;
+  }
 
   // -------------------------
   // Refresh Cart
@@ -601,8 +623,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      const strings = window.themeStrings || {};
+      const submitButton = productForm.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton ? submitButton.textContent : "";
+
       try {
         setLoading(true);
+        if (submitButton) {
+          submitButton.textContent = strings.adding || "Adding...";
+        }
 
         const response = await fetch("/cart/add.js", {
           method: "POST",
@@ -619,8 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }),
         });
 
-        const strings = window.themeStrings || {};
-
         if (!response.ok) {
           const error = await response.json();
           throw new Error(
@@ -634,12 +661,14 @@ document.addEventListener("DOMContentLoaded", () => {
         openCartDrawer();
       } catch (error) {
         console.error(error);
-        const strings = window.themeStrings || {};
         showFormError(
           error.message || strings.addToCartError || "Unable to add item to cart.",
         );
       } finally {
         setLoading(false);
+        if (submitButton) {
+          submitButton.textContent = originalButtonText;
+        }
       }
     });
   }

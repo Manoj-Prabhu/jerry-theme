@@ -104,6 +104,16 @@
         "label": "Border radius",
         "info": "General rounding scale used across badges, swatches, cart notices, and other UI elements.",
         "default": 10
+      },
+      {
+        "type": "range",
+        "id": "input_corner_radius",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.input_corner_radius",
+        "default": 4
       }
     ]
   },
@@ -269,16 +279,6 @@
         "id": "border_color",
         "label": "Border color",
         "default": "#E5E7EB"
-      },
-      {
-        "type": "range",
-        "id": "input_corner_radius",
-        "min": 0,
-        "max": 10,
-        "step": 1,
-        "unit": "px",
-        "label": "t:labels.input_corner_radius",
-        "default": 4
       }
     ]
   },
