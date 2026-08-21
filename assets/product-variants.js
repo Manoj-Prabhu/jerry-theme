@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const stickyButton = document.getElementById("StickyAddToCart");
   const comparePrice = document.getElementById("ProductComparePrice");
   const inventoryStatus = document.getElementById("ProductInventoryStatus");
+  const pickupAvailability = document.getElementById(
+    "ProductPickupAvailability",
+  );
   const quantityInput = document.getElementById("Quantity");
   const sellingPlanInput = document.getElementById("SelectedSellingPlan");
   const LOW_STOCK_THRESHOLD = 3;
@@ -141,6 +144,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // The pickup availability shown on first paint is server-rendered for
+  // whichever variant loaded the page (see product.liquid) — it never
+  // updates on its own once a shopper picks a different variant here, so
+  // this has to re-render it from the same store-availability data each
+  // variant carries in #ProductVariantsJson.
+  function updatePickupAvailability(variant) {
+    if (!pickupAvailability) return;
+
+    if (!variant.hasPickup) {
+      pickupAvailability.hidden = true;
+      return;
+    }
+
+    const strings = window.themeStrings || {};
+    const template = variant.pickupAvailable
+      ? strings.pickupAvailableHtml || "Pickup available at __LOCATION__"
+      : strings.pickupUnavailableHtml ||
+        "Pickup currently unavailable at __LOCATION__";
+
+    const message = pickupAvailability.querySelector("p");
+    if (message) {
+      message.textContent = template.replace(
+        "__LOCATION__",
+        variant.pickupLocation || "",
+      );
+    }
+
+    pickupAvailability.hidden = false;
+  }
+
   function updateQuantityLimit(variant) {
     if (!quantityInput) return;
 
@@ -166,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     variantInput.value = variant.id;
 
     updateInventoryStatus(variant);
+    updatePickupAvailability(variant);
     updateQuantityLimit(variant);
 
     if (comparePrice) {
@@ -242,6 +276,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (inventoryStatus) {
           inventoryStatus.hidden = true;
+        }
+
+        if (pickupAvailability) {
+          pickupAvailability.hidden = true;
         }
       }
 

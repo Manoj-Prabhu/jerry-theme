@@ -113,20 +113,149 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${src}${separator}width=${width}`;
   }
 
-  function getProductImages(product) {
+  // Includes every media type (image/video/external_video/model), not
+  // just images, so rich product media (a demo video, a 3D model) shows
+  // up in Quick View the same way it does on the full product page —
+  // previously this filtered everything down to images only, silently
+  // dropping any video or 3D content a product had.
+  function getProductMedia(product) {
     if (product.media && product.media.length) {
-      return product.media
-        .filter((media) => media.media_type === "image")
-        .map((media) => ({
-          id: media.id,
-          src: media.preview_image ? media.preview_image.src : media.src,
-        }));
+      return product.media.map((media) => ({
+        id: media.id,
+        mediaType: media.media_type,
+        src: media.preview_image ? media.preview_image.src : media.src,
+        alt: media.alt,
+        sources: media.sources || [],
+        host: media.host,
+        externalId: media.external_id,
+      }));
     }
 
     return (product.images || []).map((src, index) => ({
       id: `index-${index}`,
+      mediaType: "image",
       src,
     }));
+  }
+
+  // Loads the model-viewer UI on first use only, via Shopify's own
+  // Shopify.loadFeatures API — the sanctioned way themes pull this in
+  // (same mechanism product.liquid's model_viewer_tag filter relies on
+  // server-side), rather than guessing at a CDN script URL directly. Only
+  // needed for the rare product that has a 3D model attached.
+  let modelViewerFeaturePromise = null;
+
+  function loadModelViewerFeature() {
+    if (modelViewerFeaturePromise) return modelViewerFeaturePromise;
+
+    modelViewerFeaturePromise = new Promise((resolve, reject) => {
+      if (!window.Shopify || typeof window.Shopify.loadFeatures !== "function") {
+        reject(new Error("[quick-view] Shopify.loadFeatures unavailable"));
+        return;
+      }
+
+      window.Shopify.loadFeatures([
+        {
+          name: "model-viewer-ui",
+          version: "1.0",
+          onLoad: (errors) => (errors ? reject(errors) : resolve()),
+        },
+      ]);
+    });
+
+    return modelViewerFeaturePromise;
+  }
+
+  // Builds the markup for whichever media type is currently active in the
+  // main viewer — mirrors the media_type branches product.liquid handles
+  // server-side (image_tag / video_tag / external_video_tag /
+  // model_viewer_tag), since this modal has to build the same thing from
+  // the Product JS API's JSON instead of Liquid.
+  function renderMainMedia(media) {
+    if (media.mediaType === "video" && media.sources.length) {
+      const sourcesHtml = media.sources
+        .map(
+          (source) =>
+            `<source src="${source.url}" type="${source.mime_type}">`,
+        )
+        .join("");
+
+      return `
+        <video
+          id="QuickViewMainImage"
+          class="j-quick-view__main-video"
+          controls
+          controlslist="nodownload"
+          playsinline
+          poster="${resizeImageUrl(media.src, 600)}"
+        >
+          ${sourcesHtml}
+        </video>
+      `;
+    }
+
+    if (media.mediaType === "external_video" && media.host && media.externalId) {
+      const embedUrl =
+        media.host === "vimeo"
+          ? `https://player.vimeo.com/video/${media.externalId}`
+          : `https://www.youtube.com/embed/${media.externalId}`;
+
+      return `
+        <div class="j-quick-view__main-embed" id="QuickViewMainImage">
+          <iframe
+            src="${embedUrl}"
+            title="${media.alt || ""}"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      `;
+    }
+
+    if (media.mediaType === "model" && media.sources.length) {
+      const modelSource =
+        media.sources.find((source) => source.format === "glb") ||
+        media.sources[0];
+
+      return `
+        <model-viewer
+          id="QuickViewMainImage"
+          class="j-quick-view__main-model"
+          src="${modelSource.url}"
+          poster="${resizeImageUrl(media.src, 600)}"
+          camera-controls
+          ar
+        ></model-viewer>
+      `;
+    }
+
+    return `
+      <img
+        id="QuickViewMainImage"
+        src="${resizeImageUrl(media.src, 600)}"
+        srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(media.src, width)} ${width}w`).join(", ")}"
+        sizes="(max-width: 700px) 90vw, 420px"
+        alt="${media.alt || ""}"
+      >
+    `;
+  }
+
+  // Call after inserting renderMainMedia()'s output into the DOM — the
+  // model-viewer feature (and its interactive rotate/zoom controls) can
+  // only attach to the actual <model-viewer> element once it exists on
+  // the page, not while its markup is still just a string.
+  function activateModelViewerIfPresent() {
+    const modelViewer = content.querySelector("model-viewer#QuickViewMainImage");
+    if (!modelViewer) return;
+
+    loadModelViewerFeature()
+      .then(() => {
+        if (window.Shopify && window.Shopify.ModelViewerUI) {
+          new window.Shopify.ModelViewerUI(modelViewer);
+        }
+      })
+      .catch((error) => console.error(error));
   }
 
   function colorKey(value) {
@@ -207,16 +336,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const variant = selectedVariant;
     const strings = window.themeStrings || {};
 
-    const images = getProductImages(product);
+    const media = getProductMedia(product);
 
-    const mainImageEntry = (variant.featured_image &&
-      images.find(
-        (image) =>
-          normalizeSrc(image.src) === normalizeSrc(variant.featured_image.src),
+    const activeMedia = (variant.featured_image &&
+      media.find(
+        (item) =>
+          item.mediaType === "image" &&
+          normalizeSrc(item.src) === normalizeSrc(variant.featured_image.src),
       )) ||
-      images[0] || { id: null, src: product.featured_image };
-
-    const mainImage = mainImageEntry.src;
+      media[0] || { id: null, mediaType: "image", src: product.featured_image };
 
     const onSale = variant.compare_at_price > variant.price;
 
@@ -226,28 +354,34 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="j-quick-view__gallery">
 
           <div class="j-quick-view__main-image">
-            <img
-              id="QuickViewMainImage"
-              src="${resizeImageUrl(mainImage, 600)}"
-              srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(mainImage, width)} ${width}w`).join(", ")}"
-              sizes="(max-width: 700px) 90vw, 420px"
-              alt="${product.title}"
-            >
+            ${renderMainMedia(activeMedia)}
           </div>
 
           ${
-            images.length > 1
+            media.length > 1
               ? `
             <div class="j-quick-view__thumbnails">
-              ${images
+              ${media
                 .map(
-                  (image, index) => `
+                  (item, index) => `
                 <button
                   type="button"
-                  class="j-quick-view-thumbnail ${normalizeSrc(image.src) === normalizeSrc(mainImage) ? "is-active" : ""}"
-                  data-image="${image.src}"
+                  class="j-quick-view-thumbnail ${item.id === activeMedia.id ? "is-active" : ""}"
+                  data-media-id="${item.id}"
+                  data-media-type="${item.mediaType}"
+                  ${item.mediaType === "image" ? `data-image="${item.src}"` : ""}
                 >
-                  <img src="${resizeImageUrl(image.src, 120)}" alt="${product.title} ${index + 1}">
+                  <img src="${resizeImageUrl(item.src, 120)}" alt="${product.title} ${index + 1}">
+                  ${
+                    item.mediaType === "video" || item.mediaType === "external_video"
+                      ? '<span class="j-quick-view-thumbnail__icon" aria-hidden="true">▶</span>'
+                      : ""
+                  }
+                  ${
+                    item.mediaType === "model"
+                      ? '<span class="j-quick-view-thumbnail__icon j-quick-view-thumbnail__icon--model" aria-hidden="true">3D</span>'
+                      : ""
+                  }
                 </button>
               `,
                 )
@@ -386,6 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     attachContentEvents();
+    activateModelViewerIfPresent();
 
     cleanupMascot();
     const mascotCanvas = document.getElementById("QuickViewMascotCanvas");
@@ -411,47 +546,58 @@ document.addEventListener("DOMContentLoaded", () => {
     content.querySelectorAll(".j-quick-view-thumbnail").forEach((thumb) => {
       thumb.addEventListener("click", () => {
         const imageSrc = thumb.dataset.image;
-        const sameImageVariants = currentProduct.variants.filter(
-          (v) =>
-            v.featured_image &&
-            normalizeSrc(v.featured_image.src) === normalizeSrc(imageSrc),
-        );
 
-        if (sameImageVariants.length) {
-          // Only adopt the option(s) this image actually determines (e.g.
-          // Color) — if every variant sharing this image agrees on a given
-          // option index, that index is image-specific. Any other option
-          // (e.g. Size) keeps whatever the shopper already had selected,
-          // instead of jumping to whichever variant is first for this image.
-          const mergedOptions = selectedVariant.options.map(
-            (currentValue, index) => {
-              const isImageSpecific = sameImageVariants.every(
-                (v) => v.options[index] === sameImageVariants[0].options[index],
-              );
-              return isImageSpecific
-                ? sameImageVariants[0].options[index]
-                : currentValue;
-            },
+        // Only image-type thumbnails can correspond to a variant's
+        // featured_image — video/3D-model thumbnails just swap the main
+        // viewer below, they never drive variant selection.
+        if (thumb.dataset.mediaType === "image" && imageSrc) {
+          const sameImageVariants = currentProduct.variants.filter(
+            (v) =>
+              v.featured_image &&
+              normalizeSrc(v.featured_image.src) === normalizeSrc(imageSrc),
           );
 
-          const matchingVariant =
-            currentProduct.variants.find((v) =>
-              v.options.every((val, i) => val === mergedOptions[i]),
-            ) || sameImageVariants[0];
+          if (sameImageVariants.length) {
+            // Only adopt the option(s) this image actually determines (e.g.
+            // Color) — if every variant sharing this image agrees on a given
+            // option index, that index is image-specific. Any other option
+            // (e.g. Size) keeps whatever the shopper already had selected,
+            // instead of jumping to whichever variant is first for this image.
+            const mergedOptions = selectedVariant.options.map(
+              (currentValue, index) => {
+                const isImageSpecific = sameImageVariants.every(
+                  (v) =>
+                    v.options[index] === sameImageVariants[0].options[index],
+                );
+                return isImageSpecific
+                  ? sameImageVariants[0].options[index]
+                  : currentValue;
+              },
+            );
 
-          if (matchingVariant.id !== selectedVariant.id) {
-            selectedVariant = matchingVariant;
-            render();
-            return;
+            const matchingVariant =
+              currentProduct.variants.find((v) =>
+                v.options.every((val, i) => val === mergedOptions[i]),
+              ) || sameImageVariants[0];
+
+            if (matchingVariant.id !== selectedVariant.id) {
+              selectedVariant = matchingVariant;
+              render();
+              return;
+            }
           }
         }
 
-        const mainImage = document.getElementById("QuickViewMainImage");
-        if (mainImage) {
-          mainImage.src = resizeImageUrl(imageSrc, 600);
-          mainImage.srcset = [300, 450, 600, 800]
-            .map((width) => `${resizeImageUrl(imageSrc, width)} ${width}w`)
-            .join(", ");
+        const mediaId = Number(thumb.dataset.mediaId) || thumb.dataset.mediaId;
+        const media = getProductMedia(currentProduct).find(
+          (item) => String(item.id) === String(mediaId),
+        );
+
+        const mainImageWrap = content.querySelector(".j-quick-view__main-image");
+
+        if (media && mainImageWrap) {
+          mainImageWrap.innerHTML = renderMainMedia(media);
+          activateModelViewerIfPresent();
         }
 
         content.querySelectorAll(".j-quick-view-thumbnail").forEach((t) => {

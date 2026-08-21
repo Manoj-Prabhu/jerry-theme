@@ -188,7 +188,14 @@
       "next": "Next"
     },
     "back_to_top": "Back to top",
-    "view_all": "View All"
+    "view_all": "View All",
+    "share": {
+      "facebook": "Share on Facebook",
+      "x": "Share on X",
+      "pinterest": "Pin on Pinterest",
+      "label": "Share",
+      "link_copied": "Link copied"
+    }
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
@@ -224,6 +231,7 @@
     "unavailable": "Unavailable",
     "add_to_cart_error": "Unable to add item to cart.",
     "sold_out": "Sold Out",
+    "sale": "Sale",
     "low_stock_html": "Only {{ count }} left in stock",
     "pickup_available_html": "Pickup available at {{ location }}",
     "pickup_unavailable_html": "Pickup currently unavailable at {{ location }}",

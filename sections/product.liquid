@@ -58,7 +58,7 @@
                   alt: media.alt | default: main_image_alt
               }}
             {% when 'video' %}
-              {{ media | video_tag: image_size: '1000x', controls: true }}
+              {{ media | video_tag: image_size: '1000x', controls: true, controlslist: 'nodownload' }}
             {% when 'external_video' %}
               {{ media | external_video_tag: image_size: '1000x' }}
             {% when 'model' %}
@@ -366,7 +366,10 @@
               "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
               "inventoryManagement": {{ variant.inventory_management | json }},
               "inventoryQuantity": {{ variant.inventory_quantity | json }},
-              "inventoryPolicy": {{ variant.inventory_policy | json }}
+              "inventoryPolicy": {{ variant.inventory_policy | json }},
+              "hasPickup": {{ variant.store_availabilities.size | json }},
+              "pickupAvailable": {{ variant.store_availabilities.first.available | json }},
+              "pickupLocation": {{ variant.store_availabilities.first.location.name | json }}
             }{% unless forloop.last %},{% endunless %}
           {% endfor %}
         ]{% endcapture %}

@@ -33,7 +33,10 @@
         updateQuantityError: {{ 'cart.update_quantity_error' | t | json }},
         decreaseQuantity: {{ 'cart.decrease_quantity' | t | json }},
         increaseQuantity: {{ 'cart.increase_quantity' | t | json }},
-        quickView: {{ 'product.quick_view' | t | json }}
+        quickView: {{ 'product.quick_view' | t | json }},
+        pickupAvailableHtml: {{ 'product.pickup_available_html' | t: location: '__LOCATION__' | json }},
+        pickupUnavailableHtml: {{ 'product.pickup_unavailable_html' | t: location: '__LOCATION__' | json }},
+        linkCopied: {{ 'general.share.link_copied' | t | json }}
       };
     </script>
 

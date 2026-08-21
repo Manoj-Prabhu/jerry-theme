@@ -1,0 +1,515 @@
+.j-featured-product-section {
+  padding: var(--space-16) 0;
+}
+
+.j-featured-product__intro {
+  max-width: 640px;
+  margin: 0 auto var(--space-10);
+  text-align: center;
+}
+
+.j-featured-product__heading {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-2xl, 32px);
+}
+
+.j-featured-product__subtext {
+  margin: 0;
+  color: var(--color-text-light);
+}
+
+.j-featured-product__placeholder {
+  text-align: center;
+  color: var(--color-text-light);
+}
+
+/* Card */
+
+.j-featured-product-card {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  grid-template-areas: "gallery content";
+  gap: var(--space-10);
+  align-items: center;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, var(--radius-md));
+  background: var(--color-surface);
+}
+
+.j-featured-product__gallery {
+  grid-area: gallery;
+}
+
+.j-featured-product__content {
+  grid-area: content;
+}
+
+/* Content div is first in the DOM (for source-order/accessibility
+   reasons — buy box before gallery), but the default look shows the
+   image on the left, so the base grid-template-areas above already
+   overrides DOM order to put gallery first visually. This modifier
+   swaps the area order for the "Image position: Right" setting. */
+.j-featured-product-card--image-right {
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-areas: "content gallery";
+}
+
+/* Gallery */
+
+.j-featured-product__main-media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.j-featured-product__media-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity var(--transition, 0.3s ease);
+}
+
+.j-featured-product__media-slide.is-active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.j-featured-product__image,
+.j-featured-product__main-media video,
+.j-featured-product__main-media model-viewer,
+.j-featured-product__placeholder-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.j-featured-product__thumbnails-wrap {
+  position: relative;
+  margin-top: var(--space-3);
+  overflow: hidden;
+}
+
+.j-featured-product__thumbnails {
+  display: flex;
+  gap: var(--space-6);
+  /* Breathing room before the first and after the last thumbnail —
+     also keeps both from sitting directly under the overlaid arrow
+     buttons when they're showing. */
+  padding: 0 56px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.j-featured-product__thumbnails::-webkit-scrollbar {
+  display: none;
+}
+
+.j-featured-product__thumb {
+  position: relative;
+  /* Sized as a share of the row's own actual width (5 thumbnails + 4
+     gaps between them), not a guessed fixed pixel value — so exactly 5
+     always fit whatever width the row really renders at, and a 6th+
+     thumbnail can only ever be reached by scrolling. */
+  flex: 0 0 calc((100% - 4 * var(--space-6)) / 5);
+  max-width: 140px;
+  aspect-ratio: 108 / 140;
+  scroll-snap-align: start;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-background);
+  cursor: pointer;
+  transition: border-color var(--transition-fast, 0.15s ease);
+}
+
+.j-featured-product__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.j-featured-product__thumb:hover {
+  border-color: var(--color-border);
+}
+
+.j-featured-product__thumb.is-active {
+  border-color: #1a1a1a;
+}
+
+.j-featured-product__thumb-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(26, 26, 26, 0.55);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast, 0.15s ease),
+    opacity var(--transition-fast, 0.15s ease);
+}
+
+/* The unconditional `display: flex` above ties in specificity with the
+   browser's built-in `[hidden] { display: none }` rule and — since this
+   stylesheet loads after the UA default — wins the tie, silently
+   defeating JS's `.hidden = true`. This re-asserts it explicitly. */
+.j-featured-product__thumb-arrow[hidden] {
+  display: none;
+}
+
+.j-featured-product__thumb-arrow:hover {
+  background: rgba(26, 26, 26, 0.85);
+}
+
+.j-featured-product__thumb-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.j-featured-product__thumb-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.j-featured-product__thumb-arrow--prev {
+  left: var(--space-2);
+}
+
+.j-featured-product__thumb-arrow--next {
+  right: var(--space-2);
+}
+
+.j-featured-product__thumb-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.j-featured-product__thumb-icon--model {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+}
+
+/* Content */
+
+.j-featured-product__eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-light);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.j-featured-product__title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-xl);
+  line-height: 1.25;
+}
+
+.j-featured-product__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.j-featured-product__price-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.j-featured-product__price-compare {
+  color: var(--color-text-light);
+}
+
+.j-featured-product__price {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-semibold);
+}
+
+.j-featured-product__badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+}
+
+.j-featured-product__badge--sale {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.j-featured-product__badge--percent {
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.j-featured-product__description {
+  margin-bottom: var(--space-5);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.j-featured-product__description p:last-child {
+  margin-bottom: 0;
+}
+
+.j-featured-product__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.j-featured-product__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.j-featured-product__option-header {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.j-featured-product__option-header label {
+  font-weight: var(--font-semibold);
+}
+
+.j-featured-product__option-value {
+  color: var(--color-text-light);
+}
+
+.j-featured-product__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.j-featured-product__swatch {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.j-featured-product__swatch-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.2);
+  background-size: cover;
+  background-position: center;
+}
+
+.j-featured-product__swatch.is-active .j-featured-product__swatch-inner {
+  border: 2px solid #1a1a1a;
+  outline: 1px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+.j-featured-product__swatch:hover .j-featured-product__swatch-inner {
+  border-color: #f0c14b;
+}
+
+.j-featured-product__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.j-featured-product__pill {
+  min-width: 40px;
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast, 0.15s ease),
+    background-color var(--transition-fast, 0.15s ease);
+}
+
+.j-featured-product__pill.is-active {
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* Quantity + Add to Cart, side by side */
+
+.j-featured-product__cart-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.j-featured-product__qty-control {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  /* Matches the Add to Cart button's own border color/radius (not a
+     fixed gray box) so the two controls read as one connected group
+     instead of visually clashing. */
+  border: 1px solid var(--button-background);
+  border-radius: var(--style-border-radius-button);
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.j-featured-product__qty-control button {
+  width: 40px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--button-background);
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: var(--font-semibold);
+  transition: background-color var(--transition-fast, 0.15s ease);
+}
+
+.j-featured-product__qty-control button:hover {
+  background: color-mix(in srgb, var(--button-background) 8%, transparent);
+}
+
+.j-featured-product__qty-control input {
+  width: 40px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  text-align: center;
+  font: inherit;
+  font-weight: var(--font-semibold);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.j-featured-product__qty-control input::-webkit-outer-spin-button,
+.j-featured-product__qty-control input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.j-featured-product__add {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 44px;
+}
+
+.j-featured-product__add svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.j-featured-product__form-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: var(--font-size-sm);
+}
+
+.j-featured-product__payment-button {
+  margin-top: -4px;
+}
+
+/* Pickup */
+
+.j-featured-product__pickup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: var(--space-3) 0 0;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.j-featured-product__pickup svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.j-featured-product__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-4);
+  color: var(--color-text);
+  font-weight: var(--font-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.j-featured-product__link svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition-fast, 0.15s ease);
+}
+
+.j-featured-product__link:hover svg {
+  transform: translateX(3px);
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .j-featured-product-card,
+  .j-featured-product-card--image-right {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+    padding: var(--space-5);
+    gap: var(--space-6);
+  }
+
+  /* Image always shows above the buy box on mobile, regardless of the
+     left/right setting used on desktop — there's no meaningful "side" on
+     a single narrow column. */
+  .j-featured-product__gallery {
+    order: -1;
+  }
+}

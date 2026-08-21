@@ -254,6 +254,10 @@
         "products_to_show": 6
       }
     },
+    "featured_product": {
+      "type": "featured-product",
+      "settings": {}
+    },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
@@ -302,8 +306,9 @@
     "hero",
     "shop_by_category",
     "featured_collection",
-    "brand_story",
     "new_products",
+    "featured_product",
+    "brand_story",
     "testimonials"
   ]
 }
