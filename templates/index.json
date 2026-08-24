@@ -170,6 +170,26 @@
         "products_to_show": 2
       }
     },
+    "new_products": {
+      "type": "new-products",
+      "settings": {
+        "heading": "New Arrivals",
+        "description": "",
+        "collection": "traditional-cultural-collection",
+        "products_to_show": 6
+      }
+    },
+    "featured_product": {
+      "type": "featured-product",
+      "settings": {
+        "product": "ruby-red-tweed-blazer-mini-skirt-set",
+        "heading": "Featured product",
+        "subtext": "You will love it..",
+        "eyebrow": "crunching",
+        "show_description": true,
+        "image_position": "right"
+      }
+    },
     "brand_story": {
       "type": "brand-story",
       "blocks": {
@@ -244,19 +264,6 @@
         "button_label": "Learn More",
         "button_link": "shopify://pages/about-us"
       }
-    },
-    "new_products": {
-      "type": "new-products",
-      "settings": {
-        "heading": "New Arrivals",
-        "description": "",
-        "collection": "traditional-cultural-collection",
-        "products_to_show": 6
-      }
-    },
-    "featured_product": {
-      "type": "featured-product",
-      "settings": {}
     },
     "testimonials": {
       "type": "testimonials",
