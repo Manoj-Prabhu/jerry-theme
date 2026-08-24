@@ -440,6 +440,11 @@
 
 .j-featured-product__add {
   flex: 1;
+  /* .j-button sets white-space: nowrap, and flex items default to
+     min-width: auto — together those stopped this button shrinking
+     below "Add to Cart"'s own text width, so on narrow phones it
+     overflowed past the row instead of actually shrinking. */
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -544,5 +549,19 @@
     padding: 0 var(--space-4);
     width: 100%;
     flex: 0 0 auto;
+  }
+}
+
+/* Small phones (iPhone SE/12/13 mini, small Android widths) don't have
+   room for the quantity stepper and "Add to Cart" side by side without
+   squeezing the button's text — stack the button under the stepper
+   instead of letting it overflow. */
+@media (max-width: 420px) {
+  .j-featured-product__cart-row {
+    flex-wrap: wrap;
+  }
+
+  .j-featured-product__add {
+    flex-basis: 100%;
   }
 }
