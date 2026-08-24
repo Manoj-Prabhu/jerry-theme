@@ -13,7 +13,7 @@
     assign show_sold_out = true
   endif
 
-  if settings.show_sale_badge and product.available and product.compare_at_price > product.price
+  if settings.show_sale_badge and product.available and product.compare_at_price_max > product.price
     assign show_sale = true
   endif
 

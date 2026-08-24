@@ -32,3 +32,47 @@
     flex-direction: column;
   }
 }
+
+/* Article / page results (product results reuse .j-product-card from
+   featured-collection.css, which is loaded globally). */
+
+.j-search-result {
+  display: flex;
+  flex-direction: column;
+}
+
+.j-search-result__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.j-search-result__image {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.j-search-result__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.j-search-result__type {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+}
+
+.j-search-result__excerpt {
+  color: var(--color-text-light);
+}

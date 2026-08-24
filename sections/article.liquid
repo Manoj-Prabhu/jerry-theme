@@ -33,7 +33,7 @@
     </div>
   {% endif %}
 
-  <div class="j-article__content">
+  <div class="j-article__content rte">
     {{ article.content }}
   </div>
 
@@ -51,6 +51,113 @@
           {{ blog.next_article.title }} →
         </a>
       {% endif %}
+
+    </div>
+  {% endif %}
+
+  {% if blog.comments_enabled? %}
+    <div class="j-article__comments" id="Comments">
+
+      <h2 class="j-article__comments-title">
+        {{ 'blog.article_comments' | t }}
+        {% if article.comments_count > 0 %}({{ article.comments_count }}){% endif %}
+      </h2>
+
+      {% paginate article.comments by 10 %}
+
+        {% if article.comments_count > 0 %}
+          <ul class="j-article__comment-list">
+            {% for comment in article.comments %}
+              <li class="j-article__comment" id="Comment-{{ comment.id }}">
+                <p class="j-article__comment-author">{{ comment.author }}</p>
+                <p class="j-article__comment-date">{{ comment.created_at | date: '%B %d, %Y' }}</p>
+                <div class="j-article__comment-content">{{ comment.content }}</div>
+              </li>
+            {% endfor %}
+          </ul>
+
+          {% if paginate.pages > 1 %}
+            <div class="j-pagination">
+              {{ paginate | default_pagination }}
+            </div>
+          {% endif %}
+        {% else %}
+          <p class="j-article__no-comments">{{ 'blog.no_comments' | t }}</p>
+        {% endif %}
+
+      {% endpaginate %}
+
+      {% form 'new_comment', article, id: 'CommentForm' %}
+
+        <h3 class="j-article__comment-form-title">{{ 'blog.comment_form_title' | t }}</h3>
+
+        {% if form.posted_successfully? %}
+          <p class="j-article__comment-message j-article__comment-message--success" role="status">
+            {% if blog.moderated? %}
+              {{ 'blog.comment_success_moderated' | t }}
+            {% else %}
+              {{ 'blog.comment_success' | t }}
+            {% endif %}
+          </p>
+        {% elsif form.errors %}
+          <div class="j-article__comment-message j-article__comment-message--error" role="alert">
+            <p>{{ 'blog.comment_error_heading' | t }}</p>
+            <ul>
+              {% for field in form.errors %}
+                <li>
+                  {% if field == 'form' %}
+                    {{ form.errors.messages[field] }}
+                  {% else %}
+                    {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="j-article__comment-field">
+          <label for="CommentAuthor">{{ 'blog.comment_form_name' | t }}</label>
+          <input
+            type="text"
+            id="CommentAuthor"
+            name="comment[author]"
+            value="{{ form.author }}"
+            autocomplete="name"
+            required
+            {% if form.errors contains 'author' %}aria-invalid="true"{% endif %}
+          >
+        </div>
+
+        <div class="j-article__comment-field">
+          <label for="CommentEmail">{{ 'blog.comment_form_email' | t }}</label>
+          <input
+            type="email"
+            id="CommentEmail"
+            name="comment[email]"
+            value="{{ form.email }}"
+            autocomplete="email"
+            required
+            {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}
+          >
+        </div>
+
+        <div class="j-article__comment-field">
+          <label for="CommentBody">{{ 'blog.comment_form_body' | t }}</label>
+          <textarea
+            id="CommentBody"
+            name="comment[body]"
+            rows="5"
+            required
+            {% if form.errors contains 'body' %}aria-invalid="true"{% endif %}
+          >{{ form.body }}</textarea>
+        </div>
+
+        <button type="submit" class="j-button j-button-outline--gold">
+          {{ 'blog.comment_form_submit' | t }}
+        </button>
+
+      {% endform %}
 
     </div>
   {% endif %}

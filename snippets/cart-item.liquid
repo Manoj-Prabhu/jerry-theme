@@ -67,7 +67,7 @@
 
     {% if item.unit_price_measurement %}
       <p class="j-cart-item__unit-price">
-        {{ item.unit_price | money }}/{% if item.unit_price_measurement.reference_value != 1 %}{{ item.unit_price_measurement.reference_value }}{% endif %}{{ item.unit_price_measurement.reference_unit }}
+        {{ item.unit_price | unit_price_with_measurement: item.unit_price_measurement }}
       </p>
     {% endif %}
 

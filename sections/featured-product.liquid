@@ -80,6 +80,10 @@
             {% endif %}
           </div>
 
+          {% if cart.taxes_included %}
+            <p class="j-featured-product__tax-note">{{ 'product.taxes_included' | t }}</p>
+          {% endif %}
+
           {% if section.settings.show_description and fp_product.description != blank %}
             <div class="j-featured-product__description">
               {{ fp_product.description }}
@@ -226,6 +230,17 @@
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
 
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'custom_liquid' %}
+                <div {{ block.shopify_attributes }}>
+                  {{ block.settings.custom_liquid }}
+                </div>
+              {% when '@app' %}
+                {% render block %}
+            {% endcase %}
+          {% endfor %}
+
         </div>
 
         <!-- Media -->
@@ -365,6 +380,23 @@
         { "value": "right", "label": "Right" }
       ],
       "default": "right"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Liquid code",
+          "info": "Add app snippets, custom HTML, or third-party embed code."
+        }
+      ]
+    },
+    {
+      "type": "@app"
     }
   ],
   "presets": [

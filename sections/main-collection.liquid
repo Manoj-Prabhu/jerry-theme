@@ -1,12 +1,27 @@
 {% render 'breadcrumbs' %}
 
-<div class="full-width j-page-hero-band">
+<div class="full-width j-page-hero-band {% if collection.image %}j-page-hero-band--has-image{% endif %}">
+  {% if collection.image %}
+    <div class="j-page-hero-band__image">
+      {{
+        collection.image
+        | image_url: width: 1600
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '800, 1200, 1600',
+          sizes: '100vw',
+          alt: collection.image.alt | default: collection.title
+      }}
+    </div>
+  {% endif %}
+
   <div class="j-page-hero-band__inner">
     <div class="j-section-title">
       <h1>{{ collection.title }}</h1>
 
       {% if collection.description != blank %}
-        <p>{{ collection.description }}</p>
+        <div class="rte">{{ collection.description }}</div>
       {% endif %}
     </div>
   </div>

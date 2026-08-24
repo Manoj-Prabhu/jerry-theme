@@ -50,25 +50,6 @@
   line-height: 1.9;
 }
 
-.j-article__content h2,
-.j-article__content h3 {
-  margin: 40px 0 20px;
-}
-
-.j-article__content p {
-  margin-bottom: 20px;
-}
-
-.j-article__content ul,
-.j-article__content ol {
-  margin: 20px 0 20px 24px;
-}
-
-.j-article__content img {
-  max-width: 100%;
-  border-radius: var(--radius-md);
-}
-
 .j-article__navigation {
   display: flex;
   justify-content: space-between;
@@ -93,4 +74,92 @@
     flex-direction: column;
     gap: 20px;
   }
+}
+
+/* -------------------------
+   Comments
+-------------------------- */
+
+.j-article__comments {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-border);
+}
+
+.j-article__comments-title {
+  margin-bottom: 24px;
+}
+
+.j-article__comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.j-article__comment {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.j-article__comment-author {
+  font-weight: 600;
+}
+
+.j-article__comment-date {
+  margin-bottom: 8px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.j-article__comment-content p {
+  margin-bottom: 0;
+}
+
+.j-article__no-comments {
+  margin-bottom: 24px;
+  color: var(--color-text-light);
+}
+
+.j-article__comment-form-title {
+  margin-bottom: 16px;
+}
+
+.j-article__comment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.j-article__comment-field label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.j-article__comment-field input,
+.j-article__comment-field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface, #fff);
+}
+
+.j-article__comment-message {
+  margin-bottom: 16px;
+  font-size: var(--font-size-sm);
+}
+
+.j-article__comment-message--success {
+  color: var(--color-success, #2e7d32);
+}
+
+.j-article__comment-message--error {
+  color: var(--color-error, #c0392b);
+}
+
+.j-article__comment-message--error ul {
+  margin: 4px 0 0 20px;
 }

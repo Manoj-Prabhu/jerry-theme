@@ -87,6 +87,11 @@
 
             </div>
 
+          {% when 'custom_liquid' %}
+            <div {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+
           {% when '@app' %}
             {% render block %}
 
@@ -150,6 +155,18 @@
           "id": "role",
           "label": "Role / Location",
           "default": "Verified Buyer"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Liquid code",
+          "info": "Add app snippets, custom HTML, or third-party embed code."
         }
       ]
     },

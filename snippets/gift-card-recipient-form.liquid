@@ -1,0 +1,104 @@
+{% comment %}
+  Gift card recipient form — lets a shopper send this gift card directly
+  to someone else instead of themselves. Rendered inside the product
+  form on the product page when product.gift_card? is true.
+  https://shopify.dev/docs/storefronts/themes/product-merchandising/gift-cards
+
+  Accepts:
+  - product: {Object} product object
+  - form: {Object} the product form object
+  - section: {Object} section this snippet is rendered from
+{% endcomment %}
+
+{% assign recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' %}
+
+<div class="j-product__recipient" id="Recipient-{{ section.id }}">
+
+  <label class="j-product__recipient-checkbox-row">
+    <input
+      type="checkbox"
+      class="j-product__recipient-checkbox"
+      name="{{ recipient_control_flag }}"
+      {% if form.errors %}checked{% endif %}
+    >
+    <span>{{ 'recipient.checkbox' | t }}</span>
+  </label>
+
+  {% assign is_open = false %}
+  {% if form.errors %}
+    {% assign is_open = true %}
+  {% endif %}
+
+  <div class="j-product__recipient-fields" {% unless is_open %}hidden{% endunless %}>
+
+    {% if form.errors %}
+      <p class="j-product__recipient-error" role="alert">{{ 'recipient.error' | t }}</p>
+    {% endif %}
+
+    <div class="j-product__recipient-field">
+      <label for="RecipientEmail-{{ section.id }}">{{ 'recipient.email_label' | t }}</label>
+      <input
+        type="email"
+        id="RecipientEmail-{{ section.id }}"
+        name="properties[Recipient email]"
+        value="{{ form.email }}"
+        autocomplete="email"
+        {% unless is_open %}disabled{% endunless %}
+        {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}
+      >
+      {% if form.errors contains 'email' %}
+        <p class="j-product__recipient-field-error">{{ form.errors.messages.email }}</p>
+      {% endif %}
+    </div>
+
+    <div class="j-product__recipient-field">
+      <label for="RecipientName-{{ section.id }}">{{ 'recipient.name_label' | t }}</label>
+      <input
+        type="text"
+        id="RecipientName-{{ section.id }}"
+        name="properties[Recipient name]"
+        value="{{ form.name }}"
+        maxlength="255"
+        autocomplete="name"
+        {% unless is_open %}disabled{% endunless %}
+      >
+    </div>
+
+    <div class="j-product__recipient-field">
+      <label for="RecipientMessage-{{ section.id }}">{{ 'recipient.message_label' | t }}</label>
+      <textarea
+        id="RecipientMessage-{{ section.id }}"
+        name="properties[Message]"
+        maxlength="200"
+        rows="4"
+        {% unless is_open %}disabled{% endunless %}
+      >{{ form.message }}</textarea>
+    </div>
+
+    <div class="j-product__recipient-field">
+      <label for="RecipientSendOn-{{ section.id }}">{{ 'recipient.send_on_label' | t }}</label>
+      <input
+        type="date"
+        id="RecipientSendOn-{{ section.id }}"
+        name="properties[Send on]"
+        value="{{ form.send_on }}"
+        pattern="\d{4}-\d{2}-\d{2}"
+        {% unless is_open %}disabled{% endunless %}
+        {% if form.errors contains 'send_on' %}aria-invalid="true"{% endif %}
+      >
+      {% if form.errors contains 'send_on' %}
+        <p class="j-product__recipient-field-error">{{ form.errors.messages.send_on }}</p>
+      {% endif %}
+    </div>
+
+    <input
+      type="hidden"
+      name="properties[__shopify_offset]"
+      class="j-product__recipient-offset"
+      value=""
+      {% unless is_open %}disabled{% endunless %}
+    >
+
+  </div>
+
+</div>

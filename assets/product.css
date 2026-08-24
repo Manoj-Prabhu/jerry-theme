@@ -56,6 +56,26 @@
   font-size: var(--font-size-2xl);
 }
 
+.j-product__vendor {
+  margin: 0 0 6px;
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.j-product__sku {
+  margin: 0 0 8px;
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+.j-product__text {
+  margin-bottom: 8px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
 .j-product__price-row {
   display: flex;
   align-items: baseline;
@@ -91,6 +111,66 @@
 
 .j-product__unit-price[hidden] {
   display: none;
+}
+
+.j-product__tax-note {
+  margin: 0 0 16px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.j-product__recipient {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.j-product__recipient-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.j-product__recipient-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.j-product__recipient-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.j-product__recipient-field label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.j-product__recipient-field input,
+.j-product__recipient-field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface, #fff);
+}
+
+.j-product__recipient-field textarea {
+  resize: vertical;
+}
+
+.j-product__recipient-error,
+.j-product__recipient-field-error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-error, #c0392b);
 }
 
 .j-product__inventory {

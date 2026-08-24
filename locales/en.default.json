@@ -3,7 +3,8 @@
     "title": "404",
     "not_found": "Page not found.",
     "not_found_detail": "The page you're looking for doesn't exist or has been moved.",
-    "back_to_shopping": "Back to shopping"
+    "back_to_shopping": "Back to shopping",
+    "back_to_home": "Back to homepage"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -16,7 +17,11 @@
     "comment_form_email": "Email",
     "comment_form_name": "Name",
     "comment_form_submit": "Post",
-    "comment_form_title": "Add a comment"
+    "comment_form_title": "Add a comment",
+    "comment_success": "Your comment has been posted.",
+    "comment_success_moderated": "Your comment has been submitted and is awaiting approval.",
+    "comment_error_heading": "Please correct the following:",
+    "no_comments": "Be the first to comment."
   },
   "cart": {
     "checkout": "Checkout",
@@ -32,6 +37,7 @@
     "order_summary": "Order Summary",
     "subtotal": "Subtotal",
     "taxes_note": "Shipping and taxes calculated at checkout.",
+    "taxes_included_note": "Tax included. Shipping calculated at checkout.",
     "notes": "Order notes",
     "notes_placeholder": "Add special instructions for your order",
     "secure_checkout": "Secure checkout",
@@ -202,7 +208,17 @@
     "card": "Gift card",
     "expired": "This gift card has expired",
     "expires_on": "Expires on {{ expires_on }}",
-    "use_at_checkout": "Use this gift card at checkout"
+    "use_at_checkout": "Use this gift card at checkout",
+    "scheduled_send_on": "This gift card is scheduled to be sent on {{ send_on }}",
+    "qr_image_alt": "QR code to redeem this gift card"
+  },
+  "recipient": {
+    "checkbox": "This is a gift",
+    "error": "There's a problem with the recipient information.",
+    "email_label": "Recipient email",
+    "name_label": "Recipient name (optional)",
+    "message_label": "Message (optional)",
+    "send_on_label": "Send on (optional)"
   },
   "header": {
     "menu_open": "Open menu",
@@ -226,12 +242,14 @@
   },
   "product": {
     "from_price_html": "From {{ price }}",
+    "sku": "SKU",
     "add_to_cart": "Add to Cart",
     "adding": "Adding...",
     "unavailable": "Unavailable",
     "add_to_cart_error": "Unable to add item to cart.",
     "sold_out": "Sold Out",
     "sale": "Sale",
+    "taxes_included": "Tax included.",
     "low_stock_html": "Only {{ count }} left in stock",
     "pickup_available_html": "Pickup available at {{ location }}",
     "pickup_unavailable_html": "Pickup currently unavailable at {{ location }}",
@@ -270,6 +288,8 @@
     "results_for_html": "{{ count }} results found for {{ terms }}",
     "remove_recent_search_html": "Remove {{ term }} from recent searches",
     "recently_searched": "Recently Searched",
-    "clear_all": "Clear all"
+    "clear_all": "Clear all",
+    "type_article": "Article",
+    "type_page": "Page"
   }
 }

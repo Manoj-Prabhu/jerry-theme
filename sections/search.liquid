@@ -12,7 +12,6 @@
     <h1>{{ 'search.title' | t }}</h1>
 
     <form action="{{ routes.search_url }}" method="get" role="search" class="j-search-page-form">
-      <input type="hidden" name="type" value="product">
       <input
         type="search"
         name="q"
@@ -98,9 +97,47 @@
             <div class="j-collection-grid">
 
               {% for result in search.results %}
-                {% if result.object_type == 'product' %}
-                  {% render 'product-card', product: result %}
-                {% endif %}
+                {% case result.object_type %}
+
+                  {% when 'product' %}
+                    {% render 'product-card', product: result %}
+
+                  {% when 'article' %}
+                    <article class="j-search-result j-search-result--article">
+                      <a href="{{ result.url }}" class="j-search-result__link">
+                        {% if result.image %}
+                          <div class="j-search-result__image">
+                            {{
+                              result.image
+                              | image_url: width: 700
+                              | image_tag: loading: 'lazy', alt: result.title
+                            }}
+                          </div>
+                        {% endif %}
+                        <div class="j-search-result__content">
+                          <span class="j-search-result__type">{{ 'search.type_article' | t }}</span>
+                          <h2>{{ result.title }}</h2>
+                          <p class="j-search-result__excerpt">
+                            {{ result.excerpt_or_content | strip_html | truncate: 120 }}
+                          </p>
+                        </div>
+                      </a>
+                    </article>
+
+                  {% when 'page' %}
+                    <article class="j-search-result j-search-result--page">
+                      <a href="{{ result.url }}" class="j-search-result__link">
+                        <div class="j-search-result__content">
+                          <span class="j-search-result__type">{{ 'search.type_page' | t }}</span>
+                          <h2>{{ result.title }}</h2>
+                          <p class="j-search-result__excerpt">
+                            {{ result.content | strip_html | truncate: 120 }}
+                          </p>
+                        </div>
+                      </a>
+                    </article>
+
+                {% endcase %}
               {% endfor %}
 
             </div>

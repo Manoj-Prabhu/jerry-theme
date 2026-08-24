@@ -111,7 +111,11 @@
       {% endif %}
 
       <p class="j-cart-page__note">
-        {{ 'cart.taxes_note' | t }}
+        {% if cart.taxes_included %}
+          {{ 'cart.taxes_included_note' | t }}
+        {% else %}
+          {{ 'cart.taxes_note' | t }}
+        {% endif %}
       </p>
 
       <form action="{{ routes.cart_url }}" method="get" class="j-cart-page__discount-form" id="CartDiscountForm">

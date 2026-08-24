@@ -136,7 +136,7 @@
       {% assign card_variant = product.selected_or_first_available_variant %}
       {% if card_variant.unit_price_measurement %}
         <p class="j-product-card__unit-price">
-          {{ card_variant.unit_price | money }}/{% if card_variant.unit_price_measurement.reference_value != 1 %}{{ card_variant.unit_price_measurement.reference_value }}{% endif %}{{ card_variant.unit_price_measurement.reference_unit }}
+          {{ card_variant.unit_price | unit_price_with_measurement: card_variant.unit_price_measurement }}
         </p>
       {% endif %}
 

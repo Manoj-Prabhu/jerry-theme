@@ -1,5 +1,14 @@
 {% comment %}
   Product Section
+
+  The buy box (everything in .j-product__content) is block-based —
+  merchants can add, remove, and reorder title/price/vendor/description/
+  variant picker/quantity/buy buttons etc. independently in the theme
+  editor, matching Dawn's main-product.liquid pattern. Every element kept
+  its exact original id/class when moved into its block case, since
+  product-variants.js, cart.js, sticky-cart.js, and product.js all look
+  these up by id/class — none of them depend on DOM order, so reordering
+  blocks in the editor doesn't break any of that JS.
 {% endcomment %}
 
 {% assign current_variant = product.selected_or_first_available_variant %}
@@ -153,65 +162,6 @@
   <!-- Product Content -->
   <div class="j-product__content">
 
-    <h1 class="j-product__title">
-      {{ product.title }}
-    </h1>
-
-    <div class="j-product__price-row">
-      <p
-        class="j-product__price"
-        id="ProductPrice"
-        aria-live="polite"
-      >
-        {{ current_variant.price | money }}
-      </p>
-
-      <del
-        class="j-product__price-compare"
-        id="ProductComparePrice"
-        {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}
-      >
-        {{ current_variant.compare_at_price | money }}
-      </del>
-    </div>
-
-    <p class="j-product__unit-price" id="ProductUnitPrice" {% unless current_variant.unit_price_measurement %}hidden{% endunless %}>
-      {% if current_variant.unit_price_measurement %}
-        {{ current_variant.unit_price | money }}/{% if current_variant.unit_price_measurement.reference_value != 1 %}{{ current_variant.unit_price_measurement.reference_value }}{% endif %}{{ current_variant.unit_price_measurement.reference_unit }}
-      {% endif %}
-    </p>
-
-    <div class="j-product__installments" id="ProductInstallments">
-      {{ current_variant.price | payment_terms }}
-    </div>
-
-    {% assign low_stock_threshold = 3 %}
-    {% assign is_low_stock = false %}
-    {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity < low_stock_threshold %}
-      {% assign is_low_stock = true %}
-    {% endif %}
-
-    <p
-      class="j-product__inventory"
-      id="ProductInventoryStatus"
-      aria-live="polite"
-      {% unless is_low_stock %}hidden{% endunless %}
-    >
-      {% if is_low_stock %}{{ 'product.low_stock_html' | t: count: current_variant.inventory_quantity }}{% endif %}
-    </p>
-
-    {% if current_variant.store_availabilities.size > 0 %}
-      {% assign pickup_location = current_variant.store_availabilities.first %}
-      <div class="j-product__pickup" id="ProductPickupAvailability">
-        {% if pickup_location.available %}
-          <p>{{ 'product.pickup_available_html' | t: location: pickup_location.location.name }}</p>
-        {% else %}
-          <p>{{ 'product.pickup_unavailable_html' | t: location: pickup_location.location.name }}</p>
-        {% endif %}
-        <span class="j-product__pickup-cross" aria-hidden="true">✕</span>
-      </div>
-    {% endif %}
-
     {% form 'product', product, class: 'product-form j-product-form' %}
 
       <input
@@ -221,250 +171,388 @@
         value="{{ current_variant.id }}"
       >
 
-      {% if product.selling_plan_groups.size > 0 %}
-        <fieldset class="j-product__purchase-options" id="ProductPurchaseOptions">
-          <legend class="visually-hidden">{{ 'product.purchase_option' | t }}</legend>
+      {% for block in section.blocks %}
+        {% case block.type %}
 
-          <label class="j-product__purchase-option is-active">
-            <input type="radio" name="purchase_option" value="one_time" checked>
-            <span class="j-product__purchase-option-name">{{ 'product.one_time_purchase' | t }}</span>
-          </label>
+          {% when 'title' %}
+            <h1 class="j-product__title" {{ block.shopify_attributes }}>
+              {{ product.title }}
+            </h1>
 
-          {% for group in product.selling_plan_groups %}
-            <div class="j-product__purchase-option-group">
-              <label class="j-product__purchase-option">
-                <input
-                  type="radio"
-                  name="purchase_option"
-                  value="{{ group.id }}"
-                >
-                <span class="j-product__purchase-option-name">{{ group.name }}</span>
-              </label>
+          {% when 'vendor' %}
+            {% if product.vendor != blank %}
+              <p class="j-product__vendor" {{ block.shopify_attributes }}>
+                {{ product.vendor }}
+              </p>
+            {% endif %}
 
-              {% if group.selling_plans.size > 1 %}
-                <select
-                  class="j-product__selling-plan-select"
-                  data-selling-plan-group="{{ group.id }}"
-                  aria-label="{{ group.name | escape }}"
-                  disabled
+          {% when 'sku' %}
+            <p
+              class="j-product__sku"
+              id="ProductSku"
+              {% if current_variant.sku == blank %}hidden{% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {% if current_variant.sku != blank %}{{ 'product.sku' | t }}: {{ current_variant.sku }}{% endif %}
+            </p>
+
+          {% when 'price' %}
+            <div {{ block.shopify_attributes }}>
+              <div class="j-product__price-row">
+                <p
+                  class="j-product__price"
+                  id="ProductPrice"
+                  aria-live="polite"
                 >
-                  {% for plan in group.selling_plans %}
-                    <option value="{{ plan.id }}">{{ plan.name }}</option>
-                  {% endfor %}
-                </select>
-              {% else %}
-                <input
-                  type="hidden"
-                  class="j-product__selling-plan-select"
-                  data-selling-plan-group="{{ group.id }}"
-                  value="{{ group.selling_plans.first.id }}"
-                >
-                <p class="j-product__selling-plan-description">
-                  {{ group.selling_plans.first.description | default: group.selling_plans.first.name }}
+                  {{ current_variant.price | money }}
                 </p>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </fieldset>
 
-        <input type="hidden" name="selling_plan" id="SelectedSellingPlan" disabled>
-      {% endif %}
-
-      {% if product.has_only_default_variant == false or product.selling_plan_groups.size > 0 %}
-
-        {% if product.has_only_default_variant == false %}
-        <div class="j-product__options" id="ProductOptions">
-
-          {% for option in product.options_with_values %}
-            {% assign option_index = forloop.index0 %}
-            {% assign option_name_down = option.name | downcase %}
-            {% assign selected_value = current_variant.options[option_index] %}
-
-            <div class="j-product__option">
-
-              <div class="j-product__option-header">
-                <label>{{ option.name }}</label>
-                <span class="j-product__option-value">{{ selected_value }}</span>
+                <del
+                  class="j-product__price-compare"
+                  id="ProductComparePrice"
+                  {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}
+                >
+                  {{ current_variant.compare_at_price | money }}
+                </del>
               </div>
 
-              {% if option_name_down == 'color' or option_name_down == 'colour' %}
+              <p class="j-product__unit-price" id="ProductUnitPrice" {% unless current_variant.unit_price_measurement %}hidden{% endunless %}>
+                {% if current_variant.unit_price_measurement %}
+                  {{ current_variant.unit_price | unit_price_with_measurement: current_variant.unit_price_measurement }}
+                {% endif %}
+              </p>
 
-                <div class="j-product__swatches">
-                  {% for value in option.values %}
-                    {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
-                    <button
-                      type="button"
-                      class="j-product__swatch {% if value == selected_value %}is-active{% endif %}"
-                      data-option-index="{{ option_index }}"
-                      data-value="{{ value | escape }}"
-                      aria-label="{{ value | escape }}"
-                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
-                      title="{{ value | escape }}"
-                    >
-                      {% if value.swatch.image %}
-                        <span
-                          class="j-product__swatch-inner"
-                          style="background-image: url({{ value.swatch.image | image_url: width: 60, format: 'webp' }});"
-                        ></span>
-                      {% elsif value.swatch.color %}
-                        <span
-                          class="j-product__swatch-inner"
-                          style="background-color: {{ value.swatch.color }};"
-                        ></span>
+              {% if cart.taxes_included %}
+                <p class="j-product__tax-note">{{ 'product.taxes_included' | t }}</p>
+              {% endif %}
+            </div>
+
+          {% when 'inventory' %}
+            {% assign low_stock_threshold = 3 %}
+            {% assign is_low_stock = false %}
+            {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity < low_stock_threshold %}
+              {% assign is_low_stock = true %}
+            {% endif %}
+
+            <p
+              class="j-product__inventory"
+              id="ProductInventoryStatus"
+              aria-live="polite"
+              {% unless is_low_stock %}hidden{% endunless %}
+              {{ block.shopify_attributes }}
+            >
+              {% if is_low_stock %}{{ 'product.low_stock_html' | t: count: current_variant.inventory_quantity }}{% endif %}
+            </p>
+
+          {% when 'pickup_availability' %}
+            {% if current_variant.store_availabilities.size > 0 %}
+              {% assign pickup_location = current_variant.store_availabilities.first %}
+              <div class="j-product__pickup" id="ProductPickupAvailability" {{ block.shopify_attributes }}>
+                {% if pickup_location.available %}
+                  <p>{{ 'product.pickup_available_html' | t: location: pickup_location.location.name }}</p>
+                {% else %}
+                  <p>{{ 'product.pickup_unavailable_html' | t: location: pickup_location.location.name }}</p>
+                {% endif %}
+                <span class="j-product__pickup-cross" aria-hidden="true">✕</span>
+              </div>
+            {% endif %}
+
+          {% when 'variant_picker' %}
+            <div {{ block.shopify_attributes }}>
+
+              {% comment %}
+                Shopify's own Shop Pay Installments script watches this
+                form's `id` input and re-fetches this banner automatically
+                when it changes — the reason this uses `form |
+                payment_terms` (Shopify's documented pattern) rather than
+                `current_variant.price | payment_terms`, which was a
+                fixed snapshot of whichever variant the page loaded with
+                and never updated when a shopper picked a different one.
+                See product-variants.js, which dispatches a change event
+                on #SelectedVariant after updating its value so this
+                actually fires (custom swatch/pill buttons don't trigger
+                a native change event on their own). Rendered here,
+                bundled with the variant picker, since installments
+                pricing only makes sense once a variant is selected.
+              {% endcomment %}
+              <div class="j-product__installments" id="ProductInstallments">
+                {{ form | payment_terms }}
+              </div>
+
+              {% if product.selling_plan_groups.size > 0 %}
+                <fieldset class="j-product__purchase-options" id="ProductPurchaseOptions">
+                  <legend class="visually-hidden">{{ 'product.purchase_option' | t }}</legend>
+
+                  <label class="j-product__purchase-option is-active">
+                    <input type="radio" name="purchase_option" value="one_time" checked>
+                    <span class="j-product__purchase-option-name">{{ 'product.one_time_purchase' | t }}</span>
+                  </label>
+
+                  {% for group in product.selling_plan_groups %}
+                    <div class="j-product__purchase-option-group">
+                      <label class="j-product__purchase-option">
+                        <input
+                          type="radio"
+                          name="purchase_option"
+                          value="{{ group.id }}"
+                        >
+                        <span class="j-product__purchase-option-name">{{ group.name }}</span>
+                      </label>
+
+                      {% if group.selling_plans.size > 1 %}
+                        <select
+                          class="j-product__selling-plan-select"
+                          data-selling-plan-group="{{ group.id }}"
+                          aria-label="{{ group.name | escape }}"
+                          disabled
+                        >
+                          {% for plan in group.selling_plans %}
+                            <option value="{{ plan.id }}">{{ plan.name }}</option>
+                          {% endfor %}
+                        </select>
                       {% else %}
-                        <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
+                        <input
+                          type="hidden"
+                          class="j-product__selling-plan-select"
+                          data-selling-plan-group="{{ group.id }}"
+                          value="{{ group.selling_plans.first.id }}"
+                        >
+                        <p class="j-product__selling-plan-description">
+                          {{ group.selling_plans.first.description | default: group.selling_plans.first.name }}
+                        </p>
                       {% endif %}
-                    </button>
+                    </div>
                   {% endfor %}
-                </div>
+                </fieldset>
 
-              {% else %}
+                <input type="hidden" name="selling_plan" id="SelectedSellingPlan" disabled>
+              {% endif %}
 
-                <div class="j-product__pills">
-                  {% for value in option.values %}
-                    <button
-                      type="button"
-                      class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
-                      data-option-index="{{ option_index }}"
-                      data-value="{{ value | escape }}"
-                      aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
-                    >
-                      {{ value }}
-                    </button>
+              {% if product.has_only_default_variant == false or product.selling_plan_groups.size > 0 %}
+
+                {% if product.has_only_default_variant == false %}
+                <div class="j-product__options" id="ProductOptions">
+
+                  {% for option in product.options_with_values %}
+                    {% assign option_index = forloop.index0 %}
+                    {% assign option_name_down = option.name | downcase %}
+                    {% assign selected_value = current_variant.options[option_index] %}
+
+                    <div class="j-product__option">
+
+                      <div class="j-product__option-header">
+                        <label>{{ option.name }}</label>
+                        <span class="j-product__option-value">{{ selected_value }}</span>
+                      </div>
+
+                      {% if option_name_down == 'color' or option_name_down == 'colour' %}
+
+                        <div class="j-product__swatches">
+                          {% for value in option.values %}
+                            {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+                            <button
+                              type="button"
+                              class="j-product__swatch {% if value == selected_value %}is-active{% endif %}"
+                              data-option-index="{{ option_index }}"
+                              data-value="{{ value | escape }}"
+                              aria-label="{{ value | escape }}"
+                              aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
+                              title="{{ value | escape }}"
+                            >
+                              {% if value.swatch.image %}
+                                <span
+                                  class="j-product__swatch-inner"
+                                  style="background-image: url({{ value.swatch.image | image_url: width: 60, format: 'webp' }});"
+                                ></span>
+                              {% elsif value.swatch.color %}
+                                <span
+                                  class="j-product__swatch-inner"
+                                  style="background-color: {{ value.swatch.color }};"
+                                ></span>
+                              {% else %}
+                                <span class="j-product__swatch-inner" style="background-color: {{ color_key }};"></span>
+                              {% endif %}
+                            </button>
+                          {% endfor %}
+                        </div>
+
+                      {% else %}
+
+                        <div class="j-product__pills">
+                          {% for value in option.values %}
+                            <button
+                              type="button"
+                              class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
+                              data-option-index="{{ option_index }}"
+                              data-value="{{ value | escape }}"
+                              aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
+                            >
+                              {{ value }}
+                            </button>
+                          {% endfor %}
+                        </div>
+
+                      {% endif %}
+
+                    </div>
                   {% endfor %}
+
                 </div>
+                {% endif %}
+
+                {% capture variants_json %}[
+                  {% for variant in product.variants %}
+                    {% capture unit_price %}
+                      {%- if variant.unit_price_measurement -%}
+                        {{ variant.unit_price | unit_price_with_measurement: variant.unit_price_measurement }}
+                      {%- endif -%}
+                    {% endcapture %}
+                    {% capture selling_plan_allocations %}{
+                      {% for allocation in variant.selling_plan_allocations %}
+                        "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
+                      {% endfor %}
+                    }{% endcapture %}
+                    {
+                      "id": {{ variant.id }},
+                      "available": {{ variant.available }},
+                      "price": {{ variant.price | money | json }},
+                      "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                      "unitPrice": {{ unit_price | strip | json }},
+                      "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
+                      "options": {{ variant.options | json }},
+                      "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200, format: 'webp' | json }},
+                      "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
+                      "inventoryManagement": {{ variant.inventory_management | json }},
+                      "inventoryQuantity": {{ variant.inventory_quantity | json }},
+                      "inventoryPolicy": {{ variant.inventory_policy | json }},
+                      "hasPickup": {{ variant.store_availabilities.size | json }},
+                      "pickupAvailable": {{ variant.store_availabilities.first.available | json }},
+                      "pickupLocation": {{ variant.store_availabilities.first.location.name | json }},
+                      "sku": {{ variant.sku | json }}
+                    }{% unless forloop.last %},{% endunless %}
+                  {% endfor %}
+                ]{% endcapture %}
+                <script type="application/json" id="ProductVariantsJson">{{ variants_json }}</script>
 
               {% endif %}
 
             </div>
-          {% endfor %}
 
-        </div>
-        {% endif %}
+            {% if product.gift_card? %}
+              {% render 'gift-card-recipient-form', product: product, form: form, section: section %}
+              <script src="{{ 'recipient-form.js' | asset_url }}" defer="defer"></script>
+            {% endif %}
 
-        {% capture variants_json %}[
-          {% for variant in product.variants %}
-            {% capture unit_price %}
-              {%- if variant.unit_price_measurement -%}
-                {{ variant.unit_price | money }}/{% if variant.unit_price_measurement.reference_value != 1 %}{{ variant.unit_price_measurement.reference_value }}{% endif %}{{ variant.unit_price_measurement.reference_unit }}
-              {%- endif -%}
-            {% endcapture %}
-            {% capture selling_plan_allocations %}{
-              {% for allocation in variant.selling_plan_allocations %}
-                "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
-              {% endfor %}
-            }{% endcapture %}
-            {
-              "id": {{ variant.id }},
-              "available": {{ variant.available }},
-              "price": {{ variant.price | money | json }},
-              "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
-              "unitPrice": {{ unit_price | strip | json }},
-              "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
-              "options": {{ variant.options | json }},
-              "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200, format: 'webp' | json }},
-              "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
-              "inventoryManagement": {{ variant.inventory_management | json }},
-              "inventoryQuantity": {{ variant.inventory_quantity | json }},
-              "inventoryPolicy": {{ variant.inventory_policy | json }},
-              "hasPickup": {{ variant.store_availabilities.size | json }},
-              "pickupAvailable": {{ variant.store_availabilities.first.available | json }},
-              "pickupLocation": {{ variant.store_availabilities.first.location.name | json }}
-            }{% unless forloop.last %},{% endunless %}
-          {% endfor %}
-        ]{% endcapture %}
-        <script type="application/json" id="ProductVariantsJson">{{ variants_json }}</script>
+          {% when 'quantity_selector' %}
+            <div {{ block.shopify_attributes }}>
+              <label for="Quantity">
+                {{ 'product.quantity' | t }}
+              </label>
 
-      {% endif %}
+              {% assign quantity_max = null %}
+              {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' %}
+                {% assign quantity_max = current_variant.inventory_quantity %}
+              {% endif %}
 
-      <label for="Quantity">
-        {{ 'product.quantity' | t }}
-      </label>
+              <div class="j-product__qty-control">
+                <button
+                  type="button"
+                  class="j-product__qty-minus"
+                  aria-label="{{ 'cart.decrease_quantity' | t }}"
+                >
+                  −
+                </button>
 
-      {% assign quantity_max = null %}
-      {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' %}
-        {% assign quantity_max = current_variant.inventory_quantity %}
-      {% endif %}
+                <input
+                  id="Quantity"
+                  type="number"
+                  name="quantity"
+                  min="1"
+                  {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
+                  value="1"
+                >
 
-      <div class="j-product__cart-row">
+                <button
+                  type="button"
+                  class="j-product__qty-plus"
+                  aria-label="{{ 'cart.increase_quantity' | t }}"
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
-        <div class="j-product__qty-control">
-          <button
-            type="button"
-            class="j-product__qty-minus"
-            aria-label="{{ 'cart.decrease_quantity' | t }}"
-          >
-            −
-          </button>
+          {% when 'buy_buttons' %}
+            <div {{ block.shopify_attributes }}>
+              <div class="j-product__cart-row">
+                <button
+                  type="submit"
+                  class="j-button j-button-outline--gold j-product__add-to-cart"
+                  id="AddToCartButton"
+                  {% unless current_variant.available %}disabled{% endunless %}
+                >
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" class="j-product__cart-icon">
+                    <path d="M3 5h1.5l1.4 8.4a1.5 1.5 0 0 0 1.48 1.25h6.24a1.5 1.5 0 0 0 1.48-1.25L16.5 7H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="8" cy="17" r="1" fill="currentColor"/>
+                    <circle cx="14" cy="17" r="1" fill="currentColor"/>
+                  </svg>
+                  {% if current_variant.available %}
+                    {{ 'product.add_to_cart' | t }}
+                  {% else %}
+                    {{ 'product.sold_out' | t }}
+                  {% endif %}
+                </button>
+              </div>
 
-          <input
-            id="Quantity"
-            type="number"
-            name="quantity"
-            min="1"
-            {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
-            value="1"
-          >
+              <p
+                class="j-product__form-error"
+                id="ProductFormError"
+                role="alert"
+                hidden
+              ></p>
 
-          <button
-            type="button"
-            class="j-product__qty-plus"
-            aria-label="{{ 'cart.increase_quantity' | t }}"
-          >
-            +
-          </button>
-        </div>
+              {% comment %}
+                The gift card recipient form's validation isn't compatible
+                with accelerated checkout buttons — Shopify's own guidance
+                is to use Add to Cart only for gift card products.
+                https://shopify.dev/docs/storefronts/themes/product-merchandising/gift-cards
+              {% endcomment %}
+              {% if current_variant.available and product.gift_card? == false %}
+                <div class="j-product__payment-button" style="--shopify-payment-button-color-scheme: dark;">
+                  {{ form | payment_button }}
+                </div>
+              {% endif %}
+            </div>
 
-        <button
-          type="submit"
-          class="j-button j-button-outline--gold j-product__add-to-cart"
-          id="AddToCartButton"
-          {% unless current_variant.available %}disabled{% endunless %}
-        >
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" class="j-product__cart-icon">
-            <path d="M3 5h1.5l1.4 8.4a1.5 1.5 0 0 0 1.48 1.25h6.24a1.5 1.5 0 0 0 1.48-1.25L16.5 7H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="8" cy="17" r="1" fill="currentColor"/>
-            <circle cx="14" cy="17" r="1" fill="currentColor"/>
-          </svg>
-          {% if current_variant.available %}
-            {{ 'product.add_to_cart' | t }}
-          {% else %}
-            {{ 'product.sold_out' | t }}
-          {% endif %}
-        </button>
+          {% when 'description' %}
+            {% if product.description != blank %}
+              <details class="j-product__description" {{ block.shopify_attributes }}>
+                <summary class="j-product__description-toggle">{{ 'product.description' | t }}</summary>
+                <div class="j-product__description-content rte">
+                  {{ product.description }}
+                </div>
+              </details>
+            {% endif %}
 
-      </div>
+          {% when 'text' %}
+            {% if block.settings.text != blank %}
+              <div class="j-product__text" {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+            {% endif %}
 
-      <p
-        class="j-product__form-error"
-        id="ProductFormError"
-        role="alert"
-        hidden
-      ></p>
+          {% when 'custom_liquid' %}
+            <div {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
 
-      {% if current_variant.available %}
-        <div class="j-product__payment-button" style="--shopify-payment-button-color-scheme: dark;">
-          {{ form | payment_button }}
-        </div>
-      {% endif %}
+          {% when '@app' %}
+            {% render block %}
+
+        {% endcase %}
+      {% endfor %}
 
     {% endform %}
-
-    {% if product.description != blank %}
-      <details class="j-product__description">
-        <summary class="j-product__description-toggle">{{ 'product.description' | t }}</summary>
-        <div class="j-product__description-content">
-          {{ product.description }}
-        </div>
-      </details>
-    {% endif %}
-
-    <div class="j-product__blocks">{%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when '@app' -%}
-            {% render block %}
-        {%- endcase -%}
-      {%- endfor -%}</div>
 
   </div>
   <div
@@ -511,6 +599,79 @@
   "name": "t:general.product",
   "settings": [],
   "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "SKU",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory status",
+      "limit": 1
+    },
+    {
+      "type": "pickup_availability",
+      "name": "Pickup availability",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Liquid code",
+          "info": "Add app snippets, custom HTML, or third-party embed code."
+        }
+      ]
+    },
     {
       "type": "@app"
     }

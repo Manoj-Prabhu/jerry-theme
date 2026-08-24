@@ -108,6 +108,93 @@ ol {
 }
 
 /* -------------------------
+   Rich text (RTE) content
+
+   Shared typographic treatment for merchant-entered HTML — product
+   descriptions, blog article bodies, collection descriptions, page
+   content — so headings/lists/blockquotes look consistent everywhere
+   the RTE editor's output is rendered, rather than each template
+   inventing its own (or, for lists, silently losing markers to the
+   global `list-style: none` reset above).
+-------------------------- */
+
+.rte h1,
+.rte h2,
+.rte h3,
+.rte h4,
+.rte h5,
+.rte h6 {
+  margin: 1.4em 0 0.6em;
+  line-height: 1.3;
+}
+
+.rte h1:first-child,
+.rte h2:first-child,
+.rte h3:first-child,
+.rte h4:first-child,
+.rte h5:first-child,
+.rte h6:first-child {
+  margin-top: 0;
+}
+
+.rte p {
+  margin: 0 0 1em;
+}
+
+.rte p:last-child {
+  margin-bottom: 0;
+}
+
+.rte ul,
+.rte ol {
+  margin: 0 0 1em 1.25em;
+}
+
+.rte ul {
+  list-style: disc;
+}
+
+.rte ol {
+  list-style: decimal;
+}
+
+.rte li {
+  margin-bottom: 0.4em;
+}
+
+.rte blockquote {
+  margin: 1.4em 0;
+  padding: 0.2em 0 0.2em 1.2em;
+  border-left: 3px solid var(--color-border);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.rte a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.rte img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1em;
+}
+
+.rte th,
+.rte td {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+/* -------------------------
    Buttons
 -------------------------- */
 

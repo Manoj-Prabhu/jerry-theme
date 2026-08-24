@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const pickupAvailability = document.getElementById(
     "ProductPickupAvailability",
   );
+  const skuDisplay = document.getElementById("ProductSku");
   const quantityInput = document.getElementById("Quantity");
   const sellingPlanInput = document.getElementById("SelectedSellingPlan");
   const LOW_STOCK_THRESHOLD = 3;
@@ -197,10 +198,23 @@ document.addEventListener("DOMContentLoaded", () => {
   function selectVariant(variant) {
     currentVariant = variant;
     variantInput.value = variant.id;
+    // Setting .value directly (rather than a real user interaction with
+    // a native <select>) doesn't fire a change event on its own — Shop
+    // Pay Installments' own script listens for one on this input to know
+    // when to re-fetch the payment_terms banner for the new variant.
+    variantInput.dispatchEvent(new Event("change", { bubbles: true }));
 
     updateInventoryStatus(variant);
     updatePickupAvailability(variant);
     updateQuantityLimit(variant);
+
+    if (skuDisplay) {
+      const strings = window.themeStrings || {};
+      skuDisplay.hidden = !variant.sku;
+      skuDisplay.textContent = variant.sku
+        ? `${strings.sku || "SKU"}: ${variant.sku}`
+        : "";
+    }
 
     if (comparePrice) {
       comparePrice.textContent = variant.compareAtPrice || "";
