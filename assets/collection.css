@@ -2,15 +2,14 @@
   padding: var(--space-16) 0;
 }
 
-/* auto-fit (not a fixed repeat(4, 1fr)) so a collection with fewer
-   products than fit a row doesn't leave a large empty gap after the last
-   card — empty tracks collapse to 0 width and the real cards share the
-   row evenly instead. min(100%, 260px) keeps the same 4-per-row sizing
-   as before on a full grid while still shrinking to fit on narrow
-   screens. Same pattern already used in featured-collection.css. */
+/* auto-fill (not auto-fit) so cards keep their normal ~260px width even
+   when a collection has fewer products than fit a row — auto-fit would
+   collapse the unused tracks and stretch the remaining cards to fill the
+   row (e.g. a single product blown up full-width). auto-fill keeps those
+   tracks reserved-but-empty instead. */
 .j-collection-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: var(--space-8);
 }
 
@@ -25,7 +24,7 @@
 
 @media (min-width: 993px) and (max-width: 1300px) {
   .j-collection-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   }
 }
 
