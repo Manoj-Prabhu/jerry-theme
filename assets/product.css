@@ -342,22 +342,31 @@
   font-size: 1rem;
 }
 
+/* Quantity + Add to Cart sit side by side, sharing one row height —
+   the stepper stays a fixed width and the cart button fills the rest. */
+.j-product__cart-row {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+
 /* Quantity stepper — minus/plus buttons around the number input, instead
    of a bare full-width native number field with its own tiny spinner
    arrows. */
 .j-product__qty-control {
   display: inline-flex;
-  align-self: flex-start;
   align-items: center;
-  border: 1px solid #b7dfc2;
+  flex-shrink: 0;
+  border: 1px solid #1a1a1a;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: transparent;
 }
 
 .j-product__qty-control button {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 100%;
+  min-height: 48px;
   border: none;
   background: transparent;
   color: #1a1a1a;
@@ -367,16 +376,16 @@
 }
 
 .j-product__qty-control button:hover {
-  background: rgba(183, 223, 194, 0.35);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .j-product__qty-control input[type="number"] {
-  width: 48px;
-  height: 36px;
+  width: 40px;
+  height: 100%;
   padding: 0;
   border: none;
-  border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
+  border-left: 1px solid #1a1a1a;
+  border-right: 1px solid #1a1a1a;
   border-radius: 0;
   background: transparent;
   color: #1a1a1a;
@@ -412,6 +421,27 @@
 #AddToCartButton {
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+.j-product__add-to-cart {
+  flex: 1;
+  min-height: 48px;
+}
+
+.j-product__cart-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .j-product__cart-row {
+    flex-wrap: wrap;
+  }
+
+  .j-product__add-to-cart {
+    flex-basis: 100%;
+  }
 }
 
 

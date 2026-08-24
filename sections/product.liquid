@@ -386,45 +386,54 @@
         {% assign quantity_max = current_variant.inventory_quantity %}
       {% endif %}
 
-      <div class="j-product__qty-control">
+      <div class="j-product__cart-row">
+
+        <div class="j-product__qty-control">
+          <button
+            type="button"
+            class="j-product__qty-minus"
+            aria-label="{{ 'cart.decrease_quantity' | t }}"
+          >
+            −
+          </button>
+
+          <input
+            id="Quantity"
+            type="number"
+            name="quantity"
+            min="1"
+            {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
+            value="1"
+          >
+
+          <button
+            type="button"
+            class="j-product__qty-plus"
+            aria-label="{{ 'cart.increase_quantity' | t }}"
+          >
+            +
+          </button>
+        </div>
+
         <button
-          type="button"
-          class="j-product__qty-minus"
-          aria-label="{{ 'cart.decrease_quantity' | t }}"
+          type="submit"
+          class="j-button j-button-outline--gold j-product__add-to-cart"
+          id="AddToCartButton"
+          {% unless current_variant.available %}disabled{% endunless %}
         >
-          −
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" class="j-product__cart-icon">
+            <path d="M3 5h1.5l1.4 8.4a1.5 1.5 0 0 0 1.48 1.25h6.24a1.5 1.5 0 0 0 1.48-1.25L16.5 7H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="8" cy="17" r="1" fill="currentColor"/>
+            <circle cx="14" cy="17" r="1" fill="currentColor"/>
+          </svg>
+          {% if current_variant.available %}
+            {{ 'product.add_to_cart' | t }}
+          {% else %}
+            {{ 'product.sold_out' | t }}
+          {% endif %}
         </button>
 
-        <input
-          id="Quantity"
-          type="number"
-          name="quantity"
-          min="1"
-          {% if quantity_max %}max="{{ quantity_max }}"{% endif %}
-          value="1"
-        >
-
-        <button
-          type="button"
-          class="j-product__qty-plus"
-          aria-label="{{ 'cart.increase_quantity' | t }}"
-        >
-          +
-        </button>
       </div>
-
-      <button
-        type="submit"
-        class="j-button j-button-outline--gold"
-        id="AddToCartButton"
-        {% unless current_variant.available %}disabled{% endunless %}
-      >
-        {% if current_variant.available %}
-          {{ 'product.add_to_cart' | t }}
-        {% else %}
-          {{ 'product.sold_out' | t }}
-        {% endif %}
-      </button>
 
       <p
         class="j-product__form-error"

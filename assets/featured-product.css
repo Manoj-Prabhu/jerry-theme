@@ -35,14 +35,21 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg, var(--radius-md));
   background: var(--color-surface);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .j-featured-product__gallery {
   grid-area: gallery;
+  /* Grid items default to min-width: auto, so the image's own intrinsic
+     size (from its width/height attributes) can force this track wider
+     than the card and push the gallery past the viewport on mobile. */
+  min-width: 0;
 }
 
 .j-featured-product__content {
   grid-area: content;
+  min-width: 0;
 }
 
 /* Content div is first in the DOM (for source-order/accessibility
@@ -498,18 +505,44 @@
 /* Mobile */
 
 @media (max-width: 768px) {
+  /* Switched from grid to a plain flex column here — the children still
+     carry the desktop `grid-area: gallery` / `grid-area: content` rules,
+     and relying on `grid-template-areas: none` to cancel that out on a
+     single-column grid caused the two items to stack on top of each
+     other instead of one after another. Flex sidesteps grid-area
+     entirely, so `order` is all that's needed to control stacking. */
   .j-featured-product-card,
   .j-featured-product-card--image-right {
-    grid-template-columns: 1fr;
-    grid-template-areas: none;
-    padding: var(--space-5);
-    gap: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: 0;
+    border: none;
+    background: transparent;
   }
 
   /* Image always shows above the buy box on mobile, regardless of the
      left/right setting used on desktop — there's no meaningful "side" on
-     a single narrow column. */
+     a single narrow column. Width/flex-basis are reasserted explicitly
+     (rather than relying on the flex column's default stretch) because
+     switching a live viewport from desktop to mobile — e.g. the theme
+     editor's device-preview toggle, without a full page reload — can
+     leave this item holding onto the width it had as a desktop grid
+     column (1.15fr) until the next reflow, squashing the aspect-ratio
+     box into a tall sliver instead of a square. */
   .j-featured-product__gallery {
     order: -1;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .j-featured-product__main-media {
+    width: 100%;
+  }
+
+  .j-featured-product__content {
+    padding: 0 var(--space-4);
+    width: 100%;
+    flex: 0 0 auto;
   }
 }
