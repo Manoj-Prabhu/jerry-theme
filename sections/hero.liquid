@@ -19,6 +19,22 @@
     font-style: {{ section.settings.trust_font.style }};
     font-weight: {{ section.settings.trust_font.weight }};
   }
+
+  {{ section.settings.description_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-hero__content p {
+    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
+    font-style: {{ section.settings.description_font.style }};
+    font-weight: {{ section.settings.description_font.weight }};
+  }
+
+  {{ section.settings.badge_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-hero__badge {
+    font-family: {{ section.settings.badge_font.family }}, {{ section.settings.badge_font.fallback_families }};
+    font-style: {{ section.settings.badge_font.style }};
+    font-weight: {{ section.settings.badge_font.weight }};
+  }
 {% endstyle %}
 
 <div class="j-hero-band full-width">
@@ -220,13 +236,25 @@
       "type": "font_picker",
       "id": "button_font",
       "label": "Button font",
-      "default": "germania_one_n4"
+      "default": "barlow_condensed_n4"
     },
     {
       "type": "font_picker",
       "id": "trust_font",
       "label": "Trust row font",
       "default": "instrument_serif_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Description font",
+      "default": "rajdhani_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "badge_font",
+      "label": "Badge font",
+      "default": "unifraktur_maguntia_n4"
     }
   ],
   "blocks": [

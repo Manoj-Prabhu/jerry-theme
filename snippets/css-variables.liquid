@@ -19,6 +19,10 @@
     assign page_title_font_bold = settings.type_page_title_font | font_modify: 'weight', 'bold'
     assign page_title_font_italic = settings.type_page_title_font | font_modify: 'style', 'italic'
     assign page_title_font_bold_italic = page_title_font_bold | font_modify: 'style', 'italic'
+
+    assign product_name_font_bold = settings.type_product_name_font | font_modify: 'weight', 'bold'
+    assign product_name_font_italic = settings.type_product_name_font | font_modify: 'style', 'italic'
+    assign product_name_font_bold_italic = product_name_font_bold | font_modify: 'style', 'italic'
   %}
 
   {{ settings.type_primary_font | font_face: font_display: 'swap' }}
@@ -65,6 +69,17 @@
     {{ page_title_font_italic | font_face: font_display: 'swap' }}
   {% endif %}
 
+  {{ settings.type_product_name_font | font_face: font_display: 'swap' }}
+  {% if product_name_font_bold != blank %}
+    {{ product_name_font_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if product_name_font_bold_italic != blank %}
+    {{ product_name_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if product_name_font_italic != blank %}
+    {{ product_name_font_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+
   :root {
 
     /* Typography */
@@ -84,6 +99,10 @@
     --font-page-title--family: {{ settings.type_page_title_font.family }}, {{ settings.type_page_title_font.fallback_families }};
     --font-page-title--style: {{ settings.type_page_title_font.style }};
     --font-page-title--weight: {{ settings.type_page_title_font.weight }};
+
+    --font-product-name--family: {{ settings.type_product_name_font.family }}, {{ settings.type_product_name_font.fallback_families }};
+    --font-product-name--style: {{ settings.type_product_name_font.style }};
+    --font-product-name--weight: {{ settings.type_product_name_font.weight }};
 
     /* Layout */
 

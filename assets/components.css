@@ -135,7 +135,7 @@
 -------------------------- */
 
 .j-product-recommendations {
-  max-width: var(--container-width);
+  max-width: 2000px;
   margin: 0 auto;
   padding: 40px var(--space-8) 60px;
 }
@@ -145,11 +145,15 @@
    recommendation cards to ever share one row. `repeat(4, ...)` here
    forces exactly 4 equal columns (each shrinking as needed) instead of
    auto-fit, which would still wrap to fewer columns any time the
-   viewport isn't wide enough for four 200px+ tracks. Same treatment as
-   "Recently Viewed" (see recently-viewed.css). */
+   viewport isn't wide enough for four 200px+ tracks. The section's own
+   max-width (above) was widened from the standard content width to
+   1800px specifically so these 4 columns have more room to work with —
+   at the standard content width, each card was capped at a quarter of
+   a much narrower box and read as cramped. Same treatment as "Recently
+   Viewed" (see recently-viewed.css). */
 .j-product-recommendations .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 40px;
 }
 
 @media (max-width: 900px) {

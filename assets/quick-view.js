@@ -259,8 +259,62 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error(error));
   }
 
+  // Quick View can't see a variant option's actual configured swatch
+  // color/image (Shopify's /products/{handle}.js API only returns raw
+  // option-value strings, not swatch metadata) the way product.liquid
+  // and product-card.liquid can via `value.swatch.color`/`.image` — so
+  // this falls back to guessing a CSS color from the option text
+  // itself. A raw name like "Bronze" isn't a real CSS color keyword,
+  // so the browser silently drops an invalid `background-color: bronze`
+  // and the swatch renders with no color at all (reads as gray/silver).
+  // This table covers common apparel/product color names that aren't
+  // valid CSS keywords, checked before falling back to the raw name.
+  const COMMON_COLOR_NAME_FALLBACKS = {
+    bronze: "#8c7853",
+    rosegold: "#b76e79",
+    champagne: "#f7e7ce",
+    blush: "#de5d83",
+    charcoal: "#36454f",
+    denim: "#1560bd",
+    burgundy: "#800020",
+    mustard: "#ffdb58",
+    emerald: "#50c878",
+    sapphire: "#0f52ba",
+    camel: "#c19a6b",
+    taupe: "#483c32",
+    mauve: "#e0b0ff",
+    khaki: "#c3b091",
+    olive: "#708238",
+    rust: "#b7410e",
+    terracotta: "#e2725b",
+    cream: "#fffdd0",
+    ivory: "#fffff0",
+    offwhite: "#faf9f6",
+    stone: "#928e85",
+    sand: "#c2b280",
+    wine: "#722f37",
+    coral: "#ff7f50",
+    navy: "#000080",
+    teal: "#008080",
+    turquoise: "#40e0d0",
+    lilac: "#c8a2c8",
+    lavender: "#e6e6fa",
+    mint: "#98ff98",
+    peach: "#ffe5b4",
+    apricot: "#fbceb1",
+    plum: "#8e4585",
+    indigo: "#4b0082",
+    maroon: "#800000",
+    beige: "#f5f5dc",
+  };
+
   function colorKey(value) {
     return value.replace(/[\s-]/g, "").toLowerCase();
+  }
+
+  function resolveSwatchColor(value) {
+    const key = colorKey(value);
+    return COMMON_COLOR_NAME_FALLBACKS[key] || key;
   }
 
   function getOptionValues(product, index) {
@@ -445,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               aria-pressed="${value === selectedValue}"
                               title="${value}"
                             >
-                              <span class="j-quick-view-swatch-inner" style="background-color: ${colorKey(value)};"></span>
+                              <span class="j-quick-view-swatch-inner" style="background-color: ${resolveSwatchColor(value)};"></span>
                             </button>
                           `,
                             )

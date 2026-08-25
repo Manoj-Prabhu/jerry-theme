@@ -195,6 +195,7 @@
   /* Same gold used for the heading highlight — ties the badge to the rest
      of the hero's accent color instead of introducing a separate one. */
   color: #f0c14b;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 24px;
 }

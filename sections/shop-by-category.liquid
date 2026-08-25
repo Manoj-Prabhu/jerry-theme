@@ -10,6 +10,14 @@
     font-style: {{ section.settings.heading_font.style }};
     font-weight: {{ section.settings.heading_font.weight }};
   }
+
+  {{ section.settings.card_title_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-category-card__title {
+    font-family: {{ section.settings.card_title_font.family }}, {{ section.settings.card_title_font.fallback_families }};
+    font-style: {{ section.settings.card_title_font.style }};
+    font-weight: {{ section.settings.card_title_font.weight }};
+  }
 {% endstyle %}
 
 <section class="j-shop-by-category full-width">
@@ -71,6 +79,12 @@
       "id": "heading_font",
       "label": "Heading font",
       "default": "kaushan_script_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "card_title_font",
+      "label": "Category title font",
+      "default": "manuale_n7"
     },
     {
       "type": "textarea",

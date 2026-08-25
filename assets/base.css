@@ -327,6 +327,23 @@ h6 {
   letter-spacing: 0.06em;
 }
 
+/* Every place a product's name is displayed: product cards (collection
+   grids, search, recommendations, wishlist, recently viewed), the
+   product page title, cart line items, sticky cart, quick view, and
+   predictive search. One shared rule instead of duplicating it per
+   component, so the setting only has to be wired up once. */
+.j-product-card__content h2,
+.j-product__title,
+.j-featured-product__title,
+.j-sticky-cart__name,
+.j-cart-item__title,
+.j-quick-view__details h2,
+.j-predictive-search-item__title {
+  font-family: var(--font-product-name--family);
+  font-style: var(--font-product-name--style);
+  font-weight: var(--font-product-name--weight);
+}
+
 p {
   color: var(--color-text-light);
 }

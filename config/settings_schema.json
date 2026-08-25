@@ -49,6 +49,13 @@
         "default": "kaushan_script_n4",
         "label": "Page title font",
         "info": "Used for the page heading on simple pages like Contact, About Us, FAQ, and search."
+      },
+      {
+        "type": "font_picker",
+        "id": "type_product_name_font",
+        "default": "oswald_n4",
+        "label": "Product name font",
+        "info": "Used everywhere a product's name is shown: product cards, the product page, cart, sticky cart, quick view, and predictive search."
       }
     ]
   },
