@@ -103,7 +103,10 @@
         "trust-2",
         "trust-3"
       ],
-      "settings": {}
+      "settings": {
+        "button_font": "germania_one_n4",
+        "trust_font": "instrument_serif_n4"
+      }
     },
     "shop_by_category": {
       "type": "shop-by-category",
@@ -158,6 +161,7 @@
       ],
       "settings": {
         "heading": "Shop by Category",
+        "heading_font": "kaushan_script_n4",
         "description": "Find exactly what you're looking for."
       }
     },
@@ -165,6 +169,7 @@
       "type": "featured-collection",
       "settings": {
         "heading": "Featured Collection",
+        "heading_font": "marcellus_n4",
         "description": "Hand-picked products you'll love.",
         "collection": "premium-lifestyle-collection",
         "products_to_show": 2
@@ -174,6 +179,7 @@
       "type": "new-products",
       "settings": {
         "heading": "New Arrivals",
+        "heading_font": "michroma_n4",
         "description": "",
         "collection": "traditional-cultural-collection",
         "products_to_show": 6
@@ -184,6 +190,7 @@
       "settings": {
         "product": "ruby-red-tweed-blazer-mini-skirt-set",
         "heading": "Featured product",
+        "heading_font": "quantico_n7",
         "subtext": "You will love it..",
         "eyebrow": "crunching",
         "show_description": true,
@@ -305,7 +312,8 @@
         "review-3"
       ],
       "settings": {
-        "eyebrow": "From the people"
+        "eyebrow": "From the people",
+        "quote_font": "rancho_n4"
       }
     }
   },

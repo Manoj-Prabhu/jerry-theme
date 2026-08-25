@@ -9,7 +9,7 @@
  */
 {
   "current": {
-    "favicon": "shopify://shop_images/genrate-fav-icon-for-my-store-with-colour-green.png",
+    "favicon": "shopify://shop_images/mj_fav.png",
     "type_primary_font": "anton_n4",
     "type_body_font": "work_sans_n4",
     "type_logo_font": "poppins_n7",
@@ -19,6 +19,7 @@
     "section_spacing": 64,
     "card_radius": 16,
     "base_border_radius": 10,
+    "input_corner_radius": 4,
     "animation_speed": 100,
     "shadow_strength": 100,
     "show_breadcrumbs": true,
@@ -41,14 +42,13 @@
     "accent_color": "#15803D",
     "accent_text_color": "#FFFFFF",
     "border_color": "#8891A0",
-    "input_corner_radius": 4,
     "button_bg": "#14110F",
     "button_text": "#FFFFFF",
     "button_radius": 12,
-    "facebook": "",
-    "instagram": "",
-    "youtube": "",
-    "x": "",
+    "facebook": "https://www.facebook.com/",
+    "instagram": "https://www.instagram.com/?hl=en",
+    "youtube": "https://www.youtube.com/",
+    "x": "https://x.com/",
     "sections": {
       "cart-drawer": {
         "type": "cart-drawer",
