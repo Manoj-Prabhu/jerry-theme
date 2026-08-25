@@ -45,12 +45,12 @@
    reads clearly. A pseudo-element instead of an extra element, so this
    needed no changes to hero.liquid's markup at all.
 
-   Kept deliberately light — the heading/description/trust text all
-   carry their own text-shadow (see below) as the primary legibility
-   mechanism now, the same balance a reference site landed on (photo
-   reads bright and clear, scrim barely visible), rather than relying on
-   a heavy scrim to do that work and dulling the photo/video underneath
-   in the process. */
+   The left stop (0%-45%, roughly where .j-hero__content sits) is opaque
+   enough on its own — no separate card/backdrop behind the text — to
+   guarantee ~4.5:1 for white text even against a worst-case pure-white
+   photo underneath. Text-shadow alone isn't credited by contrast
+   checkers, and a boxed backdrop behind just the text read as a pasted-
+   on UI card, so the guarantee has to live in the scrim itself instead. */
 .j-hero::before {
   content: "";
   position: absolute;
@@ -59,11 +59,11 @@
   pointer-events: none;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.32) 0%,
-    rgba(0, 0, 0, 0.24) 20%,
-    rgba(0, 0, 0, 0.16) 38%,
-    rgba(0, 0, 0, 0.09) 55%,
-    rgba(0, 0, 0, 0.04) 72%,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.58) 30%,
+    rgba(0, 0, 0, 0.45) 45%,
+    rgba(0, 0, 0, 0.22) 60%,
+    rgba(0, 0, 0, 0.08) 75%,
     rgba(0, 0, 0, 0) 90%
   );
 }
@@ -174,17 +174,9 @@
   position: relative;
   z-index: 2;
   max-width: 560px;
-  /* The full-bleed scrim above is deliberately light (see its own
-     comment) and can't guarantee enough contrast for the white text
-     below on its own — a bright/light merchant photo behind a barely-
-     there scrim would leave white text well under 4.5:1, and text-
-     shadow isn't a substitute a contrast checker credits. This backdrop
-     is opaque enough (0.6) to guarantee ~5.7:1 for white text even
-     against a worst-case pure-white photo, scoped to just behind the
-     text instead of darkening the whole image. */
-  padding: 28px 32px;
-  border-radius: var(--radius-lg, 16px);
-  background: rgba(0, 0, 0, 0.6);
+  /* No card/backdrop behind the text — the contrast guarantee lives in
+     .j-hero::before's scrim instead (see its own comment), so the text
+     sits directly on the photo/video like the rest of the hero. */
 }
 
 .j-hero__badge {
