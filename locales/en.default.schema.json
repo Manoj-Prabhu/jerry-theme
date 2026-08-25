@@ -23,7 +23,7 @@
     "content": "Content",
     "custom_section": "Custom section",
     "favicon": "Favicon",
-    "favicon_info": "Will be scaled down to 32 x 32px",
+    "favicon_info": "32 x 32px recommended",
     "fonts": "Fonts",
     "general": "General",
     "footer": "Footer",

@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll(".j-product-recommendations");
+function initProductRecommendations(root) {
+  const sections = (root || document).querySelectorAll(
+    ".j-product-recommendations",
+  );
 
   sections.forEach(async (section) => {
     // Only sections still on their initial (JS-populated) render have
@@ -45,4 +47,16 @@ document.addEventListener("DOMContentLoaded", () => {
       section.hidden = true;
     }
   });
+}
+
+document.addEventListener("DOMContentLoaded", () => initProductRecommendations());
+
+// The theme editor swaps this section's markup via AJAX on every
+// settings change (heading, limit, intent) rather than reloading the
+// page — without this, the freshly-swapped section would stay a stale
+// empty/hidden shell that never fetches its recommendations.
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector(".j-product-recommendations")) {
+    initProductRecommendations(event.target);
+  }
 });

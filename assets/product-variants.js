@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initProductVariants() {
   const optionsWrap = document.getElementById("ProductOptions");
   const variantsJson = document.getElementById("ProductVariantsJson");
   const purchaseOptionsWrap = document.getElementById("ProductPurchaseOptions");
@@ -302,4 +302,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   updateAvailability();
+}
+
+document.addEventListener("DOMContentLoaded", initProductVariants);
+
+// The theme editor swaps a section's markup via AJAX on every settings
+// change rather than reloading the page, so DOMContentLoaded only ever
+// fires once — without this, editing anything in the product section
+// (reordering/adding a block, changing a setting) would leave variant
+// swatches/pills unresponsive until a hard refresh.
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector("#ProductVariantsJson")) {
+    initProductVariants();
+  }
 });

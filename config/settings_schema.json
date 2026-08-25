@@ -182,7 +182,7 @@
     ]
   },
   {
-    "name": "Cart & Shipping",
+    "name": "Cart and shipping",
     "settings": [
       {
         "type": "number",
@@ -194,7 +194,7 @@
     ]
   },
   {
-    "name": "Product Badges",
+    "name": "Product badges",
     "settings": [
       {
         "type": "checkbox",

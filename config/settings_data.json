@@ -42,16 +42,16 @@
     "button_bg": "#14110F",
     "button_text": "#FFFFFF",
     "button_radius": 12,
-    "facebook": "https://www.facebook.com/",
-    "instagram": "https://www.instagram.com/?hl=en",
-    "youtube": "https://www.youtube.com/",
-    "x": "https://x.com/",
+    "facebook": "",
+    "instagram": "",
+    "youtube": "",
+    "x": "",
     "sections": {
       "cart-drawer": {
         "type": "cart-drawer",
         "settings": {
           "empty_cart_heading": "You should definitely check out",
-          "empty_cart_collection": "the-essential-collection"
+          "empty_cart_collection": ""
         }
       }
     },

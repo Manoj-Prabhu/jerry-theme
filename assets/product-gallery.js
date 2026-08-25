@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
+let productGalleryResizeListenerBound = false;
+
+function initProductGallery() {
   const gallery = document.querySelector(".j-product__gallery");
   const thumbnails = document.querySelectorAll(".j-product-thumbnail");
   const dots = document.querySelectorAll(".j-product__dot");
@@ -114,12 +116,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     thumbList.addEventListener("scroll", updateArrowState, { passive: true });
 
-    let resizeTimer = null;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateArrowState, 150);
-    });
+    // Bound once, ever, at module scope — this listens on `window`
+    // itself (never replaced by a section reload), so re-running init on
+    // every shopify:section:load would otherwise stack a duplicate
+    // listener each time instead of just picking up the new elements.
+    if (!productGalleryResizeListenerBound) {
+      productGalleryResizeListenerBound = true;
+      let resizeTimer = null;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(updateArrowState, 150);
+      });
+    }
 
     updateArrowState();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initProductGallery);
+
+// See product-variants.js for why this listener is needed — the theme
+// editor swaps section markup via AJAX without firing DOMContentLoaded
+// again, so without this, thumbnails/dots stop switching the main image
+// after any edit to the product section.
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector(".j-product__gallery")) {
+    initProductGallery();
   }
 });

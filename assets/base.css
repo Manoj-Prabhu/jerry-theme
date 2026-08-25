@@ -310,6 +310,23 @@ h4 {
   font-size: var(--font-size-lg);
 }
 
+/* h5/h6 previously had no explicit size at all, falling back to
+   whatever the browser's UA stylesheet happens to use — unpredictable,
+   and small enough (~13px/~11px relative to the 16px body) to hurt
+   legibility if a merchant ever uses them via the rich text editor.
+   Both share font-size-sm (going smaller still would hurt legibility
+   further), distinguished from each other and from h4 by treatment
+   instead of just shrinking. */
+h5 {
+  font-size: var(--font-size-sm);
+}
+
+h6 {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 p {
   color: var(--color-text-light);
 }

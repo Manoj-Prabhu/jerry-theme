@@ -12,7 +12,7 @@ function resizeImageUrl(src, width) {
 
 const RECENTLY_VIEWED_IMAGE_WIDTHS = [200, 350, 500, 700];
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function initRecentlyViewed() {
   const container = document.getElementById("RecentlyViewedProducts");
 
   if (!container) return;
@@ -119,5 +119,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (window.JerryProductCardCycle) {
     window.JerryProductCardCycle(container);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initRecentlyViewed);
+
+// The theme editor swaps this section's markup via AJAX on every
+// settings change rather than reloading the page — without this, the
+// freshly-swapped section stays a stale empty shell.
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector("#RecentlyViewedProducts")) {
+    initRecentlyViewed();
   }
 });

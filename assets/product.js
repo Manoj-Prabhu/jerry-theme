@@ -20,6 +20,15 @@ function initProductQuantityStepper() {
   plus.addEventListener("click", () => step(1));
 }
 
+// See product-variants.js for why this listener is needed — without it,
+// the quantity +/- stepper stops working after any edit to the product
+// section in the theme editor.
+document.addEventListener("shopify:section:load", (event) => {
+  if (event.target.querySelector(".j-product__qty-control")) {
+    initProductQuantityStepper();
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   initProductQuantityStepper();
 

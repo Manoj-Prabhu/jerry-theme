@@ -4,7 +4,7 @@
     "not_found": "Page not found.",
     "not_found_detail": "The page you're looking for doesn't exist or has been moved.",
     "back_to_shopping": "Back to shopping",
-    "back_to_home": "Back to homepage"
+    "back_to_home": "Back to home page"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -97,7 +97,7 @@
     "order": {
       "title_html": "Order {{ name }}",
       "date_html": "Placed on {{ date }}",
-      "cancelled_html": "Order Cancelled on {{ date }}",
+      "cancelled_html": "Order Canceled on {{ date }}",
       "cancelled_reason": "Reason: {{ reason }}",
       "billing_address": "Billing Address",
       "shipping_address": "Shipping Address",

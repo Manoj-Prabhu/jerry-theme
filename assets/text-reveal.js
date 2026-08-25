@@ -116,6 +116,8 @@ const HERO_SLIDE_CROSSFADE_MS = 800;
 const HERO_BADGE_DELAY_MS = HERO_SLIDE_CROSSFADE_MS - 100;
 const HERO_DESCRIPTION_DELAY_MS = HERO_SLIDE_CROSSFADE_MS + 150;
 
+let textRevealHeroListenerBound = false;
+
 function initHeroTextReveal() {
   const slides = document.querySelectorAll(".j-hero");
 
@@ -130,13 +132,20 @@ function initHeroTextReveal() {
   descriptions.forEach(prepareTextReveal);
 
   // Multi-slide hero: replay the reveal every time a slide becomes active
-  // (dispatched by hero-slideshow.js), not just once on page load.
-  document.addEventListener("heroSlideActivated", (event) => {
-    const slide = event.detail.slide;
-    playTextReveal(slide.querySelector(".j-hero__badge"), HERO_BADGE_DELAY_MS);
-    playTextReveal(slide.querySelector("h1"), HERO_SLIDE_CROSSFADE_MS);
-    playTextReveal(slide.querySelector("p"), HERO_DESCRIPTION_DELAY_MS);
-  });
+  // (dispatched by hero-slideshow.js), not just once on page load. Bound
+  // once, ever — this listens on `document` (never replaced by a section
+  // reload), so re-running initHeroTextReveal on every
+  // shopify:section:load would otherwise stack a duplicate listener each
+  // time, playing the reveal multiple times per slide change.
+  if (!textRevealHeroListenerBound) {
+    textRevealHeroListenerBound = true;
+    document.addEventListener("heroSlideActivated", (event) => {
+      const slide = event.detail.slide;
+      playTextReveal(slide.querySelector(".j-hero__badge"), HERO_BADGE_DELAY_MS);
+      playTextReveal(slide.querySelector("h1"), HERO_SLIDE_CROSSFADE_MS);
+      playTextReveal(slide.querySelector("p"), HERO_DESCRIPTION_DELAY_MS);
+    });
+  }
 
   // Single, non-slideshow hero (or the initially active slide before any
   // heroSlideActivated event has fired) still needs its own trigger.
@@ -198,3 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(initTextReveal, 150);
   }
 });
+
+// The theme editor swaps a section's markup via AJAX on every settings
+// change rather than reloading the page — without this, a hero slide or
+// section title added/swapped in after initial load never gets wrapped
+// into words/letters, so it never gets the reveal treatment at all.
+// prepareTextReveal/prepareHeroTextReveal are self-guarded per-element
+// (dataset.textReveal), so re-running against already-processed
+// elements is a safe no-op.
+document.addEventListener("shopify:section:load", initTextReveal);

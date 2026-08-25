@@ -68,3 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(initScrollReveal, 200);
   }
 });
+
+// The theme editor swaps a section's markup via AJAX on every settings
+// change rather than reloading the page — without this, a freshly-
+// swapped section's elements never get .j-reveal added at all, so the
+// enter animation just silently stops playing for it (content still
+// renders fully visible either way, since .j-reveal — not its absence —
+// is what sets opacity: 0). Re-scanning the whole page is safe: already-
+// revealed elements just get re-observed and immediately re-marked
+// revealed, a harmless no-op.
+document.addEventListener("shopify:section:load", initScrollReveal);
