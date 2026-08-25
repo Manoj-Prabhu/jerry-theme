@@ -1,8 +1,24 @@
 <div class="j-product-card">
 
-  <a href="{{ product.url }}" class="j-product-card__link">
+  <div class="j-product-card__image"{% if product.images.size > 1 %} data-auto-cycle{% endif %}>
 
-    <div class="j-product-card__image"{% if product.images.size > 1 %} data-auto-cycle{% endif %}>
+    {% comment %}
+      A <button> can't be nested inside an <a> per the HTML spec (invalid
+      interactive-in-interactive content) — the wishlist/quick-view
+      buttons below need to sit alongside the images, not inside a link
+      wrapping them. This anchor still makes the image itself clickable
+      (display: contents means it generates no box of its own, so its
+      children — the <img> tags — lay out exactly as if it weren't
+      there, while still functioning as a real, focusable link), and is
+      hidden from assistive tech since the card's real accessible link
+      is the title below.
+    {% endcomment %}
+    <a
+      href="{{ product.url }}"
+      class="j-product-card__image-link"
+      tabindex="-1"
+      aria-hidden="true"
+    >
 
       {% if product.featured_image %}
 
@@ -20,7 +36,7 @@
               | image_url: width: 700, format: 'webp'
               | image_tag:
                 class: img_class,
-                alt: product.title,
+                alt: card_image.alt | default: product.title,
                 widths: '200, 350, 500, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw',
                 fetchpriority: 'high'
@@ -32,7 +48,7 @@
               | image_tag:
                 loading: 'lazy',
                 class: img_class,
-                alt: product.title,
+                alt: card_image.alt | default: product.title,
                 widths: '200, 350, 500, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw'
             }}
@@ -45,7 +61,9 @@
 
       {% endif %}
 
-      {% render 'product-badges', product: product %}
+    </a>
+
+    {% render 'product-badges', product: product %}
 
       <button
         type="button"
@@ -71,6 +89,7 @@
 
     </div>
 
+  <a href="{{ product.url }}" class="j-product-card__link">
     <div class="j-product-card__content">
 
       <h2>{{ product.title }}</h2>

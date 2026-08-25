@@ -78,6 +78,10 @@
         <a
           href="{{ link.url }}"
           class="j-nav-link"
+          {% if link.links != blank %}
+            aria-haspopup="true"
+            aria-expanded="false"
+          {% endif %}
         >
           {{ link.title }}
           {% if link.links != blank %}

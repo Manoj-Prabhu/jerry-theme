@@ -19,7 +19,7 @@
         {{
           section.settings.image
           | image_url: width: 1200
-          | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: section.settings.heading
+          | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: section.settings.heading | default: shop.name
         }}
       {% else %}
         <div class="j-about-story__media-placeholder">{{ 'image' | placeholder_svg_tag: 'j-about-story__placeholder-svg' }}</div>

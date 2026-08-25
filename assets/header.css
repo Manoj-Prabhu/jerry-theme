@@ -610,7 +610,12 @@
 .j-body--home
   .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
   .j-search-form input {
-  background: rgba(255, 255, 255, 0.18);
+  /* A dark (not white) tint — a white-tinted translucent field over a
+     bright/light merchant photo can wash out to near-white-on-white for
+     both the field and its white placeholder text, with no guaranteed
+     floor. Dark tint at this opacity guarantees ~5.7:1 for white text
+     even against a worst-case pure-white photo behind it. */
+  background: rgba(0, 0, 0, 0.6);
   border-color: rgba(255, 255, 255, 0.5);
   color: #fff;
 }

@@ -7,6 +7,53 @@ class JerryHeader {
     this.initMobileMenu();
     this.initHeaderSearchToggle();
     this.initHeroRevealOnNavHover();
+    this.initDesktopDropdowns();
+  }
+
+  /* Desktop Dropdown/Mega Menu — keyboard support
+
+     The dropdown itself opens/closes via pure CSS (:hover/:focus-within
+     in header.css), which already lets a keyboard user Tab into it. This
+     just layers on the two things CSS alone can't do: keep
+     aria-expanded in sync for screen readers, and let Escape close an
+     open dropdown. :focus-within is true as long as focus is ANYWHERE
+     inside .j-nav-item — including the trigger link itself — so
+     re-focusing the trigger on Escape wouldn't actually close it; only
+     blurring (moving focus out of the item entirely) does. */
+
+  initDesktopDropdowns() {
+    const items = document.querySelectorAll(
+      ".j-nav-item:has(.j-dropdown)",
+    );
+
+    if (!items.length) return;
+
+    items.forEach((item) => {
+      const trigger = item.querySelector(".j-nav-link");
+      if (!trigger) return;
+
+      const setExpanded = (expanded) => {
+        trigger.setAttribute("aria-expanded", String(expanded));
+      };
+
+      item.addEventListener("mouseenter", () => setExpanded(true));
+      item.addEventListener("mouseleave", () => setExpanded(false));
+      item.addEventListener("focusin", () => setExpanded(true));
+      item.addEventListener("focusout", (event) => {
+        if (!item.contains(event.relatedTarget)) setExpanded(false);
+      });
+
+      item.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        setExpanded(false);
+        // Blur (not re-focus the trigger) — :focus-within stays true, and
+        // the dropdown stays open, for as long as focus is anywhere
+        // inside .j-nav-item, including the trigger itself.
+        if (item.contains(document.activeElement)) {
+          document.activeElement.blur();
+        }
+      });
+    });
   }
 
   /* Hero Reveal on Nav Hover (homepage only — see header.css/hero.css) */

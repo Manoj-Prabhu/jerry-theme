@@ -2,11 +2,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jerry-wishlist";
 
   function getWishlist() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch (error) {
+      /* localStorage unavailable (private browsing, in-app webview, etc.) */
+      return [];
+    }
   }
 
   function saveWishlist(items) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch (error) {
+      /* no-op */
+    }
   }
 
   function updateButton(button, active) {
@@ -79,7 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const wishlist = getWishlist();
     if (wishlist.length === 0) return;
 
-    const lastPruned = Number(localStorage.getItem(PRUNE_CHECK_KEY)) || 0;
+    let lastPruned = 0;
+    try {
+      lastPruned = Number(localStorage.getItem(PRUNE_CHECK_KEY)) || 0;
+    } catch (error) {
+      /* localStorage unavailable — treat as never pruned, still safe to skip below */
+    }
     if (Date.now() - lastPruned < PRUNE_INTERVAL_MS) return;
 
     Promise.all(
@@ -99,7 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
           updateWishlistCount();
         }
 
-        localStorage.setItem(PRUNE_CHECK_KEY, String(Date.now()));
+        try {
+          localStorage.setItem(PRUNE_CHECK_KEY, String(Date.now()));
+        } catch (error) {
+          /* no-op */
+        }
       })
       .catch(() => {});
   }

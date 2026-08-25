@@ -142,7 +142,7 @@
 }
 
 .j-footer__newsletter-field:focus-within {
-  box-shadow: 0 0 0 2px #b8860b;
+  box-shadow: 0 0 0 3px #b8860b;
 }
 
 .j-footer__newsletter input {
@@ -156,7 +156,9 @@
 }
 
 .j-footer__newsletter input::placeholder {
-  color: rgba(0, 0, 0, 0.45);
+  /* 0.45 measured at ~3.35:1 on white — under the 4.5:1 minimum for
+     visible placeholder text. 0.6 clears it with margin (~5.75:1). */
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .j-footer__newsletter input:focus {
@@ -250,6 +252,7 @@
 
 .j-localization-form:focus-within {
   border-color: #b8860b;
+  box-shadow: 0 0 0 2px #b8860b;
 }
 
 .j-localization-form__globe {

@@ -174,6 +174,17 @@
   position: relative;
   z-index: 2;
   max-width: 560px;
+  /* The full-bleed scrim above is deliberately light (see its own
+     comment) and can't guarantee enough contrast for the white text
+     below on its own — a bright/light merchant photo behind a barely-
+     there scrim would leave white text well under 4.5:1, and text-
+     shadow isn't a substitute a contrast checker credits. This backdrop
+     is opaque enough (0.6) to guarantee ~5.7:1 for white text even
+     against a worst-case pure-white photo, scoped to just behind the
+     text instead of darkening the whole image. */
+  padding: 28px 32px;
+  border-radius: var(--radius-lg, 16px);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .j-hero__badge {

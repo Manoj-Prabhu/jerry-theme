@@ -11,7 +11,10 @@
   --color-white: #ffffff;
   --color-black: #000000;
 
-  --color-text-light: #6b7280;
+  /* Darkened from the more common #6b7280 to keep headroom above 4.5:1
+     on white (was 4.83:1 — passes, but with almost no margin against
+     any merchant-customized off-white background_color). */
+  --color-text-light: #5b6270;
 
   /* Darkened from the more common #22c55e/#ef4444 shades — those only hit
      ~2.3:1 and ~3.8:1 against white, failing WCAG AA (4.5:1) for normal

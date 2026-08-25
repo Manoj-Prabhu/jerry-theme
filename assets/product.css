@@ -183,7 +183,11 @@
 
   border-radius: 999px;
   background: rgba(239, 68, 68, 0.1);
-  color: var(--color-error, #ef4444);
+  /* --color-error (#dc2626) only hits ~4.24:1 on this pale-red badge
+     background — under the 4.5:1 minimum, even though it passes on
+     plain white elsewhere. A darker red specifically for this badge
+     clears it (~5.69:1) without touching the shared token. */
+  color: #b91c1c;
 
   font-size: var(--font-size-sm);
   font-weight: 600;

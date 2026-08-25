@@ -116,6 +116,15 @@
   flex: 1;
 }
 
+/* No box of its own — its <img> children lay out exactly as if this
+   anchor weren't there at all, while it still functions as a real,
+   focusable link (hidden from assistive tech; see product-card.liquid
+   for why this exists as a separate anchor from .j-product-card__link
+   rather than wrapping the whole card). */
+.j-product-card__image-link {
+  display: contents;
+}
+
 /* Image */
 
 .j-product-card__image {
@@ -687,7 +696,12 @@
 }
 
 .j-featured-collection .j-star {
-  color: rgba(255, 255, 255, 0.35);
+  /* Bumped from 0.35 — at the lighter end of the card's gradient scrim
+     (see .j-product-card__image::after) over a light product photo, the
+     unfilled star was getting too close to its background to reliably
+     read as a star shape at all, which also blurs the filled/unfilled
+     rating distinction itself. */
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .j-featured-collection .j-product-card__rating-count {

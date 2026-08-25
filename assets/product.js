@@ -28,12 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const handle = window.location.pathname.split("/products/")[1];
   if (!handle) return;
   const STORAGE_KEY = "jerry-recently-viewed";
-  let products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  // Remove duplicate
-  products = products.filter((item) => item !== handle);
-  // Add current product first
-  products.unshift(handle);
-  // Keep only last 4
-  products = products.slice(0, 4);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  try {
+    let products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    // Remove duplicate
+    products = products.filter((item) => item !== handle);
+    // Add current product first
+    products.unshift(handle);
+    // Keep only last 4
+    products = products.slice(0, 4);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  } catch (error) {
+    /* localStorage unavailable (private browsing, in-app webview, etc.) */
+  }
 });

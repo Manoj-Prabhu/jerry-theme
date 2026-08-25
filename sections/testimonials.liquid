@@ -78,7 +78,8 @@
                     | image_tag:
                       loading: 'lazy',
                       widths: '600, 900, 1200',
-                      sizes: '(max-width: 900px) 100vw, 50vw'
+                      sizes: '(max-width: 900px) 100vw, 50vw',
+                      alt: block.settings.image.alt | default: block.settings.name
                   }}
                 {% else %}
                   <div class="j-testimonials__media-placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>

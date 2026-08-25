@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // server-side (image_tag / video_tag / external_video_tag /
   // model_viewer_tag), since this modal has to build the same thing from
   // the Product JS API's JSON instead of Liquid.
-  function renderMainMedia(media) {
+  function renderMainMedia(media, fallbackAlt) {
     if (media.mediaType === "video" && media.sources.length) {
       const sourcesHtml = media.sources
         .map(
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="j-quick-view__main-embed" id="QuickViewMainImage">
           <iframe
             src="${embedUrl}"
-            title="${media.alt || ""}"
+            title="${media.alt || fallbackAlt || ""}"
             frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
         src="${resizeImageUrl(media.src, 600)}"
         srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(media.src, width)} ${width}w`).join(", ")}"
         sizes="(max-width: 700px) 90vw, 420px"
-        alt="${media.alt || ""}"
+        alt="${media.alt || fallbackAlt || ""}"
       >
     `;
   }
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="j-quick-view__gallery">
 
           <div class="j-quick-view__main-image">
-            ${renderMainMedia(activeMedia)}
+            ${renderMainMedia(activeMedia, product.title)}
           </div>
 
           ${
@@ -596,7 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainImageWrap = content.querySelector(".j-quick-view__main-image");
 
         if (media && mainImageWrap) {
-          mainImageWrap.innerHTML = renderMainMedia(media);
+          mainImageWrap.innerHTML = renderMainMedia(media, currentProduct.title);
           activateModelViewerIfPresent();
         }
 
@@ -761,10 +761,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = event.target.closest(".j-quick-view-button");
     if (!button) return;
 
-    // The button now sits inside the product card's <a> (nested in
-    // .j-product-card__image, alongside the wishlist button) so it can be
-    // positioned as an overlay directly on the image — without this, the
-    // click would also bubble up as a navigation to the product page.
+    // This button sits inside .j-product-card__image, right next to the
+    // small image-only <a> that makes the photo itself clickable (see
+    // product-card.liquid) — stopPropagation keeps a click here from
+    // also being picked up as a click on that overlapping link.
     event.preventDefault();
     event.stopPropagation();
 

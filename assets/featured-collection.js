@@ -112,15 +112,23 @@ function initFeaturedCollectionTapReveal() {
     if (card.dataset.tapRevealInitialized) return;
     card.dataset.tapRevealInitialized = "true";
 
-    const link = card.querySelector(".j-product-card__link");
-    if (!link) return;
+    // Two separate anchors now cover the card (one over the image, one
+    // over the title/content — see product-card.liquid), so both need
+    // the same tap-to-reveal interception, not just whichever one
+    // querySelector happened to find first.
+    const links = card.querySelectorAll(
+      ".j-product-card__link, .j-product-card__image-link",
+    );
+    if (!links.length) return;
 
-    link.addEventListener("click", (event) => {
-      if (card.classList.contains("is-tapped")) return;
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (card.classList.contains("is-tapped")) return;
 
-      event.preventDefault();
-      cards.forEach((other) => other.classList.remove("is-tapped"));
-      card.classList.add("is-tapped");
+        event.preventDefault();
+        cards.forEach((other) => other.classList.remove("is-tapped"));
+        card.classList.add("is-tapped");
+      });
     });
   });
 

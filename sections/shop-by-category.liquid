@@ -31,7 +31,7 @@
                     loading: 'lazy',
                     widths: '300, 450, 600',
                     sizes: '(max-width: 768px) 45vw, 22vw',
-                    alt: block.settings.title
+                    alt: block.settings.title | default: shop.name
                 }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'j-category-card__placeholder' }}

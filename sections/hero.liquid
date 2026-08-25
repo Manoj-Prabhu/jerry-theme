@@ -128,7 +128,7 @@
                     widths: '360, 480, 600, 760, 1000, 1200',
                     sizes: '(max-width: 991px) 90vw, 560px',
                     class: 'j-hero__img',
-                    alt: block.settings.heading
+                    alt: block.settings.heading | default: shop.name
                 }}
               {% else %}
                 {% comment %}
@@ -149,7 +149,7 @@
                       widths: '360, 480, 600, 760, 1000, 1200',
                       sizes: '(max-width: 991px) 90vw, 560px',
                       class: 'j-hero__img',
-                      alt: block.settings.heading
+                      alt: block.settings.heading | default: shop.name
                   }}
                 {% endcapture %}
                 {{ deferred_hero_image | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' }}

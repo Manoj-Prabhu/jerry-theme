@@ -278,7 +278,7 @@
         "type": "color",
         "id": "border_color",
         "label": "Border color",
-        "default": "#E5E7EB"
+        "default": "#8891A0"
       }
     ]
   },

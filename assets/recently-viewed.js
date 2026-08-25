@@ -17,8 +17,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!container) return;
 
-  const handles =
-    JSON.parse(localStorage.getItem("jerry-recently-viewed")) || [];
+  let handles = [];
+  try {
+    handles = JSON.parse(localStorage.getItem("jerry-recently-viewed")) || [];
+  } catch (error) {
+    /* localStorage unavailable (private browsing, in-app webview, etc.) */
+  }
 
   if (!handles.length) {
     container.innerHTML = "<p>No recently viewed products.</p>";
@@ -63,32 +67,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       container.innerHTML += `
         <div class="j-product-card">
 
-          <a href="/products/${product.handle}" class="j-product-card__link">
+          <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
 
-            <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
+            <a href="/products/${product.handle}" class="j-product-card__image-link" tabindex="-1" aria-hidden="true">
               ${imagesHtml}
+            </a>
 
-              <button
-                type="button"
-                class="j-wishlist-button"
-                data-handle="${product.handle}"
-                data-product-title="${product.title}"
-                aria-label="${(strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
-              >
-                ♡
-              </button>
+            <button
+              type="button"
+              class="j-wishlist-button"
+              data-handle="${product.handle}"
+              data-product-title="${product.title}"
+              aria-label="${(strings.addToWishlistHtml || "Add __TITLE__ to Wishlist").replace("__TITLE__", product.title)}"
+            >
+              ♡
+            </button>
 
-              <button
-                type="button"
-                class="j-quick-view-button"
-                data-handle="${product.handle}"
-                aria-haspopup="dialog"
-              >
-                ${strings.quickView || "Quick View"}
-              </button>
+            <button
+              type="button"
+              class="j-quick-view-button"
+              data-handle="${product.handle}"
+              aria-haspopup="dialog"
+            >
+              ${strings.quickView || "Quick View"}
+            </button>
 
-            </div>
+          </div>
 
+          <a href="/products/${product.handle}" class="j-product-card__link">
             <div class="j-product-card__content">
 
               <h2>${product.title}</h2>
@@ -98,7 +104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               </div>
 
             </div>
-
           </a>
 
         </div>

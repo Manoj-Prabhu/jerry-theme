@@ -230,14 +230,19 @@ function initFeaturedProduct(root) {
     // change — observing the wrapper (not the row) also avoids a feedback
     // loop, since clampVisibleThumbCount() only ever writes to the row.
     let thumbResizeTimer = null;
-    const thumbResizeObserver = new ResizeObserver(() => {
+    const onThumbWrapResize = () => {
       clearTimeout(thumbResizeTimer);
       thumbResizeTimer = setTimeout(() => {
         clampVisibleThumbCount();
         updateThumbArrows();
       }, 150);
-    });
-    thumbResizeObserver.observe(thumbWrap);
+    };
+
+    if (typeof ResizeObserver === "function") {
+      new ResizeObserver(onThumbWrapResize).observe(thumbWrap);
+    } else {
+      window.addEventListener("resize", onThumbWrapResize, { passive: true });
+    }
 
     clampVisibleThumbCount();
     updateThumbArrows();

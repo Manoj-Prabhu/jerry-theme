@@ -411,7 +411,10 @@ html.j-scroll-lock body {
 
 .j-cart-remove:hover {
   background: rgba(239, 68, 68, 0.1);
-  color: var(--color-error);
+  /* Same pale-red badge background as product.css's low-stock badge —
+     --color-error only hits ~4.24:1 here, under 4.5:1; this darker red
+     clears it (~5.69:1). */
+  color: #b91c1c;
 }
 
 /* Quantity Stepper */

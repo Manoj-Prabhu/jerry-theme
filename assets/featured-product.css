@@ -532,17 +532,20 @@
     background: transparent;
   }
 
-  /* Image always shows above the buy box on mobile, regardless of the
-     left/right setting used on desktop — there's no meaningful "side" on
-     a single narrow column. Width/flex-basis are reasserted explicitly
-     (rather than relying on the flex column's default stretch) because
-     switching a live viewport from desktop to mobile — e.g. the theme
-     editor's device-preview toggle, without a full page reload — can
-     leave this item holding onto the width it had as a desktop grid
-     column (1.15fr) until the next reflow, squashing the aspect-ratio
-     box into a tall sliver instead of a square. */
+  /* No longer forced above the buy box via `order: -1` — the gallery's
+     own thumbnail/arrow buttons are focusable, and visually reordering
+     them ahead of the buy box's controls (quantity, Add to Cart) while
+     DOM/tab order still visits the buy box first breaks keyboard focus
+     order (focus is expected to follow visual top-to-bottom order).
+     Stacks in DOM order instead: buy box, then gallery, matching what a
+     keyboard user actually tabs through. Width/flex-basis are reasserted
+     explicitly (rather than relying on the flex column's default
+     stretch) because switching a live viewport from desktop to mobile —
+     e.g. the theme editor's device-preview toggle, without a full page
+     reload — can leave this item holding onto the width it had as a
+     desktop grid column (1.15fr) until the next reflow, squashing the
+     aspect-ratio box into a tall sliver instead of a square. */
   .j-featured-product__gallery {
-    order: -1;
     width: 100%;
     flex: 0 0 auto;
   }
