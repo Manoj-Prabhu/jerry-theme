@@ -42,6 +42,13 @@
         "id": "type_logo_font",
         "default": "poppins_n7",
         "label": "Logo font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_page_title_font",
+        "default": "kaushan_script_n4",
+        "label": "Page title font",
+        "info": "Used for the page heading on simple pages like Contact, About Us, FAQ, and search."
       }
     ]
   },

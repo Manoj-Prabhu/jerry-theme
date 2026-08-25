@@ -10,6 +10,16 @@
 
 {{ 'featured-product.css' | asset_url | stylesheet_tag }}
 
+{% style %}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-featured-product__heading {
+    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    font-style: {{ section.settings.heading_font.style }};
+    font-weight: {{ section.settings.heading_font.weight }};
+  }
+{% endstyle %}
+
 {% assign fp_product = section.settings.product %}
 
 <div class="j-featured-product-section">
@@ -354,6 +364,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Featured product"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "quantico_n7"
     },
     {
       "type": "text",

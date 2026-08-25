@@ -95,8 +95,9 @@
    base.css) reads as too loud here, so this scope swaps in the lighter
    logo font at a reduced weight instead of overriding h1 globally. */
 .j-page-hero-band__inner h1 {
-  font-family: var(--font-logo--family);
-  font-weight: var(--font-semibold);
+  font-family: var(--font-page-title--family);
+  font-style: var(--font-page-title--style);
+  font-weight: var(--font-page-title--weight);
   font-size: var(--font-size-2xl);
 }
 

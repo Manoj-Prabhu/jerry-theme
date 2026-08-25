@@ -10,6 +10,15 @@
 
     assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
     assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+
+    assign logo_font_bold = settings.type_logo_font | font_modify: 'weight', 'bold'
+    assign logo_font_italic = settings.type_logo_font | font_modify: 'style', 'italic'
+    assign logo_font_bold_italic = logo_font_bold | font_modify: 'style', 'italic'
+
+    assign page_title_font_bold = settings.type_page_title_font | font_modify: 'weight', 'bold'
+    assign page_title_font_italic = settings.type_page_title_font | font_modify: 'style', 'italic'
+    assign page_title_font_bold_italic = page_title_font_bold | font_modify: 'style', 'italic'
   %}
 
   {{ settings.type_primary_font | font_face: font_display: 'swap' }}
@@ -27,11 +36,34 @@
   {% if body_font_bold != blank %}
     {{ body_font_bold | font_face: font_display: 'swap' }}
   {% endif %}
+  {% if body_font_bold_italic != blank %}
+    {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
   {% if body_font_italic != blank %}
     {{ body_font_italic | font_face: font_display: 'swap' }}
   {% endif %}
 
   {{ settings.type_logo_font | font_face: font_display: 'swap' }}
+  {% if logo_font_bold != blank %}
+    {{ logo_font_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if logo_font_bold_italic != blank %}
+    {{ logo_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if logo_font_italic != blank %}
+    {{ logo_font_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+
+  {{ settings.type_page_title_font | font_face: font_display: 'swap' }}
+  {% if page_title_font_bold != blank %}
+    {{ page_title_font_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if page_title_font_bold_italic != blank %}
+    {{ page_title_font_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if page_title_font_italic != blank %}
+    {{ page_title_font_italic | font_face: font_display: 'swap' }}
+  {% endif %}
 
   :root {
 
@@ -48,6 +80,10 @@
     --font-logo--family: {{ settings.type_logo_font.family }}, {{ settings.type_logo_font.fallback_families }};
     --font-logo--style: {{ settings.type_logo_font.style }};
     --font-logo--weight: {{ settings.type_logo_font.weight }};
+
+    --font-page-title--family: {{ settings.type_page_title_font.family }}, {{ settings.type_page_title_font.fallback_families }};
+    --font-page-title--style: {{ settings.type_page_title_font.style }};
+    --font-page-title--weight: {{ settings.type_page_title_font.weight }};
 
     /* Layout */
 

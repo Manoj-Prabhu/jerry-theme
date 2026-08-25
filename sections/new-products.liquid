@@ -6,6 +6,16 @@
   no title/price text under each photo.
 {% endcomment %}
 
+{% style %}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-new-products__heading-row h2 {
+    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    font-style: {{ section.settings.heading_font.style }};
+    font-weight: {{ section.settings.heading_font.weight }};
+  }
+{% endstyle %}
+
 <section class="j-new-products">
 
   <div class="j-new-products__heading">
@@ -92,6 +102,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "New Arrivals"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "michroma_n4"
     },
     {
       "type": "textarea",

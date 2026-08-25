@@ -4,6 +4,16 @@
 
 {% if section.settings.show_announcement and section.blocks.size > 0 %}
 
+  {% style %}
+    {{ section.settings.announcement_font | font_face: font_display: 'swap' }}
+
+    #shopify-section-{{ section.id }} .j-announcement__text {
+      font-family: {{ section.settings.announcement_font.family }}, {{ section.settings.announcement_font.fallback_families }};
+      font-style: {{ section.settings.announcement_font.style }};
+      font-weight: {{ section.settings.announcement_font.weight }};
+    }
+  {% endstyle %}
+
   <div
     class="j-announcement full-width{% if section.settings.show_close %} has-close{% endif %}"
     style="

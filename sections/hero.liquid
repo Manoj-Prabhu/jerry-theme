@@ -3,6 +3,24 @@
   assign trust_blocks = section.blocks | where: 'type', 'trust_item'
 %}
 
+{% style %}
+  {{ section.settings.button_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-hero__buttons .j-button {
+    font-family: {{ section.settings.button_font.family }}, {{ section.settings.button_font.fallback_families }};
+    font-style: {{ section.settings.button_font.style }};
+    font-weight: {{ section.settings.button_font.weight }};
+  }
+
+  {{ section.settings.trust_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-hero__trust-item {
+    font-family: {{ section.settings.trust_font.family }}, {{ section.settings.trust_font.fallback_families }};
+    font-style: {{ section.settings.trust_font.style }};
+    font-weight: {{ section.settings.trust_font.weight }};
+  }
+{% endstyle %}
+
 <div class="j-hero-band full-width">
 
   <div
@@ -197,7 +215,20 @@
 {% schema %}
 {
   "name": "Slideshow",
-  "settings": [],
+  "settings": [
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "germania_one_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "trust_font",
+      "label": "Trust row font",
+      "default": "instrument_serif_n4"
+    }
+  ],
   "blocks": [
     {
       "type": "slide",

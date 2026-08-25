@@ -1,3 +1,13 @@
+{% style %}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-featured-collection__heading h2 {
+    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    font-style: {{ section.settings.heading_font.style }};
+    font-weight: {{ section.settings.heading_font.weight }};
+  }
+{% endstyle %}
+
 <section class="j-featured-collection">
   <div class="j-featured-collection__heading">
     <h2>{{ section.settings.heading }}</h2>
@@ -39,6 +49,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Featured Collection"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "marcellus_n4"
     },
     {
       "type": "textarea",

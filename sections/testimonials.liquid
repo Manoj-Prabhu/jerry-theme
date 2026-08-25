@@ -4,6 +4,16 @@
   at a time, crossfading on an autoplay timer (see testimonials.js).
 {% endcomment %}
 
+{% style %}
+  {{ section.settings.quote_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-testimonials__quote {
+    font-family: {{ section.settings.quote_font.family }}, {{ section.settings.quote_font.fallback_families }};
+    font-style: {{ section.settings.quote_font.style }};
+    font-weight: {{ section.settings.quote_font.weight }};
+  }
+{% endstyle %}
+
 <section class="j-testimonials full-width">
   <div class="j-testimonials__slideshow" data-autoplay="5000">
     <div class="j-testimonials__track">
@@ -113,6 +123,12 @@
       "id": "eyebrow",
       "label": "Eyebrow text",
       "default": "From the people"
+    },
+    {
+      "type": "font_picker",
+      "id": "quote_font",
+      "label": "Quote font",
+      "default": "rancho_n4"
     }
   ],
   "blocks": [
