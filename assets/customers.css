@@ -271,7 +271,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-accent-text);
   font-size: var(--font-size-xs);
   font-weight: var(--font-semibold);
 }

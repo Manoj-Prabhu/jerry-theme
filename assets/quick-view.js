@@ -237,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(media.src, width)} ${width}w`).join(", ")}"
         sizes="(max-width: 700px) 90vw, 420px"
         alt="${media.alt || fallbackAlt || ""}"
+        loading="eager"
       >
     `;
   }
@@ -371,7 +372,13 @@ document.addEventListener("DOMContentLoaded", () => {
                   data-media-type="${item.mediaType}"
                   ${item.mediaType === "image" ? `data-image="${item.src}"` : ""}
                 >
-                  <img src="${resizeImageUrl(item.src, 120)}" alt="${product.title} ${index + 1}">
+                  <img
+                    src="${resizeImageUrl(item.src, 120)}"
+                    srcset="${[60, 120, 180].map((w) => `${resizeImageUrl(item.src, w)} ${w}w`).join(", ")}"
+                    sizes="60px"
+                    alt="${product.title} ${index + 1}"
+                    loading="lazy"
+                  >
                   ${
                     item.mediaType === "video" || item.mediaType === "external_video"
                       ? '<span class="j-quick-view-thumbnail__icon" aria-hidden="true">▶</span>'

@@ -276,10 +276,24 @@
       },
       {
         "type": "color",
+        "id": "secondary_text_color",
+        "label": "Secondary text color",
+        "info": "Text color used on top of the secondary color background (e.g. the Testimonials section).",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
         "id": "accent_color",
         "label": "Accent color",
         "info": "Used as text color (links, sale price, nav hover) as well as backgrounds, so pick a shade that reaches at least 4.5:1 contrast against white for accessibility.",
         "default": "#15803D"
+      },
+      {
+        "type": "color",
+        "id": "accent_text_color",
+        "label": "Accent text color",
+        "info": "Text color used on top of the accent color background (e.g. cart/wishlist count badges).",
+        "default": "#FFFFFF"
       },
       {
         "type": "color",

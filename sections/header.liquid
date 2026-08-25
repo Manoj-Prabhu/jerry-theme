@@ -26,6 +26,7 @@
       {% if section.settings.logo != blank %}
 
         {% assign logo_style = 'width:' | append: section.settings.logo_width | append: 'px;height:auto;' %}
+        {% assign logo_sizes = section.settings.logo_width | append: 'px' %}
 
         {{
           section.settings.logo
@@ -33,6 +34,7 @@
           | image_tag:
             alt: shop.name,
             widths: '120,160,200,240,300,400',
+            sizes: logo_sizes,
             loading: 'eager',
             preload: true,
             style: logo_style

@@ -16,7 +16,11 @@
           {{
             product.featured_image
             | image_url: width: 80
-            | image_tag: loading: 'lazy', alt: product.featured_image.alt | default: product.title
+            | image_tag:
+              loading: 'lazy',
+              alt: product.featured_image.alt | default: product.title,
+              widths: '52, 80, 104',
+              sizes: '52px'
           }}
 
           <div>

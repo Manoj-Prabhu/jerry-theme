@@ -76,7 +76,7 @@
   font-weight: var(--font-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-light);
+  color: var(--color-secondary-text);
 }
 
 .j-testimonials__stars {
@@ -88,7 +88,7 @@
 
 .j-testimonials__quote {
   margin: 0;
-  color: var(--color-text);
+  color: var(--color-secondary-text);
   font-size: var(--font-size-xl);
   line-height: 1.5;
   font-style: normal;
@@ -130,11 +130,11 @@
 .j-testimonials__avatar-initial {
   font-size: var(--font-size-xs);
   font-weight: var(--font-semibold);
-  color: var(--color-text-light);
+  color: var(--color-secondary-text);
 }
 
 .j-testimonials__author-line {
-  color: var(--color-text-light);
+  color: var(--color-secondary-text);
 }
 
 .j-testimonials__nav {
@@ -152,7 +152,7 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background: transparent;
-  color: var(--color-text-light);
+  color: var(--color-secondary-text);
   cursor: pointer;
   transition:
     color var(--transition-fast),
@@ -165,8 +165,8 @@
 }
 
 .j-testimonials__arrow:hover {
-  color: var(--color-text);
-  border-color: var(--color-text);
+  color: var(--color-secondary-text);
+  border-color: var(--color-secondary-text);
 }
 
 /* Media (right) */

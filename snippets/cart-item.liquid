@@ -12,14 +12,28 @@
 
 <div class="j-cart-item">
 
+  {% liquid
+    assign cart_item_loading = 'lazy'
+    assign cart_item_fetchpriority = 'auto'
+    if priority
+      assign cart_item_loading = 'eager'
+      assign cart_item_fetchpriority = 'high'
+    endif
+  %}
+
   <div class="j-cart-item__image">
-    <img
-      src="{{ item.image | image_url: width: 160 }}"
-      alt="{{ item.product.title | escape }}"
-      width="80"
-      height="80"
-      {% if priority %}fetchpriority="high"{% endif %}
-    >
+    {{
+      item.image
+      | image_url: width: 160
+      | image_tag:
+        alt: item.product.title,
+        width: 80,
+        height: 80,
+        widths: '80, 120, 160',
+        sizes: '80px',
+        loading: cart_item_loading,
+        fetchpriority: cart_item_fetchpriority
+    }}
   </div>
 
   <div class="j-cart-item__content">

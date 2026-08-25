@@ -1,3 +1,12 @@
+// Shopify's Cart API returns the image at its original, full-resolution
+// CDN URL with no size applied — appending `width` resizes it on the fly
+// (same trick used in recently-viewed.js).
+function resizeCartImageUrl(src, width) {
+  if (!src) return "";
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}width=${width}`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const drawer = document.querySelector(".j-cart-drawer");
   const overlay = document.querySelector(".j-cart-overlay");
@@ -215,7 +224,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <a href="${suggestionUrl}" class="j-cart__suggestion-card">
             ${
               cartItems.dataset.suggestionImage
-                ? `<img class="j-cart__suggestion-image" src="${cartItems.dataset.suggestionImage}" alt="" loading="lazy">`
+                ? `<img
+                    class="j-cart__suggestion-image"
+                    src="${resizeCartImageUrl(cartItems.dataset.suggestionImage, 480)}"
+                    srcset="${[240, 360, 480].map((w) => `${resizeCartImageUrl(cartItems.dataset.suggestionImage, w)} ${w}w`).join(", ")}"
+                    alt=""
+                    loading="lazy"
+                  >`
                 : ""
             }
             <span class="j-cart__suggestion-title">${cartItems.dataset.suggestionTitle || ""}</span>
@@ -251,10 +266,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="j-cart-item__image">
             <img
-              src="${item.image}"
+              src="${resizeCartImageUrl(item.image, 160)}"
+              srcset="${[80, 120, 160].map((w) => `${resizeCartImageUrl(item.image, w)} ${w}w`).join(", ")}"
+              sizes="80px"
               alt="${item.product_title}"
               width="80"
               height="80"
+              loading="lazy"
             >
           </div>
 

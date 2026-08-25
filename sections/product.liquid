@@ -566,7 +566,11 @@
       {{
         current_variant.featured_image | default: product.featured_image
         | image_url: width: 100, format: 'webp'
-        | image_tag: alt: current_variant.featured_image.alt | default: product.title, loading: 'lazy'
+        | image_tag:
+          alt: current_variant.featured_image.alt | default: product.title,
+          loading: 'lazy',
+          widths: '36, 72, 100',
+          sizes: '36px'
       }}
     </div>
 

@@ -46,7 +46,7 @@
           data-suggestion-heading="{{ section.settings.empty_cart_heading }}"
           data-suggestion-url="{{ suggested_collection.url }}"
           data-suggestion-title="{{ suggested_collection.title | escape }}"
-          data-suggestion-image="{{ suggested_collection.featured_image | image_url: width: 480 }}"
+          data-suggestion-image="{{ suggested_collection.featured_image | image_url }}"
         {% endif %}
       >
         {% if cart.item_count == 0 %}

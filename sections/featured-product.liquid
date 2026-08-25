@@ -322,7 +322,15 @@
                     data-media-id="{{ media.id }}"
                     aria-label="{{ fp_product.title }} — {{ forloop.index }}"
                   >
-                    {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}
+                    {{
+                      media.preview_image
+                      | image_url: width: 240
+                      | image_tag:
+                        loading: 'lazy',
+                        alt: '',
+                        widths: '108, 140, 240',
+                        sizes: '140px'
+                    }}
                     {% if media.media_type == 'video' or media.media_type == 'external_video' %}
                       <span class="j-featured-product__thumb-icon" aria-hidden="true">▶</span>
                     {% elsif media.media_type == 'model' %}
