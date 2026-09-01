@@ -70,7 +70,7 @@
       {% liquid
         assign is_mega_menu = false
         for column in link.links
-          if column.links != blank
+          if column.links != blank or column.type == 'collection_link'
             assign is_mega_menu = true
           endif
         endfor
@@ -95,29 +95,29 @@
           <div class="j-dropdown j-dropdown--mega">
             <div class="j-mega-menu">
               {% for column in link.links %}
-                <div class="j-mega-menu__column">
+                <a href="{{ column.url }}" class="j-mega-menu__tile">
 
-                  <a
-                    href="{{ column.url }}"
-                    class="j-mega-menu__heading"
-                  >
-                    {{ column.title }}
-                  </a>
-
-                  {% if column.links != blank %}
-                    <div class="j-mega-menu__links">
-                      {% for grandchild in column.links %}
-                        <a
-                          href="{{ grandchild.url }}"
-                          class="j-dropdown__link"
-                        >
-                          {{ grandchild.title }}
-                        </a>
-                      {% endfor %}
-                    </div>
+                  {% if column.type == 'collection_link' and column.object.featured_image %}
+                    {{
+                      column.object.featured_image
+                      | image_url: width: 600
+                      | image_tag:
+                        widths: '300, 450, 600',
+                        sizes: '(max-width: 992px) 45vw, 300px',
+                        loading: 'lazy',
+                        alt: column.title,
+                        class: 'j-mega-menu__tile-image'
+                    }}
+                  {% else %}
+                    <span class="j-mega-menu__tile-image j-mega-menu__tile-image--placeholder" aria-hidden="true"></span>
                   {% endif %}
 
-                </div>
+                  <span class="j-mega-menu__tile-caption">
+                    <span class="j-mega-menu__tile-title">{{ column.title }}</span>
+                    <span class="j-mega-menu__tile-cta">{{ 'header.shop_now' | t }}</span>
+                  </span>
+
+                </a>
               {% endfor %}
             </div>
           </div>

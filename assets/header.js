@@ -141,6 +141,23 @@ class JerryHeader {
         bar.remove();
       });
     }
+
+    // Touch equivalent of the desktop :hover pause (see .j-announcement
+    // :hover in header.css) — CSS :hover alone can't do this on touch,
+    // since a tap leaves :hover "stuck" applied with no matching
+    // mouseleave to clear it once the finger lifts. This pauses on
+    // touchstart and explicitly resumes on touchend/touchcancel instead.
+    bar.addEventListener(
+      "touchstart",
+      () => bar.classList.add("is-touch-paused"),
+      { passive: true },
+    );
+    bar.addEventListener("touchend", () =>
+      bar.classList.remove("is-touch-paused"),
+    );
+    bar.addEventListener("touchcancel", () =>
+      bar.classList.remove("is-touch-paused"),
+    );
   }
 
   /* Sticky Header */

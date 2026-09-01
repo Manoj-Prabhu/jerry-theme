@@ -3,21 +3,7 @@
 .j-footer {
   position: relative;
   width: 100%;
-  background: #f7ecd0;
-}
-
-/* Thin accent line across the top of the footer — a richer, more
-   saturated gold than the light background so it still reads as a
-   deliberate accent instead of disappearing into it. */
-.j-footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #b8860b 50%, transparent);
-  opacity: 0.7;
+  background: linear-gradient(135deg, #d9ead3 0%, #ffffff 100%);
 }
 
 /* Container */

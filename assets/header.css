@@ -49,8 +49,21 @@
 }
 
 /* Pauses the scroll under the cursor so a message can actually be read
-   (or a link clicked) instead of chasing text that keeps moving. */
-.j-announcement:hover .j-announcement__track {
+   (or a link clicked) instead of chasing text that keeps moving.
+   Scoped to devices with a real hover capability (pointer: fine) —
+   touch has no mouseleave event, so a tap's :hover state otherwise
+   stays "stuck" applied after the finger lifts, freezing the marquee
+   until something else happens to steal focus/hover away from it. */
+@media (hover: hover) and (pointer: fine) {
+  .j-announcement:hover .j-announcement__track {
+    animation-play-state: paused;
+  }
+}
+
+/* Touch equivalent — see the touchstart/touchend listeners in
+   header.js that toggle this class, since CSS :hover alone can't
+   express "paused only while actually touching". */
+.j-announcement.is-touch-paused .j-announcement__track {
   animation-play-state: paused;
 }
 
@@ -962,37 +975,62 @@
   color: var(--color-accent);
 }
 
-/* Mega Menu */
+/* Mega Menu — full-width banner of large image tiles, each with a
+   title + "Shop now" caption overlaid at the bottom, rather than a
+   small dropdown card of thumbnails. */
 
 @media (min-width: 993px) {
-  .j-dropdown--mega {
-    left: 50%;
-    transform: translateX(-50%) translateY(10px) scale(0.98);
+  /* .j-nav-item is position: relative (needed so the small dropdown
+     resolves against the individual nav item) — overriding that to
+     static just for the mega variant lets .j-dropdown--mega's own
+     absolute positioning resolve against .j-site-header-wrapper (the
+     next positioned ancestor up, which spans the full header width)
+     instead, so it can stretch edge-to-edge under the header rather
+     than being confined near wherever "Men"/"Women" sits in the nav. */
+  .j-nav-item--mega {
+    position: static;
+  }
 
-    width: fit-content;
-    max-width: min(760px, calc(100vw - var(--space-8) * 2));
+  .j-dropdown--mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: translateY(10px) scale(0.99);
+    transform-origin: top center;
+
+    width: auto;
+    max-width: none;
     min-width: 0;
+
+    border: none;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+    box-shadow: var(--shadow-lg);
 
     padding: 0;
   }
 
   .j-nav-item--mega:hover .j-dropdown--mega,
   .j-nav-item--mega:focus-within .j-dropdown--mega {
-    transform: translateX(-50%) translateY(0) scale(1);
+    transform: translateY(0) scale(1);
   }
 
+  /* Always exactly 4 columns — a 5th+ category (Accessories, Shoes,
+     etc.) wraps onto a new row of up to 4 more, rather than squeezing
+     every column narrower to force everything into one row. */
   .j-mega-menu {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: var(--space-8);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+    background: var(--color-white);
 
+    max-width: var(--container-width);
+    margin: 0 auto;
     padding: var(--space-6) var(--space-8);
   }
 
-  .j-mega-menu__column {
-    position: relative;
-    text-align: center;
-
+  .j-mega-menu__tile {
     opacity: 0;
     transform: translateY(6px);
     transition:
@@ -1000,72 +1038,82 @@
       transform 0.3s ease;
   }
 
-  .j-mega-menu__column:not(:first-child)::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(var(--space-8) / -2);
-    width: 1px;
-    background: var(--color-border);
-    opacity: 0.7;
-  }
-
-  .j-nav-item--mega:hover .j-mega-menu__column,
-  .j-nav-item--mega:focus-within .j-mega-menu__column {
+  .j-nav-item--mega:hover .j-mega-menu__tile,
+  .j-nav-item--mega:focus-within .j-mega-menu__tile {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .j-mega-menu__column:nth-child(1) {
+  .j-mega-menu__tile:nth-child(1) {
     transition-delay: 0.03s;
   }
-  .j-mega-menu__column:nth-child(2) {
+  .j-mega-menu__tile:nth-child(2) {
     transition-delay: 0.08s;
   }
-  .j-mega-menu__column:nth-child(3) {
+  .j-mega-menu__tile:nth-child(3) {
     transition-delay: 0.13s;
   }
-  .j-mega-menu__column:nth-child(4) {
+  .j-mega-menu__tile:nth-child(4) {
     transition-delay: 0.18s;
   }
-  .j-mega-menu__column:nth-child(5) {
+  .j-mega-menu__tile:nth-child(5) {
     transition-delay: 0.23s;
   }
 }
 
-.j-mega-menu__column {
-  flex: 1 1 160px;
-  min-width: 160px;
-}
-
-.j-mega-menu__heading {
+.j-mega-menu__tile {
+  position: relative;
   display: block;
-
-  margin-bottom: var(--space-3);
-
-  color: var(--color-primary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-
-  transition: color var(--transition-fast);
+  background: var(--color-background);
+  border-radius: var(--style-border-radius-card, 8px);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-.j-mega-menu__heading:hover {
-  color: var(--color-accent);
+.j-mega-menu__tile-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  background: var(--color-surface);
+  transition: transform var(--transition);
 }
 
-.j-mega-menu__links {
+.j-mega-menu__tile-image--placeholder {
+  border: 1px dashed var(--color-border);
+  box-sizing: border-box;
+}
+
+.j-mega-menu__tile:hover .j-mega-menu__tile-image {
+  transform: scale(1.04);
+}
+
+.j-mega-menu__tile-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   display: flex;
   flex-direction: column;
+  gap: 2px;
+
+  padding: var(--space-5) var(--space-4) var(--space-4);
+
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  color: #fff;
 }
 
-.j-mega-menu__links .j-dropdown__link {
-  padding: 6px 8px;
-  margin: 0 -8px;
-  border-radius: var(--radius-sm);
+.j-mega-menu__tile-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-semibold);
+}
+
+.j-mega-menu__tile-cta {
+  font-size: var(--font-size-sm);
+  opacity: 0.9;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Nav Overlay (mobile drawer backdrop) */
@@ -1209,16 +1257,30 @@
     display: block;
   }
 
-  .j-mega-menu__column {
-    margin-bottom: var(--space-4);
+  /* 2-up grid of small tiles instead of the desktop's large full-bleed
+     banner tiles — those would each take most of a phone screen's
+     height stacked full-width, turning the mobile menu into an
+     endless scroll of oversized photos. */
+  .j-mega-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
   }
 
-  .j-mega-menu__column:last-child {
-    margin-bottom: 0;
+  .j-mega-menu__tile-image {
+    aspect-ratio: 1 / 1;
   }
 
-  .j-mega-menu__heading {
+  .j-mega-menu__tile-caption {
+    padding: var(--space-3) var(--space-2) var(--space-2);
+  }
+
+  .j-mega-menu__tile-title {
     font-size: var(--font-size-sm);
+  }
+
+  .j-mega-menu__tile-cta {
+    font-size: 11px;
   }
 
   .j-nav-arrow {
