@@ -6,6 +6,16 @@
   {% endif %}
 {% endfor %}
 
+{% style %}
+  {{ section.settings.footer_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-footer {
+    font-family: {{ section.settings.footer_font.family }}, {{ section.settings.footer_font.fallback_families }};
+    font-style: {{ section.settings.footer_font.style }};
+    font-weight: {{ section.settings.footer_font.weight }};
+  }
+{% endstyle %}
+
 <footer class="j-footer full-width">
 
   <div class="j-footer__container {% unless has_menus %}j-footer__container--no-menus{% endunless %}">
@@ -168,6 +178,12 @@
       "id": "description",
       "label": "Description",
       "default": "Premium products crafted for modern living."
+    },
+    {
+      "type": "font_picker",
+      "id": "footer_font",
+      "label": "Footer font",
+      "default": "marcellus_n4"
     },
     {
       "type": "checkbox",

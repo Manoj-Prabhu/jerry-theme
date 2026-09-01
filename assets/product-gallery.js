@@ -11,10 +11,24 @@ function initProductGallery() {
 
   const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
 
+  // Source order of the slides in the DOM doubles as the gallery's
+  // left-to-right sequence — whichever direction a clicked thumbnail
+  // sits in relative to the currently active slide is the direction it
+  // visually slides in from (see the is-entering-*/is-leaving-* classes
+  // in product.css).
+  const mediaOrder = Array.from(slides).map((slide) => slide.dataset.mediaId);
+
   function activateMedia(mediaId) {
-    slides.forEach((slide) => {
-      slide.classList.toggle("is-active", slide.dataset.mediaId === mediaId);
-    });
+    const outgoing = gallery.querySelector(
+      ".j-product__media-slide.is-active",
+    );
+    const incoming = gallery.querySelector(
+      `.j-product__media-slide[data-media-id="${CSS.escape(mediaId)}"]`,
+    );
+
+    const outgoingId = outgoing ? outgoing.dataset.mediaId : null;
+    const oldIndex = outgoingId ? mediaOrder.indexOf(outgoingId) : -1;
+    const newIndex = mediaOrder.indexOf(mediaId);
 
     thumbnails.forEach((thumbnail) => {
       thumbnail.classList.toggle(
@@ -25,6 +39,64 @@ function initProductGallery() {
 
     dots.forEach((dot) => {
       dot.classList.toggle("is-active", dot.dataset.mediaId === mediaId);
+    });
+
+    if (!incoming || incoming === outgoing) return;
+
+    if (!outgoing || oldIndex === -1 || newIndex === -1) {
+      // No prior active slide (first render) — just show it, no
+      // direction to animate from.
+      slides.forEach((slide) => {
+        slide.classList.remove(
+          "is-entering-next",
+          "is-entering-prev",
+          "is-leaving-next",
+          "is-leaving-prev",
+        );
+        slide.classList.toggle("is-active", slide === incoming);
+      });
+      return;
+    }
+
+    const direction = newIndex > oldIndex ? "next" : "prev";
+    const enterClass = direction === "next" ? "is-entering-next" : "is-entering-prev";
+    const leaveClass = direction === "next" ? "is-leaving-next" : "is-leaving-prev";
+
+    // Clear any leftover state from a transition that got interrupted
+    // mid-flight (e.g. clicking a second thumbnail before the first
+    // one's animation finished).
+    slides.forEach((slide) => {
+      slide.classList.remove(
+        "is-entering-next",
+        "is-entering-prev",
+        "is-leaving-next",
+        "is-leaving-prev",
+      );
+    });
+
+    incoming.classList.remove("is-active");
+    incoming.classList.add(enterClass);
+    // Forces the browser to commit the entering slide's starting
+    // position (translateX ±100%) before the next frame flips it to
+    // .is-active — without this the two class changes would collapse
+    // into a single style recalc and the slide would never actually
+    // animate from off-screen.
+    void incoming.offsetWidth;
+
+    requestAnimationFrame(() => {
+      incoming.classList.remove(enterClass);
+      incoming.classList.add("is-active");
+
+      outgoing.classList.remove("is-active");
+      outgoing.classList.add(leaveClass);
+
+      outgoing.addEventListener(
+        "transitionend",
+        () => {
+          outgoing.classList.remove(leaveClass);
+        },
+        { once: true },
+      );
     });
   }
 

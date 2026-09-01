@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p class="j-cart__empty">
           ${emptyText}
         </p>
-        <a href="${continueUrl}" class="j-button j-button-outline--gold j-cart__continue">
+        <a href="${continueUrl}" class="j-button j-button-outline j-cart__continue">
           ${continueText}
         </a>
         ${suggestionHtml}
@@ -397,6 +397,10 @@ document.addEventListener("DOMContentLoaded", () => {
       link.classList.toggle("is-disabled", isEmpty);
       link.setAttribute("aria-disabled", isEmpty);
       link.tabIndex = isEmpty ? -1 : 0;
+    });
+
+    document.querySelectorAll(".j-cart__footer").forEach((footer) => {
+      footer.classList.toggle("is-empty", isEmpty);
     });
 
     document.querySelectorAll(".j-cart-page").forEach((page) => {

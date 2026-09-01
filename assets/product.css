@@ -28,27 +28,39 @@
   align-items: start;
 }
 
+/* First-load entrance — the gallery settles in slightly ahead of the
+   buy-box card, giving the page a moment of motion instead of both
+   halves snapping in at once. One-time keyframe animation, not tied to
+   any interaction, so it's safe to leave unscoped to a JS "loaded"
+   class. */
+@media (prefers-reduced-motion: no-preference) {
+  .j-product__gallery {
+    animation: j-product-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .j-product__content {
+    animation: j-product-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+}
+
+@keyframes j-product-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Content */
 
-/* A soft glass card behind the whole info column, so it reads as a
-   distinct panel instead of floating directly on the page's plain
-   gradient background. Sized to its own content (.j-product uses
-   align-items: start, not stretch) — justify-content: flex-start, not
-   space-between, so the card's height is exactly what its content
-   needs instead of distributing extra space between sections. */
 .j-product__content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 8px;
-  padding: 18px;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--radius-lg);
-  /* Warm cream/ivory instead of gray — ties into the gold accents used
-     throughout this card (price, chevron, active states) and pairs
-     better with the page's lavender background than a neutral gray did. */
-  background: linear-gradient(135deg, #fdf8ee 0%, #f5ecd7 50%, #fbf5e8 100%);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 .j-product__title {
@@ -85,7 +97,7 @@
 }
 
 .j-product__price {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #b8860b;
 }
@@ -197,6 +209,9 @@
   display: none;
 }
 
+/* Price-tag shape — pointed left edge (clip-path), rounded right
+   corners, small bullet dot before the label — instead of a plain
+   rounded pill. */
 .j-product__pickup {
   display: inline-flex;
   align-self: flex-start;
@@ -204,27 +219,32 @@
   gap: 8px;
 
   margin-bottom: 8px;
-  padding: 5px 14px;
+  padding: 8px 16px 8px 22px;
 
-  border: 1px solid rgba(240, 193, 75, 0.5);
-  border-radius: 999px;
-  background: rgba(240, 193, 75, 0.15);
+  border: none;
+  border-radius: 0 6px 6px 0;
+  background: #8a7862;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
 
   font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
 }
 
-.j-product__pickup-cross {
+.j-product__pickup::before {
+  content: "";
   flex-shrink: 0;
-  color: #b8860b;
-  font-size: 12px;
-  line-height: 1;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
 }
 
 .j-product__pickup p {
   margin: 0;
-  color: #1a1a1a;
+  color: #fff;
 }
 
 /* Clean white card with a gold accent bar down the left edge, instead of
@@ -235,15 +255,17 @@
   margin-top: 12px;
   margin-bottom: 0;
   border: 1px solid var(--color-border);
-  border-left: 4px solid #f0c14b;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--color-white);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .j-product__description[open] {
+  border-color: rgba(240, 193, 75, 0.4);
   box-shadow: var(--shadow-md);
 }
 
@@ -251,10 +273,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   list-style: none;
   cursor: pointer;
-  padding: 14px 40px 14px 16px;
+  padding: 12px 44px 12px 16px;
   font-size: var(--font-size-md);
   font-weight: var(--font-semibold);
   color: var(--color-primary);
@@ -269,18 +291,24 @@
   display: none;
 }
 
-/* Small document icon before the label, so the toggle reads as "more
-   info available" rather than a plain unlabeled bar. */
-.j-product__description-toggle::before {
-  content: "";
+/* Small document icon before the label, in its own soft circular badge
+   — matches the icon-in-a-circle pattern used elsewhere in the theme
+   (e.g. the empty-cart icon) instead of a bare flat glyph. */
+.j-product__description-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  background-color: #b8860b;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 3.5h7l3 3v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z' stroke='%23000' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7 10h6M7 13h6M7 7h2' stroke='%23000' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 3.5h7l3 3v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z' stroke='%23000' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7 10h6M7 13h6M7 7h2' stroke='%23000' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")
-    center / contain no-repeat;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(240, 193, 75, 0.12);
+}
+
+.j-product__description-icon svg {
+  width: 15px;
+  height: 15px;
+  color: #b8860b;
 }
 
 /* Chevron arrow, rotating from pointing down to pointing up instead of
@@ -288,17 +316,20 @@
 .j-product__description-toggle::after {
   content: "";
   position: absolute;
-  right: 18px;
+  right: 20px;
   top: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid #b8860b;
-  border-bottom: 2px solid #b8860b;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--color-text-light);
+  border-bottom: 2px solid var(--color-text-light);
   transform: translateY(-70%) rotate(45deg);
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .j-product__description[open] .j-product__description-toggle::after {
+  border-color: #b8860b;
   transform: translateY(-30%) rotate(-135deg);
 }
 
@@ -307,9 +338,20 @@
 }
 
 .j-product__description-content {
-  padding: 18px;
-  line-height: 1.7;
+  padding: 20px 22px 24px;
+  line-height: 1.75;
   color: var(--color-text-light);
+}
+
+/* Scoped to this card only (not the global .rte) — a gold marker on
+   bullet lists reads as a deliberate "Key Features" callout instead of
+   a plain default browser bullet. */
+.j-product__description-content li::marker {
+  color: #b8860b;
+}
+
+.j-product__description-content strong {
+  color: var(--color-primary);
 }
 
 /* Purchase Options (Selling Plans) */
@@ -408,8 +450,40 @@
 
 .product-form {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-flow: row wrap;
+  align-items: flex-end;
+  gap: 10px 12px;
+}
+
+/* Every block in the form is full-width by default (same stacked
+   look as before) — Quantity and the Add to Cart row are the only
+   two that opt out below, so they can share one row instead. */
+.product-form > * {
+  flex: 1 1 100%;
+}
+
+.j-product__quantity,
+.product-form > .j-product__pickup {
+  flex: 0 0 auto;
+}
+
+/* Unwraps the Buy Buttons block's own wrapper div so its children
+   (the Add to Cart row, the error message, the payment button) become
+   direct flex items of .product-form themselves, sitting alongside
+   Quantity instead of being trapped full-width inside this block's
+   own box. The block stays fully editable in the theme editor; only
+   its on-canvas selection outline may be less precise as a result. */
+.j-product__buy-buttons {
+  display: contents;
+}
+
+.j-product__cart-row {
+  flex: 1 1 200px;
+}
+
+.j-product__form-error,
+.j-product__payment-button {
+  flex: 1 1 100%;
 }
 
 .product-form label {
@@ -437,44 +511,72 @@
 /* Quantity stepper — minus/plus buttons around the number input, instead
    of a bare full-width native number field with its own tiny spinner
    arrows. */
+/* Label stacked above the control (not inline beside it) — the label
+   is naturally inline-level and .j-product__qty-control is
+   inline-flex, so without this the two would flow side by side on
+   the same line instead of the label reading as its own row. */
+.j-product__quantity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.j-product__quantity-label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.j-product__quantity-label::after {
+  content: ":";
+}
+
+/* Three separate circular controls with visible gaps between them,
+   rather than one joined pill/box — matches the "− (1) +" tag-style
+   reference instead of reading as a single bordered input group. */
 .j-product__qty-control {
   display: inline-flex;
   align-items: center;
+  gap: 10px;
   flex-shrink: 0;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--radius-md);
-  overflow: hidden;
   background: transparent;
 }
 
 .j-product__qty-control button {
-  width: 44px;
-  height: 100%;
-  min-height: 48px;
-  border: none;
-  background: transparent;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-background);
   color: #1a1a1a;
   font-size: 16px;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 0.15s ease;
 }
 
 .j-product__qty-control button:hover {
+  border-color: #8a7862;
+}
+
+.j-product__qty-control button:active {
+  transform: scale(0.85);
   background: rgba(0, 0, 0, 0.05);
 }
 
 .j-product__qty-control input[type="number"] {
-  width: 40px;
-  height: 100%;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: none;
-  border-left: 1px solid #1a1a1a;
-  border-right: 1px solid #1a1a1a;
-  border-radius: 0;
-  background: transparent;
+  border-radius: 50%;
+  background: #f0c14b;
   color: #1a1a1a;
   text-align: center;
   font-size: 1rem;
+  font-weight: 600;
   -moz-appearance: textfield;
   appearance: textfield;
 }
@@ -492,11 +594,25 @@
 
 .product-form .j-button {
   width: 100%;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .product-form .j-button:hover {
   background: #f0c14b;
   color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.product-form .j-button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-sm);
+  transition-duration: 0.1s;
 }
 
 /* Same treatment as "Continue Shopping" in the cart drawer (see
@@ -547,11 +663,19 @@
    down, with dot indicators instead of thumbnails (see .j-product__dots). */
 .j-product__gallery {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
   gap: 20px;
   width: 100%;
   min-width: 0;
+}
+
+/* Thumbnails column visually first (left of the main image) while
+   staying after it in source order — keeps the main image as the
+   first thing a screen reader/keyboard user reaches, matching its
+   primary role, instead of reordering the DOM to match the visual. */
+.j-product__thumbnails-wrap {
+  order: -1;
 }
 
 /* Fixed aspect-ratio, not a height tied to the content column — the
@@ -560,6 +684,7 @@
 .j-product__main-image {
   position: relative;
   min-width: 0;
+  max-width: 540px;
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -575,19 +700,74 @@
   overflow: hidden;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s ease;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .j-product__main-image:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* Directional carousel-style slide (not a crossfade) — clicking a
+   thumbnail slides the new image in from the side it sits on relative
+   to the current one (right if it's later in the media order, left if
+   earlier), while the current image slides out the opposite side.
+   Direction/entering/leaving classes are applied by product-gallery.js,
+   which is the only thing that knows which direction a given thumbnail
+   click represents. Steady state (no transition in progress) only ever
+   has .is-active visible; every other slide sits hidden regardless of
+   leftover position, so nothing but the active slide can ever show. */
 .j-product__media-slide {
   position: absolute;
   inset: 0;
-  opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease;
+  transform: translateX(0%);
 }
 
 .j-product__media-slide.is-active {
-  opacity: 1;
   visibility: visible;
+  transform: translateX(0%);
+  z-index: 2;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Starting position for the incoming slide, set with no transition so
+   it snaps there instantly before .is-active (added a frame later)
+   animates it in — see initProductGallery's use of
+   requestAnimationFrame. */
+.j-product__media-slide.is-entering-next {
+  visibility: visible;
+  transform: translateX(100%);
+  z-index: 2;
+}
+
+.j-product__media-slide.is-entering-prev {
+  visibility: visible;
+  transform: translateX(-100%);
+  z-index: 2;
+}
+
+.j-product__media-slide.is-leaving-next {
+  visibility: visible;
+  transform: translateX(-100%);
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.j-product__media-slide.is-leaving-prev {
+  visibility: visible;
+  transform: translateX(100%);
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-product__media-slide.is-active,
+  .j-product__media-slide.is-leaving-next,
+  .j-product__media-slide.is-leaving-prev {
+    transition: none;
+  }
 }
 
 .j-product__media-slide video,
@@ -691,10 +871,18 @@
   background-size: cover;
   background-position: center;
   padding: 0;
-  transition: border-color 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.j-product-thumbnail:hover,
+.j-product-thumbnail:hover {
+  border-color: #f0c14b;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
 .j-product-thumbnail.is-active {
   border-color: #f0c14b;
 }
@@ -759,32 +947,38 @@
    its own full-width row. */
 .j-product__options {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 40px;
+  flex-direction: column;
+  gap: 14px;
   margin: 8px 0;
 }
 
-/* Label + swatches/size pills inline together within each option. */
+/* Header (label + selected value) on its own line above the
+   swatches/pills, not inline beside them. */
 .j-product__option {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .j-product__option-header {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 4px;
 }
 
 .j-product__option-header label {
-  font-weight: 600;
+  font-weight: 400;
   font-size: 15px;
+  color: var(--color-text-light);
+}
+
+.j-product__option-header label::after {
+  content: ":";
 }
 
 .j-product__option-value {
-  color: var(--color-text-light);
-  font-size: 14px;
+  color: var(--color-text);
+  font-size: 15px;
 }
 
 /* Color swatches */
@@ -797,25 +991,27 @@
 
 .j-product__swatch {
   position: relative;
-  width: 40px;
-  height: 40px;
-  padding: 3px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
 
-  border: 2px solid transparent;
-  border-radius: 50%;
+  border: none;
   background: none;
 
   cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  /* Room below the square for the active-state underline bar, so it
+     doesn't crowd the swatch itself or get clipped. */
+  padding-bottom: 8px;
+
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .j-product__swatch-inner {
+  position: relative;
   display: block;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  height: 36px;
+  border-radius: var(--radius-sm);
   /* A fixed, more visible ring than the theme's default light gray
      border — pale swatch colors (cream/ivory/white) are otherwise hard
      to tell apart from the white background around them. */
@@ -823,10 +1019,25 @@
   background: var(--color-border);
   background-size: cover;
   background-position: center;
+  transition: border-color 0.25s ease;
 }
 
-.j-product__swatch.is-active .j-product__swatch-inner {
-  border: 2px solid #1a1a1a;
+/* Underline bar beneath the swatch, not a ring around it — expands in
+   from the center when a swatch becomes active. */
+.j-product__swatch::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #1a1a1a;
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+
+.j-product__swatch.is-active::after {
+  transform: scaleX(1);
 }
 
 .j-product__swatch:hover {
@@ -837,13 +1048,17 @@
   border-color: #f0c14b;
 }
 
+.j-product__swatch:active {
+  transform: scale(0.96);
+  transition-duration: 0.1s;
+}
 
 .j-product__swatch.is-sold-out {
   cursor: not-allowed;
   opacity: 0.4;
 }
 
-.j-product__swatch.is-sold-out::after {
+.j-product__swatch.is-sold-out .j-product__swatch-inner::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -856,20 +1071,21 @@
 
 /* Size / other option pills */
 
+/* Grid of boxes (5 per row, wrapping to further rows) instead of a
+   single wrapping flex row — reads as a deliberate size chart layout
+   rather than a loose row of pills, and keeps every box the same size
+   regardless of label length (e.g. "44" vs "6"). */
 .j-product__pills {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
+  max-width: 380px;
 }
 
-/* Rounded-square, not a circle/full pill — reads clearer for letter
-   sizes (L/M/S) than a circle, and distinguishes this from the round
-   color swatches above so the two option types aren't visually
-   ambiguous. */
 .j-product__pill {
-  min-width: 44px;
+  min-width: 40px;
   height: 44px;
-  padding: 0 14px;
+  padding: 0 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -878,27 +1094,32 @@
   border-radius: var(--radius-sm);
 
   background: var(--color-background);
-  color: var(--color-text);
-  font-size: 14px;
-  font-weight: 600;
+  color: var(--color-text-light);
+  font-size: 15px;
+  font-weight: 500;
 
   cursor: pointer;
   transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .j-product__pill:hover {
-  border-color: #f0c14b;
-  transform: translateY(-2px);
+  border-color: #1a1a1a;
 }
 
+.j-product__pill:active {
+  transition-duration: 0.1s;
+}
+
+/* Solid dark border (not a filled background) — reads as "selected
+   outline" the way the reference does, rather than an inverted button. */
 .j-product__pill.is-active {
-  background: #1a1a1a;
-  color: #fff;
-  border-color: #1a1a1a;
+  background: var(--color-background);
+  color: #1a1a1a;
+  font-weight: 700;
+  border: 2px solid #1a1a1a;
 }
 
 .j-product__pill.is-sold-out {
@@ -1088,13 +1309,16 @@
   }
 
   .j-product__swatch {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+  }
+
+  .j-product__swatch-inner {
+    height: 30px;
   }
 
   .j-product__pill {
-    min-width: 38px;
-    height: 38px;
+    min-width: 48px;
+    height: 48px;
   }
 
   .j-product__qty-control button {
@@ -1103,6 +1327,7 @@
   }
 
   .j-product__qty-control input[type="number"] {
+    width: 32px;
     height: 32px;
   }
 }

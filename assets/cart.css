@@ -150,7 +150,7 @@ html.j-scroll-lock body {
   justify-content: center;
   width: 52px;
   height: 52px;
-  margin: 24px auto 0;
+  margin: 12px auto 0;
   border-radius: 50%;
   background: rgba(240, 193, 75, 0.12);
   color: #b8860b;
@@ -169,14 +169,22 @@ html.j-scroll-lock body {
 
 .j-cart__continue {
   display: flex;
+  align-items: center;
   width: fit-content;
   margin: 20px auto 0;
+  border-radius: 0;
+}
+
+.j-cart__continue:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
 }
 
 /* Empty-cart suggested collection */
 
 .j-cart__suggestion {
-  margin: 28px auto 0;
+  margin: 16px auto 0;
   max-width: 280px;
 }
 
@@ -195,7 +203,7 @@ html.j-scroll-lock body {
   display: block;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   box-shadow: var(--shadow-sm);
   transition:
     transform var(--transition-fast),
@@ -225,14 +233,20 @@ html.j-scroll-lock body {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 55%);
 }
 
+/* z-index above the ::after scrim — without it, the pseudo-element
+   (generated after this in paint order) renders on top of the title
+   text as well as the image, washing the label out instead of just
+   darkening the photo behind it. */
 .j-cart__suggestion-title {
   position: absolute;
   left: 16px;
   right: 16px;
   bottom: 14px;
+  z-index: 2;
   color: #fff;
   font-weight: var(--font-semibold);
   font-size: var(--font-size-md);
@@ -246,6 +260,13 @@ html.j-scroll-lock body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Subtotal/View Cart/Checkout have nothing meaningful to show while the
+   cart is empty (a $0.00 subtotal, a disabled checkout button) — hidden
+   entirely instead, rather than left visible-but-inert. */
+.j-cart__footer.is-empty {
+  display: none;
 }
 
 .j-cart__subtotal {

@@ -135,31 +135,28 @@
 -------------------------- */
 
 .j-product-recommendations {
-  max-width: 2000px;
+  max-width: var(--container-width);
   margin: 0 auto;
   padding: 40px var(--space-8) 60px;
 }
 
 /* The shared .j-product-grid (see featured-collection.css) sizes cards
-   for a 2-up overlay layout (up to 520px each) — far too wide for 4
-   recommendation cards to ever share one row. `repeat(4, ...)` here
-   forces exactly 4 equal columns (each shrinking as needed) instead of
-   auto-fit, which would still wrap to fewer columns any time the
-   viewport isn't wide enough for four 200px+ tracks. The section's own
-   max-width (above) was widened from the standard content width to
-   1800px specifically so these 4 columns have more room to work with —
-   at the standard content width, each card was capped at a quarter of
-   a much narrower box and read as cramped. Same treatment as "Recently
-   Viewed" (see recently-viewed.css). */
+   for a 2-up overlay layout (up to 520px each) — far too wide for a
+   default-sized card here. 4 equal columns within the standard content
+   width (not the earlier widened-container version) lands each card
+   close to the same size shown on the collection grid, without the
+   auto-fill/auto-fit track-sizing edge cases that were collapsing this
+   to a single column. Same treatment as "Recently Viewed" (see
+   recently-viewed.css). */
 .j-product-recommendations .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 40px;
+  gap: var(--space-8);
 }
 
 @media (max-width: 900px) {
   .j-product-recommendations .j-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
+    gap: var(--space-4);
   }
 }
 

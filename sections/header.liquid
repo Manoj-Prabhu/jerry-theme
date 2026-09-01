@@ -1,5 +1,15 @@
 {% render 'announcement-bar' %}
 
+{% style %}
+  {{ section.settings.nav_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-nav-link {
+    font-family: {{ section.settings.nav_font.family }}, {{ section.settings.nav_font.fallback_families }};
+    font-style: {{ section.settings.nav_font.style }};
+    font-weight: {{ section.settings.nav_font.weight }};
+  }
+{% endstyle %}
+
 <header
   class="j-site-header-wrapper full-width {% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
@@ -272,6 +282,13 @@
       "id": "enable_sticky_header",
       "label": "Enable sticky header",
       "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "nav_font",
+      "label": "Navigation font",
+      "info": "Used for the main menu links (Home, Catalog, Men, Women, etc).",
+      "default": "fredoka_n4"
     },
     {
       "type": "link_list",

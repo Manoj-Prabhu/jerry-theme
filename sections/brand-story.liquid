@@ -13,6 +13,16 @@
   assign stat_blocks = section.blocks | where: 'type', 'stat'
 %}
 
+{% style %}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-brand-story__heading {
+    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    font-style: {{ section.settings.heading_font.style }};
+    font-weight: {{ section.settings.heading_font.weight }};
+  }
+{% endstyle %}
+
 <section class="j-brand-story full-width">
   <div class="j-brand-story__inner j-brand-story__inner--{{ section.settings.image_position }}">
 
@@ -127,6 +137,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Crafted With Purpose"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "quantico_n7"
     },
     {
       "type": "richtext",
