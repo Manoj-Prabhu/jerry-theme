@@ -230,7 +230,7 @@
         "heading": "Featured product",
         "heading_font": "quantico_n7",
         "subtext": "You will love it..",
-        "image_position": "right",
+        "image_position": "left",
         "autoplay_speed": 5
       }
     },
