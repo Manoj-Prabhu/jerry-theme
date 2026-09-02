@@ -187,13 +187,22 @@
     },
     "featured_product": {
       "type": "featured-product",
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "product": "ruby-red-tweed-blazer-mini-skirt-set",
+            "eyebrow": "crunching"
+          }
+        }
+      },
+      "block_order": ["product-1"],
       "settings": {
-        "product": "ruby-red-tweed-blazer-mini-skirt-set",
         "heading": "Featured product",
         "heading_font": "quantico_n7",
         "subtext": "You will love it..",
-        "eyebrow": "crunching",
-        "image_position": "right"
+        "image_position": "right",
+        "autoplay_speed": 5
       }
     },
     "brand_story": {

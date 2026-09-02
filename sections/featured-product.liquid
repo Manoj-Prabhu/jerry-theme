@@ -1,14 +1,19 @@
 {% comment %}
-  Featured Product — spotlights one merchant-chosen product anywhere in the
-  store (homepage, a landing page, etc.), with its own media gallery
-  (image/video/external video/3D model — same as the full product page)
-  and buy box (variant picker, quantity, add to cart, accelerated
-  checkout). Unlike sections/product.liquid, this can appear more than
-  once on a page and outside the product template, so every id here is
-  scoped with section.id rather than assuming a single global instance.
+  Featured Product — spotlights up to 4 merchant-chosen products (one per
+  "Product" block) anywhere in the store (homepage, a landing page, etc.),
+  each with its own media gallery (image/video/external video/3D model —
+  same as the full product page) and buy box (variant picker, quantity,
+  add to cart, accelerated checkout). With 2+ products, they auto-rotate
+  like a slideshow (see featured-product-slideshow.js); with exactly 1,
+  it just renders as a static card. Unlike sections/product.liquid, this
+  can appear more than once on a page and outside the product template,
+  and now renders more than one product's worth of markup at once, so
+  every id here is scoped with a per-block unique id (fp_unique_id)
+  rather than assuming a single global instance.
 {% endcomment %}
 
 {{ 'featured-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'featured-product-slideshow.js' | asset_url }}" defer="defer"></script>
 
 {% style %}
   {{ section.settings.heading_font | font_face: font_display: 'swap' }}
@@ -20,7 +25,7 @@
   }
 {% endstyle %}
 
-{% assign fp_product = section.settings.product %}
+{% assign product_blocks = section.blocks | where: 'type', 'product' %}
 
 <div class="j-featured-product-section">
   <div class="page-width">
@@ -36,27 +41,40 @@
       </div>
     {% endif %}
 
-    {% if fp_product == blank %}
+    {% if product_blocks.size == 0 %}
 
       <p class="j-featured-product__placeholder">
-        Select a product in the Theme Editor.
+        Add a Product block in the Theme Editor.
       </p>
 
     {% else %}
 
-      {% assign current_variant = fp_product.selected_or_first_available_variant %}
-      {% assign main_image_alt = current_variant.featured_image.alt | default: fp_product.title %}
-
       <div
-        class="j-featured-product-card {% if section.settings.image_position == 'right' %}j-featured-product-card--image-right{% endif %}"
-        data-section-id="{{ section.id }}"
+        class="j-featured-product-slideshow"
+        data-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
       >
+
+        {% assign fp_rendered_count = 0 %}
+        <div class="j-featured-product-slideshow__track">
+          {% for block in product_blocks %}
+            {% assign fp_product = block.settings.product %}
+            {% if fp_product != blank %}
+              {% assign fp_unique_id = section.id | append: '-' | append: block.id %}
+              {% assign current_variant = fp_product.selected_or_first_available_variant %}
+              {% assign main_image_alt = current_variant.featured_image.alt | default: fp_product.title %}
+
+              <div
+                class="j-featured-product-card j-featured-product-slide {% if fp_rendered_count == 0 %}is-active{% endif %} {% if section.settings.image_position == 'right' %}j-featured-product-card--image-right{% endif %}"
+                data-section-id="{{ fp_unique_id }}"
+                {{ block.shopify_attributes }}
+              >
+              {% assign fp_rendered_count = fp_rendered_count | plus: 1 %}
 
         <!-- Buy box -->
         <div class="j-featured-product__content">
 
-          {% if section.settings.eyebrow != blank %}
-            <p class="j-featured-product__eyebrow">{{ section.settings.eyebrow }}</p>
+          {% if block.settings.eyebrow != blank %}
+            <p class="j-featured-product__eyebrow">{{ block.settings.eyebrow }}</p>
           {% endif %}
 
           <h3 class="j-featured-product__title">
@@ -65,28 +83,28 @@
 
           <div class="j-featured-product__price-row">
             {% if current_variant.compare_at_price > current_variant.price %}
-              <del class="j-featured-product__price-compare" id="FeaturedProductComparePrice-{{ section.id }}">
+              <del class="j-featured-product__price-compare" id="FeaturedProductComparePrice-{{ fp_unique_id }}">
                 {{ current_variant.compare_at_price | money }}
               </del>
             {% else %}
-              <del class="j-featured-product__price-compare" id="FeaturedProductComparePrice-{{ section.id }}" hidden></del>
+              <del class="j-featured-product__price-compare" id="FeaturedProductComparePrice-{{ fp_unique_id }}" hidden></del>
             {% endif %}
 
-            <p class="j-featured-product__price" id="FeaturedProductPrice-{{ section.id }}">
+            <p class="j-featured-product__price" id="FeaturedProductPrice-{{ fp_unique_id }}">
               {{ current_variant.price | money }}
             </p>
 
             {% if current_variant.compare_at_price > current_variant.price %}
               {% assign fp_discount_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
-              <span class="j-featured-product__badge j-featured-product__badge--sale" id="FeaturedProductSaleBadge-{{ section.id }}">
+              <span class="j-featured-product__badge j-featured-product__badge--sale" id="FeaturedProductSaleBadge-{{ fp_unique_id }}">
                 {{ 'product.sale' | t }}
               </span>
-              <span class="j-featured-product__badge j-featured-product__badge--percent" id="FeaturedProductPercentBadge-{{ section.id }}">
+              <span class="j-featured-product__badge j-featured-product__badge--percent" id="FeaturedProductPercentBadge-{{ fp_unique_id }}">
                 -{{ fp_discount_percent }}%
               </span>
             {% else %}
-              <span class="j-featured-product__badge j-featured-product__badge--sale" id="FeaturedProductSaleBadge-{{ section.id }}" hidden>{{ 'product.sale' | t }}</span>
-              <span class="j-featured-product__badge j-featured-product__badge--percent" id="FeaturedProductPercentBadge-{{ section.id }}" hidden></span>
+              <span class="j-featured-product__badge j-featured-product__badge--sale" id="FeaturedProductSaleBadge-{{ fp_unique_id }}" hidden>{{ 'product.sale' | t }}</span>
+              <span class="j-featured-product__badge j-featured-product__badge--percent" id="FeaturedProductPercentBadge-{{ fp_unique_id }}" hidden></span>
             {% endif %}
           </div>
 
@@ -99,12 +117,12 @@
             <input
               type="hidden"
               name="id"
-              id="FeaturedProductSelectedVariant-{{ section.id }}"
+              id="FeaturedProductSelectedVariant-{{ fp_unique_id }}"
               value="{{ current_variant.id }}"
             >
 
             {% if fp_product.has_only_default_variant == false %}
-              <div class="j-featured-product__options" id="FeaturedProductOptions-{{ section.id }}">
+              <div class="j-featured-product__options" id="FeaturedProductOptions-{{ fp_unique_id }}">
                 {% for option in fp_product.options_with_values %}
                   {% assign option_index = forloop.index0 %}
                   {% assign option_name_down = option.name | downcase %}
@@ -171,18 +189,18 @@
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]{% endcapture %}
-              <script type="application/json" id="FeaturedProductVariantsJson-{{ section.id }}">{{ fp_variants_json }}</script>
+              <script type="application/json" id="FeaturedProductVariantsJson-{{ fp_unique_id }}">{{ fp_variants_json }}</script>
             {% endif %}
 
             <div class="j-featured-product__cart-row">
               <div class="j-featured-product__quantity">
-                <label for="FeaturedProductQuantity-{{ section.id }}" class="j-featured-product__quantity-label">
+                <label for="FeaturedProductQuantity-{{ fp_unique_id }}" class="j-featured-product__quantity-label">
                   {{ 'product.quantity' | t }}
                 </label>
                 <div class="j-featured-product__qty-control">
                   <button type="button" class="j-featured-product__qty-minus" aria-label="{{ 'cart.decrease_quantity' | t }}">−</button>
                   <input
-                    id="FeaturedProductQuantity-{{ section.id }}"
+                    id="FeaturedProductQuantity-{{ fp_unique_id }}"
                     type="number"
                     name="quantity"
                     min="1"
@@ -195,14 +213,14 @@
               <button
                 type="submit"
                 class="j-button j-button-outline--gold j-featured-product__add"
-                id="FeaturedProductAddToCart-{{ section.id }}"
+                id="FeaturedProductAddToCart-{{ fp_unique_id }}"
                 {% unless current_variant.available %}disabled{% endunless %}
               >
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="M4 6h13l-1.5 8.5a1.5 1.5 0 0 1-1.48 1.25H6.98a1.5 1.5 0 0 1-1.48-1.25L4 6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
                   <path d="M6.5 6V4.5a3.5 3.5 0 0 1 7 0V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
                 </svg>
-                <span id="FeaturedProductAddToCartText-{{ section.id }}">
+                <span id="FeaturedProductAddToCartText-{{ fp_unique_id }}">
                   {% if current_variant.available %}
                     {{ 'product.add_to_cart' | t }}
                   {% else %}
@@ -212,7 +230,7 @@
               </button>
             </div>
 
-            <p class="j-featured-product__form-error" id="FeaturedProductFormError-{{ section.id }}" role="alert" hidden></p>
+            <p class="j-featured-product__form-error" id="FeaturedProductFormError-{{ fp_unique_id }}" role="alert" hidden></p>
 
             {% if current_variant.available %}
               <div class="j-featured-product__payment-button" style="--shopify-payment-button-color-scheme: dark;">
@@ -224,7 +242,7 @@
 
           {% if current_variant.store_availabilities.size > 0 %}
             {% assign fp_pickup_location = current_variant.store_availabilities.first %}
-            <p class="j-featured-product__pickup" id="FeaturedProductPickup-{{ section.id }}">
+            <p class="j-featured-product__pickup" id="FeaturedProductPickup-{{ fp_unique_id }}">
               {% if fp_pickup_location.available %}
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {{ 'product.pickup_available_html' | t: location: fp_pickup_location.location.name }}
@@ -238,17 +256,6 @@
             {{ 'product.view_full_details' | t }}
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-
-          {% for block in section.blocks %}
-            {% case block.type %}
-              {% when 'custom_liquid' %}
-                <div {{ block.shopify_attributes }}>
-                  {{ block.settings.custom_liquid }}
-                </div>
-              {% when '@app' %}
-                {% render block %}
-            {% endcase %}
-          {% endfor %}
 
         </div>
 
@@ -349,8 +356,24 @@
         </div>
 
       </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+      </div>
 
     {% endif %}
+
+    {% for content_block in section.blocks %}
+      {% case content_block.type %}
+        {% when 'custom_liquid' %}
+          <div {{ content_block.shopify_attributes }}>
+            {{ content_block.settings.custom_liquid }}
+          </div>
+        {% when '@app' %}
+          {% render content_block %}
+      {% endcase %}
+    {% endfor %}
 
   </div>
 </div>
@@ -361,11 +384,6 @@
 {
   "name": "Featured product",
   "settings": [
-    {
-      "type": "product",
-      "id": "product",
-      "label": "Product"
-    },
     {
       "type": "text",
       "id": "heading",
@@ -385,11 +403,6 @@
       "info": "Short supporting line shown below the heading."
     },
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow text"
-    },
-    {
       "type": "select",
       "id": "image_position",
       "label": "Image position",
@@ -398,9 +411,36 @@
         { "value": "right", "label": "Right" }
       ],
       "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Rotation speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "info": "Only used when 2 or more products are added below."
     }
   ],
   "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow text"
+        }
+      ]
+    },
     {
       "type": "custom_liquid",
       "name": "Custom liquid",
@@ -419,7 +459,10 @@
   ],
   "presets": [
     {
-      "name": "Featured product"
+      "name": "Featured product",
+      "blocks": [
+        { "type": "product" }
+      ]
     }
   ]
 }

@@ -148,53 +148,21 @@ function initFeaturedProduct(root) {
   const thumbNext = root.querySelector(".j-featured-product__thumb-arrow--next");
 
   if (thumbList && thumbPrev && thumbNext) {
-    // The row's thumbnails used to be sized in CSS as a 1/5th share of the
-    // row's *content* box (100% minus the row's own left/right padding).
-    // That undercounts what's actually visible in two ways: (1) overflow
-    // only clips at the row's padding edge, not its content edge, so the
-    // padding — reserved so the arrow buttons don't sit on top of the
-    // first/last thumbnail — is still rendered space a 6th thumbnail can
-    // bleed into; (2) each thumbnail also has its own max-width: 140px
-    // cap, so on a wide section the 1/5th share gets clamped well below
-    // the row's real width, leaving slack after the 5th thumbnail that a
-    // 6th slides straight into. clampVisibleThumbCount() sizes thumbnails
-    // in JS against the row's *wrapper* (whose size our own writes below
-    // never change, avoiding a resize-observer feedback loop) and then
-    // caps the row itself to exactly 5 thumbnail-widths + gaps + the
-    // left offset — leaving zero slack either way, so a 6th only appears
-    // once the row is scrolled / the arrow is clicked.
-    const visibleCount = 5;
-    const thumbWrap = thumbList.parentElement;
-
+    // Thumbnail width/row-capacity is handled entirely by CSS (see
+    // .j-featured-product__thumb's flex-basis calc() in
+    // featured-product.css) rather than JS measuring and writing inline
+    // styles — a previous version of this computed and wrote explicit
+    // pixel widths here, which could go stale (thumbnails rendering
+    // overlapped/misjudged) whenever the layout changed without a full
+    // page reload, e.g. the theme editor's mobile/desktop preview
+    // toggle. CSS re-flows itself correctly on every layout change with
+    // no JS involved, so that whole class of bug isn't possible here —
+    // this only owns arrow visibility/enabled state and the scroll
+    // itself, both of which are read fresh from the DOM on demand.
     function thumbStepDistance() {
       const first = thumbList.querySelector(".j-featured-product__thumb");
       const gap = parseFloat(getComputedStyle(thumbList).columnGap) || 24;
       return first ? first.getBoundingClientRect().width + gap : thumbList.clientWidth * 0.8;
-    }
-
-    function clampVisibleThumbCount() {
-      const thumbs = thumbList.querySelectorAll(".j-featured-product__thumb");
-      if (!thumbs.length) return;
-
-      const gap = parseFloat(getComputedStyle(thumbList).columnGap) || 24;
-      const paddingLeft = parseFloat(getComputedStyle(thumbList).paddingLeft) || 0;
-
-      const usableWidth = thumbWrap.clientWidth - paddingLeft;
-      const rawWidth = (usableWidth - gap * (visibleCount - 1)) / visibleCount;
-      // Matches the CSS class's own max-width: 140px cap.
-      const thumbWidth = Math.min(rawWidth, 140);
-
-      thumbs.forEach((thumb) => {
-        thumb.style.flexBasis = `${thumbWidth}px`;
-      });
-
-      // Without this, a clamped (140px) thumbWidth leaves the row
-      // narrower than thumbWrap, and flex items keep laying out into
-      // that leftover space — a 6th thumbnail fits with room to spare
-      // instead of being pushed off into the scrollable overflow.
-      const rowWidth =
-        paddingLeft + thumbWidth * visibleCount + gap * (visibleCount - 1);
-      thumbList.style.maxWidth = `${rowWidth}px`;
     }
 
     function updateThumbArrows() {
@@ -221,30 +189,23 @@ function initFeaturedProduct(root) {
 
     thumbList.addEventListener("scroll", updateThumbArrows, { passive: true });
 
-    // A plain window "resize" listener only catches viewport changes — it
-    // misses the row growing/shrinking from its own content settling (web
-    // fonts swapping in, images finishing load, the grid column reflowing),
-    // which left the thumbnail width frozen at whatever it measured on the
-    // very first, not-yet-stable layout pass. ResizeObserver reacts to the
-    // wrapper's actual rendered size instead, whatever causes it to
-    // change — observing the wrapper (not the row) also avoids a feedback
-    // loop, since clampVisibleThumbCount() only ever writes to the row.
+    // Re-checks arrow visibility whenever the row's available width
+    // changes for any reason (viewport resize, web fonts swapping in,
+    // the grid column reflowing, a live mobile/desktop preview toggle)
+    // — ResizeObserver reacts to the row's actual rendered size itself
+    // rather than only window resize events.
     let thumbResizeTimer = null;
-    const onThumbWrapResize = () => {
+    const onThumbListResize = () => {
       clearTimeout(thumbResizeTimer);
-      thumbResizeTimer = setTimeout(() => {
-        clampVisibleThumbCount();
-        updateThumbArrows();
-      }, 150);
+      thumbResizeTimer = setTimeout(updateThumbArrows, 150);
     };
 
     if (typeof ResizeObserver === "function") {
-      new ResizeObserver(onThumbWrapResize).observe(thumbWrap);
+      new ResizeObserver(onThumbListResize).observe(thumbList);
     } else {
-      window.addEventListener("resize", onThumbWrapResize, { passive: true });
+      window.addEventListener("resize", onThumbListResize, { passive: true });
     }
 
-    clampVisibleThumbCount();
     updateThumbArrows();
   }
 
