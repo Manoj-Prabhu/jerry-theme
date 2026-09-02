@@ -105,7 +105,9 @@
       ],
       "settings": {
         "button_font": "bebas_neue_n4",
-        "trust_font": "instrument_serif_n4"
+        "trust_font": "instrument_serif_n4",
+        "description_font": "rajdhani_n4",
+        "badge_font": "unifraktur_maguntia_n4"
       }
     },
     "shop_by_category": {
@@ -162,6 +164,7 @@
       "settings": {
         "heading": "Shop by Category",
         "heading_font": "kaushan_script_n4",
+        "card_title_font": "manuale_n7",
         "description": "Find exactly what you're looking for."
       }
     },
@@ -188,6 +191,27 @@
     "featured_product": {
       "type": "featured-product",
       "blocks": {
+        "product_mFde8G": {
+          "type": "product",
+          "settings": {
+            "product": "emerald-green-ivory-tweed-blazer",
+            "eyebrow": ""
+          }
+        },
+        "product_WJwkdy": {
+          "type": "product",
+          "settings": {
+            "product": "black-stretch-slim-fit-shirt",
+            "eyebrow": ""
+          }
+        },
+        "product_wE7Pbn": {
+          "type": "product",
+          "settings": {
+            "product": "cherry-red-oversized-shirt",
+            "eyebrow": ""
+          }
+        },
         "product-1": {
           "type": "product",
           "settings": {
@@ -196,7 +220,12 @@
           }
         }
       },
-      "block_order": ["product-1"],
+      "block_order": [
+        "product_mFde8G",
+        "product_WJwkdy",
+        "product_wE7Pbn",
+        "product-1"
+      ],
       "settings": {
         "heading": "Featured product",
         "heading_font": "quantico_n7",
@@ -275,6 +304,7 @@
         "autoplay_speed": 5,
         "eyebrow": "Our Story",
         "heading": "Crafted With Purpose",
+        "heading_font": "quantico_n7",
         "body": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>",
         "button_label": "Learn More",
         "button_link": "shopify://pages/about-us"
