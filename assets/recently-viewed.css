@@ -4,16 +4,29 @@
   padding: var(--space-12) var(--space-8) var(--space-16);
 }
 
-/* The shared .j-product-grid (see featured-collection.css) sizes cards
-   for a 2-up overlay layout (up to 520px each) — not the standard
-   card size shown everywhere else (collection grid, etc). This matches
-   .j-collection-grid's own sizing instead (see collection.css) so
-   "Recently Viewed" cards read as the same default product card, not
-   an oversized one-off. Same treatment as "Product Recommendations"
-   (see components.css). */
+/* repeat(4, ...) — NOT auto-fit/auto-fill, which has repeatedly
+   collapsed to a single huge column in testing (see the matching
+   comment on .j-product-recommendations .j-product-grid in
+   components.css). Column count adjusts per product count via :has()
+   below instead. */
 .j-recently-viewed .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-8);
+}
+
+.j-recently-viewed .j-product-grid:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.j-recently-viewed .j-product-grid:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* A single result shouldn't stretch edge to edge as one giant card —
+   capped to roughly the same width as one column in the 4-up layout. */
+.j-recently-viewed .j-product-grid:has(> :nth-child(1):last-child) {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 320px;
 }
 
 @media (max-width: 900px) {

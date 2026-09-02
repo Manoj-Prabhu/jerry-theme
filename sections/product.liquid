@@ -541,15 +541,24 @@
 
           {% when 'description' %}
             {% if product.description != blank %}
-              <details class="j-product__description" {{ block.shopify_attributes }}>
+              {% style %}
+                {{ block.settings.font | font_face: font_display: 'swap' }}
+
+                [data-description-block-id="{{ block.id }}"] .j-product__description-content {
+                  font-family: {{ block.settings.font.family }}, {{ block.settings.font.fallback_families }};
+                  font-style: {{ block.settings.font.style }};
+                  font-weight: {{ block.settings.font.weight }};
+                }
+              {% endstyle %}
+
+              <details
+                class="j-product__description"
+                data-description-block-id="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
                 <summary class="j-product__description-toggle">
-                  <span class="j-product__description-icon" aria-hidden="true">
-                    <svg viewBox="0 0 20 20" fill="none">
-                      <path d="M5 3.5h7l3 3v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-                      <path d="M7 10h6M7 13h6M7 7h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-                    </svg>
-                  </span>
                   {{ 'product.description' | t }}
+                  <span class="j-product__description-sign" aria-hidden="true"></span>
                 </summary>
                 <div class="j-product__description-content rte">
                   {{ product.description }}
@@ -682,7 +691,15 @@
     {
       "type": "description",
       "name": "Description",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "font_picker",
+          "id": "font",
+          "label": "Font",
+          "default": "eczar_n4"
+        }
+      ]
     },
     {
       "type": "text",

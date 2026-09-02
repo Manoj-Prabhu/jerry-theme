@@ -142,15 +142,35 @@
 
 /* The shared .j-product-grid (see featured-collection.css) sizes cards
    for a 2-up overlay layout (up to 520px each) — far too wide for a
-   default-sized card here. 4 equal columns within the standard content
-   width (not the earlier widened-container version) lands each card
-   close to the same size shown on the collection grid, without the
-   auto-fill/auto-fit track-sizing edge cases that were collapsing this
-   to a single column. Same treatment as "Recently Viewed" (see
-   recently-viewed.css). */
+   default-sized card here. repeat(4, ...) — NOT auto-fit/auto-fill —
+   every time auto-fit has been tried here it's collapsed to a single
+   huge column in testing, seemingly a real quirk of the browser this
+   theme is being tested in rather than anything wrong with the CSS
+   itself; repeat(N, minmax(0, 1fr)) is the one pattern that's rendered
+   correctly every time. The column count is set per breakpoint (and
+   per product count via :has() below) instead. Same treatment as
+   "Recently Viewed" (see recently-viewed.css). */
 .j-product-recommendations .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-8);
+}
+
+/* Fewer than 4 recommended products — collapse to that many explicit
+   columns so they spread evenly across the row instead of leaving
+   empty reserved column(s) as dead space on the right. */
+.j-product-recommendations .j-product-grid:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.j-product-recommendations .j-product-grid:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* A single result shouldn't stretch edge to edge as one giant card —
+   capped to roughly the same width as one column in the 4-up layout. */
+.j-product-recommendations .j-product-grid:has(> :nth-child(1):last-child) {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 320px;
 }
 
 @media (max-width: 900px) {

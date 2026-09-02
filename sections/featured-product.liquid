@@ -94,12 +94,6 @@
             <p class="j-featured-product__tax-note">{{ 'product.taxes_included' | t }}</p>
           {% endif %}
 
-          {% if section.settings.show_description and fp_product.description != blank %}
-            <div class="j-featured-product__description">
-              {{ fp_product.description }}
-            </div>
-          {% endif %}
-
           {% form 'product', fp_product, class: 'j-featured-product__form' %}
 
             <input
@@ -181,16 +175,21 @@
             {% endif %}
 
             <div class="j-featured-product__cart-row">
-              <div class="j-featured-product__qty-control">
-                <button type="button" class="j-featured-product__qty-minus" aria-label="{{ 'cart.decrease_quantity' | t }}">−</button>
-                <input
-                  id="FeaturedProductQuantity-{{ section.id }}"
-                  type="number"
-                  name="quantity"
-                  min="1"
-                  value="1"
-                >
-                <button type="button" class="j-featured-product__qty-plus" aria-label="{{ 'cart.increase_quantity' | t }}">+</button>
+              <div class="j-featured-product__quantity">
+                <label for="FeaturedProductQuantity-{{ section.id }}" class="j-featured-product__quantity-label">
+                  {{ 'product.quantity' | t }}
+                </label>
+                <div class="j-featured-product__qty-control">
+                  <button type="button" class="j-featured-product__qty-minus" aria-label="{{ 'cart.decrease_quantity' | t }}">−</button>
+                  <input
+                    id="FeaturedProductQuantity-{{ section.id }}"
+                    type="number"
+                    name="quantity"
+                    min="1"
+                    value="1"
+                  >
+                  <button type="button" class="j-featured-product__qty-plus" aria-label="{{ 'cart.increase_quantity' | t }}">+</button>
+                </div>
               </div>
 
               <button
@@ -389,12 +388,6 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_description",
-      "label": "Show description",
-      "default": true
     },
     {
       "type": "select",

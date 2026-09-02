@@ -259,7 +259,7 @@ html.j-scroll-lock body {
   border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
 /* Subtotal/View Cart/Checkout have nothing meaningful to show while the
@@ -282,16 +282,18 @@ html.j-scroll-lock body {
 .j-cart__footer form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .j-cart__footer .j-button {
   width: 100%;
 }
 
+/* Same look as "Continue Shopping" (see .j-cart__continue) — square
+   corners, default gray border, gold fill on hover — instead of its
+   own gold-bordered rounded style. */
 .j-cart-view-link {
-  border-color: #f0c14b;
-  color: var(--color-primary);
+  border-radius: 0;
 }
 
 .j-cart-view-link:not(.is-disabled):hover {
@@ -304,6 +306,7 @@ html.j-scroll-lock body {
   background: #1a1a1a;
   color: #f0c14b;
   border: none;
+  border-radius: 0;
 }
 
 .j-cart-checkout-button:not(:disabled):hover {
@@ -364,7 +367,12 @@ html.j-scroll-lock body {
 .j-cart-item__content .j-cart-item__title {
   margin-bottom: 8px;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-semibold);
+  /* No font-weight here — the shared product-name font rule (see
+     base.css) already sets the weight that matches the configured
+     font itself. Forcing a fixed semibold here used to fight that,
+     synthetically bolding fonts that don't ship a 600 weight and
+     making this title render differently here than everywhere else
+     the same font setting applies. */
   line-height: 1.4;
   /* Overrides the accent color the generic ".j-cart-item__content p" rule
      below would otherwise apply — that rule targets the price paragraph,
@@ -897,6 +905,14 @@ html.j-scroll-lock body {
   margin-top: 16px;
 }
 
+/* In the drawer specifically, the form already has its own flex `gap`
+   (see .j-cart__footer form) spacing every child consistently — this
+   field's own margin-top stacked on top of that gap, making the space
+   above it noticeably larger than the gap between every other row. */
+.j-cart__footer .j-cart-page__note-field {
+  margin-top: 0;
+}
+
 .j-cart-page__note-field label {
   display: block;
   margin-bottom: 6px;
@@ -913,6 +929,13 @@ html.j-scroll-lock body {
   font: inherit;
   font-size: var(--font-size-sm);
   resize: vertical;
+}
+
+/* Gold, not the site-wide green focus ring (see :focus-visible in
+   base.css) — scoped to just this field rather than changing focus
+   color globally. */
+.j-cart-page__note-field textarea:focus-visible {
+  outline-color: #f0c14b;
 }
 
 .j-cart-item__discounts {

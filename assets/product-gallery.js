@@ -147,6 +147,74 @@ function initProductGallery() {
   gallery.activateMedia = activateMedia;
 
   // -------------------------
+  // Swipe (mobile) — the dots already let a visitor jump to a specific
+  // image; this adds the swipe-through gesture visitors expect from a
+  // gallery on touch, using the same activateMedia/direction logic so
+  // it slides exactly like tapping a dot would.
+  // -------------------------
+
+  const mainImage = document.querySelector(".j-product__main-image");
+
+  if (mainImage) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let tracking = false;
+
+    const SWIPE_THRESHOLD = 40;
+
+    mainImage.addEventListener(
+      "touchstart",
+      (event) => {
+        if (event.touches.length !== 1) return;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        tracking = true;
+      },
+      { passive: true },
+    );
+
+    mainImage.addEventListener(
+      "touchend",
+      (event) => {
+        if (!tracking) return;
+        tracking = false;
+
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+
+        // Ignore mostly-vertical drags (page scroll) and drags too
+        // short to be a deliberate swipe.
+        if (
+          Math.abs(deltaX) < SWIPE_THRESHOLD ||
+          Math.abs(deltaX) < Math.abs(deltaY)
+        ) {
+          return;
+        }
+
+        const activeSlide = gallery.querySelector(
+          ".j-product__media-slide.is-active",
+        );
+        if (!activeSlide) return;
+
+        const currentIndex = mediaOrder.indexOf(activeSlide.dataset.mediaId);
+        if (currentIndex === -1) return;
+
+        // Swipe left -> next image; swipe right -> previous. No
+        // wraparound, matching the dots/thumbnails (there's no "last
+        // dot loops to first" behavior there either).
+        const nextIndex = deltaX < 0 ? currentIndex + 1 : currentIndex - 1;
+        if (nextIndex < 0 || nextIndex >= mediaOrder.length) return;
+
+        const nextMediaId = mediaOrder[nextIndex];
+        activateMedia(nextMediaId);
+        syncVariantToMedia(nextMediaId);
+      },
+      { passive: true },
+    );
+  }
+
+  // -------------------------
   // Thumbnail scroll arrows (desktop column only — see .j-product__dots
   // for the mobile equivalent, which doesn't need scrolling)
   // -------------------------

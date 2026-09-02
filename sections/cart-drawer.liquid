@@ -1,3 +1,13 @@
+{% style %}
+  {{ section.settings.item_title_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-cart-item__title {
+    font-family: {{ section.settings.item_title_font.family }}, {{ section.settings.item_title_font.fallback_families }};
+    font-style: {{ section.settings.item_title_font.style }};
+    font-weight: {{ section.settings.item_title_font.weight }};
+  }
+{% endstyle %}
+
 <div class="j-cart-drawer" id="CartDrawer">
 
   <div class="j-cart-overlay"></div>
@@ -163,6 +173,12 @@
       "id": "empty_cart_collection",
       "label": "Empty state suggested collection",
       "info": "Shown as an image card below \"Continue Shopping\" when the cart is empty."
+    },
+    {
+      "type": "font_picker",
+      "id": "item_title_font",
+      "label": "Item name font",
+      "default": "bayon_n4"
     }
   ]
 }

@@ -281,16 +281,6 @@
   color: var(--color-text-light);
 }
 
-.j-featured-product__description {
-  margin-bottom: var(--space-5);
-  color: var(--color-text);
-  line-height: 1.6;
-}
-
-.j-featured-product__description p:last-child {
-  margin-bottom: 0;
-}
-
 .j-featured-product__form {
   display: flex;
   flex-direction: column;
@@ -387,52 +377,70 @@
 
 /* Quantity + Add to Cart, side by side */
 
+/* align-items: flex-end — Add to Cart lines up with the bottom of the
+   quantity stepper, not the "Quantity :" label above it. */
 .j-featured-product__cart-row {
   display: flex;
+  align-items: flex-end;
   gap: var(--space-3);
 }
 
-.j-featured-product__qty-control {
+.j-featured-product__quantity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
   flex-shrink: 0;
+}
+
+.j-featured-product__quantity-label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.j-featured-product__quantity-label::after {
+  content: ":";
+}
+
+/* Separate circular buttons with a gap between them, and a filled
+   gold circle for the number — same treatment as the main product
+   page's quantity stepper (see .j-product__qty-control in product.css)
+   instead of one joined bordered box. */
+.j-featured-product__qty-control {
   display: inline-flex;
   align-items: center;
-  /* Matches the Add to Cart button's own border color/radius (not a
-     fixed gray box) so the two controls read as one connected group
-     instead of visually clashing. */
-  border: 1px solid var(--button-background);
-  border-radius: var(--style-border-radius-button);
-  overflow: hidden;
-  background: var(--color-background);
+  gap: 10px;
 }
 
 .j-featured-product__qty-control button {
-  width: 40px;
-  height: 44px;
-  border: none;
-  background: transparent;
-  color: var(--button-background);
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-background);
+  color: var(--color-text);
   cursor: pointer;
-  font-size: 17px;
-  font-weight: var(--font-semibold);
-  transition: background-color var(--transition-fast, 0.15s ease);
+  font-size: 16px;
+  transition:
+    background-color var(--transition-fast, 0.15s ease),
+    border-color var(--transition-fast, 0.15s ease);
 }
 
 .j-featured-product__qty-control button:hover {
-  background: color-mix(in srgb, var(--button-background) 8%, transparent);
+  border-color: #f0c14b;
 }
 
 .j-featured-product__qty-control input {
-  width: 40px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: none;
-  border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text);
+  border-radius: 50%;
+  background: #f0c14b;
+  color: #1a1a1a;
   text-align: center;
   font: inherit;
-  font-weight: var(--font-semibold);
+  font-weight: 600;
   -moz-appearance: textfield;
   appearance: textfield;
 }
@@ -456,6 +464,7 @@
   justify-content: center;
   gap: var(--space-2);
   height: 44px;
+  border-radius: 24px;
 }
 
 .j-featured-product__add svg {
