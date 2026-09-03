@@ -1,5 +1,29 @@
 {% render 'breadcrumbs' %}
 
+{% style %}
+  {{ section.settings.content_heading_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-article__content h1,
+  #shopify-section-{{ section.id }} .j-article__content h2,
+  #shopify-section-{{ section.id }} .j-article__content h3,
+  #shopify-section-{{ section.id }} .j-article__content h4,
+  #shopify-section-{{ section.id }} .j-article__content h5,
+  #shopify-section-{{ section.id }} .j-article__content h6 {
+    font-family: {{ section.settings.content_heading_font.family }}, {{ section.settings.content_heading_font.fallback_families }};
+    font-style: {{ section.settings.content_heading_font.style }};
+    font-weight: {{ section.settings.content_heading_font.weight }};
+  }
+
+  {{ section.settings.content_body_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-article__content p,
+  #shopify-section-{{ section.id }} .j-article__content li {
+    font-family: {{ section.settings.content_body_font.family }}, {{ section.settings.content_body_font.fallback_families }};
+    font-style: {{ section.settings.content_body_font.style }};
+    font-weight: {{ section.settings.content_body_font.weight }};
+  }
+{% endstyle %}
+
 <div class="full-width j-page-hero-band">
   <div class="j-page-hero-band__inner">
     <header class="j-article__header">
@@ -167,6 +191,21 @@
 {% schema %}
 {
   "name": "Article",
-  "settings": []
+  "settings": [
+    {
+      "type": "font_picker",
+      "id": "content_heading_font",
+      "label": "Content heading font",
+      "info": "Used for headings written inside the article's body text (e.g. \"Why We Love It\").",
+      "default": "chakra_petch_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_body_font",
+      "label": "Content body font",
+      "info": "Used for paragraph and list text inside the article's body.",
+      "default": "eczar_n4"
+    }
+  ]
 }
 {% endschema %}

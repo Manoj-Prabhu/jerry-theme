@@ -73,12 +73,12 @@
 }
 
 .j-faq__item {
-  border: 1px solid var(--color-sage);
+  border: 1px solid #e0d2b8;
   border-radius: var(--radius-md);
   background: linear-gradient(
     135deg,
-    var(--color-sage) 0%,
-    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
+    #e0d2b8 0%,
+    color-mix(in srgb, #e0d2b8 35%, white) 35%,
     var(--color-white) 75%
   );
   overflow: hidden;
@@ -90,14 +90,23 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Flex row (not absolute-positioned chevron) — a chevron centered via
+   `top: 50%` is only ever tuned right for one specific text height; a
+   question that wraps to 2 lines grows the row taller and throws that
+   fixed offset out of alignment. Flexbox centers the chevron against
+   the row's actual rendered height automatically, however many lines
+   the question text takes. */
 .j-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   list-style: none;
   cursor: pointer;
-  padding: 14px 40px 14px 18px;
+  padding: 14px 18px;
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-primary);
-  position: relative;
   transition: background var(--transition-fast);
 }
 
@@ -113,19 +122,17 @@
    instead of swapping "+"/"−" text (content changes can't be animated). */
 .j-faq__question::after {
   content: "";
-  position: absolute;
-  right: 18px;
-  top: 50%;
+  flex-shrink: 0;
   width: 10px;
   height: 10px;
   border-right: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
-  transform: translateY(-70%) rotate(45deg);
+  transform: rotate(45deg);
   transition: transform 0.3s ease;
 }
 
 .j-faq__item[open] .j-faq__question::after {
-  transform: translateY(-30%) rotate(-135deg);
+  transform: rotate(-135deg);
 }
 
 .j-faq__answer {
@@ -191,6 +198,7 @@
   }
 
   .j-faq__question {
-    font-size: 18px;
+    padding: 14px 14px;
+    font-size: 14px;
   }
 }

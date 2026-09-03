@@ -19,6 +19,14 @@
     font-style: {{ section.settings.heading_font.style }};
     font-weight: {{ section.settings.heading_font.weight }};
   }
+
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+
+  #shopify-section-{{ section.id }} .j-about-story__body {
+    font-family: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    font-style: {{ section.settings.body_font.style }};
+    font-weight: {{ section.settings.body_font.weight }};
+  }
 {% endstyle %}
 
 <section class="j-about-story full-width">
@@ -118,6 +126,12 @@
       "id": "body",
       "label": "Body text",
       "default": "<p>It began with a simple frustration: too many everyday products were built to be replaced, not kept. We set out to make the opposite — pieces chosen for their materials, their maker, and how they hold up years later.</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "eczar_n4"
     },
     {
       "type": "text",
