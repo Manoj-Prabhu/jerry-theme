@@ -174,7 +174,7 @@
         "heading": "Featured Collection",
         "heading_font": "marcellus_n4",
         "description": "Hand-picked products you'll love.",
-        "collection": "premium-lifestyle-collection",
+        "collection": "editors-picks",
         "products_to_show": 2
       }
     },
@@ -184,7 +184,7 @@
         "heading": "New Arrivals",
         "heading_font": "michroma_n4",
         "description": "",
-        "collection": "traditional-cultural-collection",
+        "collection": "new-arrivals",
         "products_to_show": 6
       }
     },
@@ -306,6 +306,7 @@
         "heading": "Crafted With Purpose",
         "heading_font": "quantico_n7",
         "body": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>",
+        "body_font": "eczar_n4",
         "button_label": "Learn More",
         "button_link": "shopify://pages/about-us"
       }
@@ -319,6 +320,7 @@
             "rating": 5,
             "quote": "This shop exceeded my expectations. Fast shipping, great quality, and excellent customer service.",
             "image": "shopify://shop_images/pexels-arif-15827759.jpg",
+            "avatar": "shopify://shop_images/fashionable-young-woman.jpg",
             "name": "Jancy Rose",
             "role": "Mumbai"
           }
@@ -329,6 +331,7 @@
             "rating": 5,
             "quote": "Beautifully made products and the packaging felt so premium. Will definitely order again.",
             "image": "shopify://shop_images/pexels-minan1398-1003979.jpg",
+            "avatar": "shopify://shop_images/pexels-hanuman-photo-studio-564865561-26728097.jpg",
             "name": "Alex Rivera",
             "role": "Houston"
           }
@@ -339,6 +342,7 @@
             "rating": 4,
             "quote": "Great selection and easy checkout. Delivery was quicker than expected too.",
             "image": "shopify://shop_images/pexels-introspectivedsgn-4061551.jpg",
+            "avatar": "shopify://shop_images/pexels-hurrahsuhail-10814413.jpg",
             "name": "Sam John",
             "role": "Hobart"
           }
