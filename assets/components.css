@@ -136,7 +136,6 @@
 
 .j-product-recommendations {
   max-width: var(--container-width);
-  margin: 0 auto;
   padding: 40px var(--space-8) 60px;
 }
 
@@ -174,9 +173,33 @@
 }
 
 @media (max-width: 900px) {
-  .j-product-recommendations .j-product-grid {
+  .j-product-recommendations {
+    padding: 40px var(--space-4) 60px;
+  }
+
+  .j-product-recommendations .j-product-grid,
+  .j-product-recommendations .j-product-grid:has(> :nth-child(3):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-4);
+  }
+
+  .j-product-recommendations .j-product-card__image {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .j-product-recommendations .j-wishlist-button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .j-product-recommendations .j-quick-view-button {
+    left: 30px;
+    right: 30px;
+    bottom: 10px;
+    padding: 6px;
+    font-size: 10px;
   }
 }
 

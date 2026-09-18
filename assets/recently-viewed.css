@@ -1,6 +1,5 @@
 .j-recently-viewed {
   max-width: var(--container-width);
-  margin: 0 auto;
   padding: var(--space-12) var(--space-8) var(--space-16);
 }
 
@@ -30,8 +29,32 @@
 }
 
 @media (max-width: 900px) {
-  .j-recently-viewed .j-product-grid {
+  .j-recently-viewed {
+    padding: var(--space-12) var(--space-4) var(--space-16);
+  }
+
+  .j-recently-viewed .j-product-grid,
+  .j-recently-viewed .j-product-grid:has(> :nth-child(3):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-4);
+  }
+
+  .j-recently-viewed .j-product-card__image {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .j-recently-viewed .j-wishlist-button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .j-recently-viewed .j-quick-view-button {
+    left: 30px;
+    right: 30px;
+    bottom: 10px;
+    padding: 6px;
+    font-size: 10px;
   }
 }
