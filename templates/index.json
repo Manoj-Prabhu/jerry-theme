@@ -116,17 +116,17 @@
         "cat-1": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/person-dressed-in-black-holds-two-weights-in-each-hand.jpg",
+            "image": "shopify://shop_images/person-walks-down-sunflower-row.jpg",
             "title": "Just In",
-            "link": ""
+            "link": "shopify://collections/new-arrivals"
           }
         },
         "cat-2": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/pink-lip-gloss.jpg",
+            "image": "shopify://shop_images/love-heart-hands.jpg",
             "title": "Fan Favorites",
-            "link": ""
+            "link": "shopify://collections/best-sellers"
           }
         },
         "cat-3": {
@@ -134,23 +134,23 @@
           "settings": {
             "image": "shopify://shop_images/laughter-in-the-sun.jpg",
             "title": "Finishing Touches",
-            "link": ""
+            "link": "shopify://collections/accessories"
           }
         },
         "cat-4": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/studded-flats.jpg",
+            "image": "shopify://shop_images/pexels-jibarofoto-16069736.jpg",
             "title": "Style Steals",
-            "link": ""
+            "link": "shopify://collections/sale"
           }
         },
         "cat-5": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/two-woman-hold-hands-outside-while-facing-each-other.jpg",
+            "image": "shopify://shop_images/man-adjusts-his-shirt-cuffs-below-watch.jpg",
             "title": "Editor's Picks",
-            "link": ""
+            "link": "shopify://collections/editors-picks"
           }
         }
       },
