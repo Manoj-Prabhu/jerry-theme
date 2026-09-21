@@ -135,6 +135,21 @@
                       autoplay: true
                   }}
                 {% endcapture %}
+                {% comment %}
+                  On a <video>, fetchpriority applies to the video file, not
+                  to its poster — and the poster is what actually paints as
+                  the LCP element. Preloading the exact poster URL that
+                  video_tag generated (extracted from its output so the two
+                  can never drift apart) makes it a high-priority request
+                  discoverable straight from the HTML. (AssetPreload's suggested
+                  image_tag preload argument doesn't apply to a video poster.)
+                {% endcomment %}
+                {% if eager_hero_video contains ' poster="' %}
+                  {% assign hero_poster_url = eager_hero_video | split: ' poster="' | last | split: '"' | first %}
+                  {% # theme-check-disable AssetPreload %}
+                  <link rel="preload" as="image" href="{{ hero_poster_url }}" fetchpriority="high">
+                  {% # theme-check-enable AssetPreload %}
+                {% endif %}
                 {{ eager_hero_video | replace: '<video ', '<video fetchpriority="high" ' }}
               {% else %}
                 {% capture deferred_hero_video %}
