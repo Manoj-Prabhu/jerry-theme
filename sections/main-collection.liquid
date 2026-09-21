@@ -3,6 +3,7 @@
 <div class="full-width j-page-hero-band {% if collection.image %}j-page-hero-band--has-image{% endif %}">
   {% if collection.image %}
     <div class="j-page-hero-band__image">
+      {% assign img_alt = collection.image.alt | default: collection.title %}
       {{
         collection.image
         | image_url: width: 1600
@@ -11,7 +12,7 @@
           fetchpriority: 'high',
           widths: '800, 1200, 1600',
           sizes: '100vw',
-          alt: collection.image.alt | default: collection.title
+          alt: img_alt
       }}
     </div>
   {% endif %}

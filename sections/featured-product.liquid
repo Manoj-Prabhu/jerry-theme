@@ -279,6 +279,7 @@
               >
                 {% case media.media_type %}
                   {% when 'image' %}
+                    {% assign img_alt = media.alt | default: main_image_alt %}
                     {{
                       media
                       | image_url: width: 900, format: 'webp'
@@ -287,7 +288,7 @@
                         loading: 'lazy',
                         widths: '400, 600, 800, 900',
                         sizes: '(max-width: 768px) 100vw, 500px',
-                        alt: media.alt | default: main_image_alt
+                        alt: img_alt
                     }}
                   {% when 'video' %}
                     {{ media | video_tag: image_size: '900x', controls: true, controlslist: 'nodownload' }}

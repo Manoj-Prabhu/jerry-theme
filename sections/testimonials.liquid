@@ -49,10 +49,11 @@
                 <div class="j-testimonials__author">
                   <div class="j-testimonials__avatar">
                     {% if block.settings.avatar %}
+                      {% assign img_alt = block.settings.name | default: '' %}
                       {{
                         block.settings.avatar
                         | image_url: width: 96
-                        | image_tag: loading: 'lazy', alt: block.settings.name | default: '', widths: '48, 96'
+                        | image_tag: loading: 'lazy', alt: img_alt, widths: '48, 96'
                       }}
                     {% else %}
                       <span class="j-testimonials__avatar-initial">
@@ -82,6 +83,7 @@
 
               <div class="j-testimonials__media">
                 {% if block.settings.image %}
+                  {% assign img_alt = block.settings.image.alt | default: block.settings.name | default: shop.name %}
                   {{
                     block.settings.image
                     | image_url: width: 1200
@@ -89,7 +91,7 @@
                       loading: 'lazy',
                       widths: '600, 900, 1200',
                       sizes: '(max-width: 900px) 100vw, 50vw',
-                      alt: block.settings.image.alt | default: block.settings.name | default: shop.name
+                      alt: img_alt
                   }}
                 {% else %}
                   <div class="j-testimonials__media-placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>

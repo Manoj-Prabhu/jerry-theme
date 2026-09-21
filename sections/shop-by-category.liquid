@@ -42,6 +42,7 @@
           >
             <div class="j-category-card__image">
               {% if block.settings.image %}
+                {% assign img_alt = block.settings.title | default: shop.name %}
                 {{
                   block.settings.image
                   | image_url: width: 600
@@ -49,7 +50,7 @@
                     loading: 'lazy',
                     widths: '300, 450, 600',
                     sizes: '(max-width: 768px) 45vw, 22vw',
-                    alt: block.settings.title | default: shop.name
+                    alt: img_alt
                 }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'j-category-card__placeholder' }}

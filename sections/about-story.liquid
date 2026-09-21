@@ -34,10 +34,11 @@
 
     <div class="j-about-story__media">
       {% if section.settings.image != blank %}
+        {% assign img_alt = section.settings.heading | default: shop.name %}
         {{
           section.settings.image
           | image_url: width: 1200
-          | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: section.settings.heading | default: shop.name
+          | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: img_alt
         }}
       {% else %}
         <div class="j-about-story__media-placeholder">{{ 'image' | placeholder_svg_tag: 'j-about-story__placeholder-svg' }}</div>

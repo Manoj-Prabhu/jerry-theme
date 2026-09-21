@@ -31,24 +31,26 @@
           {% endif %}
 
           {% if forloop.first and priority %}
+            {% assign img_alt = card_image.alt | default: product.title %}
             {{
               card_image
               | image_url: width: 700, format: 'webp'
               | image_tag:
                 class: img_class,
-                alt: card_image.alt | default: product.title,
+                alt: img_alt,
                 widths: '200, 350, 500, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw',
                 fetchpriority: 'high'
             }}
           {% else %}
+            {% assign img_alt = card_image.alt | default: product.title %}
             {{
               card_image
               | image_url: width: 700, format: 'webp'
               | image_tag:
                 loading: 'lazy',
                 class: img_class,
-                alt: card_image.alt | default: product.title,
+                alt: img_alt,
                 widths: '200, 350, 500, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw'
             }}

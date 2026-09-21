@@ -153,6 +153,7 @@
 
             {% elsif block.settings.image %}
               {% if forloop.first %}
+                {% assign img_alt = block.settings.heading | default: shop.name %}
                 {{
                   block.settings.image
                   | image_url: width: 1200
@@ -162,7 +163,7 @@
                     widths: '360, 480, 600, 760, 1000, 1200',
                     sizes: '(max-width: 991px) 90vw, 560px',
                     class: 'j-hero__img',
-                    alt: block.settings.heading | default: shop.name
+                    alt: img_alt
                 }}
               {% else %}
                 {% comment %}
@@ -176,6 +177,7 @@
                   downloading slides the visitor may never scroll to.
                 {% endcomment %}
                 {% capture deferred_hero_image %}
+                  {% assign img_alt = block.settings.heading | default: shop.name %}
                   {{
                     block.settings.image
                     | image_url: width: 1200
@@ -183,7 +185,7 @@
                       widths: '360, 480, 600, 760, 1000, 1200',
                       sizes: '(max-width: 991px) 90vw, 560px',
                       class: 'j-hero__img',
-                      alt: block.settings.heading | default: shop.name
+                      alt: img_alt
                   }}
                 {% endcapture %}
                 {{ deferred_hero_image | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' }}

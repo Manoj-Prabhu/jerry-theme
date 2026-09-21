@@ -62,6 +62,7 @@
               {% if forloop.first %}
                 {% assign card_img_class = card_img_class | append: ' is-active' %}
               {% endif %}
+              {% assign img_alt = card_image.alt | default: product.title %}
               {{
                 card_image
                 | image_url: width: 900, format: 'webp'
@@ -70,7 +71,7 @@
                   widths: '500, 700, 900',
                   sizes: '(max-width: 700px) 60vw, 480px',
                   class: card_img_class,
-                  alt: card_image.alt | default: product.title
+                  alt: img_alt
               }}
             {% endfor %}
           {% else %}

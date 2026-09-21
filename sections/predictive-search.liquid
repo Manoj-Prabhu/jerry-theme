@@ -13,12 +13,13 @@
           aria-selected="false"
         >
 
+          {% assign img_alt = product.featured_image.alt | default: product.title %}
           {{
             product.featured_image
             | image_url: width: 80
             | image_tag:
               loading: 'lazy',
-              alt: product.featured_image.alt | default: product.title,
+              alt: img_alt,
               widths: '52, 80, 104',
               sizes: '52px'
           }}

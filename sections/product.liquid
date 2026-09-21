@@ -54,6 +54,7 @@
         >
           {% case media.media_type %}
             {% when 'image' %}
+              {% assign img_alt = media.alt | default: main_image_alt %}
               {{
                 media
                 | image_url: width: 1000, format: 'webp'
@@ -64,7 +65,7 @@
                   preload: media_preload,
                   widths: '400, 600, 800, 1000',
                   sizes: '(max-width: 768px) 100vw, 450px',
-                  alt: media.alt | default: main_image_alt
+                  alt: img_alt
               }}
             {% when 'video' %}
               {{ media | video_tag: image_size: '1000x', controls: true, controlslist: 'nodownload' }}
@@ -595,11 +596,12 @@
   <div class="j-sticky-cart__product">
 
     <div class="j-sticky-cart__image">
+      {% assign img_alt = current_variant.featured_image.alt | default: product.title %}
       {{
         current_variant.featured_image | default: product.featured_image
         | image_url: width: 100, format: 'webp'
         | image_tag:
-          alt: current_variant.featured_image.alt | default: product.title,
+          alt: img_alt,
           loading: 'lazy',
           widths: '36, 72, 100',
           sizes: '36px'

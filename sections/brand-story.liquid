@@ -49,10 +49,11 @@
               {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
               {{ block.shopify_attributes }}
             >
+              {% assign img_alt = section.settings.heading | default: shop.name %}
               {{
                 block.settings.image
                 | image_url: width: 1200
-                | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-brand-story__image', alt: section.settings.heading | default: shop.name
+                | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-brand-story__image', alt: img_alt
               }}
             </div>
           {% endif %}
@@ -89,19 +90,17 @@
 
       {% if section.settings.button_label != blank %}
         {% comment %}
-          aria-label — "Learn More" alone isn't descriptive out of
-          context (flagged by Lighthouse's "Links do not have descriptive
-          text"); screen reader users often scan a page's links in
-          isolation from surrounding text, so the accessible name spells
-          out what it actually leads to while the visible button keeps
-          its shorter label.
+          The visually-hidden suffix makes the link text descriptive on its
+          own — "Learn More" alone is flagged by Lighthouse's "Links do not
+          have descriptive text" (its audit reads the link's text content and
+          ignores aria-label), and screen reader users often scan a page's
+          links in isolation. The visible button keeps its shorter label.
         {% endcomment %}
         <a
           href="{{ section.settings.button_link | default: '#' }}"
           class="j-button j-button-outline j-brand-story__button"
-          aria-label="{{ section.settings.button_label }} about {{ shop.name }}"
         >
-          {{ section.settings.button_label }}
+          {{ section.settings.button_label }}<span class="visually-hidden"> about {{ shop.name }}</span>
         </a>
       {% endif %}
 
