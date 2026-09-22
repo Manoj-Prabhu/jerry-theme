@@ -33,13 +33,39 @@ function initScrollReveal() {
     document.querySelectorAll(".j-product-card, .j-card"),
   );
 
-  sectionTargets.forEach((el) => el.classList.add("j-reveal"));
+  // .j-reveal starts an element at opacity: 0 until .is-revealed is added
+  // (see scroll-reveal.css) — correct for content the visitor scrolls
+  // down to, but applying it to whatever's already sitting in the
+  // viewport on load (a collection grid's first row, the hero, etc.)
+  // hides real above-the-fold content behind a JS+IntersectionObserver
+  // round trip for no visual benefit (it was never off-screen, so there's
+  // nothing to "reveal"). On a page busy enough to delay this script
+  // (this itself runs on requestIdleCallback), that's exactly the
+  // "Element render delay" Lighthouse's LCP breakdown flagged — an
+  // already-loaded, already-decoded LCP image sitting invisible for
+  // seconds waiting on this script and its observer to get around to it.
+  // Anything already in (or above) the viewport at scan time skips the
+  // hide/reveal treatment entirely and just renders normally.
+  const isAboveTheFold = (el) => el.getBoundingClientRect().top < window.innerHeight;
+
+  // Elements already above the fold are simply left out of both arrays
+  // below — never getting .j-reveal at all leaves them in their normal,
+  // fully-visible state, with no opacity:0 window for anything (a slow
+  // main thread, a delayed observer callback) to strand them behind.
+  const revealOnScroll = [];
+
+  sectionTargets.forEach((el) => {
+    if (!isAboveTheFold(el)) revealOnScroll.push(el);
+  });
 
   cardTargets.forEach((el, index) => {
-    el.classList.add("j-reveal");
+    if (isAboveTheFold(el)) return;
+    revealOnScroll.push(el);
     const step = index % (STAGGER_MAX_STEPS + 1);
     el.style.transitionDelay = `${step * STAGGER_STEP_MS}ms`;
   });
+
+  revealOnScroll.forEach((el) => el.classList.add("j-reveal"));
 
   const observer = new IntersectionObserver(
     (entries, obs) => {
@@ -53,8 +79,7 @@ function initScrollReveal() {
     { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
   );
 
-  sectionTargets.forEach((el) => observer.observe(el));
-  cardTargets.forEach((el) => observer.observe(el));
+  revealOnScroll.forEach((el) => observer.observe(el));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
