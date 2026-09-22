@@ -30,6 +30,16 @@
             {% assign img_class = img_class | append: ' is-active' %}
           {% endif %}
 
+          {% comment %}
+            widths' 500 -> 700 jump: at the mobile/tablet sizes branch
+            (<=1100px, 50vw) this grid's real card width lands around
+            514-526px on plenty of common desktop/laptop window widths
+            (~1024-1100px) — just short of 500, so the browser had
+            nothing between 500 and 700 to pick and always overshot
+            straight to 700 (flagged by Lighthouse's "Improve image
+            delivery": ~700x700 fetched for a ~514x514 display). Added
+            600 to close that gap.
+          {% endcomment %}
           {% if forloop.first and priority %}
             {% assign img_alt = card_image.alt | default: product.title %}
             {{
@@ -38,7 +48,7 @@
               | image_tag:
                 class: img_class,
                 alt: img_alt,
-                widths: '200, 350, 500, 700',
+                widths: '200, 350, 500, 600, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw',
                 fetchpriority: 'high'
             }}
@@ -51,7 +61,7 @@
                 loading: 'lazy',
                 class: img_class,
                 alt: img_alt,
-                widths: '200, 350, 500, 700',
+                widths: '200, 350, 500, 600, 700',
                 sizes: '(max-width: 1100px) 50vw, 25vw'
             }}
           {% endif %}

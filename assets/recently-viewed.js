@@ -13,7 +13,12 @@ function resizeImageUrl(src, width) {
   return `${src}${separator}width=${width}&format=webp`;
 }
 
-const RECENTLY_VIEWED_IMAGE_WIDTHS = [200, 350, 500, 700];
+// 600 closes the gap between 500 and 700 — this grid's real card width
+// (.j-product-grid, shared with product-card.liquid) lands around
+// 514-526px on plenty of common desktop/laptop window widths, at which
+// point 500 falls just short and the browser always overshot straight
+// to 700 (see the identical fix/comment in snippets/product-card.liquid).
+const RECENTLY_VIEWED_IMAGE_WIDTHS = [200, 350, 500, 600, 700];
 
 async function initRecentlyViewed() {
   const container = document.getElementById("RecentlyViewedProducts");
