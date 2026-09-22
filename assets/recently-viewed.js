@@ -3,11 +3,14 @@
 // directly as <img src> downloaded 1-3 MB originals for what displays as a
 // 240x240 card thumbnail (flagged by Lighthouse's "Improve image delivery").
 // Shopify's CDN supports resizing any file URL on the fly via a `width`
-// query param, so this builds a proper srcset from it instead.
+// query param, so this builds a proper srcset from it instead. format=webp
+// mirrors every Liquid image_tag call elsewhere in the theme (e.g.
+// product-card.liquid) — without it these were the one place still
+// shipping full JPEG/PNG bytes instead of the smaller re-encode.
 function resizeImageUrl(src, width) {
   if (!src) return "";
   const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}width=${width}`;
+  return `${src}${separator}width=${width}&format=webp`;
 }
 
 const RECENTLY_VIEWED_IMAGE_WIDTHS = [200, 350, 500, 700];

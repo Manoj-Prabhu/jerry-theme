@@ -106,11 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // product.images[]) are original, full-resolution CDN URLs — rendering
   // them directly downloads multi-MB originals for a modal-sized image.
   // Shopify's CDN supports resizing any file URL on the fly via a `width`
-  // query param.
+  // query param. format=webp matches every Liquid image_tag call
+  // elsewhere in the theme, which re-encode instead of shipping the
+  // original JPEG/PNG bytes.
   function resizeImageUrl(src, width) {
     if (!src) return "";
     const separator = src.includes("?") ? "&" : "?";
-    return `${src}${separator}width=${width}`;
+    return `${src}${separator}width=${width}&format=webp`;
   }
 
   // Includes every media type (image/video/external_video/model), not

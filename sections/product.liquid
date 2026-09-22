@@ -55,6 +55,18 @@
           {% case media.media_type %}
             {% when 'image' %}
               {% assign img_alt = media.alt | default: main_image_alt %}
+              {% comment %}
+                sizes' desktop value: the flat "450px" guess undershot the
+                gallery's real rendered width (.j-product grid's 1.25fr
+                column, minus the 76px thumbnail rail and 20px gap inside
+                .j-product__gallery) — around 537-635px depending on
+                viewport, per Lighthouse's "Improve image delivery"
+                measuring an actual 537px display fetching the 800w
+                candidate. min(635px, ...) matches the width at the
+                container's max-width (90rem, see settings.max_page_width)
+                and the vw formula tracks it below that; 700w fills the
+                gap the old 600/800 pair used to overshoot across.
+              {% endcomment %}
               {{
                 media
                 | image_url: width: 1000, format: 'webp'
@@ -63,8 +75,8 @@
                   loading: media_loading,
                   fetchpriority: media_priority,
                   preload: media_preload,
-                  widths: '400, 600, 800, 1000',
-                  sizes: '(max-width: 768px) 100vw, 450px',
+                  widths: '400, 500, 600, 700, 800, 1000',
+                  sizes: '(max-width: 768px) 100vw, min(635px, calc(55.6vw - 165px))',
                   alt: img_alt
               }}
             {% when 'video' %}

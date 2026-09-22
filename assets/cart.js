@@ -1,10 +1,11 @@
 // Shopify's Cart API returns the image at its original, full-resolution
 // CDN URL with no size applied — appending `width` resizes it on the fly
-// (same trick used in recently-viewed.js).
+// (same trick used in recently-viewed.js). format=webp matches every
+// Liquid image_tag call elsewhere in the theme.
 function resizeCartImageUrl(src, width) {
   if (!src) return "";
   const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}width=${width}`;
+  return `${src}${separator}width=${width}&format=webp`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
