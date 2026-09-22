@@ -275,8 +275,15 @@ html.j-scroll-lock body {
   font-weight: var(--font-semibold);
 }
 
+/* Darkened from the more common #b8860b "goldenrod" — that only hits
+   ~3.1:1 against the cart page summary's --color-surface background
+   (and ~3.25:1 against plain white in the cart drawer), failing WCAG
+   AA's 4.5:1 for normal text (flagged by Lighthouse's "Background and
+   foreground colors do not have a sufficient contrast ratio" on
+   .j-cart-subtotal-value). This shade passes at ~5.1:1 / ~5.3:1 while
+   staying visually gold. */
 .j-cart__subtotal strong {
-  color: #b8860b;
+  color: #8a6508;
 }
 
 .j-cart__footer form {
