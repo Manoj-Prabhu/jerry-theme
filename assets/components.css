@@ -225,3 +225,24 @@ h2.j-section-title {
   margin-inline: auto;
   color: var(--color-text-light);
 }
+
+/* Shopify dynamic checkout button — fallback "unbranded" state
+   -------------------------------------------------------- */
+
+/* The unbranded fallback (shown when no wallet like Apple/Google Pay is
+   available) inherits its background from the store's checkout accent
+   color regardless of --shopify-payment-button-color-scheme, which can
+   land below WCAG AA's 4.5:1 text contrast against its white label
+   (flagged by Lighthouse's "Background and foreground colors do not
+   have a sufficient contrast ratio"). Forcing a solid black background
+   with white text guarantees max contrast and matches the dark scheme
+   already requested via that CSS variable everywhere this button is
+   rendered (product, featured product, cart, cart drawer). !important is
+   needed because Shopify injects this button's own inline-ish styles
+   after theme CSS loads.
+*/
+.shopify-payment-button__button--unbranded {
+  background-color: var(--color-black) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-black) !important;
+}
