@@ -105,9 +105,22 @@
       click, back-to-top only appears after scrolling, scroll-reveal only
       matters once elements approach the viewport): loaded without blocking
       render via the preload+swap pattern, with a <noscript> fallback.
+
+      new-products.css, testimonials.css and brand-story.css style
+      homepage sections that sit well below the fold (after Hero, Shop by
+      Category and Featured Collection) — nothing they style is visible
+      before the browser has had time to fetch them anyway, so blocking
+      the whole page's first paint on them (Lighthouse's "Render-blocking
+      requests") buys nothing. hero.css and shop-by-category.css stay
+      above, since those two ARE above the fold and deferring them would
+      risk a flash of unstyled content.
     {% endcomment %}
     {% # theme-check-disable AssetPreload %}
     {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
+    {% if template.name == 'index' %}
+      {% assign index_deferred_css = 'new-products.css,testimonials.css,brand-story.css' | split: ',' %}
+      {% assign non_critical_css = non_critical_css | concat: index_deferred_css %}
+    {% endif %}
     {% for file in non_critical_css %}
       <link rel="preload" href="{{ file | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
       <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
@@ -125,9 +138,6 @@
     {% if template.name == 'index' %}
       {{ 'hero.css' | asset_url | stylesheet_tag }}
       {{ 'shop-by-category.css' | asset_url | stylesheet_tag }}
-      {{ 'brand-story.css' | asset_url | stylesheet_tag }}
-      {{ 'new-products.css' | asset_url | stylesheet_tag }}
-      {{ 'testimonials.css' | asset_url | stylesheet_tag }}
     {% endif %}
     {% if template.name == 'product' %}
       {{ 'product.css' | asset_url | stylesheet_tag }}
