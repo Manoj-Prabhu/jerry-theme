@@ -12,7 +12,16 @@
 
   <div class="j-cart-overlay"></div>
 
-  <aside class="j-cart" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
+  {% comment %}
+    A plain <div>, not <aside> — <aside> carries an implicit landmark
+    role of "complementary" (tangential content, like a sidebar), and
+    the ARIA-in-HTML spec doesn't allow overriding that with role="dialog"
+    (a window-category role); axe/Lighthouse flags that combination as
+    "Uses ARIA roles only on compatible elements". A modal cart drawer is
+    a dialog, not complementary content, so the element itself shouldn't
+    be a landmark to begin with.
+  {% endcomment %}
+  <div class="j-cart" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
 
     <!-- Header -->
     <div class="j-cart__header">
@@ -154,7 +163,7 @@
 
     </div>
 
-  </aside>
+  </div>
 
 </div>
 

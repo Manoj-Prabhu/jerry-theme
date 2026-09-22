@@ -15,16 +15,28 @@
   {% liquid
     assign cart_item_loading = 'lazy'
     assign cart_item_fetchpriority = 'auto'
+    assign cart_item_preload = false
     if priority
       assign cart_item_loading = 'eager'
       assign cart_item_fetchpriority = 'high'
+      assign cart_item_preload = true
     endif
   %}
 
+  {% comment %}
+    preload: true on the first (LCP) item — Lighthouse's "LCP breakdown"
+    showed this image's "Resource load delay" (840ms) dwarfing its actual
+    load time (230ms): eager + fetchpriority="high" raise its priority
+    once discovered, but the browser still has to reach and parse this
+    far into the body first. A <link rel="preload"> (the same idiomatic
+    image_tag argument sections/header.liquid already uses for the logo)
+    makes the browser discover and start fetching it immediately, instead
+    of waiting on normal HTML parsing to get here.
+  {% endcomment %}
   <div class="j-cart-item__image">
     {{
       item.image
-      | image_url: width: 160
+      | image_url: width: 160, format: 'webp'
       | image_tag:
         alt: item.product.title,
         width: 80,
@@ -32,7 +44,8 @@
         widths: '80, 120, 160',
         sizes: '80px',
         loading: cart_item_loading,
-        fetchpriority: cart_item_fetchpriority
+        fetchpriority: cart_item_fetchpriority,
+        preload: cart_item_preload
     }}
   </div>
 
