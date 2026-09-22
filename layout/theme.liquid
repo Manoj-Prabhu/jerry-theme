@@ -42,17 +42,29 @@
     </script>
 
     {% comment %}
-      Shared engine used by the hero, testimonials, and brand story
-      slideshows — loaded here in <head> (rather than down by the other
-      deferred scripts near the closing body tag) because those sections'
-      own <script defer> tags for hero-slideshow.js/testimonials.js/
-      brand-story.js render as part of the page's main content, which
-      comes before the end of <body> in document order. Deferred scripts
-      run in document order, so this has to appear earlier in the HTML
-      than any of them, or they'd call createCrossfadeSlideshow() before
-      it's defined.
+      Shared engine used by the hero, testimonials, brand story and
+      featured product slideshows — loaded here in <head> (rather than
+      down by the other deferred scripts near the closing body tag)
+      because those sections' own <script defer> tags for
+      hero-slideshow.js/testimonials.js/brand-story.js/
+      featured-product-slideshow.js render as part of the page's main
+      content, which comes before the end of <body> in document order.
+      Deferred scripts run in document order, so this has to appear
+      earlier in the HTML than any of them, or they'd call
+      createCrossfadeSlideshow() before it's defined.
+
+      Every consumer of this file is a section that only exists on the
+      homepage (per templates/index.json) — this was previously loaded
+      unconditionally on every template, pure unused JS weight on
+      product/collection/cart/search/etc. (part of Lighthouse's "Minimize
+      main-thread work" / "Reduce unused JavaScript"). Scoped the same
+      way shop-by-category-v2.js already is below. If a merchant ever
+      adds one of those sections to a non-homepage template via the
+      theme editor, this script would need to be added there too.
     {% endcomment %}
-    <script src="{{ 'crossfade-slideshow.js' | asset_url }}" defer="defer"></script>
+    {% if template.name == 'index' %}
+      <script src="{{ 'crossfade-slideshow.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
 
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}

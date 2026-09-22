@@ -32,29 +32,38 @@ async function initRecentlyViewed() {
     return;
   }
 
-  container.innerHTML = "";
+  // Fetches every handle concurrently (rather than one `await` per
+  // iteration of a for-loop) and builds each card's markup as a plain
+  // string, writing container.innerHTML exactly once at the end.
+  // Appending via `container.innerHTML += ...` inside the loop was both
+  // slower (the browser re-parses and re-lays-out everything already
+  // inserted on every single iteration — O(n²) as the list grows) and
+  // serialized network requests that don't depend on each other, both
+  // showing up as extra "Style & Layout"/"Script Evaluation" time in
+  // Lighthouse's "Minimize main-thread work" on this page.
+  const strings = window.themeStrings || {};
 
-  for (const handle of handles) {
-    try {
-      const response = await fetch(`/products/${handle}.js`);
-      const product = await response.json();
-      const strings = window.themeStrings || {};
+  const cardHtmlList = await Promise.all(
+    handles.map(async (handle) => {
+      try {
+        const response = await fetch(`/products/${handle}.js`);
+        const product = await response.json();
 
-      const images = (
-        product.images && product.images.length
-          ? product.images
-          : [product.featured_image]
-      )
-        .filter(Boolean)
-        .slice(0, 4);
+        const images = (
+          product.images && product.images.length
+            ? product.images
+            : [product.featured_image]
+        )
+          .filter(Boolean)
+          .slice(0, 4);
 
-      const imagesHtml = images
-        .map((src, index) => {
-          const srcset = RECENTLY_VIEWED_IMAGE_WIDTHS.map(
-            (width) => `${resizeImageUrl(src, width)} ${width}w`,
-          ).join(", ");
+        const imagesHtml = images
+          .map((src, index) => {
+            const srcset = RECENTLY_VIEWED_IMAGE_WIDTHS.map(
+              (width) => `${resizeImageUrl(src, width)} ${width}w`,
+            ).join(", ");
 
-          return `
+            return `
               <img
                 src="${resizeImageUrl(src, 350)}"
                 srcset="${srcset}"
@@ -64,10 +73,10 @@ async function initRecentlyViewed() {
                 class="j-product-card__img${index === 0 ? " is-active" : ""}"
               >
             `;
-        })
-        .join("");
+          })
+          .join("");
 
-      container.innerHTML += `
+        return `
         <div class="j-product-card">
 
           <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
@@ -111,10 +120,14 @@ async function initRecentlyViewed() {
 
         </div>
       `;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    }),
+  );
+
+  container.innerHTML = cardHtmlList.filter(Boolean).join("");
 
   if (window.JerryWishlist) {
     window.JerryWishlist.sync(container);
