@@ -50,6 +50,18 @@
     {% endif %}
 
     <div class="j-footer__column j-footer__column--newsletter">
+      {% comment %}
+        The Rive mascot previously only ever appeared in Quick View and
+        the 404 page — two places almost nobody looks, for what's
+        otherwise the theme's most distinctive visual asset. This gives
+        it a small, ambient home on every page's footer instead, without
+        adding weight to page load: assets/footer-mascot.js only fetches
+        the Rive runtime once this canvas actually scrolls into view
+        (same lazy pattern already used for Quick View/404), not on
+        initial load.
+      {% endcomment %}
+      <canvas class="j-footer__mascot" id="FooterMascotCanvas" width="72" height="72" aria-hidden="true"></canvas>
+
       <h4>{{ 'footer.newsletter_title' | t }}</h4>
       <p class="j-footer__newsletter-copy">{{ 'footer.newsletter_subtext' | t }}</p>
 

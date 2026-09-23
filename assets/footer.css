@@ -88,6 +88,19 @@
   font-size: var(--font-size-sm);
 }
 
+/* Ambient mascot — see assets/footer-mascot.js for the lazy Rive load.
+   A soft circular backdrop means this reads as an intentional graphic
+   element even before (or if) the animation loads, rather than a bare
+   unstyled canvas. */
+.j-footer__mascot {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: rgba(138, 101, 8, 0.08);
+}
+
 /* Links */
 
 .j-footer__column ul {

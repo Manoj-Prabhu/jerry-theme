@@ -558,6 +558,40 @@
   margin-top: 8px;
 }
 
+/* Trust badges block — the stretch of page between the buy buttons and
+   "You may also like" had nothing reliably in it (vendor/SKU/low-stock
+   only show for products whose data happens to trigger them); this
+   gives every product page real trust content regardless. Same
+   icon+text row language as .j-hero__trust, adapted for a light
+   background instead of sitting over a photo. */
+.j-product__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.j-product__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+}
+
+.j-product__trust-icon {
+  display: flex;
+  color: var(--color-accent);
+}
+
+.j-product__trust-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
 .product-form .j-button {
   width: 100%;
   transition:
@@ -635,6 +669,24 @@
   gap: 20px;
   width: 100%;
   min-width: 0;
+}
+
+/* Sticky gallery — a common pattern on premium PDPs (the image stays in
+   view while a shopper scrolls through a longer buy-box: description,
+   trust badges, etc.) that this theme didn't have. Desktop only (see
+   the 768px breakpoint below, where the layout switches to a single
+   stacked column where "sticky" wouldn't mean anything). top: 100px
+   clears the sticky header's ~70-90px height already used as reference
+   elsewhere (see hero.css's padding-top for the same header-clearance
+   figure); max-height + the outer .j-product's own align-items: start
+   keep it from ever growing taller than the viewport or fighting the
+   content column's natural height. */
+@media (min-width: 769px) {
+  .j-product__gallery {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+  }
 }
 
 /* Thumbnails column visually first (left of the main image) while

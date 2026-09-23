@@ -40,6 +40,10 @@
           "type": "buy_buttons",
           "settings": {}
         },
+        "trust_badges": {
+          "type": "trust_badges",
+          "settings": {}
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -53,6 +57,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "trust_badges",
         "description"
       ],
       "settings": {}

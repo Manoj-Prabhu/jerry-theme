@@ -260,6 +260,13 @@
     <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'featured-collection.js' | asset_url }}" defer="defer"></script>
+    {% comment %}
+      Tiny (just sets up an IntersectionObserver) — the actual Rive
+      runtime this fetches on scroll-into-view is what's expensive, and
+      that only happens once the footer is actually reached. See
+      assets/footer-mascot.js.
+    {% endcomment %}
+    <script src="{{ 'footer-mascot.js' | asset_url }}" defer="defer"></script>
     {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
       <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     {% endif %}

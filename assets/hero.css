@@ -173,7 +173,10 @@
 .j-hero__content {
   position: relative;
   z-index: 2;
-  max-width: 560px;
+  /* Widened alongside the bigger headline below (was a flat 560px) —
+     the larger clamp()'d h1 needs more room to breathe before wrapping
+     awkwardly tight on wide screens. */
+  max-width: clamp(560px, 45vw, 720px);
   /* No card/backdrop behind the text — the contrast guarantee lives in
      .j-hero::before's scrim instead (see its own comment), so the text
      sits directly on the photo/video like the rest of the hero. */
@@ -201,9 +204,16 @@
 }
 
 .j-hero h1 {
-  font-size: 40px;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  /* Was a flat 40px at every desktop width — with .j-hero__content's
+     560px max-width and the container scaling up to 640px tall on wide
+     viewports, that left a lot of unused visual weight: the video was
+     doing all the work and the headline read as an afterthought sitting
+     in the corner. clamp() lets it grow substantially on wide screens
+     (up to 88px) while never shrinking below the original 40px until
+     the 991px breakpoint below takes over anyway. */
+  font-size: clamp(40px, 5.5vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   margin-bottom: 24px;
   /* White, not var(--color-primary) — the heading now sits directly over
      a photo/video with a dark scrim behind it, not the old light gradient
@@ -259,12 +269,23 @@
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 0;
   color: #fff;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .j-hero__buttons .j-button:hover {
   background: #f0c14b;
   border-color: #f0c14b;
   color: #1a1a1a;
+  /* A flat color swap read as static against the hero's motion (video
+     background, text-reveal animation) — a small lift + shadow gives
+     the hover itself a sense of motion instead of just a color change. */
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
 .j-hero__buttons .j-button-outline {
@@ -272,12 +293,20 @@
   border-color: rgba(255, 255, 255, 0.7);
   border-radius: 0;
   color: #fff;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .j-hero__buttons .j-button-outline:hover {
   background: #f0c14b;
   border-color: #f0c14b;
   color: #1a1a1a;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
 /* Trust Row */
