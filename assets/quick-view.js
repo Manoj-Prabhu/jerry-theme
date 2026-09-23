@@ -174,6 +174,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // model_viewer_tag), since this modal has to build the same thing from
   // the Product JS API's JSON instead of Liquid.
   function renderMainMedia(media, fallbackAlt) {
+    // A product with no media at all (product.media and product.featured_image
+    // both empty — e.g. freshly created, before photos are uploaded) makes
+    // the caller's fallback chain bottom out at { src: undefined }. Without
+    // this guard that produced <img src=""> — a broken-image glyph, and an
+    // empty src can trigger a spurious request to the current page URL in
+    // some browsers. sections/product.liquid handles the equivalent
+    // server-rendered case with placeholder_svg_tag; this is the same
+    // placeholder treatment built as a plain inline SVG, since Liquid's
+    // image filters aren't available to this client-side render path.
+    if (!media || !media.src) {
+      return `
+        <div id="QuickViewMainImage" class="j-quick-view__main-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+            <path d="M4 17l5-5 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      `;
+    }
+
     if (media.mediaType === "video" && media.sources.length) {
       const sourcesHtml = media.sources
         .map(

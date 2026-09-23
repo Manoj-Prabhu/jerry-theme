@@ -52,7 +52,6 @@ window.formatMoney = function formatMoney(cents, format) {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Jerry Theme initialized");
   window.JerryProductCardCycle();
 });
 

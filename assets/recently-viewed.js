@@ -132,7 +132,19 @@ async function initRecentlyViewed() {
     }),
   );
 
-  container.innerHTML = cardHtmlList.filter(Boolean).join("");
+  const validCards = cardHtmlList.filter(Boolean);
+
+  // Distinct from the "0 stored handles" case above: this is a shopper
+  // with 1+ handles saved whose products have ALL since been deleted/
+  // unpublished (each fetch 404s, every entry above becomes null) — an
+  // easy scenario for a returning visitor days later. Without this, the
+  // "Recently Viewed" heading (rendered by
+  // sections/recently-viewed-products.liquid, outside this container)
+  // was left sitting over a blank grid instead of the same message used
+  // when there's nothing saved at all.
+  container.innerHTML = validCards.length
+    ? validCards.join("")
+    : "<p>No recently viewed products.</p>";
 
   if (window.JerryWishlist) {
     window.JerryWishlist.sync(container);

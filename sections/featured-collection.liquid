@@ -8,37 +8,62 @@
   }
 {% endstyle %}
 
-<section class="j-featured-collection">
-  <div class="j-featured-collection__heading">
-    <h2>{{ section.settings.heading }}</h2>
-    {% if section.settings.description != blank %}
-      <p>{{ section.settings.description }}</p>
+{% liquid
+  assign selected_collection = collections[section.settings.collection]
+  assign has_products = false
+  if selected_collection != blank and selected_collection.products.size > 0
+    assign has_products = true
+  endif
+%}
+
+{% comment %}
+  Renders nothing at all on the live storefront when there's no usable
+  content — either no collection picked, or one picked that currently
+  has zero products (a real merchant scenario: a brand-new "editors
+  picks" collection created but not yet populated). Previously this
+  rendered the section's heading/View All chrome around an empty
+  product grid either way, leaving a bare heading over a blank gap for
+  real shoppers. The "pick a collection" nudge is only useful to a
+  merchant mid-setup, so it's gated to the theme editor (request.
+  design_mode) instead of showing raw setup instructions to customers.
+{% endcomment %}
+{% if has_products or request.design_mode %}
+  <section class="j-featured-collection">
+    <div class="j-featured-collection__heading">
+      <h2>{{ section.settings.heading }}</h2>
+      {% if section.settings.description != blank %}
+        <p>{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    {% if has_products %}
+      <div class="j-product-grid">
+        {% for product in selected_collection.products limit: section.settings.products_to_show %}
+          {% render 'product-card', product: product, priority: forloop.first %}
+        {% endfor %}
+      </div>
+
+      <div class="j-featured-collection__view-all">
+        <a href="{{ selected_collection.url }}" class="j-button j-button-outline">
+          {{ 'general.view_all' | t }}
+          <svg class="j-featured-collection__view-all-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    {% elsif selected_collection != blank %}
+      <p style="text-align:center;">
+        The "{{ selected_collection.title }}" collection has no products yet.
+      </p>
+    {% else %}
+      <p style="text-align:center;">
+        Select a collection in the Theme Editor.
+      </p>
     {% endif %}
-  </div>
-  {% assign selected_collection = collections[section.settings.collection] %}
-  {% if selected_collection != blank %}
-    <div class="j-product-grid">
-      {% for product in selected_collection.products limit: section.settings.products_to_show %}
-        {% render 'product-card', product: product, priority: forloop.first %}
-      {% endfor %}
-    </div>
 
-    <div class="j-featured-collection__view-all">
-      <a href="{{ selected_collection.url }}" class="j-button j-button-outline">
-        {{ 'general.view_all' | t }}
-        <svg class="j-featured-collection__view-all-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </div>
-
-  {% else %}
-    <p style="text-align:center;">
-      Select a collection in the Theme Editor.
-    </p>
-  {% endif %}
-
-</section>
+  </section>
+{% endif %}
 
 {% schema %}
 {

@@ -234,6 +234,31 @@ select {
   outline-offset: 2px;
 }
 
+/* Skip-to-content link (see layout/theme.liquid) — off-screen like
+   .visually-hidden until it receives focus, at which point it needs to
+   become genuinely visible (not just focusable), so it can't reuse that
+   utility class as-is. Pinned to the top-left corner above everything
+   else via a high z-index once focused, since it has to be reachable
+   before the header's own stacking context exists in the tab order. */
+.j-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--style-border-radius-button);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+}
+
+.j-skip-link:focus {
+  top: var(--space-3);
+  left: var(--space-3);
+}
+
 /* -------------------------
    Typography
 -------------------------- */

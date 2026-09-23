@@ -416,6 +416,23 @@ html.j-scroll-lock body {
   color: var(--color-text-light);
 }
 
+/* A line item whose variant has gone out of stock since being added —
+   same accessible red as .j-cart-remove:hover above (--color-error
+   alone under-hits contrast here). Image dims slightly so the whole
+   row reads as "no longer actionable" at a glance, matching sold-out
+   product cards elsewhere in the theme. */
+.j-cart-item.is-unavailable .j-cart-item__image {
+  opacity: 0.5;
+}
+
+.j-cart-item__content .j-cart-item__unavailable {
+  margin-top: -6px;
+  margin-bottom: 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+  color: #b91c1c;
+}
+
 .j-cart-item__content span {
   color: var(--color-text-light);
   font-size: var(--font-size-sm);

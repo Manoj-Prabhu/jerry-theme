@@ -297,18 +297,33 @@
   font-size: var(--font-size-sm);
 }
 
+/* A generic thin gray border blending into the page was one of the more
+   "default template" feeling controls on the site — this borrows the
+   same dark-fill/gold-hover language already established on buttons
+   elsewhere (see .j-cart-checkout-button, .j-cart-view-link) instead of
+   a plain bordered box. */
 .j-filter-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
-  background: #fff;
-  color: var(--color-text);
+  background: var(--color-primary);
+  color: var(--color-white);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
   cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.j-filter-toggle:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
 }
 
 .j-filter-toggle svg {
@@ -392,7 +407,10 @@
   width: 100%;
   padding: 10px 40px 10px 16px;
 
-  border: 1px solid var(--color-border);
+  /* Bolder border (was --color-border, the same faint gray as every
+     unstyled input on the page) gives this the same visual weight as
+     .j-filter-toggle beside it, instead of blending into the page. */
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
   background: #fff;
 

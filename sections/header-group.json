@@ -68,7 +68,7 @@
         "menu": "main-menu",
         "show_announcement": true,
         "show_close": false,
-        "announcement_background": "#14110f",
+        "announcement_background": "#8a6508",
         "announcement_text_color": "#ffffff"
       }
     }

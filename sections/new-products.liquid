@@ -16,81 +16,108 @@
   }
 {% endstyle %}
 
-<section class="j-new-products">
+{% liquid
+  assign selected_collection = collections[section.settings.collection]
+  assign has_products = false
+  if selected_collection != blank and selected_collection.products.size > 0
+    assign has_products = true
+  endif
+%}
 
-  <div class="j-new-products__heading">
+{% comment %}
+  has_products (not just "collection assigned") gates the board, the
+  arrows, and the "View all" link — a collection can be assigned but
+  currently have 0 products (e.g. a "Newest arrivals" smart collection
+  matching nothing yet), which previously rendered the heading/arrows/
+  "View all" over a completely blank board (same gap already fixed in
+  sections/featured-collection.liquid). The "pick a collection" nudge
+  is only useful to a merchant mid-setup, so it's gated to the theme
+  editor instead of showing raw setup instructions to customers.
+{% endcomment %}
+{% if has_products or request.design_mode %}
+  <section class="j-new-products">
 
-    <div class="j-new-products__heading-row">
-      <button type="button" class="j-new-products__arrow j-new-products__arrow--prev" aria-label="{{ 'general.pagination.prev' | t }}">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+    <div class="j-new-products__heading">
 
-      <h2>{{ section.settings.heading }}</h2>
+      <div class="j-new-products__heading-row">
+        {% if has_products %}
+          <button type="button" class="j-new-products__arrow j-new-products__arrow--prev" aria-label="{{ 'general.pagination.prev' | t }}">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {% endif %}
 
-      <button type="button" class="j-new-products__arrow j-new-products__arrow--next" aria-label="{{ 'general.pagination.next' | t }}">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
+        <h2>{{ section.settings.heading }}</h2>
 
-    {% if section.settings.description != blank %}
-      <p>{{ section.settings.description }}</p>
-    {% endif %}
+        {% if has_products %}
+          <button type="button" class="j-new-products__arrow j-new-products__arrow--next" aria-label="{{ 'general.pagination.next' | t }}">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 5 12.5 10l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {% endif %}
+      </div>
 
-    {% assign selected_collection = collections[section.settings.collection] %}
-    {% if selected_collection != blank %}
-      <a href="{{ selected_collection.url }}" class="j-new-products__view-all">
-        {{ 'general.view_all' | t }}
-      </a>
-    {% endif %}
+      {% if section.settings.description != blank %}
+        <p>{{ section.settings.description }}</p>
+      {% endif %}
 
-  </div>
-
-  {% if selected_collection != blank %}
-
-    <div class="j-new-products__board" data-new-products-board>
-      {% for product in selected_collection.products limit: section.settings.products_to_show %}
-        <a href="{{ product.url }}" class="j-new-products__card" aria-label="{{ product.title | escape }}">
-
-          {% if product.featured_image %}
-            {% assign card_images = product.images | slice: 0, 4 %}
-            {% for card_image in card_images %}
-              {% assign card_img_class = 'j-new-products__image' %}
-              {% if forloop.first %}
-                {% assign card_img_class = card_img_class | append: ' is-active' %}
-              {% endif %}
-              {% assign img_alt = card_image.alt | default: product.title %}
-              {{
-                card_image
-                | image_url: width: 900, format: 'webp'
-                | image_tag:
-                  loading: 'lazy',
-                  widths: '500, 700, 900',
-                  sizes: '(max-width: 700px) 60vw, 480px',
-                  class: card_img_class,
-                  alt: img_alt
-              }}
-            {% endfor %}
-          {% else %}
-            <div class="j-new-products__media-placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
-          {% endif %}
-
-          {% render 'product-badges', product: product %}
-
+      {% if has_products %}
+        <a href="{{ selected_collection.url }}" class="j-new-products__view-all">
+          {{ 'general.view_all' | t }}
         </a>
-      {% endfor %}
+      {% endif %}
+
     </div>
 
-  {% else %}
-    <p style="text-align:center;">
-      Select a collection in the Theme Editor.
-    </p>
-  {% endif %}
+    {% if has_products %}
 
-</section>
+      <div class="j-new-products__board" data-new-products-board>
+        {% for product in selected_collection.products limit: section.settings.products_to_show %}
+          <a href="{{ product.url }}" class="j-new-products__card" aria-label="{{ product.title | escape }}">
+
+            {% if product.featured_image %}
+              {% assign card_images = product.images | slice: 0, 4 %}
+              {% for card_image in card_images %}
+                {% assign card_img_class = 'j-new-products__image' %}
+                {% if forloop.first %}
+                  {% assign card_img_class = card_img_class | append: ' is-active' %}
+                {% endif %}
+                {% assign img_alt = card_image.alt | default: product.title %}
+                {{
+                  card_image
+                  | image_url: width: 900, format: 'webp'
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '500, 700, 900',
+                    sizes: '(max-width: 700px) 60vw, 480px',
+                    class: card_img_class,
+                    alt: img_alt
+                }}
+              {% endfor %}
+            {% else %}
+              <div class="j-new-products__media-placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
+            {% endif %}
+
+            {% render 'product-badges', product: product %}
+
+          </a>
+        {% endfor %}
+      </div>
+
+    {% elsif selected_collection != blank %}
+      <p style="text-align:center;">
+        The "{{ selected_collection.title }}" collection has no products yet.
+      </p>
+    {% else %}
+      <p style="text-align:center;">
+        Select a collection in the Theme Editor.
+      </p>
+    {% endif %}
+
+  </section>
+{% endif %}
 
 <script src="{{ 'new-products.js' | asset_url }}" defer="defer"></script>
 
@@ -108,7 +135,7 @@
       "type": "font_picker",
       "id": "heading_font",
       "label": "Heading font",
-      "default": "michroma_n4"
+      "default": "marcellus_n4"
     },
     {
       "type": "textarea",

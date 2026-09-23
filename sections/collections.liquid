@@ -27,6 +27,15 @@
           height: 600,
           crop: 'center'
         %}
+      {% else %}
+        {% comment %}
+          Every other card component in the theme (shop-by-category,
+          product cards, cart's suggested-collection card) shows a
+          placeholder graphic for a missing image — this was the one
+          left showing no image at all, an inconsistent-looking blank
+          spot next to collections that do have one.
+        {% endcomment %}
+        {{ 'collection-1' | placeholder_svg_tag: 'collection-card__image' }}
       {% endif %}
 
       <div class="collection-card__content">

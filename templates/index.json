@@ -163,7 +163,7 @@
       ],
       "settings": {
         "heading": "Shop by Category",
-        "heading_font": "kaushan_script_n4",
+        "heading_font": "marcellus_n4",
         "card_title_font": "manuale_n7",
         "description": "Find exactly what you're looking for."
       }
@@ -182,7 +182,7 @@
       "type": "new-products",
       "settings": {
         "heading": "New Arrivals",
-        "heading_font": "michroma_n4",
+        "heading_font": "marcellus_n4",
         "description": "",
         "collection": "new-arrivals",
         "products_to_show": 6
@@ -228,7 +228,7 @@
       ],
       "settings": {
         "heading": "Featured product",
-        "heading_font": "quantico_n7",
+        "heading_font": "marcellus_n4",
         "subtext": "You will love it..",
         "image_position": "left",
         "autoplay_speed": 5
@@ -304,7 +304,7 @@
         "autoplay_speed": 5,
         "eyebrow": "Our Story",
         "heading": "Crafted With Purpose",
-        "heading_font": "quantico_n7",
+        "heading_font": "marcellus_n4",
         "body": "<p>What started as a small idea has grown into a collection built on care, quality, and craftsmanship. Every piece is chosen thoughtfully, made to last, and designed for the way you actually live.</p>",
         "body_font": "eczar_n4",
         "button_label": "Learn More",

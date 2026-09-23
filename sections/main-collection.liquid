@@ -34,28 +34,41 @@
 
     <div class="j-collection-layout">
 
-      <aside class="j-collection-sidebar" id="CollectionFilters">
+      {% comment %}
+        A collection with no filterable options (no product options,
+        tags, or availability variance) previously still showed the
+        Filters toggle and an empty-looking panel with just a heading
+        and an inert Apply button — a dead-end control. Gating both the
+        toggle and the panel on collection.filters != empty hides the
+        whole affordance instead when there's genuinely nothing to
+        filter by.
+      {% endcomment %}
+      {% if collection.filters != empty %}
+        <aside class="j-collection-sidebar" id="CollectionFilters">
 
-        {% render 'collection-filters' %}
+          {% render 'collection-filters' %}
 
-      </aside>
+        </aside>
 
-      <div class="j-filter-overlay"></div>
+        <div class="j-filter-overlay"></div>
+      {% endif %}
 
       <div class="j-collection-content">
 
         <div class="j-collection-toolbar">
-            <button
-              type="button"
-              class="j-filter-toggle"
-              aria-expanded="false"
-              aria-controls="CollectionFilters"
-            >
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-              </svg>
-              {{ 'filters.title' | t }}
-            </button>
+            {% if collection.filters != empty %}
+              <button
+                type="button"
+                class="j-filter-toggle"
+                aria-expanded="false"
+                aria-controls="CollectionFilters"
+              >
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                {{ 'filters.title' | t }}
+              </button>
+            {% endif %}
 
             <form id="CollectionSortForm">
               <label for="SortBy">

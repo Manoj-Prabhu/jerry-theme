@@ -187,6 +187,18 @@
   </head>
 
   <body class="{% if template.name == 'index' %}j-body--home{% elsif template.name == 'product' %}j-body--product{% else %}j-body--tinted{% endif %}">
+    {% comment %}
+      Skip-to-content link (WCAG 2.4.1 bypass blocks) — the very first
+      focusable element on every page, so a keyboard/screen reader user
+      can jump straight to #MainContent instead of tabbing through the
+      full header/nav on every single page load. Hidden off-screen until
+      it receives focus (see .j-skip-link in base.css), same convention
+      as the .visually-hidden utility elsewhere in the theme but with a
+      focus-visible override since this one specifically needs to become
+      visible.
+    {% endcomment %}
+    <a href="#MainContent" class="j-skip-link">{{ 'general.skip_to_content' | t }}</a>
+
     {% sections 'header-group' %}
     <main id="MainContent" class="j-main">
       {{ content_for_layout }}

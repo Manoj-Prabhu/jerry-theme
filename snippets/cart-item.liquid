@@ -10,7 +10,7 @@
     candidate (fetchpriority="high")
 {% endcomment %}
 
-<div class="j-cart-item">
+<div class="j-cart-item{% unless item.variant.available %} is-unavailable{% endunless %}">
 
   {% liquid
     assign cart_item_loading = 'lazy'
@@ -66,6 +66,25 @@
         {% if item.selling_plan_allocation %}
           <p class="j-cart-item__selling-plan">{{ item.selling_plan_allocation.selling_plan.name }}</p>
         {% endif %}
+
+        {% comment %}
+          A line item's variant can go out of stock after it's already
+          been added to cart (someone else buys the last one, a merchant
+          disables it, etc.) — previously this rendered with no
+          indication at all, so a shopper wouldn't find out until
+          checkout rejected it. item.variant is a full Variant object
+          here (this is the Liquid-rendered path — sections/cart.liquid /
+          cart-drawer.liquid), unlike the Cart API's JSON line-item
+          resource, which doesn't expose availability; assets/cart.js's
+          client-side re-render after a quantity change can't check this
+          without an extra request, so it's unchanged there. A fresh
+          cart page load or drawer open (the common case) always goes
+          through this snippet, so this still covers the scenario that
+          matters most.
+        {% endcomment %}
+        {% unless item.variant.available %}
+          <p class="j-cart-item__unavailable">{{ 'cart.item_unavailable' | t }}</p>
+        {% endunless %}
       </div>
 
       <button
@@ -115,6 +134,7 @@
         data-key="{{ item.key }}"
         data-quantity="{{ item.quantity }}"
         aria-label="{{ 'cart.decrease_quantity' | t }}"
+        {% unless item.variant.available %}disabled{% endunless %}
       >
         −
       </button>
@@ -126,6 +146,7 @@
         data-key="{{ item.key }}"
         data-quantity="{{ item.quantity }}"
         aria-label="{{ 'cart.increase_quantity' | t }}"
+        {% unless item.variant.available %}disabled{% endunless %}
       >
         +
       </button>

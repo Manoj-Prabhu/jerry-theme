@@ -89,6 +89,16 @@
               {{ media | media_tag: image_size: '1000x' }}
           {% endcase %}
         </div>
+      {% else %}
+        {% comment %}
+          A product with zero media (e.g. freshly created, before photos
+          are uploaded) previously rendered a completely blank gallery
+          here — sections/featured-product.liquid already handles this
+          identical case with the same placeholder pattern.
+        {% endcomment %}
+        <div class="j-product__media-slide is-active">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
       {% endfor %}
 
     </div>

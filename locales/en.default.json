@@ -31,6 +31,7 @@
     "discount_code": "Discount code",
     "apply_discount": "Apply",
     "remove": "Remove",
+    "item_unavailable": "No longer available",
     "drawer_title": "Your Cart",
     "close": "Close cart",
     "view_cart": "View Cart",
@@ -188,6 +189,7 @@
     "rights_reserved": "All rights reserved."
   },
   "general": {
+    "skip_to_content": "Skip to content",
     "pagination": {
       "label": "Pagination",
       "prev": "Prev",
@@ -221,6 +223,7 @@
     "send_on_label": "Send on (optional)"
   },
   "header": {
+    "menu": "Main menu",
     "menu_open": "Open menu",
     "shop_now": "Shop now",
     "menu_close": "Close menu",

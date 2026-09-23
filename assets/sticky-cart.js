@@ -6,12 +6,33 @@
 let stickyCartEl = null;
 let stickyCartAddToCartButton = null;
 
+// Cached once, not re-queried on every scroll frame — the footer element
+// itself never changes across a page's lifetime the way section content
+// can.
+let stickyCartFooterEl = null;
+
 function toggleStickyCart() {
   if (!stickyCartEl || !stickyCartAddToCartButton) return;
 
   const buttonRect = stickyCartAddToCartButton.getBoundingClientRect();
+  const pastAddToCart = buttonRect.bottom < 0;
 
-  if (buttonRect.bottom < 0) {
+  // Without this, the bar stayed visible for the entire rest of the page
+  // once shown — including over "You may also like"/"Recently Viewed"
+  // and, worst, permanently covering the footer's newsletter signup for
+  // anyone who scrolls that far, since the original Add to Cart button
+  // was still off-screen above. Hiding it once the footer comes into
+  // view matches the pattern almost every sticky-cart implementation
+  // uses, and there's no reason to keep nudging someone to buy once
+  // they've reached the very bottom of the page.
+  if (!stickyCartFooterEl) {
+    stickyCartFooterEl = document.querySelector(".j-footer");
+  }
+  const footerVisible = stickyCartFooterEl
+    ? stickyCartFooterEl.getBoundingClientRect().top < window.innerHeight
+    : false;
+
+  if (pastAddToCart && !footerVisible) {
     stickyCartEl.classList.add("is-visible");
   } else {
     stickyCartEl.classList.remove("is-visible");

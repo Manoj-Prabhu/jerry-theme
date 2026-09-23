@@ -3,7 +3,13 @@
 .j-footer {
   position: relative;
   width: 100%;
-  background: linear-gradient(135deg, #d9ead3 0%, #ffffff 100%);
+  /* Was an unrelated mint green with no connection to anything else in
+     the theme's palette. This is the same cream/gold family already
+     used for the contact page's info card (assets/contact.css) and the
+     header/cart's gold accents — ties the footer back into the site's
+     one accent identity instead of introducing a fifth, disconnected
+     hue. */
+  background: linear-gradient(135deg, #f5ecd7 0%, #ffffff 100%);
 }
 
 /* Container */
