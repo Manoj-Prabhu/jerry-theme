@@ -45,24 +45,42 @@
                 {% assign img_alt = block.settings.title | default: shop.name %}
                 {{
                   block.settings.image
-                  | image_url: width: 600
+                  | image_url: width: 800
                   | image_tag:
                     loading: 'lazy',
-                    widths: '300, 450, 600',
-                    sizes: '(max-width: 768px) 45vw, 22vw',
+                    widths: '400, 600, 800',
+                    sizes: '(max-width: 768px) 60vw, 26vw',
                     alt: img_alt
                 }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'j-category-card__placeholder' }}
               {% endif %}
+              {% comment %}
+                Caption moved onto the photo (same overlay pattern as
+                the header's mega-menu tiles, snippets/announcement-bar
+                aside) instead of sitting as small plain text underneath
+                — bigger cards + an overlaid title read as an editorial
+                lookbook tile instead of a generic thumbnail-plus-label
+                grid.
+              {% endcomment %}
+              <span class="j-category-card__title">{{ block.settings.title }}</span>
             </div>
-            <span class="j-category-card__title">{{ block.settings.title }}</span>
           </a>
       {% endcase %}
     {% endfor %}
   </div>
 
   </div>
+
+  {% comment %}
+    Curved divider into whatever section follows (typically Featured
+    Collection, white) — same idea as hero.liquid's divider into this
+    section, closing the loop so the purple gradient doesn't just cut
+    off flat into white either.
+  {% endcomment %}
+  <svg class="j-shop-by-category__divider" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,50 C240,10 480,90 720,60 C960,30 1200,70 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+  </svg>
 </section>
 
 {% schema %}

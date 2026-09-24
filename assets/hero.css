@@ -1,6 +1,35 @@
 .j-hero-band {
   width: 100%;
+  position: relative;
   background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
+}
+
+/* Wave divider into Shop by Category (see the SVG markup at the end of
+   hero.liquid) — anchored to the band, not the slideshow, so it stays
+   fixed regardless of which slide is active. Height is a flat pixel
+   value rather than a percentage since it's meant to read as a
+   consistent decorative flourish at every hero height, not scale with
+   the hero itself. */
+.j-hero-band__divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 60px;
+  /* Above the raw video/scrim (z-index: 0/1 on .j-hero's own layers) but
+     below the heading/buttons (z-index: 2) and the arrows (z-index: 3)
+     — this only ever decorates the media behind the content, it must
+     never be able to paint over the content or arrows themselves even
+     if the wave shape dips up further than expected on a short hero. */
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .j-hero-band__divider {
+    height: 32px;
+  }
 }
 
 /* Pulls the hero up to extend behind the header instead of starting just

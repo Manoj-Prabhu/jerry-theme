@@ -286,6 +286,36 @@
 
   </div>
 
+  {% comment %}
+    Curved divider into Shop by Category — the hero (a dark video/photo)
+    used to cut off abruptly into that section's light purple gradient
+    background with a hard flat seam. This wave shape, filled with a
+    color sampled from that gradient's lighter stop, sits on top of the
+    hero's own bottom edge so it reads as the next section flowing up
+    into it, instead of two unrelated blocks just stacked on top of each
+    other. Purely decorative (aria-hidden) and never intercepts clicks
+    on the arrows/content above it.
+  {% endcomment %}
+  <svg class="j-hero-band__divider" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+    {% comment %}
+      A flat fill color only matches Shop by Category's actual
+      background (a 135deg diagonal gradient — see .j-shop-by-category
+      in shop-by-category.css) at one single point along that diagonal,
+      so it looked visibly mismatched everywhere else the wave crossed.
+      This gradient definition mirrors those same three stops/direction,
+      so the wave continues the real background instead of an
+      approximation of it.
+    {% endcomment %}
+    <defs>
+      <linearGradient id="heroDividerGradient-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f3effa"/>
+        <stop offset="50%" stop-color="#d9c9f0"/>
+        <stop offset="100%" stop-color="#ece2f7"/>
+      </linearGradient>
+    </defs>
+    <path d="M0,40 C240,90 480,0 720,20 C960,40 1200,90 1440,30 L1440,80 L0,80 Z" fill="url(#heroDividerGradient-{{ section.id }})"/>
+  </svg>
+
 </div>
 
 {% schema %}

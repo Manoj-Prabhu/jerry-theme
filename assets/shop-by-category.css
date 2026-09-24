@@ -1,8 +1,30 @@
 .j-shop-by-category {
   width: 100%;
   box-sizing: border-box;
+  position: relative;
   background: linear-gradient(135deg, #f3effa 0%, #d9c9f0 50%, #ece2f7 100%);
   padding: 80px 0;
+}
+
+/* Wave divider into the next section (see the SVG markup at the end of
+   shop-by-category.liquid) — same technique as hero.css's divider into
+   this section. z-index kept low/decorative-only; nothing in this
+   section is positioned near the bottom edge for it to conflict with. */
+.j-shop-by-category__divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 60px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .j-shop-by-category__divider {
+    height: 32px;
+  }
 }
 
 .j-shop-by-category__inner {
@@ -118,7 +140,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1 / 1;
+  /* Taller portrait crop (was a plain 1:1 square) — closer to the
+     mega-menu tiles' own 3:4 ratio (see .j-mega-menu__tile-image in
+     header.css), reading more like an editorial lookbook photo than a
+     square thumbnail. */
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -141,22 +167,36 @@
 
 .j-category-card:hover .j-category-card__image img,
 .j-category-card:hover .j-category-card__placeholder {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
+/* Caption overlaid on the photo (was plain text sitting below the
+   image) — same gradient-scrim treatment as the header's mega-menu
+   tiles (.j-mega-menu__tile-caption), for a consistent "photo with a
+   title on it" language instead of introducing a second pattern. */
 .j-category-card__title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: var(--space-8) var(--space-4) var(--space-4);
+
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  color: #fff;
   text-align: center;
   font-weight: var(--font-semibold);
-  font-size: var(--font-size-md);
-  transition: color 0.2s ease;
-}
-
-.j-category-card:hover .j-category-card__title {
-  color: #b8873a;
+  font-size: var(--font-size-lg);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 600px) {
   .j-category-card {
-    flex-basis: clamp(140px, 50vw, 200px);
+    flex-basis: clamp(160px, 55vw, 240px);
+  }
+
+  .j-category-card__title {
+    font-size: var(--font-size-md);
+    padding: var(--space-6) var(--space-3) var(--space-3);
   }
 }
