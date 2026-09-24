@@ -311,6 +311,20 @@
   box-shadow: 0 0 0 1px #fff;
   background-size: cover;
   background-position: center;
+  /* Now that hovering swaps the card's photo (assets/swatch-preview.js),
+     these need to actually read as interactive rather than purely
+     decorative dots. */
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.j-product-card__swatch:hover {
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 0 2px var(--color-accent);
 }
 
 .j-product-card__swatch-more {

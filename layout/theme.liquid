@@ -208,6 +208,12 @@
 
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+    {% comment %}
+      Tiny shared utility (see assets/fly-to-cart.js) — loaded sitewide
+      since both cart.js (every page) and sticky-cart.js (product pages)
+      call window.JerryFlyToCart from their own add-to-cart handlers.
+    {% endcomment %}
+    <script src="{{ 'fly-to-cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'text-reveal.js' | asset_url }}" defer="defer"></script>
     <script>
@@ -259,6 +265,7 @@
 
     <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'swatch-preview.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'featured-collection.js' | asset_url }}" defer="defer"></script>
     {% comment %}
       Tiny (just sets up an IntersectionObserver) — the actual Rive

@@ -109,6 +109,20 @@ function initStickyCart() {
         return;
       }
 
+      // Cosmetic only — see assets/fly-to-cart.js. Uses the sticky bar's
+      // own small product thumbnail as the flying source, since that's
+      // what's actually visible near the top of the viewport at the
+      // moment this button is clicked (the main gallery image may be
+      // scrolled out of view by then).
+      if (typeof window.JerryFlyToCart === "function") {
+        try {
+          const sourceImg = document.querySelector(".j-sticky-cart__image img");
+          window.JerryFlyToCart(sourceImg);
+        } catch (error) {
+          /* no-op — purely decorative */
+        }
+      }
+
       const cartButton = document.querySelector(".j-header__cart");
       if (cartButton) cartButton.click();
     } catch (error) {

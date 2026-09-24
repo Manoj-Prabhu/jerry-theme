@@ -181,12 +181,37 @@
 
       {% if color_option %}
         {% assign swatch_limit = 4 %}
+        {% comment %}
+          Swatch hover-preview: hovering a color swatch swaps the card's
+          image to that color's photo without navigating away — see
+          assets/swatch-preview.js. Each swatch
+          needs the matching variant's image, found by walking variants
+          for one whose option at this color option's position equals
+          the swatch's value (options_with_values' values don't expose a
+          direct `.variant` link on every theme-compatible Shopify
+          version, so this matches the same way variant selection does
+          elsewhere in the theme).
+        {% endcomment %}
+        {% assign color_option_index = color_option.position | minus: 1 %}
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+
+            {% assign preview_variant = null %}
+            {% for variant in product.variants %}
+              {% assign variant_option_value = variant.options[color_option_index] %}
+              {% if variant_option_value == value and preview_variant == null %}
+                {% assign preview_variant = variant %}
+              {% endif %}
+            {% endfor %}
+            {% assign preview_image = preview_variant.featured_image %}
+
             <span
               class="j-product-card__swatch"
               title="{{ value | escape }}"
+              {% if preview_image %}
+                data-preview-image="{{ preview_image | image_url: width: 700, format: 'webp' }}"
+              {% endif %}
               {% if value.swatch.image %}
                 style="background-image: url({{ value.swatch.image | image_url: width: 30 }});"
               {% elsif value.swatch.color %}

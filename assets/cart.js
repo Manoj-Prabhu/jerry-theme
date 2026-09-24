@@ -680,6 +680,21 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
 
+        // Cosmetic only — plays after the add already succeeded, using
+        // whichever product image is currently the active gallery slide.
+        // See assets/fly-to-cart.js; never allowed to affect the actual
+        // cart flow even if something about the animation itself throws.
+        if (typeof window.JerryFlyToCart === "function") {
+          try {
+            const sourceImg = document.querySelector(
+              ".j-product__media-slide.is-active .j-product-main-image",
+            );
+            window.JerryFlyToCart(sourceImg);
+          } catch (error) {
+            /* no-op — purely decorative */
+          }
+        }
+
         await refreshCart();
         openCartDrawer();
       } catch (error) {

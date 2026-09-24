@@ -533,6 +533,31 @@
   cursor: pointer;
 }
 
+/* Landing "bump" for the fly-to-cart animation (see assets/fly-to-cart.js)
+   — plays once the flying product-image clone arrives, giving the icon
+   itself a reaction instead of the animation just silently ending. */
+.j-header__cart.is-bumping {
+  animation: j-header-cart-bump 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes j-header-cart-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-header__cart.is-bumping {
+    animation: none;
+  }
+}
+
 #CartCount {
   position: absolute;
   top: -6px;
