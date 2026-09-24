@@ -65,7 +65,10 @@
   align-items: flex-start;
   justify-content: center;
   gap: 16px;
-  max-width: 480px;
+  /* Widened from 480px alongside the bigger quote text below — at the
+     old width the larger font wrapped to 2-3 words per line, cramped
+     rather than confident. */
+  max-width: 560px;
   padding: 80px var(--space-8);
   margin: 0 auto 0 0;
 }
@@ -82,15 +85,29 @@
 .j-testimonials__stars {
   display: flex;
   gap: 2px;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
+}
+
+.j-testimonials__quote-wrap {
+  position: relative;
+}
+
+.j-testimonials__quote-mark {
+  display: block;
+  width: 40px;
+  height: 30px;
+  margin-bottom: 4px;
 }
 
 .j-testimonials__quote {
   margin: 0;
   color: var(--color-secondary-text);
-  font-size: var(--font-size-xl);
-  line-height: 1.5;
+  /* Bumped from --font-size-xl (22px) — a real vote of visual confidence
+     for the section's one piece of actual customer proof, matching the
+     bolder scale used elsewhere this pass (the hero headline). */
+  font-size: var(--font-size-2xl);
+  line-height: 1.4;
   font-style: normal;
 
   /* Bounds wildly different quote lengths between blocks to the same
@@ -114,11 +131,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-surface);
+  /* A thin gold ring — matches the accent used everywhere else this
+     pass (badge/highlight/hover colors) instead of leaving the avatar
+     as a bare unstyled circle. */
+  box-shadow: 0 0 0 2px #f0c14b;
 }
 
 .j-testimonials__avatar img {
@@ -128,7 +149,7 @@
 }
 
 .j-testimonials__avatar-initial {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-md);
   font-weight: var(--font-semibold);
   color: var(--color-secondary-text);
 }

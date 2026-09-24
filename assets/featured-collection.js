@@ -92,19 +92,26 @@ function initFeaturedCollectionReveal() {
   window.addEventListener("resize", scheduleUpdate);
 }
 
-// Tap-to-reveal Quick View on touch devices — they have no real hover
-// state, so the button (hidden by default, same as the desktop hover
-// reveal — see .j-quick-view-button in featured-collection.css) needs a
-// different trigger there. First tap on a card intercepts the link's
-// navigation and reveals the button instead (via .is-tapped); tapping
-// that same card again (now already revealed) lets the navigation
-// proceed normally; tapping anywhere else collapses it back down.
-function initFeaturedCollectionTapReveal() {
+// Tap-to-reveal Quick View + Wishlist on touch devices — they have no
+// real hover state, so both buttons (hidden by default, same as the
+// desktop hover reveal — see .j-quick-view-button/.j-wishlist-button in
+// featured-collection.css/quick-view.css) need a different trigger
+// there. First tap on a card intercepts the link's navigation and
+// reveals both instead (via .is-tapped); tapping that same card again
+// (now already revealed) lets the navigation proceed normally; tapping
+// anywhere else collapses it back down.
+//
+// Originally scoped to just .j-featured-collection (the homepage
+// section) — every other product grid sitewide (collection pages,
+// search, recommendations, recently-viewed) left Quick View and the
+// wishlist heart permanently visible on touch instead, an inconsistent,
+// more cluttered-looking default than what this section already had.
+// Generalized to every .j-product-card instead of duplicating this
+// logic per grid; this file already loads on every page.
+function initProductCardTapReveal() {
   if (!window.matchMedia("(hover: none)").matches) return;
 
-  const cards = Array.from(
-    document.querySelectorAll(".j-featured-collection .j-product-card"),
-  );
+  const cards = Array.from(document.querySelectorAll(".j-product-card"));
 
   if (!cards.length) return;
 
@@ -146,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(initFeaturedCollectionReveal, 200);
   }
 
-  initFeaturedCollectionTapReveal();
+  initProductCardTapReveal();
 });
 
 // The theme editor replaces a section's markup wholesale on block
@@ -155,6 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("shopify:section:load", (event) => {
   if (event.target.querySelector(".j-featured-collection")) {
     initFeaturedCollectionReveal();
-    initFeaturedCollectionTapReveal();
+  }
+  if (event.target.querySelector(".j-product-card")) {
+    initProductCardTapReveal();
   }
 });

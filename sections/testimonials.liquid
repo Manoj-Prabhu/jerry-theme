@@ -41,9 +41,23 @@
                 {% endif %}
 
                 {% if block.settings.quote != blank %}
-                  <blockquote class="j-testimonials__quote">
-                    “{{ block.settings.quote }}”
-                  </blockquote>
+                  <div class="j-testimonials__quote-wrap">
+                    {% comment %}
+                      Large decorative quotation mark — this section
+                      previously had nothing to distinguish it visually
+                      from any other text block on the page (plain gray
+                      background, small stars, body-sized quote text).
+                      A big oversized mark behind the quote is a
+                      standard, low-risk way to give a testimonial
+                      section some real presence.
+                    {% endcomment %}
+                    <svg class="j-testimonials__quote-mark" viewBox="0 0 32 24" fill="none" aria-hidden="true">
+                      <path d="M0 24V14.4C0 6.4 4.8 1.2 13.6 0l1.6 4C9.6 5.6 7.2 8.8 6.8 13.2H14V24H0ZM17.6 24V14.4C17.6 6.4 22.4 1.2 31.2 0l1.6 4c-5.6 1.6-8 4.8-8.4 9.2h7.2V24H17.6Z" fill="#f0c14b"/>
+                    </svg>
+                    <blockquote class="j-testimonials__quote">
+                      {{ block.settings.quote }}
+                    </blockquote>
+                  </div>
                 {% endif %}
 
                 <div class="j-testimonials__author">

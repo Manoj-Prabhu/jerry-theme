@@ -404,12 +404,6 @@
     height: 14px;
   }
 
-  .j-wishlist-button {
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
-  }
-
   .j-quick-view-button {
     left: 12px;
     right: 12px;
@@ -442,8 +436,28 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-  transition: all 0.25s ease;
   z-index: 10;
+  /* Hidden until the card is hovered/focused (desktop) or tapped
+     (touch — see .is-tapped below and assets/featured-collection.js's
+     initProductCardTapReveal), matching Quick View's existing reveal
+     pattern instead of sitting permanently visible on every card at
+     rest. .is-active (already-favorited) is the one exception — see
+     below — so a shopper can still see what's already in their
+     wishlist across a grid without hovering every card first. */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease,
+    transform 0.25s ease,
+    background var(--transition-fast);
+}
+
+.j-product-card:hover .j-wishlist-button,
+.j-product-card:focus-within .j-wishlist-button,
+.j-product-card.is-tapped .j-wishlist-button {
+  opacity: 1;
+  visibility: visible;
 }
 
 .j-wishlist-button:hover {
@@ -453,6 +467,29 @@
 
 .j-wishlist-button.is-active {
   color: #e63946;
+  /* Always visible regardless of hover/tap state — once favorited, a
+     shopper should be able to see that at a glance across a whole grid,
+     not just on whichever card they're currently interacting with. */
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Was previously declared inside the earlier @media (max-width: 768px)
+   block above (around .j-product-grid/.j-product-card__* mobile
+   tweaks) — but that block sits BEFORE the unscoped .j-wishlist-button
+   rule above in this same file. With identical specificity (one class
+   selector each), CSS resolves the tie by source order, so the later,
+   unscoped 44px rule always won regardless of viewport — the mobile
+   override never actually applied. Redeclared here, after the rule it
+   needs to override, so it wins at narrow widths as intended. */
+@media (max-width: 768px) {
+  .j-wishlist-button {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
 }
 
 /* -------------------------

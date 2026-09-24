@@ -691,14 +691,18 @@
   transform: translateY(0);
 }
 
-/* Touch devices have no hover state to reveal this on — keep it visible
-   by default there rather than making it unreachable. */
-@media (hover: none) {
-  .j-quick-view-button {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-  }
+/* Touch devices have no real hover state to reveal this with — the
+   reveal is driven by tapping the card once instead (see
+   assets/featured-collection.js's initProductCardTapReveal, which
+   toggles .is-tapped and intercepts that first tap's navigation), the
+   same treatment already used for the homepage's Featured Collection.
+   An earlier version of this made the button permanently visible on
+   touch instead, which was inconsistent with that section and more
+   visually cluttered at rest. */
+.j-product-card.is-tapped .j-quick-view-button {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }
 
 .j-quick-view-button:hover {
