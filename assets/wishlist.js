@@ -152,10 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const handle = button.dataset.handle;
     let wishlist = getWishlist();
+    let added = true;
 
     if (wishlist.includes(handle)) {
       wishlist = wishlist.filter((item) => item !== handle);
       updateButton(button, false);
+      added = false;
     } else {
       wishlist.push(handle);
       updateButton(button, true);
@@ -163,5 +165,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveWishlist(wishlist);
     updateWishlistCount();
+
+    // Lets the wishlist page (assets/wishlist-page.js) remove/re-check a
+    // card in place instead of the toggle only taking effect after a
+    // full reload — this heart button exists on any product card
+    // anywhere (including the wishlist page's own cards), so a removal
+    // there needs to be reflected immediately, not just in localStorage.
+    document.dispatchEvent(
+      new CustomEvent("jerry:wishlist-changed", { detail: { handle, added } }),
+    );
   });
 });

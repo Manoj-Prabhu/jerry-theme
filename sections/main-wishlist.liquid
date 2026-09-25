@@ -1,0 +1,61 @@
+{% comment %}
+  Wishlist page — the header's heart icon (sections/header.liquid) links
+  here, but previously had nowhere to actually go; this section renders
+  it. Wishlist data only ever lives in the browser's localStorage (see
+  assets/wishlist.js), never on the server, so — same as
+  recently-viewed-products.liquid — the actual product grid is entirely
+  populated by JS after load, not server-rendered Liquid.
+
+  Requires a Page in the Shopify admin with this section's template
+  assigned (Page → Theme template → page.wishlist) — the same setup
+  already needed for the About/FAQ/Contact pages elsewhere in this
+  theme. The header links to /pages/wishlist by default.
+{% endcomment %}
+{% # theme-check-disable AssetPreload %}
+<link rel="preload" href="{{ 'wishlist-page.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>{{ 'wishlist-page.css' | asset_url | stylesheet_tag }}</noscript>
+{% # theme-check-enable AssetPreload %}
+
+{% render 'breadcrumbs' %}
+
+<div class="full-width j-page-hero-band">
+  <div class="j-page-hero-band__inner">
+    <div class="j-section-title">
+      <h1>{{ page.title | default: 'Wishlist' }}</h1>
+    </div>
+  </div>
+</div>
+
+<div class="j-wishlist-page page-width">
+
+  <div class="j-product-grid" id="WishlistPageProducts"></div>
+
+  {% comment %}
+    Shown by wishlist-page.js only once it's actually confirmed the
+    wishlist is empty (no stored handles, or every stored product has
+    since been deleted) — hidden by default so it doesn't flash before
+    JS has had a chance to check, matching the same empty/no-JS-safe
+    pattern used elsewhere (e.g. the cart drawer's empty state).
+  {% endcomment %}
+  <div class="j-wishlist-page__empty" id="WishlistPageEmpty" hidden>
+    <div class="j-wishlist-page__empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 20.5s-7.5-4.6-9.7-9.1C.7 7.7 2.6 4 6.3 4c2 0 3.8 1 4.9 2.6C12.3 5 14.1 4 16.1 4c3.7 0 5.6 3.7 4 7.4-2.2 4.5-9.7 9.1-9.7 9.1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <p>{{ 'product.wishlist_empty' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="j-button j-wishlist-page__continue">
+      {{ 'cart.continue_shopping' | t }}
+    </a>
+  </div>
+
+</div>
+
+<script src="{{ 'wishlist-page.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Wishlist page",
+  "settings": []
+}
+{% endschema %}

@@ -228,9 +228,20 @@
       actually has something in it (see .has-items below and
       assets/wishlist.js's updateWishlistCount) — a plain always-solid
       heart gave no visual signal either way.
+
+      A plain, non-navigating <button> before this — clicking it did
+      nothing at all, since no wishlist page existed yet to send anyone
+      to. Now a real link to sections/main-wishlist.liquid, the same way
+      the cart icon opens the cart drawer and the account icon links to
+      the account page. Requires a Page in the Shopify admin using the
+      "page.wishlist" template (Online Store → Pages → Add page →
+      Theme template → page.wishlist) — the same one-time setup already
+      needed for the About/FAQ/Contact pages elsewhere in this theme;
+      pages.wishlist.url resolves automatically once that page exists,
+      falling back to the conventional URL it'll have either way.
     {% endcomment %}
-    <button
-      type="button"
+    <a
+      href="{{ pages.wishlist.url | default: '/pages/wishlist' }}"
       class="j-header__wishlist"
       aria-label="{{ 'header.wishlist' | t }}"
     >
@@ -245,7 +256,7 @@
         0
       </sup>
 
-    </button>
+    </a>
 
     <button
       type="button"

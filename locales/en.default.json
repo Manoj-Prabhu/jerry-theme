@@ -262,6 +262,7 @@
     "one_time_purchase": "One-time purchase",
     "add_to_wishlist_html": "Add {{ title }} to Wishlist",
     "remove_from_wishlist_html": "Remove {{ title }} from Wishlist",
+    "wishlist_empty": "Your wishlist is empty. Tap the heart on any product to save it here.",
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
     "description": "Description",
