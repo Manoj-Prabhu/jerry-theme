@@ -47,7 +47,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-wrap: break-word;
-  overflow-x: hidden;
+  /* Not overflow-x: hidden here (kept only on <html> above) — setting it
+     on body too turns body into its own independent scroll container,
+     which silently breaks position: sticky for any direct child (the
+     header) that's supposed to stick to the real viewport: it sticks
+     relative to body's box instead, and since body never scrolls on its
+     own (only the document/viewport does), that "stuck" calculation has
+     nothing to hook into and the header just scrolled away like a
+     normal static element instead of staying pinned to the top. */
 }
 
 /* Applied on every template except the homepage (which has its own hero

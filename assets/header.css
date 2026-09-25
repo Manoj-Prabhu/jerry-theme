@@ -1,3 +1,13 @@
+/* The sticky element is the section wrapper, not <header>: a sticky box
+   can only move within its parent, and <header>'s parent is this wrapper,
+   which is exactly as tall as its content. Negative top (set by header.js)
+   scrolls the announcement bar away while the header stays pinned. */
+.shopify-section-group-header-group:has(.j-header--sticky) {
+  position: sticky;
+  top: calc(-1 * var(--announcement-height, 0px));
+  z-index: 1000;
+}
+
 /* Announcement Bar — a continuous breaking-news-style scrolling ticker
    rather than the fade-between-messages behavior this used to have. */
 
@@ -334,19 +344,10 @@
 /* Sticky Header */
 
 .j-header--sticky {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   background: #ffffff;
-
   transition:
-    top 0.25s ease,
-    transform 0.3s ease,
+    background 0.35s ease,
     box-shadow 0.3s ease;
-}
-
-.j-header--sticky.is-hidden {
-  transform: translateY(-100%);
 }
 
 .j-header--sticky.is-scrolled {

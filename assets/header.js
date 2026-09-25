@@ -167,42 +167,32 @@ class JerryHeader {
 
     if (!header) return;
 
-    let lastScroll = 0;
+    const section = header.closest(".shopify-section");
+
+    if (section) {
+      const syncOffset = () => {
+        const bar = section.querySelector(".j-announcement");
+        const height = bar ? bar.getBoundingClientRect().height : 0;
+        section.style.setProperty("--announcement-height", `${height}px`);
+      };
+
+      syncOffset();
+
+      if (typeof ResizeObserver === "function") {
+        new ResizeObserver(syncOffset).observe(section);
+      } else {
+        window.addEventListener("resize", syncOffset);
+      }
+    }
 
     window.addEventListener(
       "scroll",
       () => {
-        const currentScroll = window.pageYOffset;
-
-        /* Shadow */
-
-        if (currentScroll > 10) {
+        if (window.pageYOffset > 10) {
           header.classList.add("is-scrolled");
         } else {
           header.classList.remove("is-scrolled");
         }
-
-        /* Always visible at top */
-
-        if (currentScroll <= 0) {
-          header.classList.remove("is-hidden");
-          lastScroll = 0;
-          return;
-        }
-
-        /* Hide */
-
-        if (currentScroll > lastScroll && currentScroll > 100) {
-          header.classList.add("is-hidden");
-        }
-
-        /* Show */
-
-        if (currentScroll < lastScroll) {
-          header.classList.remove("is-hidden");
-        }
-
-        lastScroll = currentScroll;
       },
       { passive: true },
     );
