@@ -684,8 +684,12 @@
     color var(--transition-fast);
 }
 
+/* :has(:focus-visible), not :focus-within — see the matching comment on
+   .j-wishlist-button's identical rule in featured-collection.css. Both
+   buttons share this same card, so clicking either one previously left
+   both stuck visible after the click until something else took focus. */
 .j-product-card:hover .j-quick-view-button,
-.j-product-card:focus-within .j-quick-view-button {
+.j-product-card:has(:focus-visible) .j-quick-view-button {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);

@@ -453,8 +453,19 @@
     background var(--transition-fast);
 }
 
+/* :has(:focus-visible), not :focus-within — clicking the wishlist
+   button itself leaves it holding real DOM focus afterwards, and
+   :focus-within stays true for as long as that focus sits anywhere
+   inside the card, with nothing to end it until something else on the
+   page happens to receive focus. Net effect: click the heart, move the
+   mouse away, and the button (plus Quick View, which shares this same
+   hover group) stayed visible until an unrelated click elsewhere finally
+   moved focus away. :focus-visible only matches focus a browser decided
+   to show a ring for (keyboard/programmatic, not an ordinary mouse
+   click), so a keyboard tab still reveals these for accessibility while
+   a mouse click on the heart no longer leaves the card stuck "hovered". */
 .j-product-card:hover .j-wishlist-button,
-.j-product-card:focus-within .j-wishlist-button,
+.j-product-card:has(:focus-visible) .j-wishlist-button,
 .j-product-card.is-tapped .j-wishlist-button {
   opacity: 1;
   visibility: visible;
@@ -718,7 +729,7 @@
 }
 
 .j-featured-collection .j-product-card:hover .j-quick-view-button,
-.j-featured-collection .j-product-card:focus-within .j-quick-view-button {
+.j-featured-collection .j-product-card:has(:focus-visible) .j-quick-view-button {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
