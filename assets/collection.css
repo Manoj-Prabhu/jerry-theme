@@ -85,28 +85,43 @@
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: var(--space-6) var(--space-5);
-  background: linear-gradient(
-    135deg,
-    var(--color-sage) 0%,
-    color-mix(in srgb, var(--color-sage) 35%, white) 35%,
-    var(--color-white) 75%
-  );
+  padding: var(--space-8) var(--space-6);
+  /* Was a sage-green gradient with no connection to anything else on
+     the site — this store's actual accent identity (established across
+     the cart, footer, hero, etc.) is warm gold on a clean white/cream
+     surface, not green. */
+  background: var(--color-white);
   overflow: hidden;
+}
+
+/* Thin gold flourish across the top of the panel — same small recurring
+   accent used elsewhere (the cart drawer header, footer column
+   underlines) instead of introducing a new decorative device just for
+   this panel. */
+.j-collection-filters::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #b8873a 0%, #f0c14b 50%, #b8873a 100%);
 }
 
 .j-collection-filters__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  margin-top: 6px;
   border-bottom: 1px solid var(--color-border);
 }
 
 .j-collection-filters__header h2 {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-bold);
+  letter-spacing: 0.01em;
 }
 
 .j-collection-filters__header-actions {
@@ -117,7 +132,7 @@
 
 .j-collection-filters__clear {
   font-size: var(--font-size-xs);
-  color: var(--color-accent);
+  color: #b8873a;
   font-weight: var(--font-semibold);
   text-decoration: underline;
   transition: color var(--transition-fast);
@@ -152,14 +167,23 @@
 }
 
 .j-filter {
-  background: var(--color-surface);
+  /* Was a flat --color-surface fill with no border — a thin border plus
+     white background reads as a considered card rather than a gray
+     blob, and gives the open/hover states something to react against. */
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 12px 14px;
-  margin-bottom: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  transition: border-color var(--transition-fast);
 }
 
 .j-filter:last-of-type {
   margin-bottom: 0;
+}
+
+.j-filter[open] {
+  border-color: #f0c14b;
 }
 
 .j-filter summary {
@@ -168,8 +192,13 @@
   justify-content: space-between;
   cursor: pointer;
   font-weight: var(--font-semibold);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   list-style: none;
+  transition: color var(--transition-fast);
+}
+
+.j-filter summary:hover {
+  color: #b8873a;
 }
 
 .j-filter summary::-webkit-details-marker {
@@ -179,23 +208,28 @@
 .j-filter summary::after {
   content: "";
   flex-shrink: 0;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-right: 2px solid var(--color-text-light);
   border-bottom: 2px solid var(--color-text-light);
   transform: rotate(45deg);
-  transition: transform var(--transition-fast);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .j-filter[open] summary::after {
   transform: rotate(-135deg);
+  border-color: #b8873a;
 }
 
 .j-filter__values {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 14px;
+  gap: 2px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
 }
 
 /* Checkbox Options */
@@ -203,26 +237,61 @@
 .j-filter__option {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
+  gap: 10px;
+  padding: 8px;
   margin-inline: -8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   transition: background var(--transition-fast);
 }
 
 .j-filter__option:hover {
-  background: #fff;
+  background: var(--color-surface);
 }
 
+/* Custom checkbox — the native OS checkbox (just an accent-color tint on
+   the browser's own control) looked noticeably different across
+   browsers/platforms and didn't match anything else in the theme's
+   visual language. This is a real checkbox underneath (still fully
+   keyboard/screen-reader operable, just visually hidden) with a styled
+   box drawn from scratch, checked state filled with the site's gold
+   accent and a small inline checkmark. */
 .j-filter__option input[type="checkbox"] {
-  width: 14px;
-  height: 14px;
-  accent-color: var(--color-primary);
-  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-white);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.j-filter__option input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: transform var(--transition-fast);
+  background: #1a1a1a;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.j-filter__option input[type="checkbox"]:checked {
+  background: #f0c14b;
+  border-color: #f0c14b;
+}
+
+.j-filter__option input[type="checkbox"]:checked::before {
+  transform: scale(1);
 }
 
 .j-filter__option-label {
@@ -231,7 +300,7 @@
 }
 
 .j-filter__option:hover .j-filter__option-label {
-  color: var(--color-accent);
+  color: #b8873a;
 }
 
 .j-filter__option-count {
@@ -244,7 +313,7 @@
 .j-filter__price-range {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .j-filter__price-input {
@@ -252,31 +321,31 @@
   align-items: center;
   flex: 1;
   min-width: 0;
-  padding: 0 8px;
-  border: 1px solid var(--color-border);
+  padding: 0 10px;
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--color-white);
   transition: border-color var(--transition-fast);
 }
 
 .j-filter__price-input:focus-within {
-  border-color: var(--color-accent);
+  border-color: #f0c14b;
 }
 
 .j-filter__price-input span {
   color: var(--color-text-light);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .j-filter__values input[type="number"] {
   width: 100%;
-  padding: 7px 4px;
+  padding: 9px 6px;
   border: none;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .j-filter__values input[type="number"]:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid #f0c14b;
   outline-offset: 1px;
 }
 
@@ -286,15 +355,27 @@
 
 .j-filter__price-separator {
   color: var(--color-text-light);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   flex-shrink: 0;
 }
 
 .j-collection-filters__apply {
   width: 100%;
-  margin-top: 16px;
-  padding: 10px 16px;
+  margin-top: 20px;
+  padding: 13px 16px;
   font-size: var(--font-size-sm);
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.j-collection-filters__apply:hover {
+  background: #f0c14b;
+  border-color: #f0c14b;
+  color: #1a1a1a;
 }
 
 /* A generic thin gray border blending into the page was one of the more

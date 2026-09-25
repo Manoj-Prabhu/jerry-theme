@@ -53,6 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const wishlist = getWishlist();
     count.textContent = wishlist.length;
     count.hidden = wishlist.length === 0;
+
+    const wishlistButton = document.querySelector(".j-header__wishlist");
+    if (wishlistButton) {
+      wishlistButton.classList.toggle("has-items", wishlist.length > 0);
+    }
   }
 
   function syncWishlistButtons(root = document) {

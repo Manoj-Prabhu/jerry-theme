@@ -220,13 +220,22 @@
       </shopify-account>
     {% endif %}
 
+    {% comment %}
+      A plain "♥" text glyph previously rendered here — font/OS-dependent
+      (different weight and shape across browsers), unlike every other
+      header icon (cart, account, search), which are all custom SVGs.
+      Outline by default, filled with the accent color once the wishlist
+      actually has something in it (see .has-items below and
+      assets/wishlist.js's updateWishlistCount) — a plain always-solid
+      heart gave no visual signal either way.
+    {% endcomment %}
     <button
       type="button"
       class="j-header__wishlist"
       aria-label="{{ 'header.wishlist' | t }}"
     >
 
-      ♥
+      {{ 'icon-heart.svg' | inline_asset_content }}
 
       <sup
         id="WishlistCount"

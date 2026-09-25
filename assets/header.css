@@ -904,7 +904,27 @@
   width: 44px;
   height: 44px;
   cursor: pointer;
-  font-size: 22px;
+}
+
+.j-header__wishlist svg {
+  width: 22px;
+  height: 22px;
+  transition:
+    fill var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.j-header__wishlist:hover svg {
+  transform: scale(1.1);
+}
+
+/* Filled once the wishlist actually has something saved — an
+   always-solid heart (the old plain "♥" glyph) gave no signal either
+   way; outline-by-default plus a filled, accent-colored state on real
+   content matches the same "something is here" cue #WishlistCount's own
+   badge already gives. */
+.j-header__wishlist.has-items svg {
+  fill: var(--color-accent);
 }
 
 #WishlistCount {
