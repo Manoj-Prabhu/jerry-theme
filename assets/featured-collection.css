@@ -777,6 +777,32 @@
     padding: 10px;
     font-size: var(--font-size-sm);
   }
+
+  /* The shared .j-button/.j-button-outline base sizing (14px 28px
+     padding, 16px text) is tuned for a full-width primary action —
+     oversized for this section's single secondary "View All" link
+     sitting under a much narrower mobile card. */
+  .j-featured-collection__view-all {
+    margin-top: 28px;
+  }
+
+  .j-featured-collection__view-all .j-button-outline {
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+  }
+
+  .j-featured-collection__view-all-arrow {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* The desktop min-height (520px, sized for a much wider multi-column
+     card) was carrying over unchanged onto a ~280-340px-wide mobile
+     card, stretching it to nearly double a normal portrait photo's
+     height instead of a proportional one. */
+  .j-featured-collection .j-product-card__link {
+    min-height: 380px;
+  }
 }
 
 /* Below 600px, the auto-fit grid (see .j-product-grid above) was
