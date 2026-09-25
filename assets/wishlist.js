@@ -47,6 +47,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const HEART_BURST_COUNT = 7;
+  const HEART_BURST_DURATION_MS = 1400;
+
+  function spawnHeartBurst(button) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const card = button.closest(".j-product-card");
+    if (!card) return;
+
+    const burst = document.createElement("span");
+    burst.className = "j-heart-burst";
+    burst.setAttribute("aria-hidden", "true");
+
+    for (let i = 0; i < HEART_BURST_COUNT; i += 1) {
+      const particle = document.createElement("span");
+      particle.className = "j-heart-burst__particle";
+      particle.textContent = "♥";
+      particle.style.setProperty("--burst-x", `${Math.round((Math.random() - 0.5) * 80)}px`);
+      particle.style.setProperty("--burst-y", `${Math.round(70 + Math.random() * 50)}px`);
+      particle.style.setProperty("--burst-rotate", `${Math.round((Math.random() - 0.5) * 50)}deg`);
+      particle.style.setProperty("--burst-size", `${Math.round(14 + Math.random() * 10)}px`);
+      particle.style.setProperty("--burst-delay", `${i * 50}ms`);
+      burst.appendChild(particle);
+    }
+
+    card.appendChild(burst);
+    setTimeout(() => burst.remove(), HEART_BURST_DURATION_MS);
+  }
+
   function updateWishlistCount() {
     const count = document.getElementById("WishlistCount");
     if (!count) return;
@@ -161,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       wishlist.push(handle);
       updateButton(button, true);
+      spawnHeartBurst(button);
     }
 
     saveWishlist(wishlist);

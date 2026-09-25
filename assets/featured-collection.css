@@ -54,6 +54,13 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 520px));
   justify-content: center;
   gap: 64px;
+  /* The permanent 3D tilt below (see .j-product-card:nth-child) lifts a
+     card's rendered pixels above its actual layout box via translateY —
+     transforms never affect layout/box size, so without this the top
+     row's tilted (and especially hovered/settled) cards visually
+     overlapped whatever heading or toolbar sits directly above the
+     grid. */
+  padding-top: 24px;
 }
 
 .j-featured-collection__view-all {
@@ -108,6 +115,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: transform 0.35s ease;
 }
 
 .j-product-card__link {
@@ -144,10 +152,101 @@
   outline-offset: -2px;
 }
 
-/* Highlight the image once the product's been added to the wishlist */
+/* Permanent static 3D tilt — every card, not just wishlisted ones, sits
+   at a fixed perspective angle at rest (no hover/JS involved), like a
+   stack of printed photos laid down slightly askew rather than a rigid
+   flat grid. Alternating the direction per card (odd tilts one way,
+   even the other) keeps a full row from all leaning in the same
+   direction, which would just read as the whole grid being crooked
+   rather than each card catching light on its own. Excludes the
+   homepage's Featured Collection section, which already has its own
+   hover lift (see .j-featured-collection .j-product-card:hover below)
+   built around a flat resting state. */
+.j-product-card:nth-child(odd) {
+  transform: perspective(700px) rotateY(-6deg) rotateX(2deg) translateY(-6px);
+}
+
+.j-product-card:nth-child(even) {
+  transform: perspective(700px) rotateY(6deg) rotateX(2deg) translateY(-6px);
+}
+
+.j-product-card:nth-child(odd) .j-product-card__image {
+  box-shadow: 18px 22px 28px -10px rgba(0, 0, 0, 0.3);
+}
+
+.j-product-card:nth-child(even) .j-product-card__image {
+  box-shadow: -18px 22px 28px -10px rgba(0, 0, 0, 0.3);
+}
+
+.j-featured-collection .j-product-card {
+  transform: none;
+}
+
+/* Highlight the product once it's added to the wishlist — same tilt
+   strength as every other card now (see above), so the gold outline/
+   badge treatment is what actually carries the "this one's saved"
+   difference rather than the angle itself. */
+.j-product-card:has(.j-wishlist-button.is-active) {
+  transform: perspective(700px) rotateY(-6deg) rotateX(2deg) translateY(-6px);
+  transform-origin: center bottom;
+}
+
 .j-product-card:has(.j-wishlist-button.is-active) .j-product-card__image {
   outline: 2px solid var(--color-gold);
   outline-offset: -2px;
+  box-shadow:
+    18px 22px 28px -10px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover "settle" — the resting tilt above is a static illusion (no
+   cursor-tracking), so hovering straightens the card up toward the
+   viewer instead: less rotation, more lift, like picking the photo up
+   off the table for a closer look, rather than tilting it further away.
+   Each selector below repeats the matching resting one with :hover
+   appended specifically so it also wins over that resting rule's own
+   .j-product-card__image box-shadow on specificity alone — without
+   that, the plain :hover .j-product-card__image rule further up this
+   file (same specificity as the resting nth-child shadow, declared
+   earlier) lost the tie to source order and never actually showed on a
+   tilted card. */
+.j-product-card:nth-child(odd):hover {
+  transform: perspective(700px) rotateY(-2deg) rotateX(1deg) translateY(-14px) scale(1.02);
+}
+
+.j-product-card:nth-child(even):hover {
+  transform: perspective(700px) rotateY(2deg) rotateX(1deg) translateY(-14px) scale(1.02);
+}
+
+.j-product-card:has(.j-wishlist-button.is-active):hover {
+  transform: perspective(700px) rotateY(-3deg) rotateX(1deg) translateY(-16px) scale(1.03);
+}
+
+.j-product-card:nth-child(odd):hover .j-product-card__image,
+.j-product-card:nth-child(even):hover .j-product-card__image {
+  box-shadow: 0 20px 40px rgba(240, 193, 75, 0.25);
+  outline: 2px solid #f0c14b;
+  outline-offset: -2px;
+}
+
+.j-product-card:has(.j-wishlist-button.is-active):hover .j-product-card__image {
+  box-shadow: 0 24px 44px rgba(212, 175, 55, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-product-card:nth-child(odd),
+  .j-product-card:nth-child(even),
+  .j-product-card:has(.j-wishlist-button.is-active),
+  .j-product-card:nth-child(odd):hover,
+  .j-product-card:nth-child(even):hover,
+  .j-product-card:has(.j-wishlist-button.is-active):hover {
+    transform: none;
+  }
+
+  .j-product-card:nth-child(odd) .j-product-card__image,
+  .j-product-card:nth-child(even) .j-product-card__image {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .j-product-card__image img {
@@ -477,12 +576,77 @@
 }
 
 .j-wishlist-button.is-active {
-  color: #e63946;
+  /* A sculpted, enamel-pin look — a soft light highlight along the top
+     edge and a darker shade along the bottom (both via inset shadows,
+     layered with the gold gradient itself) reads as a physically
+     domed/embossed badge rather than a flat colored circle, backed by a
+     real drop shadow so it visibly sits above the card surface. */
+  background: linear-gradient(135deg, #fce8b0 0%, #f0c14b 45%, #b8873a 100%);
+  color: #c0272d;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.7),
+    inset 0 -3px 4px rgba(120, 72, 0, 0.45),
+    0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(184, 135, 58, 0.5);
   /* Always visible regardless of hover/tap state — once favorited, a
      shopper should be able to see that at a glance across a whole grid,
      not just on whichever card they're currently interacting with. */
   opacity: 1;
   visibility: visible;
+}
+
+.j-wishlist-button.is-active:hover {
+  background: linear-gradient(135deg, #fce8b0 0%, #f0c14b 45%, #b8873a 100%);
+}
+
+/* Heart burst — small hearts that float up and fade out from the button
+   when a product is added to the wishlist (spawned by wishlist.js).
+   Appended to .j-product-card rather than the button itself: the button
+   lives inside .j-product-card__image, which has overflow: hidden, and
+   would clip the hearts the moment they rose past the photo's top edge.
+   Positioned to sit exactly over the button — keep these values in sync
+   with .j-wishlist-button's own top/right/size (and its mobile override
+   below). */
+.j-heart-burst {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  pointer-events: none;
+}
+
+.j-heart-burst__particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #e63946;
+  font-size: var(--burst-size, 16px);
+  line-height: 1;
+  opacity: 0;
+  animation: j-heart-burst-float 1s ease-out forwards;
+  animation-delay: var(--burst-delay, 0ms);
+}
+
+@keyframes j-heart-burst-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--burst-x, 0px)), calc(-50% - var(--burst-y, 60px))) scale(1.1) rotate(var(--burst-rotate, 0deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-heart-burst {
+    display: none;
+  }
 }
 
 /* Was previously declared inside the earlier @media (max-width: 768px)
@@ -494,11 +658,15 @@
    override never actually applied. Redeclared here, after the rule it
    needs to override, so it wins at narrow widths as intended. */
 @media (max-width: 768px) {
-  .j-wishlist-button {
+  .j-wishlist-button,
+  .j-heart-burst {
     top: 10px;
     right: 10px;
     width: 32px;
     height: 32px;
+  }
+
+  .j-wishlist-button {
     font-size: 16px;
   }
 }
@@ -542,6 +710,12 @@
 
 .j-featured-collection .j-product-card:has(.j-wishlist-button.is-active) {
   border-color: #f0c14b;
+  /* Overrides the shared base rule's tilt (see .j-product-card:has(...)
+     near the top of this file) — this section already has its own gold
+     border highlight for a saved item, and its cards are laid out full-
+     bleed edge to edge with no card-level margin to absorb a 3D tilt
+     without visually overlapping the next one. */
+  transform: none;
 }
 
 /* Scroll-scrubbed slide-in — featured-collection.js sets the CSS

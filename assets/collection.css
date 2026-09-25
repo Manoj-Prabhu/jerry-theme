@@ -11,6 +11,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: var(--space-8);
+  /* The permanent 3D tilt on .j-product-card (see featured-collection.css)
+     lifts a card's rendered pixels above its actual layout box via
+     translateY — transforms never affect layout/box size, so without
+     this the top row's tilted (and especially hovered/settled) cards
+     visually overlapped the toolbar row (Filters/Sort) directly above
+     the grid. */
+  padding-top: 24px;
 }
 
 .j-collection-empty {
