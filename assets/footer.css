@@ -12,6 +12,93 @@
   background: linear-gradient(135deg, #f5ecd7 0%, #ffffff 100%);
 }
 
+/* Photo footer — merchant-supplied background-image (set inline via
+   section.settings.background_image in footer.liquid) turns the whole
+   footer into a full-bleed editorial photo instead of the plain cream
+   fill above. A dark scrim (::before) sits between the photo and the
+   content so every existing dark-on-light text color below still reads
+   clearly against a photo instead of needing a second parallel set of
+   overrides for every element. */
+.j-footer--photo {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  isolation: isolate;
+}
+
+.j-footer--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 8, 4, 0.82) 0%,
+    rgba(10, 8, 4, 0.9) 55%,
+    rgba(10, 8, 4, 0.96) 100%
+  );
+}
+
+.j-footer--photo > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Light-on-dark palette for every text/border color the plain cream
+   footer above relies on being dark — swapped wholesale here rather
+   than per-element so nothing is missed. */
+.j-footer--photo .j-footer__column h3,
+.j-footer--photo .j-footer__column h4,
+.j-footer--photo .j-footer__logo {
+  color: #f0c14b;
+}
+
+.j-footer--photo .j-footer__column p,
+.j-footer--photo .j-footer__column a,
+.j-footer--photo .j-footer__copyright,
+.j-footer--photo .j-localization-form__label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.j-footer--photo .j-footer__column a:hover {
+  color: #f0c14b;
+}
+
+.j-footer--photo .j-footer__meta {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+.j-footer--photo .j-footer__social-link {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.j-footer--photo .j-footer__social-link:hover {
+  color: #1a1a1a;
+  background: #f0c14b;
+  border-color: #f0c14b;
+}
+
+.j-footer--photo .j-localization-form {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.j-footer--photo .j-localization-form__select,
+.j-footer--photo .j-localization-form__select option {
+  color: #fff;
+  background: #1a1a1a;
+}
+
+.j-footer--photo .j-localization-form__submit {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.j-footer--photo .j-footer__mascot {
+  background: rgba(240, 193, 74, 0.15);
+}
+
 /* Container */
 
 .j-footer__container {
