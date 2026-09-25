@@ -159,7 +159,12 @@
   },
   "collection": {
     "sort_by": "Sort By",
-    "empty": "No products found in this collection."
+    "empty": "No products found in this collection.",
+    "sort_featured": "Featured",
+    "sort_price_ascending": "Price, low to high",
+    "sort_price_descending": "Price, high to low",
+    "sort_title_ascending": "Alphabetically, A-Z",
+    "sort_title_descending": "Alphabetically, Z-A"
   },
   "contact": {
     "success": "Thank you! Your message has been sent.",
@@ -176,7 +181,10 @@
     "min": "Min",
     "max": "Max",
     "to": "to",
-    "apply": "Apply Filters"
+    "apply": "Apply Filters",
+    "product_type": "Product type",
+    "vendor": "Brand",
+    "price": "Price"
   },
   "footer": {
     "newsletter_title": "Newsletter",
@@ -263,6 +271,7 @@
     "add_to_wishlist_html": "Add {{ title }} to Wishlist",
     "remove_from_wishlist_html": "Remove {{ title }} from Wishlist",
     "wishlist_empty": "Your wishlist is empty. Tap the heart on any product to save it here.",
+    "wishlist_no_filter_matches": "No wishlist items match the selected filters.",
     "quick_view": "Quick View",
     "quick_view_close": "Close quick view",
     "description": "Description",

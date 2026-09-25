@@ -37,7 +37,29 @@
         pickupAvailableHtml: {{ 'product.pickup_available_html' | t: location: '__LOCATION__' | json }},
         pickupUnavailableHtml: {{ 'product.pickup_unavailable_html' | t: location: '__LOCATION__' | json }},
         linkCopied: {{ 'general.share.link_copied' | t | json }},
-        sku: {{ 'product.sku' | t | json }}
+        sku: {{ 'product.sku' | t | json }},
+        filtersTitle: {{ 'filters.title' | t | json }},
+        filtersClearAll: {{ 'filters.clear_all' | t | json }},
+        filtersClose: {{ 'filters.close' | t | json }},
+        filtersMin: {{ 'filters.min' | t | json }},
+        filtersMax: {{ 'filters.max' | t | json }},
+        filtersTo: {{ 'filters.to' | t | json }},
+        filtersApply: {{ 'filters.apply' | t | json }},
+        filtersProductType: {{ 'filters.product_type' | t | json }},
+        filtersVendor: {{ 'filters.vendor' | t | json }},
+        filtersPrice: {{ 'filters.price' | t | json }},
+        paginationPrev: {{ 'general.pagination.prev' | t | json }},
+        paginationNext: {{ 'general.pagination.next' | t | json }},
+        paginationLabel: {{ 'general.pagination.label' | t | json }},
+        wishlistEmpty: {{ 'product.wishlist_empty' | t | json }},
+        wishlistNoFilterMatches: {{ 'product.wishlist_no_filter_matches' | t | json }},
+        currencySymbol: {{ cart.currency.symbol | json }},
+        sortBy: {{ 'collection.sort_by' | t | json }},
+        sortFeatured: {{ 'collection.sort_featured' | t | json }},
+        sortPriceAscending: {{ 'collection.sort_price_ascending' | t | json }},
+        sortPriceDescending: {{ 'collection.sort_price_descending' | t | json }},
+        sortTitleAscending: {{ 'collection.sort_title_ascending' | t | json }},
+        sortTitleDescending: {{ 'collection.sort_title_descending' | t | json }}
       };
     </script>
 

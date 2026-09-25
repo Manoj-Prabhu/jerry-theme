@@ -1,31 +1,11 @@
-.j-wishlist-page {
-  max-width: var(--container-width);
-  padding: var(--space-12) var(--space-8) var(--space-16);
-}
-
-/* Same non-auto-fit grid pattern as .j-recently-viewed's — auto-fit/
-   auto-fill has repeatedly collapsed to one giant column in testing
-   (see the matching comment in components.css); column count instead
-   adjusts per actual product count via :has() below. */
-.j-wishlist-page .j-product-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-8);
-}
-
-.j-wishlist-page .j-product-grid:has(> :nth-child(3):last-child) {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.j-wishlist-page .j-product-grid:has(> :nth-child(2):last-child) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.j-wishlist-page .j-product-grid:has(> :nth-child(1):last-child) {
-  grid-template-columns: minmax(0, 1fr);
-  max-width: 320px;
-}
+/* .j-wishlist-page reuses sections/main-collection.liquid's
+   .j-collection / .j-collection-layout / .j-collection-grid /
+   .j-collection-filters / .j-pagination structure and CSS (see
+   collection.css) for a consistent, premium look shared with the real
+   catalog page — only the empty state below is unique to this page. */
 
 .j-wishlist-page__empty {
+  grid-column: 1 / -1;
   max-width: 360px;
   margin: var(--space-12) auto;
   text-align: center;
@@ -54,14 +34,14 @@
   margin-top: var(--space-5);
 }
 
-@media (max-width: 900px) {
-  .j-wishlist-page {
-    padding: var(--space-12) var(--space-4) var(--space-16);
-  }
-
-  .j-wishlist-page .j-product-grid,
-  .j-wishlist-page .j-product-grid:has(> :nth-child(3):last-child) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
+/* .j-filter-toggle (collection.css) sets its own `display: flex`, which
+   as an author-stylesheet rule beats the UA stylesheet's `[hidden] {
+   display: none }` regardless of specificity — collection.css never hits
+   this because it only ever removes that button from the DOM outright
+   (`{% if collection.filters != empty %}`) rather than toggling `hidden`
+   on it. This page does toggle `hidden` on it (wishlist-page.js decides
+   at runtime whether there's anything to filter by), so the override
+   needs to be explicit here. */
+#WishlistFilterToggle[hidden] {
+  display: none;
 }
