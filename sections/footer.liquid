@@ -15,14 +15,9 @@
     font-weight: {{ section.settings.footer_font.weight }};
   }
 
-  {% if section.settings.background_image %}
-    #shopify-section-{{ section.id }} .j-footer {
-      background-image: url({{ section.settings.background_image | image_url: width: 2400 }});
-    }
-  {% endif %}
 {% endstyle %}
 
-<footer class="j-footer full-width {% if section.settings.background_image %}j-footer--photo{% endif %}">
+<footer class="j-footer full-width">
 
   <div class="j-footer__container {% unless has_menus %}j-footer__container--no-menus{% endunless %}">
 
@@ -196,12 +191,6 @@
       "id": "description",
       "label": "Description",
       "default": "Premium products crafted for modern living."
-    },
-    {
-      "type": "image_picker",
-      "id": "background_image",
-      "label": "Background image",
-      "info": "Shows as a full-width photo behind the footer with a dark overlay. Leave blank to keep the plain cream background."
     },
     {
       "type": "font_picker",
