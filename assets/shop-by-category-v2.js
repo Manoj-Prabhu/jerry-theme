@@ -81,7 +81,7 @@ document.addEventListener("shopify:section:load", (event) => {
 // the loop init above (registered second, so it fires second on
 // DOMContentLoaded) since it needs the clones and the starting
 // scrollLeft already in place before it starts nudging that value.
-const AUTO_SCROLL_SPEED = 28; // px/second at full speed
+const AUTO_SCROLL_SPEED = 85; // px/second at full speed
 
 function initShopByCategoryAutoScroll(grid) {
   if (grid.dataset.autoScrollInitialized) return;

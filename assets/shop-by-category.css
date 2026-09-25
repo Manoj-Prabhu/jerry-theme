@@ -148,13 +148,28 @@
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+  /* A thin light border reads as a deliberate frame around the photo
+     rather than the photo just ending — plus a soft ambient shadow and a
+     tighter contact shadow underneath, the two-layer combination that
+     gives a card actual lift off the page instead of a single flat blur. */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 1px 2px rgba(30, 15, 60, 0.06),
+    0 20px 40px -12px rgba(30, 15, 60, 0.28);
+  transition: box-shadow 0.35s ease;
+}
+
+.j-category-card:hover .j-category-card__image {
+  box-shadow:
+    0 1px 2px rgba(30, 15, 60, 0.08),
+    0 28px 48px -12px rgba(30, 15, 60, 0.38);
 }
 
 .j-category-card__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition);
+  transition: transform 0.5s ease;
 }
 
 .j-category-card__placeholder {
@@ -173,21 +188,34 @@
 /* Caption overlaid on the photo (was plain text sitting below the
    image) — same gradient-scrim treatment as the header's mega-menu
    tiles (.j-mega-menu__tile-caption), for a consistent "photo with a
-   title on it" language instead of introducing a second pattern. */
+   title on it" language instead of introducing a second pattern. A
+   deeper, taller scrim plus letter-spacing and a small gold rule reads
+   as an editorial/boutique label rather than a plain caption. */
 .j-category-card__title {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
 
-  padding: var(--space-8) var(--space-4) var(--space-4);
+  padding: 56px var(--space-4) var(--space-5);
 
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.32) 55%, transparent 100%);
   color: #fff;
   text-align: center;
   font-weight: var(--font-semibold);
   font-size: var(--font-size-lg);
+  letter-spacing: 0.03em;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+.j-category-card__title::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin: 0 auto 10px;
+  background: #d9b45f;
+  opacity: 0.9;
 }
 
 @media (max-width: 600px) {
