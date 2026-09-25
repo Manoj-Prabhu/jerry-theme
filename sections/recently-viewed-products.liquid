@@ -18,6 +18,13 @@
     class="j-product-grid"
     id="RecentlyViewedProducts"
   >
+    {% comment %}
+      This grid starts empty and is filled by recently-viewed.js after it
+      reads localStorage and fetches each product — these skeleton cards
+      cover that gap instead of a blank grid under the heading; the JS
+      overwrites this element's contents wholesale once it has an answer.
+    {% endcomment %}
+    {% render 'product-grid-skeleton', count: 4 %}
   </div>
 
 </div>

@@ -58,7 +58,17 @@
       {% endif %}
     </h2>
 
-    <div class="j-product-grid"></div>
+    {% comment %}
+      This branch only ever runs when recommendations.performed is false,
+      meaning this render is the client-side fetch's target, not the
+      already-populated server response — the grid starts empty and
+      product-recommendations.js fills it in after fetching
+      /recommendations/products, so these skeleton cards cover that gap
+      instead of a blank grid under the heading.
+    {% endcomment %}
+    <div class="j-product-grid">
+      {% render 'product-grid-skeleton', count: 4 %}
+    </div>
 
   </div>
 

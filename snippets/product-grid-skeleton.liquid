@@ -1,0 +1,22 @@
+{% comment %}
+  Shimmering placeholder cards for a .j-product-grid that starts empty
+  and gets filled in by a JS fetch after load (see components.css's
+  "Product Grid Loading Skeleton" for why). The calling section's own JS
+  overwrites this element's parent entirely once it has real content, so
+  these never linger alongside real cards.
+
+  Accepts:
+  - count: how many placeholder cards to render (default 4)
+{% endcomment %}
+
+{% liquid
+  assign count = count | default: 4
+%}
+
+{% for i in (1..count) %}
+  <div class="j-product-skeleton-card" aria-hidden="true">
+    <div class="j-product-skeleton-card__image"></div>
+    <div class="j-product-skeleton-card__line"></div>
+    <div class="j-product-skeleton-card__line j-product-skeleton-card__line--short"></div>
+  </div>
+{% endfor %}

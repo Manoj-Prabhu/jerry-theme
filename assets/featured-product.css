@@ -64,13 +64,13 @@
   grid-template-columns: 1.15fr 1fr;
   grid-template-areas: "gallery content";
   gap: var(--space-10);
-  /* Was align-items: center — with a square (1:1) gallery image taller
-     than the content column, that centered the buy box vertically and
-     left an equal, unbalanced-looking gap both above and below it
-     inside the card. start (matching sections/product.liquid's own
-     gallery/content grid) anchors content to the top instead, so any
-     leftover height just reads as normal breathing room below it. */
-  align-items: start;
+  /* Vertically centers the buy box against the gallery image — with a
+     square (1:1) image taller than the content column, top-aligning
+     (the previous approach, matching sections/product.liquid's own
+     gallery/content grid) left the buy box sitting high with a large
+     empty gap only below it. Centering splits that leftover height
+     evenly above and below instead, which reads more balanced. */
+  align-items: center;
   padding: var(--space-8);
   border: 1px solid var(--color-border);
   border-radius: 0;

@@ -45,3 +45,9 @@
 #WishlistFilterToggle[hidden] {
   display: none;
 }
+
+/* The loading-skeleton component (.j-product-skeleton-card, shown while
+   this page's products are being fetched) lives in components.css —
+   Recently Viewed and Product Recommendations use the exact same
+   fetch-then-render pattern and needed the identical skeleton, and that
+   file is loaded globally on every page rather than just this one. */

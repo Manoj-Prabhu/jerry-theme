@@ -86,7 +86,21 @@
           </form>
         </div>
 
-        <div class="j-collection-grid" id="WishlistPageProducts"></div>
+        {% comment %}
+          Wishlist data only ever lives in localStorage, so there's
+          nothing for Liquid to render server-side here — the grid was
+          simply empty until wishlist-page.js's fetches resolved, which
+          on a slow connection or a longer wishlist reads as the page
+          being broken (blank grid, no products, no empty-state message
+          either) for however long that takes. These skeleton cards fill
+          that gap with an obviously-loading placeholder instead;
+          wishlist-page.js replaces this element's entire contents with
+          the real cards (or the empty state) the moment it has an
+          answer, so they never linger alongside real content.
+        {% endcomment %}
+        <div class="j-collection-grid" id="WishlistPageProducts">
+          {% render 'product-grid-skeleton', count: 4 %}
+        </div>
 
         {% comment %}
           Shown by wishlist-page.js only once it's actually confirmed the

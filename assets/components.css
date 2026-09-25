@@ -204,6 +204,64 @@
 }
 
 /* -------------------------
+   Product Grid Loading Skeleton
+
+   Shared by every section whose product grid starts empty and is filled
+   in by a JS fetch after load rather than server-rendered Liquid (the
+   wishlist page, Recently Viewed, Product Recommendations) — without
+   this, each showed a plain blank grid for however long that fetch
+   took, which on a slow connection reads as the page being broken
+   rather than loading. Sized to roughly match a real .j-product-card
+   (see featured-collection.css) so the grid doesn't visibly jump once
+   the real cards replace these.
+-------------------------- */
+
+.j-product-skeleton-card__image {
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+}
+
+.j-product-skeleton-card__line {
+  height: 14px;
+  margin-top: 14px;
+  border-radius: 4px;
+}
+
+.j-product-skeleton-card__line--short {
+  width: 45%;
+  margin-top: 8px;
+}
+
+.j-product-skeleton-card__image,
+.j-product-skeleton-card__line {
+  background: linear-gradient(
+    100deg,
+    var(--color-border) 30%,
+    rgba(240, 193, 75, 0.18) 50%,
+    var(--color-border) 70%
+  );
+  background-size: 300% 100%;
+  animation: j-product-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes j-product-skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .j-product-skeleton-card__image,
+  .j-product-skeleton-card__line {
+    animation: none;
+    background: var(--color-border);
+  }
+}
+
+/* -------------------------
    Section Heading
 -------------------------- */
 
