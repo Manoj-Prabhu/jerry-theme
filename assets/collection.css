@@ -543,11 +543,36 @@
   margin-top: var(--space-16);
 }
 
+/* On a page deep enough to show a "1 … 4 5 6 … 11"-style spread, the
+   number list plus both arrow buttons can add up to more than a phone's
+   width. None of these flex children had flex-shrink set, so the
+   default flex-shrink: 1 let the browser squeeze the arrow icon's own
+   fixed width (16px) all the way down to 0 instead of squeezing
+   anything else — the arrow buttons rendered as empty pill shapes with
+   an invisible 0-width icon. Locking every item's own size and letting
+   the number list scroll horizontally instead keeps the buttons at a
+   tappable, visible size no matter how many page numbers are showing. */
+.j-pagination__arrow {
+  flex-shrink: 0;
+}
+
 .j-pagination__list {
   display: flex;
   align-items: center;
   gap: 6px;
   list-style: none;
+  flex-shrink: 1;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.j-pagination__list::-webkit-scrollbar {
+  display: none;
+}
+
+.j-pagination__item {
+  flex-shrink: 0;
 }
 
 .j-pagination__item {

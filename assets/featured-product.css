@@ -678,6 +678,39 @@
     width: 100%;
     flex: 0 0 auto;
   }
+
+  /* Fixed, not a share of the row (flex-grow/shrink between a floor and
+     ceiling was tried here first) — growing to fill a short row made a
+     2-3 photo product's thumbnails visibly bigger than an 11-photo
+     product's, an inconsistency between one featured-product block and
+     the next that read as sloppier than the small-thumbnail problem it
+     replaced. Every gallery gets the same thumbnail size regardless of
+     how many photos it has; a short one just leaves trailing space in
+     the row instead of stretching to fill it. */
+  .j-featured-product__thumb {
+    flex: 0 0 72px;
+    max-width: 72px;
+  }
+
+  /* The base rule reserves 56px of padding on each side so the overlaid
+     arrow buttons never sit on top of the first/last thumbnail — fine
+     on desktop, where the row is always packed with thumbnails, but on
+     a ~320-360px phone width that's over a third of the row's own
+     width. A product with only 2-3 photos at their normal fixed size
+     then "overflowed" into that very padding, triggering a scroll arrow
+     that, when tapped, revealed nothing new (there was no 4th photo —
+     the arrow only existed because of its own reserved space). Reserving
+     that padding only once JS (featured-product.js) has actually
+     confirmed there's real extra content to scroll to avoids the
+     phantom arrow while a long gallery still gets the clearance it
+     needs. */
+  .j-featured-product__thumbnails {
+    padding: 0 var(--space-2);
+  }
+
+  .j-featured-product__thumbnails-wrap.has-thumb-scroll .j-featured-product__thumbnails {
+    padding: 0 56px;
+  }
 }
 
 /* Small phones (iPhone SE/12/13 mini, small Android widths) don't have

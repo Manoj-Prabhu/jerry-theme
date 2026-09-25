@@ -166,7 +166,18 @@ function initFeaturedProduct(root) {
     }
 
     function updateThumbArrows() {
+      // On mobile, .has-thumb-scroll is what tells featured-product.css
+      // whether to reserve edge padding for these arrow buttons at all
+      // (see the comment there) — clearing it before measuring makes
+      // sure a short gallery is checked against its actual full-width
+      // layout, not one that's already overflowing purely because of
+      // padding reserved for arrows it may not even need.
+      const wrap = thumbList.closest(".j-featured-product__thumbnails-wrap");
+      if (wrap) wrap.classList.remove("has-thumb-scroll");
+
       const canScroll = thumbList.scrollWidth > thumbList.clientWidth + 1;
+
+      if (wrap) wrap.classList.toggle("has-thumb-scroll", canScroll);
 
       thumbPrev.hidden = !canScroll;
       thumbNext.hidden = !canScroll;
