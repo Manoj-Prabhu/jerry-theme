@@ -11,7 +11,9 @@
   "sections": {
     "main": {
       "type": "main-about",
-      "settings": {}
+      "settings": {
+        "banner_image": "shopify://shop_images/laying-on-the-beach.jpg"
+      }
     },
     "story": {
       "type": "about-story",

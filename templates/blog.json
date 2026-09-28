@@ -11,7 +11,9 @@
   "sections": {
     "main": {
       "type": "main-blog",
-      "settings": {}
+      "settings": {
+        "banner_image": "shopify://shop_images/tie-clip.jpg"
+      }
     }
   },
   "order": [

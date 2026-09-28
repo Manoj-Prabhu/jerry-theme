@@ -11,7 +11,9 @@
   "sections": {
     "main": {
       "type": "main-contact",
-      "settings": {}
+      "settings": {
+        "banner_image": "shopify://shop_images/collecting-order-at-curbside-from-retail-store.jpg"
+      }
     }
   },
   "order": [
