@@ -1,11 +1,21 @@
 {% render 'breadcrumbs' %}
 
-<div class="full-width j-page-hero-band {% if collection.image %}j-page-hero-band--has-image{% endif %}">
-  {% if collection.image %}
+{% comment %}
+  Falls back to this section's own banner_image setting when the
+  collection has none of its own — Shopify's auto-generated "All
+  products" collection (usually at /collections/all) has no admin page
+  reachable through the normal collection editor to ever set an image
+  on directly, so without a fallback it could never show this banner
+  treatment at all, only the plain text header below.
+{% endcomment %}
+{% assign banner_image = collection.image | default: section.settings.banner_image %}
+
+<div class="full-width j-page-hero-band {% if banner_image %}j-page-hero-band--has-image{% endif %}">
+  {% if banner_image %}
     <div class="j-page-hero-band__image">
-      {% assign img_alt = collection.image.alt | default: collection.title %}
+      {% assign img_alt = banner_image.alt | default: collection.title %}
       {{
-        collection.image
+        banner_image
         | image_url: width: 1600
         | image_tag:
           loading: 'eager',
@@ -266,7 +276,14 @@
 {% schema %}
 {
   "name": "Main collection",
-  "settings": [],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Fallback banner image",
+      "info": "Used for the page banner only when a collection has no image of its own set in its admin page (this is the only way to give the auto-generated \"All\" collection a banner photo, since it has no image field of its own reachable through the collection editor)."
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }
