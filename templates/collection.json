@@ -11,7 +11,9 @@
   "sections": {
     "main": {
       "type": "main-collection",
-      "settings": {}
+      "settings": {
+        "banner_image": "shopify://shop_images/pexels-afitab-152665775-16310247.jpg"
+      }
     }
   },
   "order": [
