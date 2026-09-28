@@ -29,7 +29,24 @@
 
 {% render 'breadcrumbs' %}
 
-<div class="full-width j-page-hero-band">
+{% assign wishlist_title = page.title | default: 'Wishlist' %}
+
+<div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
+  {% if section.settings.banner_image %}
+    <div class="j-page-hero-band__image">
+      {{
+        section.settings.banner_image
+        | image_url: width: 1600
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '800, 1200, 1600',
+          sizes: '100vw',
+          alt: wishlist_title
+      }}
+    </div>
+  {% endif %}
+
   <div class="j-page-hero-band__inner">
     <div class="j-section-title">
       <h1>{{ page.title | default: 'Wishlist' }}</h1>
@@ -135,6 +152,13 @@
 {% schema %}
 {
   "name": "Wishlist page",
-  "settings": []
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image",
+      "info": "Shows as a full-width photo behind the page title, with a dark overlay. Leave blank to keep the plain background."
+    }
+  ]
 }
 {% endschema %}
