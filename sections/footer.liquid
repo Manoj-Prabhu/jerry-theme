@@ -23,6 +23,7 @@
 
     <div class="j-footer__column j-footer__column--brand">
       <h3 class="j-footer__logo">{{ shop.name }}</h3>
+      <span class="j-footer__logo-rule" aria-hidden="true"></span>
       <p>
         {{ section.settings.description }}
       </p>
@@ -98,14 +99,16 @@
           <button
             type="submit"
             class="j-footer__newsletter-submit"
-            aria-label="{{ 'footer.subscribe' | t }}"
           >
+            <span>{{ 'footer.subscribe' | t }}</span>
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         </div>
       {% endform %}
+
+      <p class="j-footer__newsletter-trust">{{ 'footer.newsletter_trust' | t }}</p>
     </div>
   </div>
 

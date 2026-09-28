@@ -619,6 +619,75 @@
   color: var(--color-text-light);
 }
 
+/* Animated placeholder — a native <input placeholder> can't loop through
+   multiple phrases on its own, so this sits visually on top of the input
+   (same left offset as the real placeholder text) showing one phrase at
+   a time; header.js swaps which <span> carries .is-active every few
+   seconds. Hidden the instant the input has a value or focus (see the
+   :placeholder-shown-driven rules below) so it never overlaps what the
+   shopper is actually typing. */
+.j-search-form__animated-placeholder {
+  position: absolute;
+  /* Centered by percentage (matching .j-search-form__icon's own top: 50%)
+     instead of top: 0 — an absolutely positioned child's containing block
+     is the padding edge of .j-search-form, not the <input>'s own content
+     edge, so top: 0 silently assumed .j-search-form has zero padding.
+     That's true on desktop, but the mobile floating-card treatment below
+     gives .j-search-form real padding, which pushed the actual <input>
+     down without moving this overlay — percentage centering tracks the
+     input's real vertical center regardless of the parent's padding. */
+  top: 50%;
+  left: 44px;
+  right: 18px;
+  height: 40px;
+  transform: translateY(-50%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.j-search-form__animated-placeholder span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: var(--color-text-light);
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateY(60%);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.j-search-form__animated-placeholder span.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.j-search-form__animated-placeholder span.is-leaving {
+  opacity: 0;
+  transform: translateY(-60%);
+}
+
+/* Scoped to input[type="search"] specifically, not a bare "input" — the
+   form's leading <input type="hidden" name="type"> is also a preceding
+   sibling of this overlay, and since it has no placeholder attribute it
+   never matches :placeholder-shown, making :not(:placeholder-shown)
+   permanently true for it. The ~ combinator matches on ANY preceding
+   sibling meeting the condition, so a bare "input" here matched via that
+   hidden field and hid the overlay unconditionally, regardless of what
+   the actual visible search input's state was. */
+.j-search-form input[type="search"]:focus ~ .j-search-form__animated-placeholder,
+.j-search-form input[type="search"]:not(:placeholder-shown) ~ .j-search-form__animated-placeholder {
+  display: none;
+}
+
 .j-search-form input:hover {
   background: var(--color-white);
   border-color: var(--color-border);
@@ -670,6 +739,12 @@
   .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
   .j-search-form__icon {
   color: #f0c14b;
+}
+
+.j-body--home
+  .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
+  .j-search-form__animated-placeholder span {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Focus keeps the same glass look too now — only the border tints toward
@@ -1338,22 +1413,62 @@
     transform: rotate(180deg);
   }
 
+  /* A floating rounded card with a slide/fade transition, rather than an
+     edge-to-edge bar that snaps open with a hard display:none/block
+     toggle — kept in the layout (not display:none) so opacity/transform
+     can actually transition; pointer-events is what keeps it from
+     intercepting taps while closed. Rounded on every corner + a visible
+     gap from the header's own edges reads as a deliberate floating
+     panel, instead of a flat sliver that shares a hard seam with both
+     the header above and the hero/content photo directly beneath it. */
   .j-search-form {
-    display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
+    top: calc(100% + var(--space-2));
+    left: var(--space-3);
+    right: var(--space-3);
+    width: auto;
     max-width: none;
     margin: 0;
     padding: var(--space-3) var(--space-4);
     background: var(--color-white);
-    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     z-index: 90;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0s linear 0.2s;
   }
 
   .j-search-form.is-open {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  /* The icon and animated-placeholder overlay are absolutely positioned
+     against .j-search-form's own padding edge, not the <input>'s content
+     edge — since this floating card (above) gives .j-search-form real
+     horizontal padding that the desktop-authored 18px/44px offsets never
+     accounted for, both need that same padding added back here so they
+     land on the input's actual left/right edge instead of var(--space-4)
+     short of it. */
+  .j-search-form__icon {
+    left: calc(var(--space-4) + 18px);
+  }
+
+  .j-search-form__animated-placeholder {
+    left: calc(var(--space-4) + 44px);
+    right: calc(var(--space-4) + 18px);
   }
 
   .j-header__search-toggle {

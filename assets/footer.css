@@ -12,6 +12,24 @@
   background: linear-gradient(135deg, #f5ecd7 0%, #ffffff 100%);
 }
 
+/* A thin gold gradient seam along the top edge — reads as a deliberate
+   finishing line between the page above and the footer, instead of the
+   footer's background just starting abruptly. */
+.j-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #b8860b 50%,
+    transparent 100%
+  );
+}
+
 /* Container */
 
 .j-footer__container {
@@ -74,8 +92,20 @@
 }
 
 .j-footer__logo {
-  font-size: var(--font-size-lg, 1.5rem);
+  font-size: var(--font-size-xl, 1.75rem);
   letter-spacing: 0.01em;
+}
+
+/* Small gold rule under the wordmark — gives the brand column the same
+   "accent line" treatment as the column headings (.j-footer__column
+   h4::after), instead of the logo sitting on its own with nothing to
+   anchor it visually against the taller menu/newsletter columns. */
+.j-footer__logo-rule {
+  display: block;
+  width: 36px;
+  height: 2px;
+  margin: 14px 0 18px;
+  background: #b8860b;
 }
 
 .j-footer__column p {
@@ -114,6 +144,7 @@
 }
 
 .j-footer__column a {
+  position: relative;
   display: inline-block;
   color: rgba(0, 0, 0, 0.65);
   transition:
@@ -121,9 +152,29 @@
     transform 0.2s ease;
 }
 
+/* Underline grows in from the left on hover instead of appearing all at
+   once — a small deliberate motion to pair with the existing translateX
+   nudge, rather than the translateX being the only feedback. */
+.j-footer__column a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: #b8860b;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
 .j-footer__column a:hover {
   color: #b8860b;
   transform: translateX(2px);
+}
+
+.j-footer__column a:hover::after {
+  transform: scaleX(1);
 }
 
 /* Newsletter */
@@ -173,30 +224,44 @@
 .j-footer__newsletter-submit {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
   flex-shrink: 0;
-  width: 40px;
   height: 40px;
-  padding: 0;
+  padding: 0 18px;
   border: none;
-  border-radius: 50%;
+  border-radius: 999px;
   background: #1a1a1a;
   color: #f0c14b;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold, 600);
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
+    box-shadow 0.2s ease,
     transform 0.2s ease;
 }
 
 .j-footer__newsletter-submit svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
 }
 
 .j-footer__newsletter-submit:hover {
   background: #b8860b;
   color: #1a1a1a;
-  transform: translateX(2px);
+  box-shadow: 0 6px 16px rgba(184, 134, 11, 0.35);
+}
+
+.j-footer__newsletter-submit:hover svg {
+  transform: translateX(3px);
+}
+
+.j-footer__newsletter-trust {
+  margin: 2px 0 0;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: var(--font-size-xs);
 }
 
 .j-footer__form-message {
@@ -239,7 +304,8 @@
 
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 var(--space-8) 32px;
+  padding: 32px var(--space-8);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .j-localization-form {
@@ -424,18 +490,26 @@
   flex-shrink: 0;
 }
 
+/* Matches the social icons' bordered-circle rhythm (see
+   .j-footer__social-link) instead of the payment logos sitting as bare,
+   inconsistently-sized images with nothing framing them. */
 .j-footer__payment-icon {
-  height: 24px;
+  height: 22px;
   width: auto;
-  border-radius: 4px;
+  padding: 6px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: var(--radius-md, 6px);
+  background: rgba(255, 255, 255, 0.6);
   opacity: 0.9;
   transition:
     opacity 0.25s ease,
+    border-color 0.25s ease,
     transform 0.25s ease;
 }
 
 .j-footer__payment-icon:hover {
   opacity: 1;
+  border-color: #b8860b;
   transform: translateY(-2px);
 }
 

@@ -8,6 +8,75 @@ class JerryHeader {
     this.initHeaderSearchToggle();
     this.initHeroRevealOnNavHover();
     this.initDesktopDropdowns();
+    this.initAnimatedSearchPlaceholder();
+  }
+
+  /* Animated Search Placeholder — cycles the phrases rendered into
+     #SearchAnimatedPlaceholder (see header.liquid) since a native
+     <input placeholder> can't loop on its own. Pauses entirely once the
+     input has a value or focus — the CSS already hides the overlay in
+     that state, but pausing the timer too avoids swapping .is-active
+     underneath a hidden element for no reason. */
+
+  initAnimatedSearchPlaceholder() {
+    const wrapper = document.getElementById("SearchAnimatedPlaceholder");
+    const input = document.getElementById("PredictiveSearchInput");
+
+    if (!wrapper || !input) return;
+
+    const phrases = Array.from(wrapper.children);
+    if (phrases.length < 2) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // The real placeholder attribute exists only as a no-JS/reduced-motion
+    // fallback — the browser still paints it underneath the overlay
+    // regardless of the overlay's own opacity/z-index, showing both texts
+    // stacked on top of each other. Clearing it now that the overlay is
+    // confirmed active removes that double-text artifact.
+    input.setAttribute("placeholder", "");
+
+    const ROTATE_INTERVAL = 2600;
+    const LEAVE_DURATION = 350;
+
+    let index = 0;
+    let intervalId = null;
+
+    const rotate = () => {
+      const current = phrases[index];
+      const next = phrases[(index + 1) % phrases.length];
+
+      current.classList.add("is-leaving");
+      current.classList.remove("is-active");
+
+      window.setTimeout(() => {
+        current.classList.remove("is-leaving");
+      }, LEAVE_DURATION);
+
+      next.classList.add("is-active");
+      index = (index + 1) % phrases.length;
+    };
+
+    const start = () => {
+      if (intervalId !== null) return;
+      intervalId = window.setInterval(rotate, ROTATE_INTERVAL);
+    };
+
+    const stop = () => {
+      if (intervalId === null) return;
+      window.clearInterval(intervalId);
+      intervalId = null;
+    };
+
+    start();
+
+    input.addEventListener("focus", stop);
+    input.addEventListener("input", () => {
+      if (input.value) stop();
+    });
+    input.addEventListener("blur", () => {
+      if (!input.value) start();
+    });
   }
 
   /* Desktop Dropdown/Mega Menu — keyboard support

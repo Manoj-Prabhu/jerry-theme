@@ -166,10 +166,34 @@
 
     <input type="hidden" name="type" value="product">
 
+    {% comment %}
+      section.settings falls back to the schema "default" only for a
+      section instance created after this setting existed — an already-
+      installed header (like this theme's) keeps whatever it last saved,
+      which for a brand-new setting is blank, not the schema default. This
+      explicit fallback covers that case without needing the merchant to
+      re-save the section in the editor first.
+    {% endcomment %}
+    {% assign search_placeholder_suggestions = section.settings.search_placeholder_suggestions %}
+    {% if search_placeholder_suggestions == blank %}
+      {% capture search_placeholder_suggestions %}Search for jeans...
+Search for jackets...
+Search for accessories...{% endcapture %}
+    {% endif %}
+    {% comment %}
+      Splitting directly on a captured "\n" is fragile — this file (and
+      merchant-typed textarea input) can mix \n and \r\n line endings, and
+      a captured separator only matches one of those exactly. newline_to_br
+      normalizes any line-ending style into a plain "<br />" marker, which
+      is then a reliable, unambiguous string to split on.
+    {% endcomment %}
+    {% assign search_suggestions = search_placeholder_suggestions | newline_to_br | split: '<br />' %}
+
     <input
       type="search"
       name="q"
       placeholder="{{ 'header.search_placeholder' | t }}"
+      aria-label="{{ 'header.search' | t }}"
       autocomplete="off"
       id="PredictiveSearchInput"
       role="combobox"
@@ -178,6 +202,23 @@
       aria-autocomplete="list"
       aria-haspopup="listbox"
     >
+
+    {% comment %}
+      Native placeholder text can't be animated, so this overlay sits
+      visually on top of the input (see .j-search-form__animated-placeholder
+      in header.css) showing/rotating one phrase at a time via
+      header.js. CSS hides the overlay the instant the input gains a
+      value or focus (the :placeholder-shown-driven rules in header.css),
+      and the real placeholder attribute above still covers the no-JS/
+      empty-list case so search is never left without any hint text.
+    {% endcomment %}
+    {% if search_suggestions.size > 1 %}
+      <div class="j-search-form__animated-placeholder" id="SearchAnimatedPlaceholder" aria-hidden="true">
+        {% for phrase in search_suggestions %}
+          <span{% if forloop.first %} class="is-active"{% endif %}>{{ phrase | strip }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <svg class="j-search-form__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/>
@@ -309,6 +350,13 @@
       "id": "enable_sticky_header",
       "label": "Enable sticky header",
       "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "search_placeholder_suggestions",
+      "label": "Animated search placeholder phrases",
+      "info": "One phrase per line. Rotates in the search field when it's empty. Leave a single line to disable the animation.",
+      "default": "Search for jeans...\nSearch for jackets...\nSearch for accessories..."
     },
     {
       "type": "font_picker",
