@@ -1,6 +1,26 @@
 {% render 'breadcrumbs' %}
 
-<div class="full-width j-page-hero-band">
+{% comment %}
+  A Shopify "blog" resource has no image field of its own (unlike an
+  individual article, which does) — this banner is entirely driven by
+  the section setting below.
+{% endcomment %}
+<div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
+  {% if section.settings.banner_image %}
+    <div class="j-page-hero-band__image">
+      {{
+        section.settings.banner_image
+        | image_url: width: 1600
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '800, 1200, 1600',
+          sizes: '100vw',
+          alt: blog.title
+      }}
+    </div>
+  {% endif %}
+
   <div class="j-page-hero-band__inner">
     <header class="j-blog__header">
       <h1>{{ blog.title }}</h1>
@@ -98,6 +118,13 @@
 {% schema %}
 {
   "name": "Main blog",
-  "settings": []
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image",
+      "info": "Shows as a full-width photo behind the blog title, with a dark overlay. Leave blank to keep the plain background."
+    }
+  ]
 }
 {% endschema %}
