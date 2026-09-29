@@ -1,5 +1,3 @@
-{% render 'breadcrumbs' %}
-
 <div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
   {% if section.settings.banner_image %}
     <div class="j-page-hero-band__image">
@@ -15,6 +13,8 @@
       }}
     </div>
   {% endif %}
+
+  {% render 'breadcrumbs' %}
 
   <div class="j-page-hero-band__inner">
     <div class="j-faq__header">

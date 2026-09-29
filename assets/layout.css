@@ -74,6 +74,54 @@
   color: #fff;
 }
 
+/* Breadcrumbs render inside the band itself now — as a sibling of
+   .j-page-hero-band__inner, not a child of it (see main-collection/
+   main-contact/main-faq/main-blog/main-about/main-wishlist.liquid) —
+   instead of as their own separate block above it, since a plain-
+   background breadcrumb bar sandwiched between the white header and a
+   full-bleed banner photo read as an unintended gap/seam rather than
+   one cohesive banner. Its own top padding is dropped since the band
+   already has vertical padding of its own; only relevant to the plain
+   (no image) state, since --has-image below takes it out of flow
+   entirely. */
+.j-page-hero-band .j-breadcrumbs {
+  padding-top: 0;
+  margin-bottom: var(--space-4);
+}
+
+/* Pinned to the very top of the photo (independent of the band's own
+   96px vertical padding, which is tuned to center the title instead) —
+   a sibling of .j-page-hero-band__inner in the markup, not a child of
+   it, specifically so its "top" isn't measured from __inner's own box
+   (which already starts 96px down, since __inner sits after the band's
+   own top padding in normal flow — positioning against it would've put
+   this 96px + top lower than intended, not just "top" from the photo's
+   actual top edge). Positioned against the band itself instead, which
+   has no such offset, so top: 20px here really is ~20px from the photo.
+   max-width/margin/padding reproduce __inner's own centering, since
+   without being nested inside it this no longer gets that for free. */
+.j-page-hero-band--has-image .j-breadcrumbs {
+  position: absolute;
+  top: var(--space-5, 20px);
+  left: 0;
+  right: 0;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+.j-page-hero-band--has-image .j-breadcrumbs__item {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.j-page-hero-band--has-image .j-breadcrumbs__item.is-active {
+  color: #fff;
+}
+
+.j-page-hero-band--has-image .j-breadcrumbs__item a:hover {
+  color: #fff;
+}
+
 .j-page-hero-band__inner {
   max-width: var(--container-width);
   margin: 0 auto;

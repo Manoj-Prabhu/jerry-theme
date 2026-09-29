@@ -1,5 +1,3 @@
-{% render 'breadcrumbs' %}
-
 {% comment %}
   A Shopify "blog" resource has no image field of its own (unlike an
   individual article, which does) — this banner is entirely driven by
@@ -20,6 +18,8 @@
       }}
     </div>
   {% endif %}
+
+  {% render 'breadcrumbs' %}
 
   <div class="j-page-hero-band__inner">
     <header class="j-blog__header">

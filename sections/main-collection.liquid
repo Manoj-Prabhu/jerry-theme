@@ -1,5 +1,3 @@
-{% render 'breadcrumbs' %}
-
 {% comment %}
   Falls back to this section's own banner_image setting when the
   collection has none of its own — Shopify's auto-generated "All
@@ -26,6 +24,19 @@
       }}
     </div>
   {% endif %}
+
+  {% comment %}
+    A sibling of .j-page-hero-band__inner, not a child of it — rendered
+    inside the band (on top of the photo when one is set) instead of as
+    its own block above it, since a separate breadcrumb bar sitting
+    between the white header and a full-bleed banner photo read as an
+    unintentional gap/seam rather than one cohesive banner. Kept out of
+    __inner specifically so it can be pinned near the very top of the
+    band independent of __inner's own vertical centering (see
+    .j-page-hero-band--has-image .j-breadcrumbs in layout.css) — __inner
+    only wraps the title block, whose vertical position is unrelated.
+  {% endcomment %}
+  {% render 'breadcrumbs' %}
 
   <div class="j-page-hero-band__inner">
     <div class="j-section-title">

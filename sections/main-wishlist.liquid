@@ -27,8 +27,6 @@
 <noscript>{{ 'wishlist-page.css' | asset_url | stylesheet_tag }}</noscript>
 {% # theme-check-enable AssetPreload %}
 
-{% render 'breadcrumbs' %}
-
 {% assign wishlist_title = page.title | default: 'Wishlist' %}
 
 <div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
@@ -46,6 +44,8 @@
       }}
     </div>
   {% endif %}
+
+  {% render 'breadcrumbs' %}
 
   <div class="j-page-hero-band__inner">
     <div class="j-section-title">

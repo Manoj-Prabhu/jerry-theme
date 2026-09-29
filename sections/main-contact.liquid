@@ -1,5 +1,3 @@
-{% render 'breadcrumbs' %}
-
 {% comment %}
   A Shopify "page" resource has no image field of its own — unlike a
   collection or a blog article, there's nothing to default to here, so
@@ -20,6 +18,8 @@
       }}
     </div>
   {% endif %}
+
+  {% render 'breadcrumbs' %}
 
   <div class="j-page-hero-band__inner">
     <div class="j-contact__header">
