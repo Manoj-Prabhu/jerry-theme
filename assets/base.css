@@ -61,7 +61,7 @@ body {
    treatment) and product pages (see .j-body--product below) — see the
    body class set in layout/theme.liquid. */
 body.j-body--tinted {
-  background: linear-gradient(135deg, #f7ecd0 0%, #ffffff 75%);
+  background: var(--color-white);
 }
 
 /* Product pages — a warm blush/peach gradient instead of the generic
