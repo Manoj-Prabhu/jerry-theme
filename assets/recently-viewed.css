@@ -47,7 +47,7 @@
   .j-recently-viewed .j-wishlist-button {
     width: 30px;
     height: 30px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .j-recently-viewed .j-quick-view-button {
@@ -55,6 +55,6 @@
     right: 30px;
     bottom: 10px;
     padding: 6px;
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
   }
 }

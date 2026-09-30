@@ -13,41 +13,67 @@
   </div>
 </div>
 
-<div
-  class="collections {{ section.settings.grid_item_width }}"
-  style="--grid-gap: {{ section.settings.grid_gap }}px"
->
-  {% for collection in collections %}
-    <a class="collection-card" href="{{ collection.url }}">
-      {% if collection.featured_image %}
-        {% render 'image',
-          class: 'collection-card__image',
-          image: collection.featured_image,
-          width: 600,
-          height: 600,
-          crop: 'center'
-        %}
-      {% else %}
-        {% comment %}
-          Every other card component in the theme (shop-by-category,
-          product cards, cart's suggested-collection card) shows a
-          placeholder graphic for a missing image — this was the one
-          left showing no image at all, an inconsistent-looking blank
-          spot next to collections that do have one.
-        {% endcomment %}
-        {{ 'collection-1' | placeholder_svg_tag: 'collection-card__image' }}
+{% comment %}
+  Paginated instead of looping over the full `collections` object — that
+  was unconditionally rendering (and building an image tag / description
+  snippet for) every single collection the store has, on one page, no
+  matter how many there were. Fine for a handful of collections, but
+  scales directly with store size and adds real Liquid + markup cost on
+  a store with dozens or hundreds of them.
+{% endcomment %}
+{% paginate collections by 24 %}
+  <div
+    class="collections {{ section.settings.grid_item_width }}"
+    style="--grid-gap: {{ section.settings.grid_gap }}px"
+  >
+    {% for collection in collections %}
+      <a class="collection-card" href="{{ collection.url }}">
+        {% if collection.featured_image %}
+          {% render 'image',
+            class: 'collection-card__image',
+            image: collection.featured_image,
+            width: 600,
+            height: 600,
+            crop: 'center'
+          %}
+        {% else %}
+          {% comment %}
+            Every other card component in the theme (shop-by-category,
+            product cards, cart's suggested-collection card) shows a
+            placeholder graphic for a missing image — this was the one
+            left showing no image at all, an inconsistent-looking blank
+            spot next to collections that do have one.
+          {% endcomment %}
+          {{ 'collection-1' | placeholder_svg_tag: 'collection-card__image' }}
+        {% endif %}
+
+        <div class="collection-card__content">
+          <p>{{ collection.title }}</p>
+
+          {% if collection.description %}
+            <p>{{ collection.description | strip_html | truncatewords: 15 }}</p>
+          {% endif %}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if paginate.pages > 1 %}
+    <nav class="j-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t: default: 'Pagination' }}">
+      {% if paginate.previous %}
+        <a href="{{ paginate.previous.url }}" class="j-pagination__arrow j-pagination__arrow--prev">
+          <span aria-hidden="true">{{ 'general.pagination.prev' | t }}</span>
+        </a>
       {% endif %}
 
-      <div class="collection-card__content">
-        <p>{{ collection.title }}</p>
-
-        {% if collection.description %}
-          <p>{{ collection.description | strip_html | truncatewords: 15 }}</p>
-        {% endif %}
-      </div>
-    </a>
-  {% endfor %}
-</div>
+      {% if paginate.next %}
+        <a href="{{ paginate.next.url }}" class="j-pagination__arrow j-pagination__arrow--next">
+          <span aria-hidden="true">{{ 'general.pagination.next' | t }}</span>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% endpaginate %}
 
 {% stylesheet %}
   .collections {

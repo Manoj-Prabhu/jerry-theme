@@ -189,7 +189,7 @@
 }
 
 .j-featured-product__thumb.is-active {
-  border-color: #1a1a1a;
+  border-color: var(--color-ink);
 }
 
 .j-featured-product__thumb-arrow {
@@ -249,12 +249,12 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   background: rgba(0, 0, 0, 0.35);
 }
 
 .j-featured-product__thumb-icon--model {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: var(--font-semibold);
 }
 
@@ -306,7 +306,7 @@
 }
 
 .j-featured-product__badge--sale {
-  background: #1a1a1a;
+  background: var(--color-ink);
   color: #fff;
 }
 
@@ -395,7 +395,7 @@
   right: 0;
   bottom: 0;
   height: 2px;
-  background: #1a1a1a;
+  background: var(--color-ink);
   transform: scaleX(0);
   transition: transform 0.25s ease;
 }
@@ -409,7 +409,7 @@
 }
 
 .j-featured-product__swatch:hover .j-featured-product__swatch-inner {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 .j-featured-product__pills {
@@ -441,14 +441,14 @@
 }
 
 .j-featured-product__pill:hover {
-  border-color: #1a1a1a;
+  border-color: var(--color-ink);
 }
 
 .j-featured-product__pill.is-active {
   background: var(--color-background);
-  color: #1a1a1a;
+  color: var(--color-ink);
   font-weight: 700;
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--color-ink);
 }
 
 /* Quantity + Add to Cart, side by side */
@@ -471,7 +471,7 @@
 
 .j-featured-product__quantity-label {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--font-size-sm);
 }
 
 .j-featured-product__quantity-label::after {
@@ -496,14 +496,14 @@
   background: var(--color-background);
   color: var(--color-text);
   cursor: pointer;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   transition:
     background-color var(--transition-fast, 0.15s ease),
     border-color var(--transition-fast, 0.15s ease);
 }
 
 .j-featured-product__qty-control button:hover {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 .j-featured-product__qty-control input {
@@ -512,8 +512,8 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
   text-align: center;
   font: inherit;
   font-weight: 600;

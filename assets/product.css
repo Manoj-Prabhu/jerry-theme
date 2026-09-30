@@ -99,7 +99,7 @@
 .j-product__price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #b8860b;
+  color: var(--color-gold-deep);
 }
 
 .j-product__price-compare {
@@ -233,7 +233,7 @@
   /* Dark, not white — the lighter tag background (see above) drops
      white text below an accessible contrast ratio (~2.4:1); dark text
      clears it comfortably (~7.3:1). */
-  color: #1a1a1a;
+  color: var(--color-ink);
 }
 
 .j-product__pickup::before {
@@ -242,12 +242,12 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--color-ink);
 }
 
 .j-product__pickup p {
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-ink);
 }
 
 /* Clean white card with a gold accent bar down the left edge, instead of
@@ -273,7 +273,7 @@
   cursor: pointer;
   padding: 4px 0 20px;
   border-bottom: 1px solid var(--color-border);
-  font-size: 13px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -385,7 +385,7 @@
 
 .j-product__purchase-option-name {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--font-size-sm);
 }
 
 .j-product__selling-plan-description {
@@ -490,7 +490,7 @@
 
 .j-product__quantity-label {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--font-size-sm);
 }
 
 .j-product__quantity-label::after {
@@ -514,8 +514,8 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background: var(--color-background);
-  color: #1a1a1a;
-  font-size: 16px;
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
   cursor: pointer;
   transition:
     background var(--transition-fast),
@@ -538,8 +538,8 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
@@ -603,8 +603,8 @@
 }
 
 .product-form .j-button:hover {
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -855,9 +855,9 @@
 }
 
 .j-product__thumb-scroll:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 /* Toggled by product-gallery.js — hidden entirely when there aren't
@@ -897,13 +897,13 @@
 }
 
 .j-product-thumbnail:hover {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 
 .j-product-thumbnail.is-active {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 /* Mobile-only dot indicators (see .j-product__thumbnails-wrap above,
@@ -947,7 +947,7 @@
 }
 
 .j-product__dot.is-active::after {
-  background: #f0c14b;
+  background: var(--color-gold);
   transform: translate(-50%, -50%) scale(1.3);
 }
 
@@ -987,7 +987,7 @@
 
 .j-product__option-header label {
   font-weight: 400;
-  font-size: 15px;
+  font-size: var(--font-size-sm);
   color: var(--color-text-light);
 }
 
@@ -997,7 +997,7 @@
 
 .j-product__option-value {
   color: var(--color-text);
-  font-size: 15px;
+  font-size: var(--font-size-sm);
 }
 
 /* Color swatches */
@@ -1050,7 +1050,7 @@
   right: 0;
   bottom: 0;
   height: 2px;
-  background: #1a1a1a;
+  background: var(--color-ink);
   transform: scaleX(0);
   transition: transform 0.25s ease;
 }
@@ -1064,7 +1064,7 @@
 }
 
 .j-product__swatch:hover .j-product__swatch-inner {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 .j-product__swatch:active {
@@ -1113,7 +1113,7 @@
 
   background: var(--color-background);
   color: var(--color-text-light);
-  font-size: 15px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
 
   cursor: pointer;
@@ -1124,7 +1124,7 @@
 }
 
 .j-product__pill:hover {
-  border-color: #1a1a1a;
+  border-color: var(--color-ink);
 }
 
 .j-product__pill:active {
@@ -1135,9 +1135,9 @@
    outline" the way the reference does, rather than an inverted button. */
 .j-product__pill.is-active {
   background: var(--color-background);
-  color: #1a1a1a;
+  color: var(--color-ink);
   font-weight: 700;
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--color-ink);
 }
 
 .j-product__pill.is-sold-out {
@@ -1233,7 +1233,7 @@
 
 .j-sticky-cart__info #StickyPrice {
   margin: 2px 0 0;
-  color: #b8860b;
+  color: var(--color-gold-deep);
   font-weight: var(--font-semibold);
   font-size: var(--font-size-sm);
 }

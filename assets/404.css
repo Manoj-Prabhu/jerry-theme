@@ -64,8 +64,8 @@
    merchant's configurable accent color — inconsistent alongside the
    homepage button right next to it. */
 .j-404 .j-button:hover {
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
 }
 
 @media (max-width: 480px) {

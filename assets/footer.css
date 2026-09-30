@@ -94,7 +94,7 @@
   bottom: 0;
   width: 28px;
   height: 2px;
-  background: #b8860b;
+  background: var(--color-gold-deep);
 }
 
 .j-footer__logo {
@@ -111,7 +111,7 @@
   width: 36px;
   height: 2px;
   margin: 14px 0 18px;
-  background: #b8860b;
+  background: var(--color-gold-deep);
 }
 
 .j-footer__column p {
@@ -168,14 +168,14 @@
   bottom: -2px;
   width: 100%;
   height: 1px;
-  background: #b8860b;
+  background: var(--color-gold-deep);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s ease;
 }
 
 .j-footer__column a:hover {
-  color: #b8860b;
+  color: var(--color-gold-deep);
   transform: translateX(2px);
 }
 
@@ -204,7 +204,7 @@
 }
 
 .j-footer__newsletter-field:focus-within {
-  box-shadow: 0 0 0 3px #b8860b;
+  box-shadow: 0 0 0 3px var(--color-gold-deep);
 }
 
 .j-footer__newsletter input {
@@ -236,8 +236,8 @@
   padding: 0 18px;
   border: none;
   border-radius: 999px;
-  background: #1a1a1a;
-  color: #f0c14b;
+  background: var(--color-ink);
+  color: var(--color-gold);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
   white-space: nowrap;
@@ -255,8 +255,8 @@
 }
 
 .j-footer__newsletter-submit:hover {
-  background: #b8860b;
-  color: #1a1a1a;
+  background: var(--color-gold-deep);
+  color: var(--color-ink);
   box-shadow: 0 6px 16px rgba(184, 134, 11, 0.35);
 }
 
@@ -328,14 +328,14 @@
 }
 
 .j-localization-form:focus-within {
-  border-color: #b8860b;
-  box-shadow: 0 0 0 2px #b8860b;
+  border-color: var(--color-gold-deep);
+  box-shadow: 0 0 0 2px var(--color-gold-deep);
 }
 
 .j-localization-form__globe {
   display: flex;
   flex-shrink: 0;
-  color: #b8860b;
+  color: var(--color-gold-deep);
 }
 
 .j-localization-form__globe svg {
@@ -401,9 +401,9 @@
 }
 
 .j-localization-form__submit:hover {
-  border-color: #b8860b;
-  background: #b8860b;
-  color: #1a1a1a;
+  border-color: var(--color-gold-deep);
+  background: var(--color-gold-deep);
+  color: var(--color-ink);
 }
 
 /* The select auto-submits on change via JS, making this button redundant
@@ -470,9 +470,9 @@
 }
 
 .j-footer__social-link:hover {
-  color: #f0c14b;
-  background: #1a1a1a;
-  border-color: #1a1a1a;
+  color: var(--color-gold);
+  background: var(--color-ink);
+  border-color: var(--color-ink);
   transform: translateY(-2px);
 }
 
@@ -515,7 +515,7 @@
 
 .j-footer__payment-icon:hover {
   opacity: 1;
-  border-color: #b8860b;
+  border-color: var(--color-gold-deep);
   transform: translateY(-2px);
 }
 

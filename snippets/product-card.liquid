@@ -193,15 +193,37 @@
           elsewhere in the theme).
         {% endcomment %}
         {% assign color_option_index = color_option.position | minus: 1 %}
+
+        {% comment %}
+          Built once, in a single pass over product.variants, instead of
+          re-scanning the full variant list from scratch for each of the
+          up to swatch_limit swatches below — that previously repeated an
+          O(variants) scan swatch_limit times (up to 4 x 100 = 400
+          comparisons per card, on every product-card render, for every
+          card in every grid). One pass records the first variant seen
+          for each distinct color value; the swatch loop below then only
+          has to search that much shorter per-color list instead of the
+          full variant list.
+        {% endcomment %}
+        {% assign seen_color_values = '' | split: '' %}
+        {% assign seen_color_variants = '' | split: '' %}
+        {% for variant in product.variants %}
+          {% assign variant_color_value = variant.options[color_option_index] %}
+          {% unless seen_color_values contains variant_color_value %}
+            {% assign seen_color_values = seen_color_values | push: variant_color_value %}
+            {% assign seen_color_variants = seen_color_variants | push: variant %}
+          {% endunless %}
+        {% endfor %}
+
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
 
             {% assign preview_variant = null %}
-            {% for variant in product.variants %}
-              {% assign variant_option_value = variant.options[color_option_index] %}
-              {% if variant_option_value == value and preview_variant == null %}
-                {% assign preview_variant = variant %}
+            {% for seen_value in seen_color_values %}
+              {% if seen_value == value %}
+                {% assign preview_variant = seen_color_variants[forloop.index0] %}
+                {% break %}
               {% endif %}
             {% endfor %}
             {% assign preview_image = preview_variant.featured_image %}

@@ -112,7 +112,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #b8873a 0%, #f0c14b 50%, #b8873a 100%);
+  background: linear-gradient(90deg, var(--color-gold-dark) 0%, var(--color-gold) 50%, var(--color-gold-dark) 100%);
 }
 
 .j-collection-filters__header {
@@ -139,7 +139,7 @@
 
 .j-collection-filters__clear {
   font-size: var(--font-size-xs);
-  color: #b8873a;
+  color: var(--color-gold-dark);
   font-weight: var(--font-semibold);
   text-decoration: underline;
   transition: color var(--transition-fast);
@@ -159,7 +159,7 @@
   border-radius: 50%;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: 15px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   transition:
     background var(--transition-fast),
@@ -190,7 +190,7 @@
 }
 
 .j-filter[open] {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 .j-filter summary {
@@ -205,7 +205,7 @@
 }
 
 .j-filter summary:hover {
-  color: #b8873a;
+  color: var(--color-gold-dark);
 }
 
 .j-filter summary::-webkit-details-marker {
@@ -227,7 +227,7 @@
 
 .j-filter[open] summary::after {
   transform: rotate(-135deg);
-  border-color: #b8873a;
+  border-color: var(--color-gold-dark);
 }
 
 .j-filter__values {
@@ -288,13 +288,13 @@
   height: 10px;
   transform: scale(0);
   transition: transform var(--transition-fast);
-  background: #1a1a1a;
+  background: var(--color-ink);
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
 .j-filter__option input[type="checkbox"]:checked {
-  background: #f0c14b;
-  border-color: #f0c14b;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
 }
 
 .j-filter__option input[type="checkbox"]:checked::before {
@@ -307,7 +307,7 @@
 }
 
 .j-filter__option:hover .j-filter__option-label {
-  color: #b8873a;
+  color: var(--color-gold-dark);
 }
 
 .j-filter__option-count {
@@ -336,7 +336,7 @@
 }
 
 .j-filter__price-input:focus-within {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
 }
 
 .j-filter__price-input span {
@@ -352,7 +352,7 @@
 }
 
 .j-filter__values input[type="number"]:focus-visible {
-  outline: 2px solid #f0c14b;
+  outline: 2px solid var(--color-gold);
   outline-offset: 1px;
 }
 
@@ -380,9 +380,9 @@
 }
 
 .j-collection-filters__apply:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 /* A generic thin gray border blending into the page was one of the more
@@ -409,9 +409,9 @@
 }
 
 .j-filter-toggle:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 .j-filter-toggle svg {
@@ -597,13 +597,13 @@
 
 a.j-pagination__item:hover {
   background: rgba(240, 193, 75, .15);
-  color: #b8873a;
+  color: var(--color-gold-dark);
   transform: translateY(-1px);
 }
 
 .j-pagination__item--current {
-  background: linear-gradient(135deg, #f0c14b 0%, #b8873a 100%);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  color: var(--color-ink);
   font-weight: var(--font-semibold);
   box-shadow: 0 4px 12px rgba(184, 135, 58, .35);
 }
@@ -635,9 +635,9 @@ a.j-pagination__item:hover {
 }
 
 .j-pagination__arrow:hover {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
   background: rgba(240, 193, 75, .1);
-  color: #b8873a;
+  color: var(--color-gold-dark);
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(184, 135, 58, .2);
 }

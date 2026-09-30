@@ -3,14 +3,6 @@
 {% endcomment %}
 
 {% style %}
-  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-shop-by-category__heading h2 {
-    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
-    font-style: {{ section.settings.heading_font.style }};
-    font-weight: {{ section.settings.heading_font.weight }};
-  }
-
   {{ section.settings.card_title_font | font_face: font_display: 'swap' }}
 
   #shopify-section-{{ section.id }} .j-category-card__title {
@@ -92,12 +84,6 @@
       "id": "heading",
       "label": "Heading",
       "default": "Shop by Category"
-    },
-    {
-      "type": "font_picker",
-      "id": "heading_font",
-      "label": "Heading font",
-      "default": "marcellus_n4"
     },
     {
       "type": "font_picker",

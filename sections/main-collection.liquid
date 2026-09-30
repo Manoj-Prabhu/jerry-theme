@@ -125,7 +125,22 @@
 
         <div class="j-collection-grid">
 
-          {% paginate collection.products by 8, window_size: 1000 %}
+          {% comment %}
+            window_size is set high (not Shopify's default of 2) so that
+            `paginate.parts` comes back as one flat entry per page — the
+            custom windowing logic below indexes it directly via
+            `paginate.parts[forloop.index0]`, which only lines up with
+            absolute page numbers when nothing is pre-windowed by
+            Shopify itself. It was 1000 (up to 8,000 products at 8/page),
+            forcing Shopify to materialize that many part objects on
+            every single visit to this page regardless of the collection's
+            actual size. 200 (1,600 products) still comfortably covers
+            the vast majority of real collections at a fraction of the
+            cost; a collection larger than that would need this custom
+            windowing logic reworked to build page URLs directly instead
+            of indexing into `parts`.
+          {% endcomment %}
+          {% paginate collection.products by 8, window_size: 200 %}
             {% if collection.products.size == 0 %}
               <p class="j-collection-empty">{{ 'collection.empty' | t }}</p>
             {% endif %}

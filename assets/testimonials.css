@@ -85,7 +85,7 @@
 .j-testimonials__stars {
   display: flex;
   gap: 2px;
-  font-size: 24px;
+  font-size: var(--font-size-xl);
   line-height: 1;
 }
 
@@ -139,7 +139,7 @@
   /* A thin gold ring — matches the accent used everywhere else this
      pass (badge/highlight/hover colors) instead of leaving the avatar
      as a bare unstyled circle. */
-  box-shadow: 0 0 0 2px #f0c14b;
+  box-shadow: 0 0 0 2px var(--color-gold);
 }
 
 .j-testimonials__avatar img {

@@ -189,8 +189,8 @@
 }
 
 .j-hero-slideshow__arrow:hover {
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
   transform: scale(1.08);
 }
 
@@ -230,8 +230,8 @@
   -webkit-backdrop-filter: blur(8px);
   /* Same gold used for the heading highlight — ties the badge to the rest
      of the hero's accent color instead of introducing a separate one. */
-  color: #f0c14b;
-  font-size: 17px;
+  color: var(--color-gold);
+  font-size: var(--font-size-lg);
   font-weight: 600;
   margin-bottom: 24px;
 }
@@ -273,11 +273,11 @@
      near-black, so a dark gold would have the same "reads as invisible
      against a similarly dark backdrop" problem the original light-gradient
      hero had, just inverted. */
-  color: #f0c14b;
+  color: var(--color-gold);
 }
 
 .j-hero p {
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 40px;
   line-height: 1.8;
@@ -311,9 +311,9 @@
 }
 
 .j-hero__buttons .j-button:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
   /* A flat color swap read as static against the hero's motion (video
      background, text-reveal animation) — a small lift + shadow gives
      the hover itself a sense of motion instead of just a color change. */
@@ -335,9 +335,9 @@
 }
 
 .j-hero__buttons .j-button-outline:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
   transform: translateY(-3px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
@@ -364,7 +364,7 @@
 .j-hero__trust-icon {
   display: flex;
   flex-shrink: 0;
-  color: #f0c14b;
+  color: var(--color-gold);
 }
 
 .j-hero__trust-icon svg {
@@ -459,7 +459,7 @@
   }
 
   .j-hero p {
-    font-size: 16px;
+    font-size: var(--font-size-md);
   }
 
   /* Right-aligned (not centered) at this breakpoint, and smaller —

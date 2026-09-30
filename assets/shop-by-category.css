@@ -214,7 +214,7 @@
   width: 28px;
   height: 2px;
   margin: 0 auto 10px;
-  background: #d9b45f;
+  background: var(--color-gold-dark);
   opacity: 0.9;
 }
 

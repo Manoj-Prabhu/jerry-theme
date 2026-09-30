@@ -42,7 +42,7 @@
   content: "";
   position: absolute;
   inset: -18px;
-  border: 2px solid #f0c14b;
+  border: 2px solid var(--color-gold);
   border-radius: var(--radius-lg);
   z-index: 0;
 }
@@ -106,12 +106,12 @@
 .j-brand-story__eyebrow {
   display: inline-block;
   margin-bottom: 16px;
-  /* #b8860b (the gold used decoratively elsewhere) only computes to
+  /* var(--color-gold-deep) (the gold used decoratively elsewhere) only computes to
      ~3.25:1 against this section's white background — well under the
      4.5:1 WCAG AA minimum for normal text at this size/weight. Darkened
-     just for this text usage; #7a5c0a clears ~6.25:1 while still reading
+     just for this text usage; var(--color-gold-deep-text) clears ~6.25:1 while still reading
      as gold/bronze. */
-  color: #7a5c0a;
+  color: var(--color-gold-deep-text);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
   text-transform: uppercase;
@@ -165,14 +165,14 @@
 }
 
 .j-brand-story__button {
-  border-color: #f0c14b;
+  border-color: var(--color-gold);
   color: var(--color-primary);
 }
 
 .j-brand-story__button:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 @media (max-width: 900px) {

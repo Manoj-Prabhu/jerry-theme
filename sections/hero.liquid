@@ -4,38 +4,6 @@
 %}
 
 {% style %}
-  {{ section.settings.button_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-hero__buttons .j-button {
-    font-family: {{ section.settings.button_font.family }}, {{ section.settings.button_font.fallback_families }};
-    font-style: {{ section.settings.button_font.style }};
-    font-weight: {{ section.settings.button_font.weight }};
-  }
-
-  {{ section.settings.trust_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-hero__trust-item {
-    font-family: {{ section.settings.trust_font.family }}, {{ section.settings.trust_font.fallback_families }};
-    font-style: {{ section.settings.trust_font.style }};
-    font-weight: {{ section.settings.trust_font.weight }};
-  }
-
-  {{ section.settings.description_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-hero__content p {
-    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
-    font-style: {{ section.settings.description_font.style }};
-    font-weight: {{ section.settings.description_font.weight }};
-  }
-
-  {{ section.settings.badge_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-hero__badge {
-    font-family: {{ section.settings.badge_font.family }}, {{ section.settings.badge_font.fallback_families }};
-    font-style: {{ section.settings.badge_font.style }};
-    font-weight: {{ section.settings.badge_font.weight }};
-  }
-
   /* The wave divider's gradient (see the SVG at the end of this file)
      approximates the true color of Shop by Category's background along
      the seam line, which depends on that section's width-to-height
@@ -351,32 +319,7 @@
 {% schema %}
 {
   "name": "Slideshow",
-  "settings": [
-    {
-      "type": "font_picker",
-      "id": "button_font",
-      "label": "Button font",
-      "default": "bebas_neue_n4"
-    },
-    {
-      "type": "font_picker",
-      "id": "trust_font",
-      "label": "Trust row font",
-      "default": "instrument_serif_n4"
-    },
-    {
-      "type": "font_picker",
-      "id": "description_font",
-      "label": "Description font",
-      "default": "rajdhani_n4"
-    },
-    {
-      "type": "font_picker",
-      "id": "badge_font",
-      "label": "Badge font",
-      "default": "unifraktur_maguntia_n4"
-    }
-  ],
+  "settings": [],
   "blocks": [
     {
       "type": "slide",

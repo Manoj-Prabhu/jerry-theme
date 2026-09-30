@@ -102,9 +102,9 @@
      as a light gold fill here). Text stays dark, not var(--button-text),
      since white-on-gold fails contrast (~1.7:1); black-on-gold passes
      comfortably (~10:1). Same gold already used in hero.css. */
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 /* -------------------------
@@ -191,7 +191,7 @@
   .j-product-recommendations .j-wishlist-button {
     width: 30px;
     height: 30px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .j-product-recommendations .j-quick-view-button {
@@ -199,7 +199,7 @@
     right: 30px;
     bottom: 10px;
     padding: 6px;
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
   }
 }
 

@@ -110,7 +110,7 @@
 }
 
 .j-blog-card:hover .j-blog-card__content h2 {
-  color: #b8873a;
+  color: var(--color-gold-dark);
 }
 
 .j-blog-card__meta {
@@ -145,7 +145,7 @@
 }
 
 .j-blog-card:hover .j-blog-card__link {
-  color: #b8873a;
+  color: var(--color-gold-dark);
 }
 
 .j-blog-card:hover .j-blog-card__link svg {

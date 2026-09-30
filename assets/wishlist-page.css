@@ -21,7 +21,7 @@
   margin: 0 auto var(--space-4);
   border-radius: 50%;
   background: rgba(240, 193, 75, 0.12);
-  color: #b8860b;
+  color: var(--color-gold-deep);
 }
 
 .j-wishlist-page__empty-icon svg {

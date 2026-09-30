@@ -199,6 +199,6 @@
 
   .j-faq__question {
     padding: 14px 14px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 }

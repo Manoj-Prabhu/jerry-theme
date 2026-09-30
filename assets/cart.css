@@ -103,7 +103,7 @@ html.j-scroll-lock body {
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: #f0c14b;
+  background: var(--color-gold);
 }
 
 .j-cart__header h2 {
@@ -121,7 +121,7 @@ html.j-scroll-lock body {
   border-radius: 50%;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   line-height: 1;
   cursor: pointer;
   transition:
@@ -131,8 +131,8 @@ html.j-scroll-lock body {
 }
 
 .j-cart__close:hover {
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
   transform: rotate(90deg);
 }
 
@@ -153,7 +153,7 @@ html.j-scroll-lock body {
   margin: 12px auto 0;
   border-radius: 50%;
   background: rgba(240, 193, 75, 0.12);
-  color: #b8860b;
+  color: var(--color-gold-deep);
 }
 
 .j-cart__empty-icon svg {
@@ -176,9 +176,9 @@ html.j-scroll-lock body {
 }
 
 .j-cart__continue:hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 /* Empty-cart suggested collection */
@@ -190,7 +190,7 @@ html.j-scroll-lock body {
 
 .j-cart__suggestion-heading {
   margin-bottom: 12px;
-  color: #b8860b;
+  color: var(--color-gold-deep);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
   font-style: italic;
@@ -275,7 +275,7 @@ html.j-scroll-lock body {
   font-weight: var(--font-semibold);
 }
 
-/* Darkened from the more common #b8860b "goldenrod" — that only hits
+/* Darkened from the more common var(--color-gold-deep) "goldenrod" — that only hits
    ~3.1:1 against the cart page summary's --color-surface background
    (and ~3.25:1 against plain white in the cart drawer), failing WCAG
    AA's 4.5:1 for normal text (flagged by Lighthouse's "Background and
@@ -304,21 +304,21 @@ html.j-scroll-lock body {
 }
 
 .j-cart-view-link:not(.is-disabled):hover {
-  background: #f0c14b;
-  border-color: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
 }
 
 .j-cart-checkout-button {
-  background: #1a1a1a;
-  color: #f0c14b;
+  background: var(--color-ink);
+  color: var(--color-gold);
   border: none;
   border-radius: 0;
 }
 
 .j-cart-checkout-button:not(:disabled):hover {
-  background: #f0c14b;
-  color: #1a1a1a;
+  background: var(--color-gold);
+  color: var(--color-ink);
 }
 
 /* Cart Item */
@@ -487,7 +487,7 @@ html.j-scroll-lock body {
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: 15px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   transition: background var(--transition-fast);
 }
@@ -635,7 +635,7 @@ html.j-scroll-lock body {
   /* Fixed near-black (not a merchant-configurable variable) so this
      always passes contrast against the light gold-tinted background
      above, regardless of theme settings. */
-  color: #1a1a1a;
+  color: var(--color-ink);
 }
 
 .j-cart-page__shipping-bar.is-unlocked .j-cart-page__shipping-fill {
@@ -959,7 +959,7 @@ html.j-scroll-lock body {
    base.css) — scoped to just this field rather than changing focus
    color globally. */
 .j-cart-page__note-field textarea:focus-visible {
-  outline-color: #f0c14b;
+  outline-color: var(--color-gold);
 }
 
 .j-cart-item__discounts {

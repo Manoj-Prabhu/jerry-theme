@@ -29,7 +29,7 @@
 }
 
 .j-announcement__text:hover {
-  color: #f0c14b;
+  color: var(--color-gold);
 }
 
 .j-announcement.has-close .j-announcement__slider {
@@ -100,7 +100,7 @@
 .j-announcement__item:not(:last-child)::after {
   content: "★";
   margin: 0 var(--space-8);
-  color: #f0c14b;
+  color: var(--color-gold);
   opacity: 0.85;
 }
 
@@ -140,7 +140,7 @@
   border: none;
   background: transparent;
   color: inherit;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   line-height: 1;
   cursor: pointer;
   opacity: 0.8;
@@ -390,7 +390,7 @@
      hover (see .j-logo:hover below) — a small "reveal" consistent with
      the gold-by-default/accent-on-interaction pattern used elsewhere
      (search icon, buttons). */
-  background: linear-gradient(135deg, #f0c14b 0%, #b8873a 100%);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
   color: #fff;
   font-family: var(--font-logo--family, sans-serif);
   font-style: var(--font-logo--style, normal);
@@ -571,7 +571,7 @@
   border-radius: 50%;
   background: var(--color-accent);
   color: var(--color-accent-text);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
 }
 
@@ -738,7 +738,7 @@
 .j-body--home
   .j-site-header-wrapper:not(.is-nav-hovering):not(.is-scrolled)
   .j-search-form__icon {
-  color: #f0c14b;
+  color: var(--color-gold);
 }
 
 .j-body--home
@@ -772,7 +772,7 @@
      into it. It only reverts to the theme's normal accent color once the
      header itself goes solid (hover/scrolled), via the un-scoped rule
      above. */
-  color: #f0c14b;
+  color: var(--color-gold);
 }
 
 .j-predictive-search {
@@ -959,7 +959,7 @@
   border-radius: var(--radius-md);
 
   color: var(--color-text-light);
-  font-size: 11px;
+  font-size: var(--font-size-2xs);
 
   cursor: pointer;
   transition:
@@ -1015,7 +1015,7 @@
   border-radius: 50%;
   background: var(--color-accent);
   color: var(--color-accent-text);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
 }
 
@@ -1032,7 +1032,7 @@
 .j-nav-arrow {
   display: inline-block;
   margin-left: 6px;
-  font-size: 11px;
+  font-size: var(--font-size-2xs);
   transition: transform var(--transition-fast);
 }
 
@@ -1337,7 +1337,7 @@
     border-radius: 50%;
     background: var(--color-surface);
     color: var(--color-text);
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     line-height: 1;
     cursor: pointer;
     transition:
@@ -1347,8 +1347,8 @@
   }
 
   .j-menu-close:hover {
-    background: #f0c14b;
-    color: #1a1a1a;
+    background: var(--color-gold);
+    color: var(--color-ink);
     transform: rotate(90deg);
   }
 
@@ -1402,7 +1402,7 @@
   }
 
   .j-mega-menu__tile-cta {
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
   }
 
   .j-nav-arrow {
@@ -1515,7 +1515,7 @@
   #WishlistCount {
     width: 16px;
     height: 16px;
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
   }
 
   .j-menu-toggle {

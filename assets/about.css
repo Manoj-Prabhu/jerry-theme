@@ -60,7 +60,7 @@
   content: "";
   position: absolute;
   inset: -18px;
-  border: 2px solid #f0c14b;
+  border: 2px solid var(--color-gold);
   border-radius: var(--radius-lg);
   z-index: 0;
 }
@@ -85,10 +85,10 @@
 .j-about-story__eyebrow {
   display: inline-block;
   margin-bottom: 16px;
-  /* Same darkened gold used for brand-story's eyebrow — #b8860b only
+  /* Same darkened gold used for brand-story's eyebrow — var(--color-gold-deep) only
      computes to ~3.25:1 against a white background, under the 4.5:1 WCAG
-     AA minimum; #7a5c0a clears ~6.25:1 while still reading as gold. */
-  color: #7a5c0a;
+     AA minimum; var(--color-gold-deep-text) clears ~6.25:1 while still reading as gold. */
+  color: var(--color-gold-deep-text);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
   text-transform: uppercase;
@@ -169,7 +169,7 @@
 .j-about-values__eyebrow {
   display: inline-block;
   margin-bottom: 12px;
-  color: #7a5c0a;
+  color: var(--color-gold-deep-text);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
   text-transform: uppercase;
@@ -211,7 +211,7 @@
   margin-bottom: 20px;
   border-radius: 50%;
   background: rgba(240, 193, 75, 0.15);
-  color: #7a5c0a;
+  color: var(--color-gold-deep-text);
 }
 
 .j-about-values__icon svg {
