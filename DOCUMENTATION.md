@@ -16,21 +16,22 @@ Welcome to Jerry! This guide walks you through setting up and customizing your s
 ## Homepage Sections
 
 ### Hero Slideshow
-The homepage hero supports up to 4 slides, each with its own image, small badge label (e.g. "New Arrival"), heading, highlighted text, description, and two buttons (primary and secondary).
-- Click **Hero** in the section list, then **Add block → Slide** to add a new slide (up to 4).
+The homepage hero supports multiple slides, each with its own image, small badge label (e.g. "New Arrival"), heading, highlighted text, description, and two buttons (primary and secondary).
+- Click **Hero** in the section list, then **Add block → Slide** to add a new slide.
 - Each slide's image, badge, heading, description, and button links/labels can be set independently.
-- You can also add up to 3 **Trust items** (small icon + text, e.g. "Free Shipping", "Secure Checkout") shown beneath the hero.
+- You can also add **Trust items** (small icon + text, e.g. "Free Shipping", "Secure Checkout") shown beneath the hero.
+- Slides and Trust items share a combined limit of 7 blocks total — the default setup uses 1 slide + 3 trust items, but you can mix them differently (e.g. 4 slides + 3 trust items, or 6 slides + 1 trust item).
 - The slideshow autoplays and crossfades automatically; shoppers can also use the arrow controls or hover to pause.
 - If you don't add any Slide blocks, the section falls back to a single static hero using its own Image/Heading/Description settings — if no image is set there either, an animated placeholder graphic is shown instead of a broken image.
 
 ### Shop by Category
-A grid linking to your collections, each with its own image and title. Add up to 4 categories as blocks.
+A grid linking to your collections, each with its own image and title. Add up to 10 categories as blocks.
 
 ### Featured Collection / Product Recommendations
 Choose a collection to feature on your homepage, or let Shopify automatically recommend products on product pages. Add the **Product Recommendations** section twice to a product template to show both **Related** and **Complementary** products at once — set each instance's **Intent** setting accordingly. Complementary recommendations need real order history to populate, so they may not show results on a brand-new store yet.
 
 ### Testimonials
-Showcase customer reviews with a star rating, quote, name, and optional avatar photo. Add as many testimonial blocks as you like.
+Showcase customer reviews with a star rating, quote, name, and optional avatar photo. Add up to 12 testimonial blocks.
 
 ---
 
@@ -39,7 +40,7 @@ Showcase customer reviews with a star rating, quote, name, and optional avatar p
 - **Color swatches** and **star ratings** appear automatically on product cards if your products have a "Color" option and a `rating`/`rating_count` metafield set up under **Settings → Custom data → Products**.
 - **Badges** (New, Sale, Bestseller, Sold Out) appear automatically based on product tags and inventory status.
 - **Quick View** lets shoppers preview and add a product to cart without leaving the page they're on — no setup required, it's built in.
-- **Wishlist** lets shoppers save products to a personal list (stored in their browser, no account required).
+- **Wishlist** lets shoppers save products to a personal list (stored in their browser, no account required). Create a page using the "Wishlist" template to give shoppers a dedicated page listing everything they've saved, matching the rest of the theme's styling.
 - Products with multiple images automatically cycle through them on hover-free browsing (e.g. in collection grids).
 - **Sticky Add to Cart**: on product pages, a slim bar with the product name, price, and an Add to Cart button appears at the top once a shopper scrolls past the main add-to-cart button — no setup required.
 - **Recently Viewed Products**: a section that automatically shows the last few products a shopper looked at, based on their browsing history. Add it to any page as a section in the Theme Editor.
@@ -54,7 +55,7 @@ Showcase customer reviews with a star rating, quote, name, and optional avatar p
 
 ## Collections & Filtering
 
-- Collection pages display products in a responsive grid (4 columns on desktop, 2 on mobile).
+- Collection pages display products in a responsive grid — the number of columns flexes to fit the available width on desktop (more columns on wider screens), and is fixed at 2 columns on tablet and mobile.
 - Shoppers can **sort** results (price, newest, best-selling, etc.) and **filter** by availability and price using the Filters button, which opens as a popup — filters are based on your products' options and inventory automatically.
 - Once a collection has 3 or more products, the layout keeps everything organized and consistent regardless of screen size.
 
@@ -93,6 +94,7 @@ A slim bar above your header for promos, shipping notices, or store announcement
 ## Navigation & Search
 
 - **Breadcrumbs**: automatically shown near the top of collection, product, blog, and other inner pages so shoppers can navigate back easily — no setup required.
+- **Page banner**: collection, blog, cart, search, customer account pages, and the 404 page all share a consistent title banner at the top (breadcrumbs plus the page title), with an optional background photo on pages that support one (Contact, About, FAQ).
 - **Predictive search**: as shoppers type in the search bar, matching products appear instantly in a dropdown, along with their recent search history.
 - **Search results page**: pressing "Search" shows a dedicated results page with the same product grid used elsewhere in the theme.
 - **Country/region selector**: enable this in the Footer section to let shoppers switch their shipping country and currency.
@@ -103,7 +105,7 @@ A slim bar above your header for promos, shipping notices, or store announcement
 
 Select the **Footer** section in the Theme Editor to configure:
 - **Description**: a short line of text about your store, shown next to your logo.
-- **Menu columns**: add up to 3 **Menu** blocks, each linking to one of your navigation menus (e.g. Shop, Company, Support) — add, remove, or reorder them freely.
+- **Menu columns**: add **Menu** blocks, each linking to one of your navigation menus (e.g. Shop, Company, Support) — add, remove, or reorder them freely. The default setup uses 3, but there's no hard cap.
 - **Social icons**: toggle on/off; icons appear automatically for any social links you've added under **Theme Settings → Social media**.
 - **Follow on Shop**: a "Follow on Shop" button appears automatically next to your social icons once the Shop app sales channel is installed and active — this is Shopify's native component and its styling can't be changed, per Shopify's brand requirements. It won't appear on a password-protected store; it shows once your store is live.
 - **Payment icons**: toggle on/off to show the payment methods your store accepts.
@@ -126,12 +128,19 @@ The FAQ page uses a block-based accordion system:
 2. In the Theme Editor, go to the FAQ section and add **Category Heading** blocks (e.g. "Orders", "Shipping") followed by **FAQ Item** blocks (question + answer) for each category.
 3. Optionally add a **Note** block at the end for a closing message like "Still need help?".
 4. Categories automatically arrange into a two-column layout on desktop and stack on mobile.
+5. As with the Contact and About pages, you can optionally set a **Banner image** in the section settings to show a full-width photo behind the page title.
 
 ---
 
 ## Contact Page
 
-Create a page using the "Contact" template to get a themed contact form with name, email, phone, and message fields, styled alongside a customizable intro panel.
+Create a page using the "Contact" template to get a themed contact form with name, email, phone, and message fields, styled alongside a customizable intro panel. Optionally set a **Banner image** in the section settings to show a full-width photo (with a dark overlay) behind the page title.
+
+---
+
+## About Page
+
+Create a page using the "About" template for a themed brand-story layout. As with the Contact and FAQ pages, you can optionally set a **Banner image** in the section settings to show a full-width photo behind the page title.
 
 ---
 

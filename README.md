@@ -43,7 +43,7 @@ shopify theme push --ignore="templates/*.json" --ignore="config/settings_data.js
 
 ## Theme features
 
-- **Hero slideshow** — up to 4 slides, each with its own image, heading, description, and buttons; autoplays with manual prev/next controls, crossfades smoothly, and pauses on hover/focus
+- **Hero slideshow** — multiple slides (shares a combined 7-block limit with trust items), each with its own image, heading, description, and buttons; autoplays with manual prev/next controls, crossfades smoothly, and pauses on hover/focus
 - **Shop by Category** — image grid section linking to collections
 - **Featured Collection** and **Product Recommendations** — merchant-selected or automatic product grids
 - **Testimonials** — star-rated customer quotes with optional avatars
@@ -56,7 +56,7 @@ shopify theme push --ignore="templates/*.json" --ignore="config/settings_data.js
 - **Country/region selector** — lets shoppers switch markets and currency from the footer
 - **Customer accounts** — themed login, registration, account overview, order history, address book, and password reset/activation
 - **App blocks** — merchants can add app content to the product and footer sections via the theme editor
-- **Blog, article, FAQ, and contact page** templates
+- **Blog, article, FAQ, about, contact, and wishlist page** templates — Contact, About, and FAQ each support an optional banner image behind the page title
 - Fully responsive, with reduced-motion support throughout
 
 ## Theme settings
