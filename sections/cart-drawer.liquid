@@ -42,19 +42,29 @@
     <div class="j-cart__body">
 
       {% liquid
-        assign suggested_collection = collections[section.settings.empty_cart_collection]
+        # This whole block only feeds data-suggestion-* attributes, which
+        # are only ever read when the cart is empty (see the markup
+        # below) — skipping it whenever the cart has items avoids doing
+        # any of this work on what's normally the more common case.
+        if cart.item_count == 0
+          assign suggested_collection = collections[section.settings.empty_cart_collection]
 
-        # Falls back to the first non-empty collection when no collection
-        # is chosen in the section settings (or the chosen one no longer
-        # exists) — this card should always have something to show, not
-        # depend on that being configured.
-        if suggested_collection == blank
-          for c in collections
-            if c.products.size > 0
-              assign suggested_collection = c
-              break
-            endif
-          endfor
+          # Falls back to the first non-empty collection when no collection
+          # is chosen in the section settings (or the chosen one no longer
+          # exists) — this card should always have something to show, not
+          # depend on that being configured. Capped at 50 collections
+          # instead of scanning the entire store — a store's collections
+          # list is usually ordered with the most relevant ones first, so
+          # a non-empty one this deep in is already an edge case, and this
+          # keeps worst-case cost bounded on stores with hundreds of them.
+          if suggested_collection == blank
+            for c in collections limit: 50
+              if c.products.size > 0
+                assign suggested_collection = c
+                break
+              endif
+            endfor
+          endif
         endif
       %}
 
