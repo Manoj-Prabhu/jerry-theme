@@ -684,18 +684,23 @@ document.addEventListener("DOMContentLoaded", () => {
         // whichever product image is currently the active gallery slide.
         // See assets/fly-to-cart.js; never allowed to affect the actual
         // cart flow even if something about the animation itself throws.
+        // The drawer waits for it to land (in parallel with the cart
+        // refresh fetch below) instead of popping open mid-flight.
+        let flyToCartDone = Promise.resolve();
         if (typeof window.JerryFlyToCart === "function") {
           try {
             const sourceImg = document.querySelector(
               ".j-product__media-slide.is-active .j-product-main-image",
             );
-            window.JerryFlyToCart(sourceImg);
+            flyToCartDone =
+              window.JerryFlyToCart(sourceImg) || Promise.resolve();
           } catch (error) {
             /* no-op — purely decorative */
           }
         }
 
         await refreshCart();
+        await flyToCartDone;
         openCartDrawer();
       } catch (error) {
         console.error(error);

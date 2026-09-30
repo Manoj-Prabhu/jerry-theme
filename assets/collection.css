@@ -586,23 +586,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 38px;
+  height: 38px;
   padding: 0 8px;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-size: var(--font-size-sm);
   color: var(--color-text);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 a.j-pagination__item:hover {
-  background: var(--color-border);
+  background: rgba(240, 193, 75, .15);
+  color: #b8873a;
+  transform: translateY(-1px);
 }
 
 .j-pagination__item--current {
-  background: #f0c14b;
+  background: linear-gradient(135deg, #f0c14b 0%, #b8873a 100%);
   color: #1a1a1a;
   font-weight: var(--font-semibold);
+  box-shadow: 0 4px 12px rgba(184, 135, 58, .35);
 }
 
 .j-pagination__item--gap {
@@ -613,28 +616,44 @@ a.j-pagination__item:hover {
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 36px;
-  padding: 0 14px;
+  height: 38px;
+  padding: 0 16px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 999px;
+  background: var(--color-white);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
   color: var(--color-text);
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .j-pagination__arrow svg {
   width: 16px;
   height: 16px;
+  transition: transform var(--transition-fast);
 }
 
 .j-pagination__arrow:hover {
   border-color: #f0c14b;
+  background: rgba(240, 193, 75, .1);
   color: #b8873a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(184, 135, 58, .2);
+}
+
+.j-pagination__arrow--prev:hover svg {
+  transform: translateX(-2px);
+}
+
+.j-pagination__arrow--next:hover svg {
+  transform: translateX(2px);
 }
 
 .j-pagination__arrow.is-disabled {
   color: var(--color-text-light);
   border-color: var(--color-border);
+  background: var(--color-white);
   cursor: not-allowed;
   opacity: 0.5;
   pointer-events: none;

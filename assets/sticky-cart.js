@@ -113,15 +113,19 @@ function initStickyCart() {
       // own small product thumbnail as the flying source, since that's
       // what's actually visible near the top of the viewport at the
       // moment this button is clicked (the main gallery image may be
-      // scrolled out of view by then).
+      // scrolled out of view by then). The drawer-opening click below
+      // waits for it to land instead of firing while it's still mid-flight.
+      let flyToCartDone = Promise.resolve();
       if (typeof window.JerryFlyToCart === "function") {
         try {
           const sourceImg = document.querySelector(".j-sticky-cart__image img");
-          window.JerryFlyToCart(sourceImg);
+          flyToCartDone = window.JerryFlyToCart(sourceImg) || Promise.resolve();
         } catch (error) {
           /* no-op — purely decorative */
         }
       }
+
+      await flyToCartDone;
 
       const cartButton = document.querySelector(".j-header__cart");
       if (cartButton) cartButton.click();
