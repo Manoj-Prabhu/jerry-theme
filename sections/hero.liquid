@@ -35,6 +35,23 @@
     font-style: {{ section.settings.badge_font.style }};
     font-weight: {{ section.settings.badge_font.weight }};
   }
+
+  /* The wave divider's gradient (see the SVG at the end of this file)
+     approximates the true color of Shop by Category's background along
+     the seam line, which depends on that section's width-to-height
+     ratio — a much narrower, differently-proportioned box on mobile, so
+     the ramp reaches nowhere near as far into the gradient there as it
+     does on desktop before hitting the right edge. Without this, the
+     mobile wave carried the desktop ramp's colors straight through and
+     visibly mismatched the actual section again at this breakpoint. */
+  @media (max-width: 480px) {
+    #heroDividerGradient-{{ section.id }} stop:nth-child(2) {
+      stop-color: #e3d8f4;
+    }
+    #heroDividerGradient-{{ section.id }} stop:nth-child(3) {
+      stop-color: #dbccf1;
+    }
+  }
 {% endstyle %}
 
 <div class="j-hero-band full-width">
@@ -298,22 +315,35 @@
   {% endcomment %}
   <svg class="j-hero-band__divider" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
     {% comment %}
-      A flat fill color only matches Shop by Category's actual
-      background (a 135deg diagonal gradient — see .j-shop-by-category
-      in shop-by-category.css) at one single point along that diagonal,
-      so it looked visibly mismatched everywhere else the wave crossed.
-      This gradient definition mirrors those same three stops/direction,
-      so the wave continues the real background instead of an
-      approximation of it.
+      Reusing the section's own 0%/50%/100% stops at the same 0°→100%
+      corner angle (the previous version of this) looked mismatched
+      because that angle is only correct for a box shaped like this tiny
+      80px-tall strip — for Shop by Category's actual, much taller box,
+      a true CSS 135deg gradient's color at any point along this exact
+      seam line works out to a *horizontal-only* ramp from stop 0 at the
+      left edge to roughly the midpoint between stop 1 and stop 2 at the
+      right edge (derived from the gradient-line-length formula CSS uses
+      for angled gradients, assuming a plausible section height) — not a
+      diagonal ramp reaching all the way to stop 2. This mirrors that
+      instead, so the seam's colors actually line up with what the
+      section itself shows along its own top edge.
     {% endcomment %}
     <defs>
-      <linearGradient id="heroDividerGradient-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="heroDividerGradient-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" stop-color="#f3effa"/>
-        <stop offset="50%" stop-color="#d9c9f0"/>
-        <stop offset="100%" stop-color="#ece2f7"/>
+        <stop offset="67%" stop-color="#d9c9f0"/>
+        <stop offset="100%" stop-color="#e3d5f4"/>
       </linearGradient>
     </defs>
-    <path d="M0,40 C240,90 480,0 720,20 C960,40 1200,90 1440,30 L1440,80 L0,80 Z" fill="url(#heroDividerGradient-{{ section.id }})"/>
+    {% comment %}
+      A single gentle S-curve, not the previous double-hump path — that
+      one's control points (y=0 and y=90 against an 80-tall viewBox)
+      overshot the divider's own bounds, so the curve pinched to a sharp
+      point at the top and let the hero image poke through above it as a
+      hard diagonal seam instead of a smooth wave. Every point here stays
+      well inside 0–80, so the fill covers the full band edge to edge.
+    {% endcomment %}
+    <path d="M0,52 C240,24 480,24 720,46 C960,68 1200,68 1440,42 L1440,80 L0,80 Z" fill="url(#heroDividerGradient-{{ section.id }})"/>
   </svg>
 
 </div>

@@ -153,7 +153,11 @@
 .j-hero-slideshow__arrows {
   position: absolute;
   right: 24px;
-  bottom: 24px;
+  /* Cleared above the 60px wave divider (see .j-hero-band__divider) with
+     a bit of breathing room, instead of the previous 24px — that sat the
+     arrows' lower half directly over the wave's curve, visually slicing
+     into both the circles and the wave shape. */
+  bottom: 84px;
   z-index: 3;
   display: flex;
   gap: 12px;
@@ -458,16 +462,35 @@
     font-size: 16px;
   }
 
-  /* Centered instead of right-aligned — on this narrow a screen the
-     trust row wraps to two lines (see .j-hero__trust above) and can run
-     close to the right edge, so keeping the arrows pinned there too
-     risked crowding it. Still a fixed bottom offset, same as desktop
-     (see .j-hero-slideshow__arrows above) — just recentered
-     horizontally for this breakpoint. */
+  /* Right-aligned (not centered) at this breakpoint, and smaller —
+     centering put the circles directly over whichever trust item landed
+     in the middle, hiding its text (e.g. "Easy Returns"). Right-aligning
+     alone isn't enough on its own though: the trust row's vertical
+     position still isn't fixed (it flows after however much the
+     heading/description wrap on a given slide), so see the matching
+     .j-hero__trust rule below, which keeps that row's own text out of
+     this same right-hand corner horizontally, regardless of which row
+     of it ends up at this height. */
   .j-hero-slideshow__arrows {
-    right: auto;
-    left: 50%;
-    bottom: 16px;
-    transform: translateX(-50%);
+    right: 16px;
+    bottom: 48px;
+    transform: none;
+  }
+
+  .j-hero-slideshow__arrow {
+    width: 34px;
+    height: 34px;
+  }
+
+  .j-hero-slideshow__arrow svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Kept clear of the arrow cluster's own footprint (~34px x2 + 12px gap
+     + the 16px right offset above, so ~100px) so its text always wraps
+     before reaching that corner instead of running underneath it. */
+  .j-hero__trust {
+    max-width: calc(100% - 100px);
   }
 }

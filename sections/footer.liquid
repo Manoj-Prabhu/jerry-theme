@@ -15,9 +15,40 @@
     font-weight: {{ section.settings.footer_font.weight }};
   }
 
+  /* Same reasoning as the hero's divider (see sections/hero.liquid) —
+     the true color a short/flat seam-line gradient should show depends
+     on the actual box it's approximating, and the footer is a much
+     narrower, differently-proportioned box on mobile (menus stack
+     vertically, so it's far taller relative to its width there) than on
+     desktop, so the ramp needs a smaller mobile-only reach. */
+  @media (max-width: 480px) {
+    #footerDividerGradient-{{ section.id }} stop:nth-child(2) {
+      stop-color: #f9f3e5;
+    }
+  }
 {% endstyle %}
 
 <footer class="j-footer full-width">
+
+  {% comment %}
+    Curved divider into the footer — the same technique as the hero's
+    own wave into Shop by Category (see sections/hero.liquid): a wave
+    filled with a gradient approximating the footer's actual background
+    color along this seam, so it reads as the footer flowing up over
+    whatever section precedes it instead of a flat straight line seam.
+  {% endcomment %}
+  <svg class="j-footer__divider" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="footerDividerGradient-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#f5ecd7"/>
+        <stop offset="100%" stop-color="#fdfbf6"/>
+      </linearGradient>
+    </defs>
+    <path
+      d="M0,52 C240,24 480,24 720,46 C960,68 1200,68 1440,42 L1440,80 L0,80 Z"
+      fill="url(#footerDividerGradient-{{ section.id }})"
+    />
+  </svg>
 
   <div class="j-footer__container {% unless has_menus %}j-footer__container--no-menus{% endunless %}">
 

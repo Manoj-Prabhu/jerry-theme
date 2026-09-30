@@ -12,22 +12,28 @@
   background: linear-gradient(135deg, #f5ecd7 0%, #ffffff 100%);
 }
 
-/* A thin gold gradient seam along the top edge — reads as a deliberate
-   finishing line between the page above and the footer, instead of the
-   footer's background just starting abruptly. */
-.j-footer::before {
-  content: "";
+/* Curved divider into the footer (see the SVG markup at the top of
+   footer.liquid) — sits above the footer's own top edge, overlapping
+   upward into whatever section precedes it, so the footer reads as
+   flowing up over that section instead of starting with a flat seam.
+   Same technique as the hero's own wave into Shop by Category (see
+   .j-hero-band__divider in hero.css). */
+.j-footer__divider {
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    #b8860b 50%,
-    transparent 100%
-  );
+  top: -59px;
+  width: 100%;
+  height: 60px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .j-footer__divider {
+    top: -31px;
+    height: 32px;
+  }
 }
 
 /* Container */
