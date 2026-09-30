@@ -227,5 +227,17 @@
   .j-testimonials__media {
     min-height: 320px;
     order: 1;
+    /* Inset like a card instead of running edge to edge — matches the
+       content column's own side padding just below it, so the photo
+       doesn't look like an oversized full-bleed banner stacked above a
+       much narrower text block. */
+    margin: 0 var(--space-6);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .j-testimonials__media {
+    margin: 0 var(--space-4);
   }
 }
