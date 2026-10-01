@@ -172,12 +172,24 @@ function initShopByCategoryAutoScroll(grid) {
   // actually in view removes that load-time cost with no visible
   // difference for real visitors, since it was never seen moving before
   // it scrolled into view anyway.
+  //
+  // The viewport gate alone isn't enough on phones, though: with the
+  // shorter mobile hero this row is already on screen at load, so the
+  // loop ran every frame from first paint — on a throttled mobile CPU that
+  // was continuous main-thread work right through the window TBT is
+  // measured in. Also waiting for window load (the same rule the hero's
+  // own autoplay follows) keeps the initial load free of it; the row
+  // simply starts drifting a moment later.
+  let isInView = false;
+  let pageLoaded = document.readyState === "complete";
+
   const visibilityObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        isInView = entry.isIntersecting;
+        if (isInView && pageLoaded) {
           startTicking();
-        } else {
+        } else if (!isInView) {
           stopTicking();
         }
       });
@@ -185,6 +197,17 @@ function initShopByCategoryAutoScroll(grid) {
     { threshold: 0 },
   );
   visibilityObserver.observe(grid);
+
+  if (!pageLoaded) {
+    window.addEventListener(
+      "load",
+      () => {
+        pageLoaded = true;
+        if (isInView) startTicking();
+      },
+      { once: true },
+    );
+  }
 }
 
 function initAllShopByCategoryAutoScroll() {
