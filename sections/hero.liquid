@@ -135,6 +135,15 @@
                   hero-slideshow.js); at the same size, that later paint
                   doesn't replace the image as LCP.
                 {% endcomment %}
+                {% comment %}
+                  sizes: a video frame is landscape, but on phones the hero
+                  is a tall portrait box, so object-fit: cover draws the
+                  frame roughly twice the viewport width (sides cropped).
+                  With a plain 100vw the browser fetched a frame smaller
+                  than it's actually drawn — Chrome discounts an upscaled
+                  image's LCP size, so the full-resolution video replaced
+                  it as LCP the moment it started playing.
+                {% endcomment %}
                 {% if hero_video.preview_image %}
                   {{
                     hero_video.preview_image
@@ -143,7 +152,7 @@
                       loading: 'eager',
                       fetchpriority: 'high',
                       widths: '480, 760, 1000, 1200',
-                      sizes: '100vw',
+                      sizes: '(max-width: 749px) 200vw, 100vw',
                       class: 'j-hero__img',
                       alt: ''
                   }}
