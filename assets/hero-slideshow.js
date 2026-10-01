@@ -120,14 +120,40 @@ function initHeroSlideshow(root) {
     },
   });
 
-  if (typeof window.requestIdleCallback === "function") {
-    window.requestIdleCallback(hydrateDeferredSlideImages, { timeout: 2000 });
-    // Give the second slide's video a head start now, rather than waiting
-    // for the first autoplay transition to trigger it.
-    window.requestIdleCallback(hydrateUpcomingVideo, { timeout: 2000 });
+  // The first slide's video sits over its poster <img> at opacity 0 (see
+  // hero.liquid / hero.css) so the image is what paints as LCP; reveal the
+  // video only once it's genuinely playing frames.
+  root.querySelectorAll(".j-hero__video--over-poster").forEach((video) => {
+    const reveal = () => video.classList.add("is-playing");
+    if (!video.paused && video.readyState >= 3) {
+      reveal();
+    } else {
+      video.addEventListener("playing", reveal, { once: true });
+    }
+  });
+
+  function whenIdle(fn) {
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(fn, { timeout: 2000 });
+    } else {
+      setTimeout(fn, 1000);
+    }
+  }
+
+  // Waits for window load, not just idle time: requestIdleCallback's 2s
+  // timeout forced the second slide's multi-MB video to start downloading
+  // while the first video (the LCP) was still loading, competing with it
+  // for bandwidth inside the window LCP is measured in. Autoplay already
+  // waits for load (below), so nothing is lost for real visitors.
+  function hydrateAfterLoad() {
+    whenIdle(hydrateDeferredSlideImages);
+    whenIdle(hydrateUpcomingVideo);
+  }
+
+  if (document.readyState === "complete") {
+    hydrateAfterLoad();
   } else {
-    setTimeout(hydrateDeferredSlideImages, 1000);
-    setTimeout(hydrateUpcomingVideo, 1000);
+    window.addEventListener("load", hydrateAfterLoad, { once: true });
   }
 
   announceActiveSlide(slideshow.slides[slideshow.currentIndex]);

@@ -123,52 +123,51 @@
 
               {% if forloop.first %}
                 {% comment %}
-                  fetchpriority="high" — this is the LCP element on the
-                  homepage, but video_tag doesn't accept fetchpriority as
-                  a filter parameter (unlike image_tag, which does), so
-                  it's injected into the generated markup directly. Same
-                  post-processing approach already used below for the
-                  deferred slides' src -> data-src swap.
+                  The homepage's LCP element. A <video> can't be made an
+                  early, high-priority LCP on its own: fetchpriority isn't a
+                  valid attribute on <video>, and browsers start video
+                  downloads late and at low priority — Lighthouse measured
+                  ~5.5s before this video's request even began. Painting
+                  its first frame as a real <img> (fetchpriority=high, in
+                  the initial HTML) makes that the LCP instead. The video
+                  sits on top at opacity 0 and fades in once it's actually
+                  playing (see .j-hero__video--over-poster in hero.css and
+                  hero-slideshow.js); at the same size, that later paint
+                  doesn't replace the image as LCP.
                 {% endcomment %}
-                {% capture eager_hero_video %}
-                  {% if hero_source %}
-                    <video class="j-hero__video"
-                      poster="{{ hero_video.preview_image | image_url: width: 1000, format: 'webp' }}"
-                      preload="metadata"
-                      muted="muted"
-                      loop="loop"
-                      playsinline="true"
-                      autoplay="autoplay"
-                    ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
-                  {% else %}
-                    {{
-                      block.settings.video
-                      | video_tag:
-                        image_size: '1200x',
-                        class: 'j-hero__video',
-                        muted: true,
-                        loop: true,
-                        playsinline: true,
-                        autoplay: true
-                    }}
-                  {% endif %}
-                {% endcapture %}
-                {% comment %}
-                  On a <video>, fetchpriority applies to the video file, not
-                  to its poster — and the poster is what actually paints as
-                  the LCP element. Preloading the exact poster URL that
-                  video_tag generated (extracted from its output so the two
-                  can never drift apart) makes it a high-priority request
-                  discoverable straight from the HTML. (AssetPreload's suggested
-                  image_tag preload argument doesn't apply to a video poster.)
-                {% endcomment %}
-                {% if eager_hero_video contains ' poster="' %}
-                  {% assign hero_poster_url = eager_hero_video | split: ' poster="' | last | split: '"' | first %}
-                  {% # theme-check-disable AssetPreload %}
-                  <link rel="preload" as="image" href="{{ hero_poster_url }}" fetchpriority="high">
-                  {% # theme-check-enable AssetPreload %}
+                {% if hero_video.preview_image %}
+                  {{
+                    hero_video.preview_image
+                    | image_url: width: 1200, format: 'webp'
+                    | image_tag:
+                      loading: 'eager',
+                      fetchpriority: 'high',
+                      widths: '480, 760, 1000, 1200',
+                      sizes: '100vw',
+                      class: 'j-hero__img',
+                      alt: ''
+                  }}
                 {% endif %}
-                {{ eager_hero_video | replace: '<video ', '<video fetchpriority="high" ' }}
+                {% if hero_source %}
+                  <video class="j-hero__video j-hero__video--over-poster"
+                    preload="metadata"
+                    muted="muted"
+                    loop="loop"
+                    playsinline="true"
+                    autoplay="autoplay"
+                  ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
+                {% else %}
+                  {{
+                    block.settings.video
+                    | video_tag:
+                      image_size: '1200x',
+                      class: 'j-hero__video j-hero__video--over-poster',
+                      muted: true,
+                      loop: true,
+                      playsinline: true,
+                      autoplay: true
+                  }}
+                {% endif %}
               {% else %}
                 {% capture deferred_hero_video %}
                   {% if hero_source %}
@@ -204,7 +203,7 @@
                     loading: 'eager',
                     fetchpriority: 'high',
                     widths: '360, 480, 600, 760, 1000, 1200',
-                    sizes: '(max-width: 991px) 90vw, 560px',
+                    sizes: '100vw',
                     class: 'j-hero__img',
                     alt: img_alt
                 }}
@@ -226,7 +225,7 @@
                     | image_url: width: 1200, format: 'webp'
                     | image_tag:
                       widths: '360, 480, 600, 760, 1000, 1200',
-                      sizes: '(max-width: 991px) 90vw, 560px',
+                      sizes: '100vw',
                       class: 'j-hero__img',
                       alt: img_alt
                   }}

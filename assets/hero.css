@@ -405,6 +405,21 @@
   display: block;
 }
 
+/* First slide only: stacked over its own poster <img> (the LCP element —
+   see hero.liquid) and kept invisible until it's actually playing, so the
+   image is what paints first. hero-slideshow.js adds .is-playing. With
+   reduced motion the video never plays, so the poster image just stays. */
+.j-hero__video--over-poster {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.j-hero__video--over-poster.is-playing {
+  opacity: 1;
+}
+
 /* Responsive */
 
 @media (max-width: 991px) {
