@@ -1,0 +1,27 @@
+{%- layout none -%}
+{%- comment -%}
+  Overrides Shopify's auto-generated /llms.txt, which by default is just
+  the shop name and nothing else — no H1 markdown header and no links,
+  which fails Shopify's own llms.txt recommendations (and the agent-
+  discoverability audits that check for them). This gives AI
+  crawlers/agents an actual entry point into the store: who it is, and
+  where to find the main collections and product catalog.
+  https://llmstxt.org
+{%- endcomment -%}
+# {{ shop.name }}
+
+> {{ shop.description | default: page_description | default: shop.name }}
+
+## Store
+
+- [Home]({{ request.origin }}/)
+- [All products]({{ request.origin }}{{ routes.all_products_collection_url }})
+- [Search]({{ request.origin }}{{ routes.search_url }})
+
+## Collections
+
+{%- for collection in collections limit: 20 -%}
+  {%- unless collection.all_products_count == 0 -%}
+- [{{ collection.title }}]({{ request.origin }}{{ collection.url }})
+  {%- endunless -%}
+{%- endfor -%}

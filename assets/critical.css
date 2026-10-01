@@ -82,6 +82,21 @@ body {
   color: var(--color-foreground);
 }
 
+/* Without this, links on the password page (notably Shopify's own
+   required `powered_by_link` — the "Are you the store owner? Log in
+   here" link, which this theme can't restyle the content/markup of —
+   fall back to the browser's default link blue, which doesn't
+   reliably clear 4.5:1 contrast against every merchant's configured
+   background color. --color-foreground already guarantees that
+   contrast everywhere else the theme uses it; this is only missing
+   here because critical.css (the one stylesheet the password page
+   loads) never had a baseline `a` rule the way base.css does on every
+   other template. */
+a {
+  color: var(--color-foreground);
+  text-decoration: underline;
+}
+
 /** Section layout utilities */
 
 /**
