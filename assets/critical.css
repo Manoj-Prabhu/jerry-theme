@@ -97,6 +97,19 @@ a {
   text-decoration: underline;
 }
 
+/* The cart drawer's markup is on every page, but cart.css (which holds
+   its full styling) is deferred off the critical path everywhere except
+   /cart. This one rule keeps the drawer out of view from first paint, so
+   it can't flash on screen as unstyled content — or shift the layout —
+   during the moment before the rest of cart.css arrives. Mirrors the
+   same values cart.css itself sets for this selector. */
+.j-cart-drawer {
+  position: fixed;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+
 /** Section layout utilities */
 
 /**

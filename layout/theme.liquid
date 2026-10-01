@@ -130,9 +130,20 @@
     {{ 'components.css' | asset_url | stylesheet_tag }}
     {{ 'utilities.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
-    {{ 'breadcrumbs.css' | asset_url | stylesheet_tag }}
-    {{ 'footer.css' | asset_url | stylesheet_tag }}
-    {{ 'cart.css' | asset_url | stylesheet_tag }}
+    {% comment %}
+      The homepage has no breadcrumbs, and its footer sits far below the
+      fold, so neither needs to block its first paint. cart.css styles the
+      off-canvas drawer (hidden until opened) everywhere except the /cart
+      page itself, where it's the main above-the-fold content. These are
+      deferred via the non_critical_css list below instead.
+    {% endcomment %}
+    {% unless template.name == 'index' %}
+      {{ 'breadcrumbs.css' | asset_url | stylesheet_tag }}
+      {{ 'footer.css' | asset_url | stylesheet_tag }}
+    {% endunless %}
+    {% if template.name == 'cart' %}
+      {{ 'cart.css' | asset_url | stylesheet_tag }}
+    {% endif %}
 
     {% comment %}
       Non-critical CSS (not needed for first paint — quick view only opens on
@@ -151,8 +162,12 @@
     {% endcomment %}
     {% # theme-check-disable AssetPreload %}
     {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
+    {% unless template.name == 'cart' %}
+      {% assign cart_deferred_css = 'cart.css' | split: ',' %}
+      {% assign non_critical_css = non_critical_css | concat: cart_deferred_css %}
+    {% endunless %}
     {% if template.name == 'index' %}
-      {% assign index_deferred_css = 'new-products.css,testimonials.css,brand-story.css' | split: ',' %}
+      {% assign index_deferred_css = 'new-products.css,testimonials.css,brand-story.css,footer.css' | split: ',' %}
       {% assign non_critical_css = non_critical_css | concat: index_deferred_css %}
     {% endif %}
     {% for file in non_critical_css %}
