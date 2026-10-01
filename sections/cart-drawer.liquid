@@ -99,7 +99,7 @@
                 {% if suggested_collection.featured_image != blank %}
                   {{
                     suggested_collection.featured_image
-                    | image_url: width: 480
+                    | image_url: width: 480, format: 'webp'
                     | image_tag: loading: 'lazy', widths: '240, 360, 480', class: 'j-cart__suggestion-image', alt: ''
                   }}
                 {% else %}

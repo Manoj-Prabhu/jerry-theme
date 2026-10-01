@@ -40,7 +40,7 @@
 
         {{
           section.settings.logo
-          | image_url: width: section.settings.logo_width
+          | image_url: width: section.settings.logo_width, format: 'webp'
           | image_tag:
             alt: shop.name,
             widths: '120,160,200,240,300,400',
@@ -117,7 +117,7 @@
                   {% if column.type == 'collection_link' and column.object.featured_image %}
                     {{
                       column.object.featured_image
-                      | image_url: width: 600
+                      | image_url: width: 600, format: 'webp'
                       | image_tag:
                         widths: '300, 450, 600',
                         sizes: '(max-width: 992px) 45vw, 300px',

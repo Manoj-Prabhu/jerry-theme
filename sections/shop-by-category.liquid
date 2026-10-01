@@ -37,7 +37,7 @@
                 {% assign img_alt = block.settings.title | default: shop.name %}
                 {{
                   block.settings.image
-                  | image_url: width: 800
+                  | image_url: width: 800, format: 'webp'
                   | image_tag:
                     loading: 'lazy',
                     widths: '400, 600, 800',

@@ -118,7 +118,7 @@
                           <div class="j-search-result__image">
                             {{
                               result.image
-                              | image_url: width: 700
+                              | image_url: width: 700, format: 'webp'
                               | image_tag:
                                 loading: 'lazy',
                                 alt: result.title,

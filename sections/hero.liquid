@@ -133,7 +133,7 @@
                 {% capture eager_hero_video %}
                   {% if hero_source %}
                     <video class="j-hero__video"
-                      poster="{{ hero_video.preview_image | image_url: width: 1000 }}"
+                      poster="{{ hero_video.preview_image | image_url: width: 1000, format: 'webp' }}"
                       preload="metadata"
                       muted="muted"
                       loop="loop"
@@ -173,7 +173,7 @@
                 {% capture deferred_hero_video %}
                   {% if hero_source %}
                     <video class="j-hero__video"
-                      poster="{{ hero_video.preview_image | image_url: width: 1000 }}"
+                      poster="{{ hero_video.preview_image | image_url: width: 1000, format: 'webp' }}"
                       preload="metadata"
                       muted="muted"
                       loop="loop"
@@ -199,7 +199,7 @@
                 {% assign img_alt = block.settings.heading | default: shop.name %}
                 {{
                   block.settings.image
-                  | image_url: width: 1200
+                  | image_url: width: 1200, format: 'webp'
                   | image_tag:
                     loading: 'eager',
                     fetchpriority: 'high',
@@ -223,7 +223,7 @@
                   {% assign img_alt = block.settings.heading | default: shop.name %}
                   {{
                     block.settings.image
-                    | image_url: width: 1200
+                    | image_url: width: 1200, format: 'webp'
                     | image_tag:
                       widths: '360, 480, 600, 760, 1000, 1200',
                       sizes: '(max-width: 991px) 90vw, 560px',

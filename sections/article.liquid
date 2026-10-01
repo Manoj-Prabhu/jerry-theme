@@ -46,7 +46,7 @@
     <div class="j-article__hero">
       {{
         article.image
-        | image_url: width: 1400
+        | image_url: width: 1400, format: 'webp'
         | image_tag:
           loading: 'eager',
           fetchpriority: 'high',

@@ -3,7 +3,7 @@
     <div class="custom-section__background">
       {{
         section.settings.background_image
-        | image_url: width: 2000
+        | image_url: width: 2000, format: 'webp'
         | image_tag:
           loading: 'lazy',
           widths: '750, 1100, 1500, 2000',

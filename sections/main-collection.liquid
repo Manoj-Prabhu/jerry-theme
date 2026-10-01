@@ -14,7 +14,7 @@
       {% assign img_alt = banner_image.alt | default: collection.title %}
       {{
         banner_image
-        | image_url: width: 1600
+        | image_url: width: 1600, format: 'webp'
         | image_tag:
           loading: 'eager',
           fetchpriority: 'high',

@@ -222,7 +222,7 @@
                 data-preview-image="{{ preview_image | image_url: width: 700, format: 'webp' }}"
               {% endif %}
               {% if value.swatch.image %}
-                style="background-image: url({{ value.swatch.image | image_url: width: 30 }});"
+                style="background-image: url({{ value.swatch.image | image_url: width: 30, format: 'webp' }});"
               {% elsif value.swatch.color %}
                 style="background-color: {{ value.swatch.color }};"
               {% else %}

@@ -37,7 +37,7 @@
         {% assign img_alt = section.settings.heading | default: shop.name %}
         {{
           section.settings.image
-          | image_url: width: 1200
+          | image_url: width: 1200, format: 'webp'
           | image_tag: loading: 'lazy', widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: img_alt
         }}
       {% else %}

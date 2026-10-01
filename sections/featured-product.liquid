@@ -324,6 +324,17 @@
                 {% case media.media_type %}
                   {% when 'image' %}
                     {% assign img_alt = media.alt | default: main_image_alt %}
+                    {% comment %}
+                      sizes was a flat 500px — the gallery column is
+                      actually 1.15fr of a 2.15fr-total grid (see
+                      .j-featured-product-card in featured-product.css),
+                      which renders closer to ~53% of the content width
+                      on real desktop viewports, not a fixed 500px. That
+                      mismatch made the browser pick an oversized srcset
+                      candidate (800w) for what was actually only a
+                      591px-wide slot, flagged by Lighthouse as "image
+                      delivery" waste.
+                    {% endcomment %}
                     {{
                       media
                       | image_url: width: 900, format: 'webp'
@@ -331,7 +342,7 @@
                         class: 'j-featured-product__image',
                         loading: 'lazy',
                         widths: '400, 600, 800, 900',
-                        sizes: '(max-width: 768px) 100vw, 500px',
+                        sizes: '(max-width: 768px) 100vw, 53vw',
                         alt: img_alt
                     }}
                   {% when 'video' %}
@@ -375,7 +386,7 @@
                   >
                     {{
                       media.preview_image
-                      | image_url: width: 240
+                      | image_url: width: 240, format: 'webp'
                       | image_tag:
                         loading: 'lazy',
                         alt: '',
