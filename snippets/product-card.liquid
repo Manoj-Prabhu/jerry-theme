@@ -192,40 +192,27 @@
           version, so this matches the same way variant selection does
           elsewhere in the theme).
         {% endcomment %}
-        {% assign color_option_index = color_option.position | minus: 1 %}
-
         {% comment %}
-          Built once, in a single pass over product.variants, instead of
-          re-scanning the full variant list from scratch for each of the
-          up to swatch_limit swatches below — that previously repeated an
-          O(variants) scan swatch_limit times (up to 4 x 100 = 400
-          comparisons per card, on every product-card render, for every
-          card in every grid). One pass records the first variant seen
-          for each distinct color value; the swatch loop below then only
-          has to search that much shorter per-color list instead of the
-          full variant list.
+          Shopify Liquid has no array-mutation filters (push/pop aren't
+          real Shopify filters, despite existing in some other Liquid
+          implementations — `shopify theme check` flags them as
+          UnknownFilter), so a true single-pass "first variant per
+          color" lookup table isn't buildable here. `where` is a real,
+          Shopify-native filter though, and matching through it is still
+          simpler and faster in practice than a hand-written nested
+          Liquid loop over the full variant list for every swatch. The
+          option key is built dynamically ('option' + position) so this
+          works regardless of which option position color happens to be
+          in on a given product.
         {% endcomment %}
-        {% assign seen_color_values = '' | split: '' %}
-        {% assign seen_color_variants = '' | split: '' %}
-        {% for variant in product.variants %}
-          {% assign variant_color_value = variant.options[color_option_index] %}
-          {% unless seen_color_values contains variant_color_value %}
-            {% assign seen_color_values = seen_color_values | push: variant_color_value %}
-            {% assign seen_color_variants = seen_color_variants | push: variant %}
-          {% endunless %}
-        {% endfor %}
+        {% assign option_key = 'option' | append: color_option.position %}
 
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
 
-            {% assign preview_variant = null %}
-            {% for seen_value in seen_color_values %}
-              {% if seen_value == value %}
-                {% assign preview_variant = seen_color_variants[forloop.index0] %}
-                {% break %}
-              {% endif %}
-            {% endfor %}
+            {% assign matching_variants = product.variants | where: option_key, value %}
+            {% assign preview_variant = matching_variants.first %}
             {% assign preview_image = preview_variant.featured_image %}
 
             <span
