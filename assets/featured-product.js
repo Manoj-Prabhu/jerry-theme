@@ -205,16 +205,34 @@ function initFeaturedProduct(root) {
     // the grid column reflowing, a live mobile/desktop preview toggle)
     // — ResizeObserver reacts to the row's actual rendered size itself
     // rather than only window resize events.
+    //
+    // Observes the border box, not the default content box: on mobile,
+    // updateThumbArrows() toggles .has-thumb-scroll, which adds/removes
+    // 56px of padding on this very element. Watching the content box,
+    // every toggle registered as a resize, re-ran updateThumbArrows(),
+    // toggled the padding again — an endless loop (one per featured
+    // product block) that forced a layout every cycle and cost ~11s of
+    // CPU in Lighthouse's mobile run. The border box only changes when
+    // the surrounding layout does, which is the only time this needs to
+    // re-check. The width guard is a backstop against the same loop.
     let thumbResizeTimer = null;
-    const onThumbListResize = () => {
+    let lastThumbWidth = null;
+    const onThumbListResize = (entries) => {
+      const entry = entries && entries[0];
+      const width = entry && entry.borderBoxSize
+        ? entry.borderBoxSize[0].inlineSize
+        : thumbList.offsetWidth;
+      if (width === lastThumbWidth) return;
+      lastThumbWidth = width;
+
       clearTimeout(thumbResizeTimer);
       thumbResizeTimer = setTimeout(updateThumbArrows, 150);
     };
 
     if (typeof ResizeObserver === "function") {
-      new ResizeObserver(onThumbListResize).observe(thumbList);
+      new ResizeObserver(onThumbListResize).observe(thumbList, { box: "border-box" });
     } else {
-      window.addEventListener("resize", onThumbListResize, { passive: true });
+      window.addEventListener("resize", () => onThumbListResize(), { passive: true });
     }
 
     updateThumbArrows();
