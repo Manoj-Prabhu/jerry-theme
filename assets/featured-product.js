@@ -182,12 +182,32 @@ function initFeaturedProduct(root) {
       thumbPrev.hidden = !canScroll;
       thumbNext.hidden = !canScroll;
 
-      if (!canScroll) return;
+      updateArrowEnabledState();
+    }
+
+    // Scroll position only — never touches .has-thumb-scroll. This is all
+    // a scroll event needs; the full updateThumbArrows() above re-measures
+    // by toggling the row's padding, which shifts its scroll-snap points,
+    // which makes the browser re-snap and fire more scroll events. Wired
+    // to "scroll" directly, that fed itself indefinitely on mobile (one
+    // loop per featured product block), forcing layout on every pass.
+    function updateArrowEnabledState() {
+      if (thumbPrev.hidden) return;
 
       thumbPrev.disabled = thumbList.scrollLeft <= 0;
       thumbNext.disabled =
         thumbList.scrollLeft + thumbList.clientWidth >=
         thumbList.scrollWidth - 1;
+    }
+
+    let arrowStateQueued = false;
+    function queueArrowEnabledState() {
+      if (arrowStateQueued) return;
+      arrowStateQueued = true;
+      requestAnimationFrame(() => {
+        arrowStateQueued = false;
+        updateArrowEnabledState();
+      });
     }
 
     thumbPrev.addEventListener("click", () => {
@@ -198,7 +218,7 @@ function initFeaturedProduct(root) {
       thumbList.scrollBy({ left: thumbStepDistance(), behavior: "smooth" });
     });
 
-    thumbList.addEventListener("scroll", updateThumbArrows, { passive: true });
+    thumbList.addEventListener("scroll", queueArrowEnabledState, { passive: true });
 
     // Re-checks arrow visibility whenever the row's available width
     // changes for any reason (viewport resize, web fonts swapping in,
@@ -208,13 +228,11 @@ function initFeaturedProduct(root) {
     //
     // Observes the border box, not the default content box: on mobile,
     // updateThumbArrows() toggles .has-thumb-scroll, which adds/removes
-    // 56px of padding on this very element. Watching the content box,
-    // every toggle registered as a resize, re-ran updateThumbArrows(),
-    // toggled the padding again — an endless loop (one per featured
-    // product block) that forced a layout every cycle and cost ~11s of
-    // CPU in Lighthouse's mobile run. The border box only changes when
+    // 56px of padding on this very element, so its content box changes
+    // whenever arrow visibility does. The border box only changes when
     // the surrounding layout does, which is the only time this needs to
-    // re-check. The width guard is a backstop against the same loop.
+    // re-check. The width guard keeps a padding-only change from ever
+    // re-triggering the measurement.
     let thumbResizeTimer = null;
     let lastThumbWidth = null;
     const onThumbListResize = (entries) => {
