@@ -8,7 +8,14 @@
 // slide to `position: absolute` for a jump-free crossfade from here on).
 function createCrossfadeSlideshow(
   root,
-  { slideSelector, track, autoplayDelay = 5000, arrowSelector, onChange },
+  {
+    slideSelector,
+    track,
+    autoplayDelay = 5000,
+    arrowSelector,
+    onChange,
+    onVisibilityChange,
+  },
 ) {
   const slides = Array.from(root.querySelectorAll(slideSelector));
   const prefersReducedMotion = window.matchMedia(
@@ -101,17 +108,54 @@ function createCrossfadeSlideshow(
     goToSlide(currentIndex - 1);
   }
 
-  function stopAutoplay() {
+  // Autoplay only actually ticks while the slideshow is on screen. Each
+  // crossfade makes the browser produce main-thread frames for as long as
+  // its transition runs; with several slideshows on one page (hero,
+  // featured product, brand story, testimonials) rotating on their own
+  // timers regardless of scroll position, some transition was running
+  // almost constantly — for content nobody could see. `wantsAutoplay` is
+  // what callers asked for (start/stopAutoplay); `isInView` is whether
+  // it's worth doing right now.
+  let wantsAutoplay = false;
+  let isInView = true;
+
+  function clearTimer() {
     if (timer) {
       clearInterval(timer);
       timer = null;
     }
   }
 
+  function syncTimer() {
+    clearTimer();
+    if (wantsAutoplay && isInView) {
+      timer = setInterval(next, autoplayDelay);
+    }
+  }
+
+  function stopAutoplay() {
+    wantsAutoplay = false;
+    clearTimer();
+  }
+
   function startAutoplay() {
     if (prefersReducedMotion || slides.length < 2) return;
-    stopAutoplay();
-    timer = setInterval(next, autoplayDelay);
+    wantsAutoplay = true;
+    syncTimer();
+  }
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting === isInView) return;
+          isInView = entry.isIntersecting;
+          syncTimer();
+          if (onVisibilityChange) onVisibilityChange(isInView);
+        });
+      },
+      { threshold: 0 },
+    ).observe(root);
   }
 
   if (slides.length > 1) {

@@ -1,15 +1,5 @@
 {% render 'announcement-bar' %}
 
-{% style %}
-  {{ section.settings.nav_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-nav-link {
-    font-family: {{ section.settings.nav_font.family }}, {{ section.settings.nav_font.fallback_families }};
-    font-style: {{ section.settings.nav_font.style }};
-    font-weight: {{ section.settings.nav_font.weight }};
-  }
-{% endstyle %}
-
 <header
   class="j-site-header-wrapper full-width {% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
@@ -357,14 +347,7 @@ Search for accessories...{% endcapture %}
       "label": "Animated search placeholder phrases",
       "info": "One phrase per line. Rotates in the search field when it's empty. Leave a single line to disable the animation.",
       "default": "Search for jeans...\nSearch for jackets...\nSearch for accessories..."
-    },
-    {
-      "type": "font_picker",
-      "id": "nav_font",
-      "label": "Navigation font",
-      "info": "Used for the main menu links (Home, Catalog, Men, Women, etc).",
-      "default": "fredoka_n4"
-    },
+    },
     {
       "type": "link_list",
       "id": "menu",
@@ -400,13 +383,7 @@ Search for accessories...{% endcapture %}
       "id": "announcement_text_color",
       "label": "Text color",
       "default": "#FFFFFF"
-    },
-    {
-      "type": "font_picker",
-      "id": "announcement_font",
-      "label": "Announcement font",
-      "default": "fredoka_n4"
-    }
+    }
   ],
   "blocks": [
     {

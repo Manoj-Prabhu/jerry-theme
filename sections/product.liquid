@@ -271,16 +271,6 @@
             {% if current_variant.store_availabilities.size > 0 %}
               {% assign pickup_location = current_variant.store_availabilities.first %}
 
-              {% style %}
-                {{ block.settings.font | font_face: font_display: 'swap' }}
-
-                [data-pickup-block-id="{{ block.id }}"] {
-                  font-family: {{ block.settings.font.family }}, {{ block.settings.font.fallback_families }};
-                  font-style: {{ block.settings.font.style }};
-                  font-weight: {{ block.settings.font.weight }};
-                }
-              {% endstyle %}
-
               <div
                 class="j-product__pickup"
                 id="ProductPickupAvailability"
@@ -622,16 +612,6 @@
 
           {% when 'description' %}
             {% if product.description != blank %}
-              {% style %}
-                {{ block.settings.font | font_face: font_display: 'swap' }}
-
-                [data-description-block-id="{{ block.id }}"] .j-product__description-content {
-                  font-family: {{ block.settings.font.family }}, {{ block.settings.font.fallback_families }};
-                  font-style: {{ block.settings.font.style }};
-                  font-weight: {{ block.settings.font.weight }};
-                }
-              {% endstyle %}
-
               <details
                 class="j-product__description"
                 data-description-block-id="{{ block.id }}"
@@ -747,12 +727,6 @@
       "name": "Pickup availability",
       "limit": 1,
       "settings": [
-        {
-          "type": "font_picker",
-          "id": "font",
-          "label": "Font",
-          "default": "sofia_sans_extra_condensed_n4"
-        }
       ]
     },
     {
@@ -836,12 +810,6 @@
       "name": "Description",
       "limit": 1,
       "settings": [
-        {
-          "type": "font_picker",
-          "id": "font",
-          "label": "Font",
-          "default": "eczar_n4"
-        }
       ]
     },
     {

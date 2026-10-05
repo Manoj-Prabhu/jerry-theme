@@ -104,15 +104,18 @@ function initShopByCategoryAutoScroll(grid) {
   });
   grid.addEventListener("mouseleave", () => {
     isHovering = false;
+    resumeTicking();
   });
   grid.addEventListener("pointerdown", () => {
     isPointerActive = true;
   });
   window.addEventListener("pointerup", () => {
     isPointerActive = false;
+    resumeTicking();
   });
   window.addEventListener("pointercancel", () => {
     isPointerActive = false;
+    resumeTicking();
   });
 
   function tick(timestamp) {
@@ -150,6 +153,13 @@ function initShopByCategoryAutoScroll(grid) {
 
     if (isMoving) {
       grid.scrollLeft += currentSpeed * dt;
+    } else if (paused) {
+      // Fully eased to a stop while paused — stop requesting frames too.
+      // Left running, this loop kept forcing a main-thread frame every
+      // ~16ms for as long as the cursor/finger stayed on the row, doing
+      // nothing. resumeTicking() restarts it once the pause ends.
+      currentSpeed = 0;
+      stopTicking();
     }
   }
 
@@ -157,6 +167,10 @@ function initShopByCategoryAutoScroll(grid) {
     if (rafId !== null) return;
     lastTimestamp = null;
     rafId = requestAnimationFrame(tick);
+  }
+
+  function resumeTicking() {
+    if (isInView && pageLoaded) startTicking();
   }
 
   function stopTicking() {
@@ -241,45 +255,94 @@ const CARD_MIN_SCALE = 0.82;
 const CARD_MAX_SCALE = 1.15;
 const CARD_MAX_ROTATE_DEG = 32;
 
-function updateCardScales(grid, focusX) {
-  const cards = grid.querySelectorAll(".j-category-card");
-  if (!cards.length) return;
+// Each card's position inside the row's scrollable content never changes
+// while scrolling — only the row's scrollLeft does. Measuring all 15
+// cards (5 real + 2 cloned sets) with getBoundingClientRect() on every
+// update, ~25 times a second for as long as the row auto-scrolls, was
+// most of this file's cost on a throttled mobile CPU. This measures them
+// once and reuses that until the row's own size changes (see
+// invalidateCardGeometry).
+const cardGeometryCache = new WeakMap();
 
-  const gridRect = grid.getBoundingClientRect();
-  const center = focusX ?? gridRect.left + gridRect.width / 2;
+function measureCardGeometry(grid) {
+  const cards = Array.from(grid.querySelectorAll(".j-category-card"));
+  const gridWidth = grid.clientWidth;
+  if (!cards.length || gridWidth <= 0) return null;
+
+  // offsetLeft is unaffected by the scale/rotate transforms this effect
+  // itself applies, unlike getBoundingClientRect().
+  const gridOffset = cards[0].offsetParent === grid ? 0 : grid.offsetLeft;
+
+  const geometry = {
+    gridWidth,
+    cards: cards.map((card) => ({
+      card,
+      center: card.offsetLeft - gridOffset + card.offsetWidth / 2,
+      scale: null,
+      rotate: null,
+      zIndex: null,
+    })),
+  };
+  cardGeometryCache.set(grid, geometry);
+  return geometry;
+}
+
+function invalidateCardGeometry(grid) {
+  cardGeometryCache.delete(grid);
+}
+
+function updateCardScales(grid, focusX) {
+  const geometry = cardGeometryCache.get(grid) || measureCardGeometry(grid);
+  if (!geometry) return;
+
+  // Focus point in the same coordinate space as the cached card centers
+  // (the row's scrollable content): the row's visible center by default,
+  // or the cursor's position within the row while hovering.
+  const focusOffset =
+    focusX == null
+      ? geometry.gridWidth / 2
+      : focusX - grid.getBoundingClientRect().left;
+  const center = grid.scrollLeft + focusOffset;
   // Half the row's width is the natural falloff distance — a card
   // centered at the row's edge is as far from focus as this effect goes.
-  const maxDistance = gridRect.width / 2;
+  const maxDistance = geometry.gridWidth / 2;
 
-  // Read phase — measure every card's position before writing any
-  // styles. Reading a card's rect right after writing a previous card's
-  // style (the old shape of this loop) forces the browser to
-  // synchronously recompute layout on every iteration, since the write
-  // invalidates the geometry the next read needs — that's the "Forced
-  // reflow" Lighthouse flags. Batching all the reads first, then all the
-  // writes, means no read in this function ever follows a write.
-  const measurements = Array.from(cards, (card) => {
-    const cardRect = card.getBoundingClientRect();
-    return { card, cardCenter: cardRect.left + cardRect.width / 2 };
-  });
-
-  // Write phase — no geometry reads below this point.
-  measurements.forEach(({ card, cardCenter }) => {
-    const offset = cardCenter - center;
+  geometry.cards.forEach((entry) => {
+    const offset = entry.center - center;
     const distance = Math.abs(offset);
     const proximity = Math.max(0, 1 - distance / maxDistance);
-    const scale = CARD_MIN_SCALE + proximity * (CARD_MAX_SCALE - CARD_MIN_SCALE);
     // Opposite sign of proximity's falloff — 0deg at dead center, ramping
     // up to the max tilt the further a card sits to either side. Cards
     // left of center tilt one way, cards right of center tilt the other,
     // like pages fanned open around the focused one.
-    const rotate = -Math.sign(offset) * (1 - proximity) * CARD_MAX_ROTATE_DEG;
-
-    card.style.setProperty("--card-scale", scale.toFixed(3));
-    card.style.setProperty("--card-rotate", `${rotate.toFixed(2)}deg`);
+    const scale = (
+      CARD_MIN_SCALE +
+      proximity * (CARD_MAX_SCALE - CARD_MIN_SCALE)
+    ).toFixed(2);
+    const rotate = Math.round(
+      -Math.sign(offset) * (1 - proximity) * CARD_MAX_ROTATE_DEG,
+    );
     // Keeps the focused (scaled-up) card visually on top of its
     // neighbors instead of the later-in-DOM card always winning.
-    card.style.zIndex = Math.round(proximity * 10);
+    const zIndex = Math.round(proximity * 10);
+
+    // Only touches a card whose value actually changed. Most of the 15
+    // cards are off-screen at any moment, sitting at the same minimum
+    // scale / maximum tilt update after update — rewriting those every
+    // time restyled them (and restarted their CSS transition) for no
+    // visible difference.
+    if (scale !== entry.scale) {
+      entry.card.style.setProperty("--card-scale", scale);
+      entry.scale = scale;
+    }
+    if (rotate !== entry.rotate) {
+      entry.card.style.setProperty("--card-rotate", `${rotate}deg`);
+      entry.rotate = rotate;
+    }
+    if (zIndex !== entry.zIndex) {
+      entry.card.style.zIndex = zIndex;
+      entry.zIndex = zIndex;
+    }
   });
 }
 
@@ -297,7 +360,14 @@ function initShopByCategoryScale(grid) {
   // getBoundingClientRect() on every update, so capping it well below
   // 60fps meaningfully cuts the layout-read cost this was accumulating
   // continuously in the background.
-  const MIN_UPDATE_INTERVAL_MS = 40; // ~25fps ceiling
+  //
+  // Touch devices get a lower ceiling still (~10fps): they're the slower
+  // CPUs, and the card's own 0.2s CSS transform transition (see
+  // shop-by-category.css) already smooths the gap between updates, so
+  // the tilt still reads as continuous.
+  const MIN_UPDATE_INTERVAL_MS = window.matchMedia("(pointer: coarse)").matches
+    ? 100
+    : 40; // ~25fps ceiling on desktop
   const scheduleUpdate = (focusX) => {
     if (ticking) return;
     if (performance.now() - lastUpdateTime < MIN_UPDATE_INTERVAL_MS) return;
@@ -309,8 +379,20 @@ function initShopByCategoryScale(grid) {
     });
   };
 
+  // Card positions are cached (see measureCardGeometry) — anything that
+  // can change the row's layout has to drop that cache before the next
+  // update: a viewport resize, or late-loading fonts/images settling.
+  const remeasure = () => {
+    invalidateCardGeometry(grid);
+    lastUpdateTime = 0;
+    scheduleUpdate();
+  };
+
   grid.addEventListener("scroll", () => scheduleUpdate(), { passive: true });
-  window.addEventListener("resize", () => scheduleUpdate());
+  window.addEventListener("resize", remeasure);
+  if (document.readyState !== "complete") {
+    window.addEventListener("load", remeasure, { once: true });
+  }
 
   // Mouse-hover follows the cursor instead of the scroll position — a
   // fine/hover-capable pointer only, so this doesn't fight the

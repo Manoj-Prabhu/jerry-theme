@@ -118,6 +118,16 @@ function initHeroSlideshow(root) {
       // hydrated ahead of playback at any given time.
       hydrateUpcomingVideo();
     },
+    // No point decoding a video nobody can see — pause it once the hero
+    // scrolls out of view, resume when it comes back.
+    onVisibilityChange(inView) {
+      const slide = slideshow.slides[slideshow.currentIndex];
+      if (inView) {
+        playSlideVideo(slide);
+      } else {
+        pauseSlideVideo(slide);
+      }
+    },
   });
 
   // The first slide's video sits over its poster <img> at opacity 0 (see

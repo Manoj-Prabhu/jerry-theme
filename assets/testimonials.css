@@ -103,12 +103,15 @@
 .j-testimonials__quote {
   margin: 0;
   color: var(--color-secondary-text);
-  /* Bumped from --font-size-xl (22px) — a real vote of visual confidence
-     for the section's one piece of actual customer proof, matching the
-     bolder scale used elsewhere this pass (the hero headline). */
-  font-size: var(--font-size-2xl);
-  line-height: 1.4;
-  font-style: normal;
+  /* A quiet pull quote: the body font in regular-weight italic, a step
+     above body size (18px on phones up to 22px on desktop). The italic
+     is what marks it as someone's words; larger or bolder treatments
+     read as either oversized paragraph copy or a second headline
+     competing with the section titles. */
+  font-weight: var(--font-normal);
+  font-style: italic;
+  font-size: clamp(var(--font-size-lg), 1.6vw, var(--font-size-xl));
+  line-height: 1.6;
 
   /* Bounds wildly different quote lengths between blocks to the same
      6 lines, so the JS-measured slide height (see updateHeight in

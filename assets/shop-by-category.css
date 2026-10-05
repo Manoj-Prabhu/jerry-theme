@@ -104,6 +104,23 @@
   scroll-snap-type: none;
 }
 
+/* Registered as non-inheriting: only the card itself uses these (see its
+   transform below). As plain custom properties they inherit, so every
+   update from shop-by-category-v2.js also forced a style recalculation
+   on each card's image and title for values they never read. Browsers
+   without @property support just fall back to the inherited behavior. */
+@property --card-scale {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --card-rotate {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 .j-category-card {
   display: flex;
   flex-direction: column;

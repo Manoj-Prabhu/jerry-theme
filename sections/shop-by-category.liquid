@@ -2,16 +2,6 @@
   Shop by Category
 {% endcomment %}
 
-{% style %}
-  {{ section.settings.card_title_font | font_face: font_display: 'swap' }}
-
-  #shopify-section-{{ section.id }} .j-category-card__title {
-    font-family: {{ section.settings.card_title_font.family }}, {{ section.settings.card_title_font.fallback_families }};
-    font-style: {{ section.settings.card_title_font.style }};
-    font-weight: {{ section.settings.card_title_font.weight }};
-  }
-{% endstyle %}
-
 <section class="j-shop-by-category full-width">
   <div class="j-shop-by-category__inner">
 
@@ -84,12 +74,6 @@
       "id": "heading",
       "label": "Heading",
       "default": "Shop by Category"
-    },
-    {
-      "type": "font_picker",
-      "id": "card_title_font",
-      "label": "Category title font",
-      "default": "manuale_n7"
     },
     {
       "type": "textarea",
