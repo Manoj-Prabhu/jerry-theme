@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -40,11 +31,7 @@
           }
         }
       },
-      "block_order": [
-        "stat_est",
-        "stat_countries",
-        "stat_customers"
-      ],
+      "block_order": ["stat_est", "stat_countries", "stat_customers"],
       "settings": {
         "image_position": "left",
         "image": "shopify://shop_images/woman-stands-in-her-store-with-folded-arms.jpg",
@@ -105,9 +92,5 @@
       }
     }
   },
-  "order": [
-    "main",
-    "story",
-    "values"
-  ]
+  "order": ["main", "story", "values"]
 }
