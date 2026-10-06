@@ -1,11 +1,4 @@
-// Shared engine for the theme's crossfade slideshows (hero, testimonials,
-// brand story) — they all swap `.is-active` between absolutely positioned
-// slides and were each maintaining a near-identical copy of this: autoplay,
-// arrow navigation, focus-pause, and — where a `track` element is given —
-// the measure-then-lock-height trick that keeps the container from jumping
-// on first paint (the active slide starts as `position: static` in CSS, so
-// this measures that natural height, locks it in, then switches every
-// slide to `position: absolute` for a jump-free crossfade from here on).
+
 function createCrossfadeSlideshow(
   root,
   {
@@ -24,9 +17,6 @@ function createCrossfadeSlideshow(
 
   function updateHeight() {
     if (!track) return;
-
-    // Batched write / read / write instead of write-read-write per slide,
-    // to avoid a forced synchronous layout on every iteration.
     const originalVisibility = slides.map((slide) => slide.style.visibility);
 
     slides.forEach((slide) => {

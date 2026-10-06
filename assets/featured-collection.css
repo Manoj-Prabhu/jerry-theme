@@ -1,17 +1,6 @@
 /* Section */
 
 .j-featured-collection {
-  /* No margin: 0 auto here — this section is already a grid item inside
-     .shopify-section's own centering grid (grid-column: 2, pre-sized to
-     the theme's content-width track; see critical.css). Auto margins on
-     a grid item are special-cased by the CSS Grid spec: they make the
-     item shrink-to-fit its own content and center within the track
-     instead of stretching to fill it — which was collapsing this
-     section down to whatever narrow width its content (specifically the
-     product grid's auto-fit columns) happened to compute, instead of
-     the intended ~1400px content width. max-width alone is enough; the
-     grid item still stretches to fill (and centers within) its track by
-     default without the auto margins fighting that. */
   max-width: var(--container-width);
   padding: 120px var(--space-8);
 }
@@ -37,29 +26,11 @@
 
 /* Product Grid */
 
-/* auto-fit + a capped column width instead of a fixed repeat(4, 1fr) —
-   with products_to_show now commonly set to 2, a fixed 4-column grid
-   would leave two empty tracks and squash the 2 real cards off to one
-   side. This centers however many cards there are (2, 4, up to the
-   section's max of 12) at a consistent card width instead.
-
-   The minmax() minimum is deliberately not 0 — auto-fit with a zero
-   minimum is a known problematic combination that can make the browser
-   miscompute how many tracks actually fit, collapsing to a single
-   narrow column instead of the expected side-by-side layout. min(100%,
-   280px) keeps a sensible floor per card while still shrinking to fit
-   on very narrow screens. */
 .j-product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 520px));
   justify-content: center;
   gap: 64px;
-  /* The permanent 3D tilt below (see .j-product-card:nth-child) lifts a
-     card's rendered pixels above its actual layout box via translateY —
-     transforms never affect layout/box size, so without this the top
-     row's tilted (and especially hovered/settled) cards visually
-     overlapped whatever heading or toolbar sits directly above the
-     grid. */
   padding-top: 24px;
 }
 
@@ -88,28 +59,12 @@
   transition: translate 0.25s ease;
 }
 
-/* Nudges the arrow further right on hover — a small motion cue rather
-   than a static icon, reinforcing the "go to" action. translate, not
-   transform: this button doesn't use transform for anything else, but
-   staying consistent with the same independent-property approach used
-   for the product cards' scroll animation elsewhere in this file. */
 .j-featured-collection__view-all .j-button-outline:hover .j-featured-collection__view-all-arrow {
   translate: 4px 0;
 }
 
 /* Product Card */
 
-/* The card itself is just a layout container now — the visual "card"
-   chrome (border, shadow, rounded corners) lives on .j-product-card__image
-   below, since the image is meant to fully cover its own card-like box
-   while price/title sit as plain text underneath, not enclosed with it.
-
-   The wishlist/quick-view buttons are nested directly inside
-   .j-product-card__image in the markup (see product-card.liquid) rather
-   than positioned relative to the whole card — the card's total height
-   includes the price/title below the image, so anchoring them to the
-   card itself would put them at an inconsistent offset from the image's
-   actual bottom edge depending on how tall that text happens to render. */
 .j-product-card {
   position: relative;
   display: flex;
@@ -124,11 +79,6 @@
   flex: 1;
 }
 
-/* No box of its own — its <img> children lay out exactly as if this
-   anchor weren't there at all, while it still functions as a real,
-   focusable link (hidden from assistive tech; see product-card.liquid
-   for why this exists as a separate anchor from .j-product-card__link
-   rather than wrapping the whole card). */
 .j-product-card__image-link {
   display: contents;
 }
@@ -152,16 +102,6 @@
   outline-offset: -2px;
 }
 
-/* Permanent static 3D tilt — every card, not just wishlisted ones, sits
-   at a fixed perspective angle at rest (no hover/JS involved), like a
-   stack of printed photos laid down slightly askew rather than a rigid
-   flat grid. Alternating the direction per card (odd tilts one way,
-   even the other) keeps a full row from all leaning in the same
-   direction, which would just read as the whole grid being crooked
-   rather than each card catching light on its own. Excludes the
-   homepage's Featured Collection section, which already has its own
-   hover lift (see .j-featured-collection .j-product-card:hover below)
-   built around a flat resting state. */
 .j-product-card:nth-child(odd) {
   transform: perspective(700px) rotateY(-6deg) rotateX(2deg) translateY(-6px);
 }
@@ -182,10 +122,6 @@
   transform: none;
 }
 
-/* Highlight the product once it's added to the wishlist — same tilt
-   strength as every other card now (see above), so the gold outline/
-   badge treatment is what actually carries the "this one's saved"
-   difference rather than the angle itself. */
 .j-product-card:has(.j-wishlist-button.is-active) {
   transform: perspective(700px) rotateY(-6deg) rotateX(2deg) translateY(-6px);
   transform-origin: center bottom;
@@ -199,17 +135,6 @@
     0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Hover "settle" — the resting tilt above is a static illusion (no
-   cursor-tracking), so hovering straightens the card up toward the
-   viewer instead: less rotation, more lift, like picking the photo up
-   off the table for a closer look, rather than tilting it further away.
-   Each selector below repeats the matching resting one with :hover
-   appended specifically so it also wins over that resting rule's own
-   .j-product-card__image box-shadow on specificity alone — without
-   that, the plain :hover .j-product-card__image rule further up this
-   file (same specificity as the resting nth-child shadow, declared
-   earlier) lost the tie to source order and never actually showed on a
-   tilted card. */
 .j-product-card:nth-child(odd):hover {
   transform: perspective(700px) rotateY(-2deg) rotateX(1deg) translateY(-14px) scale(1.02);
 }
@@ -253,9 +178,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* top, not the center default — these are mostly full-body/portrait
-     shots, and a dead-center crop on a shorter card aspect ratio cuts
-     heads off. Anchoring to the top keeps faces in frame instead. */
   object-position: top;
   transition:
     transform 0.35s ease,
@@ -266,10 +188,6 @@
   transform: scale(1.08);
 }
 
-/* Multiple product images auto-cycle (assets/theme.js) — stack them and
-   crossfade between whichever one currently has .is-active. The parent's
-   fixed aspect-ratio means every image can be absolutely positioned without
-   any layout-shift risk. */
 .j-product-card__image[data-auto-cycle] img {
   position: absolute;
   inset: 0;
@@ -323,9 +241,6 @@
   background: #6b7280;
 }
 
-/* Content — plain text below the image "card", not enclosed in its own
-   box, so it visually reads as separate from the image rather than
-   another panel stacked inside the same card. */
 .j-product-card__content {
   padding: 14px 2px 0;
 }
@@ -396,12 +311,6 @@
   margin-top: 8px;
 }
 
-/* Pale swatch colors (cream/ivory/white variants, or the fallback guess
-   from an option name that doesn't map to a real Shopify swatch — see
-   product-card.liquid) are otherwise indistinguishable from the white
-   card background with only the theme's default light gray border. A
-   fixed, more visible ring keeps every swatch readable as its own circle
-   regardless of how light its actual fill color is. */
 .j-product-card__swatch {
   width: 18px;
   height: 18px;
@@ -410,9 +319,6 @@
   box-shadow: 0 0 0 1px #fff;
   background-size: cover;
   background-position: center;
-  /* Now that hovering swaps the card's photo (assets/swatch-preview.js),
-     these need to actually read as interactive rather than purely
-     decorative dots. */
   cursor: pointer;
   transition:
     transform var(--transition-fast),
@@ -536,13 +442,6 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   z-index: 10;
-  /* Hidden until the card is hovered/focused (desktop) or tapped
-     (touch — see .is-tapped below and assets/featured-collection.js's
-     initProductCardTapReveal), matching Quick View's existing reveal
-     pattern instead of sitting permanently visible on every card at
-     rest. .is-active (already-favorited) is the one exception — see
-     below — so a shopper can still see what's already in their
-     wishlist across a grid without hovering every card first. */
   opacity: 0;
   visibility: hidden;
   transition:
@@ -552,17 +451,6 @@
     background var(--transition-fast);
 }
 
-/* :has(:focus-visible), not :focus-within — clicking the wishlist
-   button itself leaves it holding real DOM focus afterwards, and
-   :focus-within stays true for as long as that focus sits anywhere
-   inside the card, with nothing to end it until something else on the
-   page happens to receive focus. Net effect: click the heart, move the
-   mouse away, and the button (plus Quick View, which shares this same
-   hover group) stayed visible until an unrelated click elsewhere finally
-   moved focus away. :focus-visible only matches focus a browser decided
-   to show a ring for (keyboard/programmatic, not an ordinary mouse
-   click), so a keyboard tab still reveals these for accessibility while
-   a mouse click on the heart no longer leaves the card stuck "hovered". */
 .j-product-card:hover .j-wishlist-button,
 .j-product-card:has(:focus-visible) .j-wishlist-button,
 .j-product-card.is-tapped .j-wishlist-button {
@@ -576,11 +464,6 @@
 }
 
 .j-wishlist-button.is-active {
-  /* A sculpted, enamel-pin look — a soft light highlight along the top
-     edge and a darker shade along the bottom (both via inset shadows,
-     layered with the gold gradient itself) reads as a physically
-     domed/embossed badge rather than a flat colored circle, backed by a
-     real drop shadow so it visibly sits above the card surface. */
   background: linear-gradient(135deg, #fce8b0 0%, var(--color-gold) 45%, var(--color-gold-dark) 100%);
   color: #c0272d;
   box-shadow:
@@ -588,9 +471,6 @@
     inset 0 -3px 4px rgba(120, 72, 0, 0.45),
     0 4px 10px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(184, 135, 58, 0.5);
-  /* Always visible regardless of hover/tap state — once favorited, a
-     shopper should be able to see that at a glance across a whole grid,
-     not just on whichever card they're currently interacting with. */
   opacity: 1;
   visibility: visible;
 }
@@ -599,14 +479,6 @@
   background: linear-gradient(135deg, #fce8b0 0%, var(--color-gold) 45%, var(--color-gold-dark) 100%);
 }
 
-/* Heart burst — small hearts that float up and fade out from the button
-   when a product is added to the wishlist (spawned by wishlist.js).
-   Appended to .j-product-card rather than the button itself: the button
-   lives inside .j-product-card__image, which has overflow: hidden, and
-   would clip the hearts the moment they rose past the photo's top edge.
-   Positioned to sit exactly over the button — keep these values in sync
-   with .j-wishlist-button's own top/right/size (and its mobile override
-   below). */
 .j-heart-burst {
   position: absolute;
   top: 16px;
@@ -649,14 +521,6 @@
   }
 }
 
-/* Was previously declared inside the earlier @media (max-width: 768px)
-   block above (around .j-product-grid/.j-product-card__* mobile
-   tweaks) — but that block sits BEFORE the unscoped .j-wishlist-button
-   rule above in this same file. With identical specificity (one class
-   selector each), CSS resolves the tie by source order, so the later,
-   unscoped 44px rule always won regardless of viewport — the mobile
-   override never actually applied. Redeclared here, after the rule it
-   needs to override, so it wins at narrow widths as intended. */
 @media (max-width: 768px) {
   .j-wishlist-button,
   .j-heart-burst {
@@ -671,24 +535,6 @@
   }
 }
 
-/* -------------------------
-   Featured Collection — gold-accented card treatment
-   Scoped to .j-featured-collection specifically, not the shared
-   .j-product-card base above — that same component is reused on
-   collection pages, search results, and product recommendations, which
-   should keep their plain default styling untouched by this section's
-   own redesign.
--------------------------- */
-
-/* Restores the pre-redesign flex layout for this section specifically —
-   the shared base rule above was changed to CSS Grid (with
-   .j-product-card__link set to `display: contents`) so the base card's
-   Quick View button could overlay the image while price/title sit in a
-   separate row below. This section's cards work completely differently
-   (full-bleed image behind overlaid text, no separate row for
-   price/title — see .j-product-card__link / __image / __content below),
-   which depends on the old flex + `position: relative` + `margin-top:
-   auto` behavior, so it's reinstated here rather than adapted to grid. */
 .j-featured-collection .j-product-card {
   display: flex;
   flex-direction: column;
@@ -710,36 +556,9 @@
 
 .j-featured-collection .j-product-card:has(.j-wishlist-button.is-active) {
   border-color: var(--color-gold);
-  /* Overrides the shared base rule's tilt (see .j-product-card:has(...)
-     near the top of this file) — this section already has its own gold
-     border highlight for a saved item, and its cards are laid out full-
-     bleed edge to edge with no card-level margin to absorb a 3D tilt
-     without visually overlapping the next one. */
   transform: none;
 }
 
-/* Scroll-scrubbed slide-in — featured-collection.js sets the CSS
-   `translate` property directly (inline style) on every scroll frame,
-   computed from each card's live position in the viewport, rather than
-   toggling a class for a CSS transition to animate once.
-   `translate` deliberately, not `transform` — this card already
-   animates `transform: translateY(-8px)` on hover (see above), and
-   `translate` is a separate, independent CSS property that composes
-   with `transform` automatically instead of overwriting it, so the
-   scroll-driven horizontal offset and the hover lift can both be
-   active at once without fighting over the same property. Nothing here
-   is listed in this card's `transition` (above), so translate changes
-   apply on every frame immediately — exactly what scrubbing needs —
-   without needing to fight the shared scroll-reveal.js's own
-   transition on `transform` for these same elements. */
-
-/* Full-bleed image — fills the entire card behind the title/price
-   rather than sitting in its own boxed-off area above the text, similar
-   treatment to the hero section's photo+text overlay. .j-product-card
-   already establishes the positioning context (position: relative from
-   the shared base rule above); .j-product-card__link needs its own
-   here since it's the direct parent this image is absolutely
-   positioned against. */
 .j-featured-collection .j-product-card__link {
   display: flex;
   flex-direction: column;
@@ -748,16 +567,6 @@
   min-height: 520px;
 }
 
-/* No z-index here (was 0) — an explicit z-index on a positioned element
-   creates its own stacking context, which would trap the wishlist/quick-
-   view buttons nested inside this image (see product-card.liquid) below
-   .j-product-card__content's z-index: 2 overlay text, regardless of
-   their own z-index — they'd render underneath it and become
-   unclickable/hidden behind the title. Leaving this at the default
-   z-index: auto lets the image stay visually behind the content (it has
-   no explicit z-index, so it still loses to content's z-index: 2) while
-   letting its button children compete directly in the shared stacking
-   context and correctly render above the text. */
 .j-featured-collection .j-product-card__image {
   position: absolute;
   inset: 0;
@@ -767,12 +576,6 @@
   box-shadow: none;
 }
 
-/* Neutralizes the shared base rule's per-image hover shadow/outline
-   (see .j-product-card:hover .j-product-card__image above) — this
-   section already shows hover state via the card's own border/shadow
-   (see .j-featured-collection .j-product-card:hover above), so the same
-   effect doubling up on the image itself underneath would be redundant
-   (and mostly invisible anyway, clipped by the card's overflow: hidden). */
 .j-featured-collection .j-product-card:hover .j-product-card__image,
 .j-featured-collection .j-product-card:has(.j-wishlist-button.is-active) .j-product-card__image {
   box-shadow: none;
@@ -791,20 +594,13 @@
   inset: 0;
 }
 
-/* Dark gradient behind the overlaid text — without it, dark product
-   titles/prices would lose contrast against a light product photo, the
-   same reasoning as the hero's own scrim over its background image. */
+
 .j-featured-collection .j-product-card__image::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Concentrated in roughly the bottom third only, not a long smooth
-     fade across most of the photo — on a light/white product studio
-     shot (very common for e-commerce, unlike the hero's curated
-     lifestyle photos) a tall gradient reads as a visible gray smear
-     across the image rather than a subtle scrim. */
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.85) 0%,
@@ -813,9 +609,6 @@
   );
 }
 
-/* Sits on top of the image + scrim (z-index: 0 / 1 above) instead of
-   below it in normal flow, pinned to the bottom of the card via the
-   parent's flex column + margin-top: auto. */
 .j-featured-collection .j-product-card__content {
   position: relative;
   z-index: 2;
@@ -837,10 +630,6 @@
 .j-featured-collection .j-product-badge--new {
   background: #dc2626;
   color: #fff;
-  /* text-shadow only, not combined with -webkit-text-stroke — stacking
-     both at once (an earlier version of this) doubled up and read as a
-     muddy, blurry outline rather than a crisp one. A tighter single-
-     layer shadow set instead. */
   text-shadow:
     -0.5px -0.5px 0 #000,
     0.5px -0.5px 0 #000,
@@ -852,12 +641,6 @@
   background: var(--color-gold-dark);
 }
 
-/* Ribbon/flag-tag shape instead of the base rounded-rect pill — a
-   pointed notch cut into the right edge via clip-path, like a classic
-   price tag. Wider left padding balances the notch visually (the point
-   eats into the right side, so text needs a bit more room on the left
-   to stay centered-looking) and a bit more right padding so the text
-   doesn't run into the point itself. */
 .j-featured-collection .j-product-badge {
   padding: 6px 20px 6px 12px;
   border-radius: 0;
@@ -873,11 +656,6 @@
 }
 
 .j-featured-collection .j-quick-view-button {
-  /* Pulled out of normal flow — the base component renders this as a
-     block-level bar below the image (its own white strip), which was
-     the "card doesn't finish cleanly" look. Positioned as an overlay
-     instead, hidden until the card is hovered, so the card ends right
-     after the price with no permanent extra strip. */
   position: absolute;
   left: 18px;
   right: 18px;
@@ -889,10 +667,6 @@
   border-color: var(--color-gold);
   opacity: 0;
   visibility: hidden;
-  /* A bigger slide distance than an earlier, subtler version of this
-     (8px), with a springy overshoot easing on the way in — the button
-     rises past its final position slightly and settles back, instead of
-     a flat linear-feeling slide. */
   transform: translateY(28px);
   transition:
     opacity 0.3s ease,
@@ -913,12 +687,6 @@
     visibility 0s linear 0s;
 }
 
-/* Touch devices have no real hover state to reveal this with — an
-   earlier version of this made it permanently visible there instead,
-   but the reveal is now driven by tapping the card once (see
-   featured-collection.js, which toggles .is-tapped and intercepts that
-   first tap's navigation), so it can stay hidden-until-interaction here
-   too rather than always showing. */
 .j-featured-collection .j-product-card.is-tapped .j-quick-view-button {
   opacity: 1;
   visibility: visible;
@@ -932,11 +700,6 @@
 }
 
 .j-featured-collection .j-star {
-  /* Bumped from 0.35 — at the lighter end of the card's gradient scrim
-     (see .j-product-card__image::after) over a light product photo, the
-     unfilled star was getting too close to its background to reliably
-     read as a star shape at all, which also blurs the filled/unfilled
-     rating distinction itself. */
   color: rgba(255, 255, 255, 0.55);
 }
 
@@ -944,10 +707,6 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
-/* Bigger presentation on mobile specifically than the shared card's own
-   mobile shrink (see the max-width: 768px block above) — this section
-   only ever shows a couple of cards at a time, so there's room to keep
-   them larger instead of shrinking to fit many in a row. */
 @media (max-width: 768px) {
   .j-featured-collection .j-product-card__content {
     padding: 16px 18px;
@@ -963,10 +722,6 @@
     font-size: var(--font-size-sm);
   }
 
-  /* The shared .j-button/.j-button-outline base sizing (14px 28px
-     padding, 16px text) is tuned for a full-width primary action —
-     oversized for this section's single secondary "View All" link
-     sitting under a much narrower mobile card. */
   .j-featured-collection__view-all {
     margin-top: 28px;
   }
@@ -981,31 +736,15 @@
     height: 14px;
   }
 
-  /* The desktop min-height (520px, sized for a much wider multi-column
-     card) was carrying over unchanged onto a ~280-340px-wide mobile
-     card, stretching it to nearly double a normal portrait photo's
-     height instead of a proportional one. */
   .j-featured-collection .j-product-card__link {
     min-height: 380px;
   }
 }
 
-/* Below 600px, the auto-fit grid (see .j-product-grid above) was
-   shrinking both cards down to fit side by side — cramped and hard to
-   read. Swipeable one-at-a-time carousel instead: one full-width card
-   visible by default, the next reachable with a horizontal swipe/scroll,
-   same scroll-snap technique Shop by Category already uses. Scoped to
-   .j-featured-collection specifically, not the shared .j-product-grid
-   rules above, so collection/search pages keep their own grid layout. */
 @media (max-width: 600px) {
   .j-featured-collection .j-product-grid {
     display: flex;
     grid-template-columns: none;
-    /* Overrides the base (desktop) rule's justify-content: center —
-       centering *overflowing* flex content shifts the whole content
-       block so it's centered as a group, which pushed card 1 off-screen
-       to the left instead of starting at the visible left edge like a
-       normal scroll container should. */
     justify-content: flex-start;
     overflow-x: auto;
     scroll-snap-type: x mandatory;

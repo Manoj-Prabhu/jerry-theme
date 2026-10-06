@@ -31,6 +31,9 @@ function initProductRecommendations(root) {
 
       if (recommendations && recommendations.children.length > 0) {
         container.innerHTML = recommendations.innerHTML;
+        // The complementary variant renders hidden until it has products
+        // (see product-recommendations.liquid).
+        section.hidden = false;
 
         if (window.JerryWishlist) {
           window.JerryWishlist.sync(container);

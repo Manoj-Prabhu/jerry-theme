@@ -59,10 +59,6 @@
   margin-top: 0;
 }
 
-/* Match the gold hover used by .j-button-outline--gold (see
-   components.css) instead of the generic .j-button:hover, which uses the
-   merchant's configurable accent color — inconsistent alongside the
-   homepage button right next to it. */
 .j-404 .j-button:hover {
   background: var(--color-gold);
   color: var(--color-ink);

@@ -76,14 +76,6 @@
   border-color: var(--color-primary);
 }
 
-/* Outline variant that fills with the merchant's accent color on hover —
-   used by the product page's Add to Cart button, the cart drawer's
-   Continue Shopping button, the About page's story button, and the
-   Contact page's submit button. Use instead of .j-button-outline, not
-   alongside it. Driven by the same button/accent theme settings as the
-   rest of the button system (border radius, button color, accent color)
-   rather than fixed colors/corners, so it responds to the merchant's
-   customization like every other button does. */
 .j-button-outline--gold {
   background: var(--color-background);
   border: 1px solid var(--button-background);
@@ -96,12 +88,6 @@
 }
 
 .j-button-outline--gold:hover {
-  /* Fixed gold (not var(--color-accent), which is merchant-configurable
-     and used as text color in many other components — it's required to
-     stay a dark, high-contrast shade for those, so it can't safely double
-     as a light gold fill here). Text stays dark, not var(--button-text),
-     since white-on-gold fails contrast (~1.7:1); black-on-gold passes
-     comfortably (~10:1). Same gold already used in hero.css. */
   background: var(--color-gold);
   border-color: var(--color-gold);
   color: var(--color-ink);
@@ -139,24 +125,12 @@
   padding: 40px var(--space-8) 60px;
 }
 
-/* The shared .j-product-grid (see featured-collection.css) sizes cards
-   for a 2-up overlay layout (up to 520px each) — far too wide for a
-   default-sized card here. repeat(4, ...) — NOT auto-fit/auto-fill —
-   every time auto-fit has been tried here it's collapsed to a single
-   huge column in testing, seemingly a real quirk of the browser this
-   theme is being tested in rather than anything wrong with the CSS
-   itself; repeat(N, minmax(0, 1fr)) is the one pattern that's rendered
-   correctly every time. The column count is set per breakpoint (and
-   per product count via :has() below) instead. Same treatment as
-   "Recently Viewed" (see recently-viewed.css). */
 .j-product-recommendations .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-8);
 }
 
-/* Fewer than 4 recommended products — collapse to that many explicit
-   columns so they spread evenly across the row instead of leaving
-   empty reserved column(s) as dead space on the right. */
+
 .j-product-recommendations .j-product-grid:has(> :nth-child(3):last-child) {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -165,8 +139,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* A single result shouldn't stretch edge to edge as one giant card —
-   capped to roughly the same width as one column in the 4-up layout. */
+
 .j-product-recommendations .j-product-grid:has(> :nth-child(1):last-child) {
   grid-template-columns: minmax(0, 1fr);
   max-width: 320px;
@@ -205,15 +178,6 @@
 
 /* -------------------------
    Product Grid Loading Skeleton
-
-   Shared by every section whose product grid starts empty and is filled
-   in by a JS fetch after load rather than server-rendered Liquid (the
-   wishlist page, Recently Viewed, Product Recommendations) — without
-   this, each showed a plain blank grid for however long that fetch
-   took, which on a slow connection reads as the page being broken
-   rather than loading. Sized to roughly match a real .j-product-card
-   (see featured-collection.css) so the grid doesn't visibly jump once
-   the real cards replace these.
 -------------------------- */
 
 .j-product-skeleton-card__image {

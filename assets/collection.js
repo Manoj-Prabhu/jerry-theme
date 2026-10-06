@@ -84,10 +84,6 @@ function initCollectionControls() {
 
 document.addEventListener("DOMContentLoaded", initCollectionControls);
 
-// The theme editor swaps a section's markup via AJAX on every settings
-// change rather than reloading the page — without this, the sort
-// dropdown and mobile filter drawer stop responding after any edit to
-// the main collection or search section.
 document.addEventListener("shopify:section:load", (event) => {
   if (
     event.target.querySelector("#SortBy") ||

@@ -94,8 +94,6 @@ html.j-scroll-lock body {
   border-bottom: 1px solid var(--color-border);
 }
 
-/* Thin gold accent under the header, tying the drawer back to the same
-   gold accent used across the rest of the redesign. */
 .j-cart__header::after {
   content: "";
   position: absolute;
@@ -237,10 +235,6 @@ html.j-scroll-lock body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 55%);
 }
 
-/* z-index above the ::after scrim — without it, the pseudo-element
-   (generated after this in paint order) renders on top of the title
-   text as well as the image, washing the label out instead of just
-   darkening the photo behind it. */
 .j-cart__suggestion-title {
   position: absolute;
   left: 16px;
@@ -262,9 +256,6 @@ html.j-scroll-lock body {
   gap: 10px;
 }
 
-/* Subtotal/View Cart/Checkout have nothing meaningful to show while the
-   cart is empty (a $0.00 subtotal, a disabled checkout button) — hidden
-   entirely instead, rather than left visible-but-inert. */
 .j-cart__footer.is-empty {
   display: none;
 }
@@ -275,13 +266,6 @@ html.j-scroll-lock body {
   font-weight: var(--font-semibold);
 }
 
-/* Darkened from the more common var(--color-gold-deep) "goldenrod" — that only hits
-   ~3.1:1 against the cart page summary's --color-surface background
-   (and ~3.25:1 against plain white in the cart drawer), failing WCAG
-   AA's 4.5:1 for normal text (flagged by Lighthouse's "Background and
-   foreground colors do not have a sufficient contrast ratio" on
-   .j-cart-subtotal-value). This shade passes at ~5.1:1 / ~5.3:1 while
-   staying visually gold. */
 .j-cart__subtotal strong {
   color: #8a6508;
 }
@@ -296,9 +280,6 @@ html.j-scroll-lock body {
   width: 100%;
 }
 
-/* Same look as "Continue Shopping" (see .j-cart__continue) — square
-   corners, default gray border, gold fill on hover — instead of its
-   own gold-bordered rounded style. */
 .j-cart-view-link {
   border-radius: 0;
 }
@@ -374,17 +355,7 @@ html.j-scroll-lock body {
 .j-cart-item__content .j-cart-item__title {
   margin-bottom: 8px;
   font-size: var(--font-size-sm);
-  /* No font-weight here — the shared product-name font rule (see
-     base.css) already sets the weight that matches the configured
-     font itself. Forcing a fixed semibold here used to fight that,
-     synthetically bolding fonts that don't ship a 600 weight and
-     making this title render differently here than everywhere else
-     the same font setting applies. */
   line-height: 1.4;
-  /* Overrides the accent color the generic ".j-cart-item__content p" rule
-     below would otherwise apply — that rule targets the price paragraph,
-     but the title is a <p> too, so it needs its own explicit color to
-     not inherit the accent/green treatment meant for the price. */
   color: var(--color-text);
 }
 
@@ -416,11 +387,6 @@ html.j-scroll-lock body {
   color: var(--color-text-light);
 }
 
-/* A line item whose variant has gone out of stock since being added —
-   same accessible red as .j-cart-remove:hover above (--color-error
-   alone under-hits contrast here). Image dims slightly so the whole
-   row reads as "no longer actionable" at a glance, matching sold-out
-   product cards elsewhere in the theme. */
 .j-cart-item.is-unavailable .j-cart-item__image {
   opacity: 0.5;
 }
@@ -464,9 +430,6 @@ html.j-scroll-lock body {
 
 .j-cart-remove:hover {
   background: rgba(239, 68, 68, 0.1);
-  /* Same pale-red badge background as product.css's low-stock badge —
-     --color-error only hits ~4.24:1 here, under 4.5:1; this darker red
-     clears it (~5.69:1). */
   color: #b91c1c;
 }
 
@@ -632,9 +595,6 @@ html.j-scroll-lock body {
 
 .j-cart-page__shipping-bar.is-unlocked .j-cart-page__shipping-message {
   font-weight: var(--font-semibold);
-  /* Fixed near-black (not a merchant-configurable variable) so this
-     always passes contrast against the light gold-tinted background
-     above, regardless of theme settings. */
   color: var(--color-ink);
 }
 
@@ -819,8 +779,6 @@ html.j-scroll-lock body {
   gap: 16px;
 }
 
-/* With only 1-2 items, the single full-width column reads best. Once a
-   3rd item is added, split into two columns instead of one long list. */
 @media (min-width: 993px) {
   .j-cart-page__items:has(.j-cart-item:nth-child(3)) {
     display: grid;
@@ -929,10 +887,6 @@ html.j-scroll-lock body {
   margin-top: 16px;
 }
 
-/* In the drawer specifically, the form already has its own flex `gap`
-   (see .j-cart__footer form) spacing every child consistently — this
-   field's own margin-top stacked on top of that gap, making the space
-   above it noticeably larger than the gap between every other row. */
 .j-cart__footer .j-cart-page__note-field {
   margin-top: 0;
 }
@@ -955,9 +909,6 @@ html.j-scroll-lock body {
   resize: vertical;
 }
 
-/* Gold, not the site-wide green focus ring (see :focus-visible in
-   base.css) — scoped to just this field rather than changing focus
-   color globally. */
 .j-cart-page__note-field textarea:focus-visible {
   outline-color: var(--color-gold);
 }

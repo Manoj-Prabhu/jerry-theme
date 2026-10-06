@@ -1,7 +1,4 @@
-// Shopify's Cart API returns the image at its original, full-resolution
-// CDN URL with no size applied — appending `width` resizes it on the fly
-// (same trick used in recently-viewed.js). format=webp matches every
-// Liquid image_tag call elsewhere in the theme.
+
 function resizeCartImageUrl(src, width) {
   if (!src) return "";
   const separator = src.includes("?") ? "&" : "?";
@@ -214,9 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const continueUrl = cartItems.dataset.continueShoppingUrl || "/";
       const emptyText = strings.cartEmpty || "Your cart is empty.";
       const continueText = strings.cartContinueShopping || "Continue Shopping";
-
-      // Suggested-collection card (see cart-drawer.liquid) is optional —
-      // only present when the store has a collection to point to.
       const suggestionUrl = cartItems.dataset.suggestionUrl;
       const suggestionHtml = suggestionUrl
         ? `
@@ -459,8 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Event delegation: bound once so re-rendering the cart never
-  // stacks duplicate listeners on repeat clicks.
   document.addEventListener("click", (event) => {
     const removeButton = event.target.closest(".j-cart-remove");
     if (removeButton) {
@@ -488,12 +480,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Updates the visible quantity the instant a +/- button is clicked,
-  // rather than leaving the old number on screen for the full network
-  // round-trip — refreshCart() (called at the end of updateCartQuantity)
-  // still re-renders with the authoritative server value right after, so
-  // this is purely about removing the perceived lag, not the source of
-  // truth.
   function optimisticallySetQuantity(button, quantity) {
     const qtyEl = button
       .closest(".j-cart-item__quantity")
@@ -680,12 +666,6 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
 
-        // Cosmetic only — plays after the add already succeeded, using
-        // whichever product image is currently the active gallery slide.
-        // See assets/fly-to-cart.js; never allowed to affect the actual
-        // cart flow even if something about the animation itself throws.
-        // The drawer waits for it to land (in parallel with the cart
-        // refresh fetch below) instead of popping open mid-flight.
         let flyToCartDone = Promise.resolve();
         if (typeof window.JerryFlyToCart === "function") {
           try {
@@ -716,11 +696,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initial cart state (items, subtotal, header count, free-shipping bar)
-  // is already server-rendered by Liquid on page load — refreshCart()
-  // only needs to run after an actual mutation (add/remove/quantity
-  // change), which each of those handlers already triggers itself.
-
   // -------------------------
   // Discount Code (cart page)
   // -------------------------
@@ -733,10 +708,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const code = discountForm.querySelector("#CartDiscountCode").value.trim();
       if (!code) return;
-
-      // Shopify's /discount/<code> route applies the code to the cart
-      // then redirects back to the given path — there's no native Liquid
-      // form for this, so a link/redirect is the documented approach.
       window.location.href = `${window.Shopify?.routes?.root || "/"}discount/${encodeURIComponent(code)}?redirect=${encodeURIComponent("/cart")}`;
     });
   }

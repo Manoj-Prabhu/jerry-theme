@@ -7,8 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  // Same lazy-load pattern as quick-view.js: the Rive runtime is only
-  // ever needed on this page for the mascot, so it isn't loaded globally.
   const riveScript = document.createElement("script");
   riveScript.src = config.riveUrl;
   riveScript.onload = () => {

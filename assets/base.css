@@ -21,13 +21,6 @@ html {
   font-size: var(--font-size-md);
   scroll-behavior: smooth;
   overflow-x: hidden;
-  /* Reserves the vertical scrollbar's width permanently, instead of the
-     browser only allocating it once content actually overflows. Without
-     this, any interaction that changes page height enough to cross the
-     scrollbar threshold (e.g. opening the product description accordion)
-     shifts the viewport's available width by the scrollbar's ~15-17px,
-     which ripples into any `fr`-based layout (like the product page's
-     image/content grid) as a small, easily-misread-as-a-bug resize. */
   scrollbar-gutter: stable;
 }
 
@@ -47,26 +40,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-wrap: break-word;
-  /* Not overflow-x: hidden here (kept only on <html> above) — setting it
-     on body too turns body into its own independent scroll container,
-     which silently breaks position: sticky for any direct child (the
-     header) that's supposed to stick to the real viewport: it sticks
-     relative to body's box instead, and since body never scrolls on its
-     own (only the document/viewport does), that "stuck" calculation has
-     nothing to hook into and the header just scrolled away like a
-     normal static element instead of staying pinned to the top. */
 }
 
-/* Applied on every template except the homepage (which has its own hero
-   treatment) and product pages (see .j-body--product below) — see the
-   body class set in layout/theme.liquid. */
+
 body.j-body--tinted {
   background: var(--color-white);
 }
 
-/* Product pages — a warm blush/peach gradient instead of the generic
-   lavender tint, to pair with the info card's cream/gold styling
-   (see .j-product__content in product.css) rather than clash with it. */
 body.j-body--product {
   background: linear-gradient(135deg, #fbe4d8 0%, #ffffff 75%);
 }
@@ -116,13 +96,6 @@ ol {
 
 /* -------------------------
    Rich text (RTE) content
-
-   Shared typographic treatment for merchant-entered HTML — product
-   descriptions, blog article bodies, collection descriptions, page
-   content — so headings/lists/blockquotes look consistent everywhere
-   the RTE editor's output is rendered, rather than each template
-   inventing its own (or, for lists, silently losing markers to the
-   global `list-style: none` reset above).
 -------------------------- */
 
 .rte h1,
@@ -241,12 +214,6 @@ select {
   outline-offset: 2px;
 }
 
-/* Skip-to-content link (see layout/theme.liquid) — off-screen like
-   .visually-hidden until it receives focus, at which point it needs to
-   become genuinely visible (not just focusable), so it can't reuse that
-   utility class as-is. Pinned to the top-left corner above everything
-   else via a high z-index once focused, since it has to be reachable
-   before the header's own stacking context exists in the tab order. */
 .j-skip-link {
   position: absolute;
   top: -100%;
@@ -281,11 +248,6 @@ h6 {
   line-height: 1.2;
 }
 
-/* Anton (the primary/display font) is a heavy poster-style face meant for
-   large, high-impact headlines — it gets clunky and hard to read at smaller
-   sizes like product card titles. Reserve it for h1 (hero, page titles) and
-   use the more legible logo font (bold, geometric, still confident) for
-   every smaller heading level. */
 h1 {
   font-family: var(--font-primary--family);
   font-size: var(--font-size-3xl);
@@ -309,9 +271,6 @@ h6 {
 .j-text-reveal__word {
   display: inline-block;
   opacity: 0;
-  /* Slightly shrunk and dropped, so the reveal transition below has room
-     to overshoot past its final size/position and settle back — that
-     overshoot is what reads as a springy "bounce" rather than a flat fade. */
   transform: scale(0.5) translateY(0.3em);
   transition:
     opacity 0.35s ease,
@@ -342,13 +301,6 @@ h4 {
   font-size: var(--font-size-lg);
 }
 
-/* h5/h6 previously had no explicit size at all, falling back to
-   whatever the browser's UA stylesheet happens to use — unpredictable,
-   and small enough (~13px/~11px relative to the 16px body) to hurt
-   legibility if a merchant ever uses them via the rich text editor.
-   Both share font-size-sm (going smaller still would hurt legibility
-   further), distinguished from each other and from h4 by treatment
-   instead of just shrinking. */
 h5 {
   font-size: var(--font-size-sm);
 }
@@ -359,11 +311,6 @@ h6 {
   letter-spacing: 0.06em;
 }
 
-/* Every place a product's name is displayed: product cards (collection
-   grids, search, recommendations, wishlist, recently viewed), the
-   product page title, cart line items, sticky cart, quick view, and
-   predictive search. One shared rule instead of duplicating it per
-   component, so the setting only has to be wired up once. */
 .j-product-card__content h2,
 .j-product__title,
 .j-featured-product__title,

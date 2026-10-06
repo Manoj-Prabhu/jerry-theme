@@ -23,8 +23,6 @@
 }
 
 .j-blog-card {
-  /* Same silver gradient used for the homepage's Shop by Category
-     background. */
   background: linear-gradient(135deg, #f2f2f2 0%, #cfcfcf 50%, #e8e8e8 100%);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -53,17 +51,6 @@
 
 .j-blog-card__image img {
   width: 100%;
-  /* No fixed aspect-ratio box: a wide/short box cropped tall article
-     photos down to a sliver with object-fit: cover, and switching to
-     contain just traded that for gray letterbox bars on either side of
-     narrower/taller photos instead. Letting height follow the image's
-     own natural aspect ratio avoids both for any normal photo — it shows
-     completely, at its own proportions, nothing added or cut off. The
-     max-height + cover combination only ever kicks in for unusually tall
-     outliers, as a cap rather than the default behavior, so it doesn't
-     dominate the row. Cards in the same row may end up different
-     heights when article photos have different proportions, which is
-     normal for a photo grid like this. */
   height: auto;
   display: block;
   max-height: 480px;

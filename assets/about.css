@@ -38,9 +38,6 @@
   gap: 72px;
 }
 
-/* Image position is content order, not just visual order — swapping via
-   `order` alone would leave screen readers hearing the text before the
-   image it's about when the image is set to the right. */
 .j-about-story__inner--right .j-about-story__media {
   order: 2;
 }
@@ -55,7 +52,6 @@
   aspect-ratio: 4 / 5;
 }
 
-/* Same offset gold frame as the homepage's Brand Story image. */
 .j-about-story__media::before {
   content: "";
   position: absolute;
@@ -85,9 +81,6 @@
 .j-about-story__eyebrow {
   display: inline-block;
   margin-bottom: 16px;
-  /* Same darkened gold used for brand-story's eyebrow — var(--color-gold-deep) only
-     computes to ~3.25:1 against a white background, under the 4.5:1 WCAG
-     AA minimum; var(--color-gold-deep-text) clears ~6.25:1 while still reading as gold. */
   color: var(--color-gold-deep-text);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);
@@ -141,9 +134,6 @@
   color: var(--color-text-light);
 }
 
-/* Same treatment as the Contact page's submit button, the cart drawer's
-   Continue Shopping, and the product page's Add to Cart — white with a
-   black border, gold fill on hover. */
 /* -------------------------
    Values grid
 -------------------------- */
@@ -193,7 +183,10 @@
   border-radius: var(--radius-lg);
   padding: var(--space-8);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .j-about-values__card:hover {

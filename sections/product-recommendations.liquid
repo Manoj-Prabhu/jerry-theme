@@ -41,9 +41,19 @@
   {% endif %}
 
 {% else %}
-
+  {% comment %}
+    Complementary products only exist if the merchant has set them up
+    (Shopify's Search & Discovery app), so on most stores this request
+    comes back empty. Reserving a full row of skeleton cards for it and
+    then collapsing them shifted everything below — including the
+    footer — up by ~600px a second after load. It starts hidden instead
+    and product-recommendations.js reveals it only when products arrive.
+    Related products nearly always exist, so that variant keeps its
+    skeleton and its reserved space.
+  {% endcomment %}
   <div
     class="j-product-recommendations"
+    {% if section.settings.intent == 'complementary' %}hidden{% endif %}
     data-section-id="{{ section.id }}"
     data-intent="{{ section.settings.intent }}"
     data-product-id="{{ product.id }}"

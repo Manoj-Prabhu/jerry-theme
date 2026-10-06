@@ -17,9 +17,6 @@
   gap: 72px;
 }
 
-/* Image position is content order, not just visual order — swapping via
-   `order` alone would leave screen readers hearing the text before the
-   image it's about when the image is set to the right. */
 .j-brand-story__inner--right .j-brand-story__media {
   order: 2;
 }
@@ -34,10 +31,6 @@
   aspect-ratio: 4 / 5;
 }
 
-/* `inset` (not top/left + width/height) so the frame is offset evenly on
-   all four sides — the earlier top/left-only offset left the frame
-   sticking out past the image on two edges while being hidden behind it
-   on the other two, reading as a broken double layer instead of a frame. */
 .j-brand-story__media::before {
   content: "";
   position: absolute;
@@ -47,16 +40,6 @@
   z-index: 0;
 }
 
-/* Slides stack directly on top of each other and crossfade — with only
-   one Image block (or the no-image placeholder) this just renders as a
-   normal static image, since there's nothing else to fade against.
-   overflow: hidden here (not on the media box) clips the incoming
-   slide's scale-in below, without also clipping the offset gold frame
-   drawn on the media box's ::before. Both the fade and the scale are
-   driven by the same class toggle (see brand-story.js), so they're
-   always in lockstep — nothing keeps animating on its own timer once a
-   slide is swapped out, which is what made an earlier version of this
-   (a continuous Ken Burns zoom) snap awkwardly mid-transition. */
 .j-brand-story__slide {
   position: absolute;
   inset: 0;
@@ -106,11 +89,6 @@
 .j-brand-story__eyebrow {
   display: inline-block;
   margin-bottom: 16px;
-  /* var(--color-gold-deep) (the gold used decoratively elsewhere) only computes to
-     ~3.25:1 against this section's white background — well under the
-     4.5:1 WCAG AA minimum for normal text at this size/weight. Darkened
-     just for this text usage; var(--color-gold-deep-text) clears ~6.25:1 while still reading
-     as gold/bronze. */
   color: var(--color-gold-deep-text);
   font-size: var(--font-size-sm);
   font-weight: var(--font-semibold, 600);

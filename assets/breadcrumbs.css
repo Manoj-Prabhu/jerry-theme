@@ -18,9 +18,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  /* A solid, always-sufficient-contrast color rather than opacity-faded
-     foreground — opacity blends toward whatever is behind it, which can
-     drop below WCAG AA depending on the page background. */
   color: var(--color-text-light, #6b7280);
 }
 

@@ -17,9 +17,6 @@
   color: var(--color-text-light);
 }
 
-/* Page body content (Online Store > Pages > FAQ) — a free-form
-   alternative/companion to the accordion blocks below, for merchants who
-   prefer writing their FAQ as one long rich-text document. */
 .j-faq__content {
   margin-bottom: 48px;
 }
@@ -47,11 +44,6 @@
   color: var(--color-text-light);
 }
 
-/* Category groups fill column 1 top-to-bottom then column 2 (grid-auto-flow:
-   column), with an explicit row count (--faq-rows, set inline per the
-   actual number of categories) so matching rows share a height — that's
-   what makes headings in the same row line up across both columns, unlike
-   CSS multi-column which flows each column independently. */
 .j-faq__items {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -64,11 +56,6 @@
 .j-faq__group {
   display: flex;
   flex-direction: column;
-  /* Without this, opening a question in one column stretches the grid
-     row height to match, and the grid then stretches the OTHER column's
-     group in that same row to fill it too — even though nothing in it
-     opened. align-self: start keeps each group at its own natural
-     height regardless of what its row neighbor is doing. */
   align-self: start;
 }
 
@@ -90,12 +77,6 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Flex row (not absolute-positioned chevron) — a chevron centered via
-   `top: 50%` is only ever tuned right for one specific text height; a
-   question that wraps to 2 lines grows the row taller and throws that
-   fixed offset out of alignment. Flexbox centers the chevron against
-   the row's actual rendered height automatically, however many lines
-   the question text takes. */
 .j-faq__question {
   display: flex;
   align-items: center;
@@ -118,8 +99,6 @@
   display: none;
 }
 
-/* Chevron arrow, rotating smoothly from pointing down to pointing up
-   instead of swapping "+"/"−" text (content changes can't be animated). */
 .j-faq__question::after {
   content: "";
   flex-shrink: 0;

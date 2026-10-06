@@ -1,10 +1,3 @@
-// Featured Product — self-contained variant switching, gallery, and add
-// to cart for sections/featured-product.liquid. Written independently
-// from product-variants.js/product-gallery.js/cart.js's product-form
-// handling (rather than reusing them) because those assume a single
-// global instance tied to fixed ids (#AddToCartButton, #ProductPrice,
-// etc.), while this section can appear more than once on a page and on
-// any template — every id here is scoped per section.id instead.
 function initFeaturedProduct(root) {
   if (root.dataset.featuredProductInitialized) return;
   root.dataset.featuredProductInitialized = "true";
@@ -141,37 +134,24 @@ function initFeaturedProduct(root) {
     thumb.addEventListener("click", () => activateMedia(thumb.dataset.mediaId));
   });
 
-  // Thumbnail row scroll arrows — the row can hold more thumbnails than
-  // fit on one line, so it scrolls horizontally instead of wrapping.
   const thumbList = root.querySelector(".j-featured-product__thumbnails");
-  const thumbPrev = root.querySelector(".j-featured-product__thumb-arrow--prev");
-  const thumbNext = root.querySelector(".j-featured-product__thumb-arrow--next");
+  const thumbPrev = root.querySelector(
+    ".j-featured-product__thumb-arrow--prev",
+  );
+  const thumbNext = root.querySelector(
+    ".j-featured-product__thumb-arrow--next",
+  );
 
   if (thumbList && thumbPrev && thumbNext) {
-    // Thumbnail width/row-capacity is handled entirely by CSS (see
-    // .j-featured-product__thumb's flex-basis calc() in
-    // featured-product.css) rather than JS measuring and writing inline
-    // styles — a previous version of this computed and wrote explicit
-    // pixel widths here, which could go stale (thumbnails rendering
-    // overlapped/misjudged) whenever the layout changed without a full
-    // page reload, e.g. the theme editor's mobile/desktop preview
-    // toggle. CSS re-flows itself correctly on every layout change with
-    // no JS involved, so that whole class of bug isn't possible here —
-    // this only owns arrow visibility/enabled state and the scroll
-    // itself, both of which are read fresh from the DOM on demand.
     function thumbStepDistance() {
       const first = thumbList.querySelector(".j-featured-product__thumb");
       const gap = parseFloat(getComputedStyle(thumbList).columnGap) || 24;
-      return first ? first.getBoundingClientRect().width + gap : thumbList.clientWidth * 0.8;
+      return first
+        ? first.getBoundingClientRect().width + gap
+        : thumbList.clientWidth * 0.8;
     }
 
     function updateThumbArrows() {
-      // On mobile, .has-thumb-scroll is what tells featured-product.css
-      // whether to reserve edge padding for these arrow buttons at all
-      // (see the comment there) — clearing it before measuring makes
-      // sure a short gallery is checked against its actual full-width
-      // layout, not one that's already overflowing purely because of
-      // padding reserved for arrows it may not even need.
       const wrap = thumbList.closest(".j-featured-product__thumbnails-wrap");
       if (wrap) wrap.classList.remove("has-thumb-scroll");
 
@@ -185,12 +165,6 @@ function initFeaturedProduct(root) {
       updateArrowEnabledState();
     }
 
-    // Scroll position only — never touches .has-thumb-scroll. This is all
-    // a scroll event needs; the full updateThumbArrows() above re-measures
-    // by toggling the row's padding, which shifts its scroll-snap points,
-    // which makes the browser re-snap and fire more scroll events. Wired
-    // to "scroll" directly, that fed itself indefinitely on mobile (one
-    // loop per featured product block), forcing layout on every pass.
     function updateArrowEnabledState() {
       if (thumbPrev.hidden) return;
 
@@ -218,28 +192,18 @@ function initFeaturedProduct(root) {
       thumbList.scrollBy({ left: thumbStepDistance(), behavior: "smooth" });
     });
 
-    thumbList.addEventListener("scroll", queueArrowEnabledState, { passive: true });
+    thumbList.addEventListener("scroll", queueArrowEnabledState, {
+      passive: true,
+    });
 
-    // Re-checks arrow visibility whenever the row's available width
-    // changes for any reason (viewport resize, web fonts swapping in,
-    // the grid column reflowing, a live mobile/desktop preview toggle)
-    // — ResizeObserver reacts to the row's actual rendered size itself
-    // rather than only window resize events.
-    //
-    // Observes the border box, not the default content box: on mobile,
-    // updateThumbArrows() toggles .has-thumb-scroll, which adds/removes
-    // 56px of padding on this very element, so its content box changes
-    // whenever arrow visibility does. The border box only changes when
-    // the surrounding layout does, which is the only time this needs to
-    // re-check. The width guard keeps a padding-only change from ever
-    // re-triggering the measurement.
     let thumbResizeTimer = null;
     let lastThumbWidth = null;
     const onThumbListResize = (entries) => {
       const entry = entries && entries[0];
-      const width = entry && entry.borderBoxSize
-        ? entry.borderBoxSize[0].inlineSize
-        : thumbList.offsetWidth;
+      const width =
+        entry && entry.borderBoxSize
+          ? entry.borderBoxSize[0].inlineSize
+          : thumbList.offsetWidth;
       if (width === lastThumbWidth) return;
       lastThumbWidth = width;
 
@@ -248,9 +212,13 @@ function initFeaturedProduct(root) {
     };
 
     if (typeof ResizeObserver === "function") {
-      new ResizeObserver(onThumbListResize).observe(thumbList, { box: "border-box" });
+      new ResizeObserver(onThumbListResize).observe(thumbList, {
+        box: "border-box",
+      });
     } else {
-      window.addEventListener("resize", () => onThumbListResize(), { passive: true });
+      window.addEventListener("resize", () => onThumbListResize(), {
+        passive: true,
+      });
     }
 
     updateThumbArrows();
@@ -284,7 +252,8 @@ function initFeaturedProduct(root) {
 
     try {
       if (addButton) addButton.disabled = true;
-      if (addButtonText) addButtonText.textContent = strings.adding || "Adding...";
+      if (addButtonText)
+        addButtonText.textContent = strings.adding || "Adding...";
 
       const response = await fetch("/cart/add.js", {
         method: "POST",
@@ -308,16 +277,15 @@ function initFeaturedProduct(root) {
         );
       }
 
-      // Reuses the header cart button's own click handler (in cart.js,
-      // loaded on every page) to refresh the cart count and open the
-      // drawer, rather than duplicating that logic here.
       const cartButton = document.querySelector(".j-header__cart");
       if (cartButton) cartButton.click();
     } catch (error) {
       console.error(error);
       if (formError) {
         formError.textContent =
-          error.message || strings.addToCartError || "Unable to add item to cart.";
+          error.message ||
+          strings.addToCartError ||
+          "Unable to add item to cart.";
         formError.hidden = false;
       }
     } finally {
@@ -328,13 +296,15 @@ function initFeaturedProduct(root) {
 }
 
 function initAllFeaturedProducts(root) {
-  root.querySelectorAll(".j-featured-product-card").forEach(initFeaturedProduct);
+  root
+    .querySelectorAll(".j-featured-product-card")
+    .forEach(initFeaturedProduct);
 }
 
-document.addEventListener("DOMContentLoaded", () => initAllFeaturedProducts(document));
+document.addEventListener("DOMContentLoaded", () =>
+  initAllFeaturedProducts(document),
+);
 
-// The theme editor replaces a section's markup wholesale on block/setting
-// changes, leaving fresh elements with no listeners attached.
 document.addEventListener("shopify:section:load", (event) =>
   initAllFeaturedProducts(event.target),
 );

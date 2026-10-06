@@ -2,21 +2,10 @@
   padding: var(--space-16) 0;
 }
 
-/* auto-fill (not auto-fit) so cards keep their normal ~260px width even
-   when a collection has fewer products than fit a row — auto-fit would
-   collapse the unused tracks and stretch the remaining cards to fill the
-   row (e.g. a single product blown up full-width). auto-fill keeps those
-   tracks reserved-but-empty instead. */
 .j-collection-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: var(--space-8);
-  /* The permanent 3D tilt on .j-product-card (see featured-collection.css)
-     lifts a card's rendered pixels above its actual layout box via
-     translateY — transforms never affect layout/box size, so without
-     this the top row's tilted (and especially hovered/settled) cards
-     visually overlapped the toolbar row (Filters/Sort) directly above
-     the grid. */
   padding-top: 24px;
 }
 
@@ -52,11 +41,6 @@
   }
 }
 
-/* Collection Filters
-
-   Filters always live behind the "Filters" toggle in the horizontal
-   toolbar, opening as a centered popup — there is no persistent sidebar
-   column at any screen size. */
 
 .j-collection-layout {
   display: block;
@@ -93,18 +77,10 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: var(--space-8) var(--space-6);
-  /* Was a sage-green gradient with no connection to anything else on
-     the site — this store's actual accent identity (established across
-     the cart, footer, hero, etc.) is warm gold on a clean white/cream
-     surface, not green. */
   background: var(--color-white);
   overflow: hidden;
 }
 
-/* Thin gold flourish across the top of the panel — same small recurring
-   accent used elsewhere (the cart drawer header, footer column
-   underlines) instead of introducing a new decorative device just for
-   this panel. */
 .j-collection-filters::before {
   content: "";
   position: absolute;
@@ -174,9 +150,6 @@
 }
 
 .j-filter {
-  /* Was a flat --color-surface fill with no border — a thin border plus
-     white background reads as a considered card rather than a gray
-     blob, and gives the open/hover states something to react against. */
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -258,13 +231,6 @@
   background: var(--color-surface);
 }
 
-/* Custom checkbox — the native OS checkbox (just an accent-color tint on
-   the browser's own control) looked noticeably different across
-   browsers/platforms and didn't match anything else in the theme's
-   visual language. This is a real checkbox underneath (still fully
-   keyboard/screen-reader operable, just visually hidden) with a styled
-   box drawn from scratch, checked state filled with the site's gold
-   accent and a small inline checkmark. */
 .j-filter__option input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -385,11 +351,6 @@
   color: var(--color-ink);
 }
 
-/* A generic thin gray border blending into the page was one of the more
-   "default template" feeling controls on the site — this borrows the
-   same dark-fill/gold-hover language already established on buttons
-   elsewhere (see .j-cart-checkout-button, .j-cart-view-link) instead of
-   a plain bordered box. */
 .j-filter-toggle {
   display: flex;
   align-items: center;
@@ -494,10 +455,6 @@
 
   width: 100%;
   padding: 10px 40px 10px 16px;
-
-  /* Bolder border (was --color-border, the same faint gray as every
-     unstyled input on the page) gives this the same visual weight as
-     .j-filter-toggle beside it, instead of blending into the page. */
   border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
   background: #fff;
@@ -550,15 +507,6 @@
   margin-top: var(--space-16);
 }
 
-/* On a page deep enough to show a "1 … 4 5 6 … 11"-style spread, the
-   number list plus both arrow buttons can add up to more than a phone's
-   width. None of these flex children had flex-shrink set, so the
-   default flex-shrink: 1 let the browser squeeze the arrow icon's own
-   fixed width (16px) all the way down to 0 instead of squeezing
-   anything else — the arrow buttons rendered as empty pill shapes with
-   an invisible 0-width icon. Locking every item's own size and letting
-   the number list scroll horizontally instead keeps the buttons at a
-   tappable, visible size no matter how many page numbers are showing. */
 .j-pagination__arrow {
   flex-shrink: 0;
 }

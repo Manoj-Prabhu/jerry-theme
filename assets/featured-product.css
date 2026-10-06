@@ -23,12 +23,6 @@
   color: var(--color-text-light);
 }
 
-/* Slideshow — up to 4 products crossfade in place using the same
-   "static until measured, then absolute" technique as the hero/
-   testimonials/brand-story slideshows (see createCrossfadeSlideshow in
-   crossfade-slideshow.js), so the section never jumps height between
-   products. With exactly one product, there's only one slide and no
-   arrows — it just renders as a static card, same as before. */
 .j-featured-product-slideshow__track {
   position: relative;
   transition: height 0.4s ease;
@@ -64,12 +58,6 @@
   grid-template-columns: 1.15fr 1fr;
   grid-template-areas: "gallery content";
   gap: var(--space-10);
-  /* Vertically centers the buy box against the gallery image — with a
-     square (1:1) image taller than the content column, top-aligning
-     (the previous approach, matching sections/product.liquid's own
-     gallery/content grid) left the buy box sitting high with a large
-     empty gap only below it. Centering splits that leftover height
-     evenly above and below instead, which reads more balanced. */
   align-items: center;
   padding: var(--space-8);
   border: 1px solid var(--color-border);
@@ -81,9 +69,6 @@
 
 .j-featured-product__gallery {
   grid-area: gallery;
-  /* Grid items default to min-width: auto, so the image's own intrinsic
-     size (from its width/height attributes) can force this track wider
-     than the card and push the gallery past the viewport on mobile. */
   min-width: 0;
 }
 
@@ -92,11 +77,6 @@
   min-width: 0;
 }
 
-/* Content div is first in the DOM (for source-order/accessibility
-   reasons — buy box before gallery), but the default look shows the
-   image on the left, so the base grid-template-areas above already
-   overrides DOM order to put gallery first visually. This modifier
-   swaps the area order for the "Image position: Right" setting. */
 .j-featured-product-card--image-right {
   grid-template-columns: 1fr 1.15fr;
   grid-template-areas: "content gallery";
@@ -144,9 +124,6 @@
 .j-featured-product__thumbnails {
   display: flex;
   gap: var(--space-6);
-  /* Breathing room before the first and after the last thumbnail —
-     also keeps both from sitting directly under the overlaid arrow
-     buttons when they're showing. */
   padding: 0 56px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -160,10 +137,6 @@
 
 .j-featured-product__thumb {
   position: relative;
-  /* Sized as a share of the row's own actual width (5 thumbnails + 4
-     gaps between them), not a guessed fixed pixel value — so exactly 5
-     always fit whatever width the row really renders at, and a 6th+
-     thumbnail can only ever be reached by scrolling. */
   flex: 0 0 calc((100% - 4 * var(--space-6)) / 5);
   max-width: 140px;
   aspect-ratio: 108 / 140;
@@ -212,10 +185,6 @@
     opacity var(--transition-fast, 0.15s ease);
 }
 
-/* The unconditional `display: flex` above ties in specificity with the
-   browser's built-in `[hidden] { display: none }` rule and — since this
-   stylesheet loads after the UA default — wins the tie, silently
-   defeating JS's `.hidden = true`. This re-asserts it explicitly. */
 .j-featured-product__thumb-arrow[hidden] {
   display: none;
 }
@@ -333,9 +302,6 @@
   gap: var(--space-4);
 }
 
-/* Label above the swatches/pills, in the light-gray "Color:"/"Size:"
-   style used on the main product page (see .j-product__option-header
-   in product.css) instead of a bold black inline label. */
 .j-featured-product__option-header {
   display: flex;
   align-items: baseline;
@@ -363,8 +329,6 @@
   gap: var(--space-2);
 }
 
-/* Square swatch with an underline bar beneath it when active, instead
-   of a circular ring — same treatment as .j-product__swatch. */
 .j-featured-product__swatch {
   position: relative;
   width: 36px;
@@ -418,9 +382,6 @@
   gap: var(--space-2);
 }
 
-/* Thin gray border + gray text by default, solid dark 2px border
-   (not a filled background) when active — same treatment as
-   .j-product__pill. */
 .j-featured-product__pill {
   min-width: 40px;
   height: 40px;
@@ -451,10 +412,6 @@
   border: 2px solid var(--color-ink);
 }
 
-/* Quantity + Add to Cart, side by side */
-
-/* align-items: flex-end — Add to Cart lines up with the bottom of the
-   quantity stepper, not the "Quantity :" label above it. */
 .j-featured-product__cart-row {
   display: flex;
   align-items: flex-end;
@@ -478,10 +435,6 @@
   content: ":";
 }
 
-/* Separate circular buttons with a gap between them, and a filled
-   gold circle for the number — same treatment as the main product
-   page's quantity stepper (see .j-product__qty-control in product.css)
-   instead of one joined bordered box. */
 .j-featured-product__qty-control {
   display: inline-flex;
   align-items: center;
@@ -530,10 +483,6 @@
 
 .j-featured-product__add {
   flex: 1;
-  /* .j-button sets white-space: nowrap, and flex items default to
-     min-width: auto — together those stopped this button shrinking
-     below "Add to Cart"'s own text width, so on narrow phones it
-     overflowed past the row instead of actually shrinking. */
   min-width: 0;
   display: inline-flex;
   align-items: center;
@@ -577,11 +526,7 @@
   color: var(--color-accent);
 }
 
-/* Trust badges — same class names/look as the main product page's
-   equivalent (assets/product.css), duplicated here rather than shared
-   since this section self-loads its own stylesheet regardless of which
-   template it's placed on (it isn't scoped to template.name == 'product'
-   the way product.css is). */
+/* Trust badges */
 .j-product__trust {
   display: flex;
   flex-wrap: wrap;
@@ -634,12 +579,6 @@
 /* Mobile */
 
 @media (max-width: 768px) {
-  /* Switched from grid to a plain flex column here — the children still
-     carry the desktop `grid-area: gallery` / `grid-area: content` rules,
-     and relying on `grid-template-areas: none` to cancel that out on a
-     single-column grid caused the two items to stack on top of each
-     other instead of one after another. Flex sidesteps grid-area
-     entirely, so `order` is all that's needed to control stacking. */
   .j-featured-product-card,
   .j-featured-product-card--image-right {
     display: flex;
@@ -650,19 +589,6 @@
     background: transparent;
   }
 
-  /* Visually first via `order: -1` — the image leads on mobile, ahead of
-     the title/price/buy box. This does put the gallery's own thumbnail/
-     arrow buttons ahead of the buy box's controls in keyboard tab order
-     even though they're still after it in the DOM (visual order and tab
-     order diverge here); accepted as a deliberate trade-off for putting
-     the product photo first on a small screen. Width/flex-basis are
-     reasserted explicitly (rather than relying on the flex column's
-     default stretch) because switching a live viewport from desktop to
-     mobile — e.g. the theme editor's device-preview toggle, without a
-     full page reload — can leave this item holding onto the width it
-     had as a desktop grid column (1.15fr) until the next reflow,
-     squashing the aspect-ratio box into a tall sliver instead of a
-     square. */
   .j-featured-product__gallery {
     order: -1;
     width: 100%;
@@ -679,31 +605,11 @@
     flex: 0 0 auto;
   }
 
-  /* Fixed, not a share of the row (flex-grow/shrink between a floor and
-     ceiling was tried here first) — growing to fill a short row made a
-     2-3 photo product's thumbnails visibly bigger than an 11-photo
-     product's, an inconsistency between one featured-product block and
-     the next that read as sloppier than the small-thumbnail problem it
-     replaced. Every gallery gets the same thumbnail size regardless of
-     how many photos it has; a short one just leaves trailing space in
-     the row instead of stretching to fill it. */
   .j-featured-product__thumb {
     flex: 0 0 72px;
     max-width: 72px;
   }
 
-  /* The base rule reserves 56px of padding on each side so the overlaid
-     arrow buttons never sit on top of the first/last thumbnail — fine
-     on desktop, where the row is always packed with thumbnails, but on
-     a ~320-360px phone width that's over a third of the row's own
-     width. A product with only 2-3 photos at their normal fixed size
-     then "overflowed" into that very padding, triggering a scroll arrow
-     that, when tapped, revealed nothing new (there was no 4th photo —
-     the arrow only existed because of its own reserved space). Reserving
-     that padding only once JS (featured-product.js) has actually
-     confirmed there's real extra content to scroll to avoids the
-     phantom arrow while a long gallery still gets the clearance it
-     needs. */
   .j-featured-product__thumbnails {
     padding: 0 var(--space-2);
   }
@@ -713,10 +619,6 @@
   }
 }
 
-/* Small phones (iPhone SE/12/13 mini, small Android widths) don't have
-   room for the quantity stepper and "Add to Cart" side by side without
-   squeezing the button's text — stack the button under the stepper
-   instead of letting it overflow. */
 @media (max-width: 420px) {
   .j-featured-product__cart-row {
     flex-wrap: wrap;

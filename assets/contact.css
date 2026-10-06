@@ -35,16 +35,11 @@
   padding: var(--space-10);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  /* Same gold gradient used for the header's account/menu accents and
-     brand-story CTAs elsewhere in the theme, paired with dark text —
-     white text on this gold doesn't clear contrast, dark does. */
   background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
   color: var(--color-ink);
   box-shadow: var(--shadow-lg);
 }
 
-/* Soft decorative glow, purely cosmetic so it's excluded from a11y tree
-   via the parent's overflow clip rather than needing its own markup. */
 .j-contact__aside::before,
 .j-contact__aside::after {
   content: "";

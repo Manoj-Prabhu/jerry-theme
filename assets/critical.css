@@ -82,27 +82,11 @@ body {
   color: var(--color-foreground);
 }
 
-/* Without this, links on the password page (notably Shopify's own
-   required `powered_by_link` — the "Are you the store owner? Log in
-   here" link, which this theme can't restyle the content/markup of —
-   fall back to the browser's default link blue, which doesn't
-   reliably clear 4.5:1 contrast against every merchant's configured
-   background color. --color-foreground already guarantees that
-   contrast everywhere else the theme uses it; this is only missing
-   here because critical.css (the one stylesheet the password page
-   loads) never had a baseline `a` rule the way base.css does on every
-   other template. */
 a {
   color: var(--color-foreground);
   text-decoration: underline;
 }
 
-/* The cart drawer's markup is on every page, but cart.css (which holds
-   its full styling) is deferred off the critical path everywhere except
-   /cart. This one rule keeps the drawer out of view from first paint, so
-   it can't flash on screen as unstyled content — or shift the layout —
-   during the moment before the rest of cart.css arrives. Mirrors the
-   same values cart.css itself sets for this selector. */
 .j-cart-drawer {
   position: fixed;
   inset: 0;
@@ -112,17 +96,6 @@ a {
 
 /** Section layout utilities */
 
-/**
- * Setup a grid that enables both full-width and constrained layouts
- * depending on the class of the child elements.
- *
- * By default, a minimum content margin is set on the left and right
- * sides of the section and the content is centered in the viewport to
- * not exceed the maximum page width.
- *
- * When a child element is given the `full-width` class, it will span
- * the entire viewport.
- */
 .shopify-section {
   --content-width: min(
     calc(var(--page-width) - var(--page-margin) * 2),
