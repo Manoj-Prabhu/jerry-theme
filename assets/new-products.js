@@ -2,9 +2,6 @@ function initNewProductsCardCycle(card) {
   if (card.dataset.cycleInitialized) return;
 
   const images = card.querySelectorAll(".j-new-products__image");
-  // Nothing to cycle through with 0-1 images — skip the hover wiring
-  // entirely rather than attaching listeners that would never do
-  // anything.
   if (images.length < 2) return;
 
   card.dataset.cycleInitialized = "true";
@@ -53,11 +50,6 @@ function initNewProducts(section) {
   if (!board || !prevButton || !nextButton) return;
 
   function stepDistance() {
-    // Scrolls by one full visible page (however many cards currently
-    // fit — 2 on mobile per the flex-basis in new-products.css, more on
-    // wider screens) rather than a single card, so each arrow click
-    // reveals the next complete set instead of leaving a card half-cut
-    // at the edge.
     return board.clientWidth || 480;
   }
 

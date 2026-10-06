@@ -1,4 +1,3 @@
-
 function initFeaturedCollectionReveal() {
   const cards = Array.from(
     document.querySelectorAll(".j-featured-collection .j-product-card"),

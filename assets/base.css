@@ -42,7 +42,6 @@ body {
   overflow-wrap: break-word;
 }
 
-
 body.j-body--tinted {
   background: var(--color-white);
 }

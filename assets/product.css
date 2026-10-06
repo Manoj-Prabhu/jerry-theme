@@ -1,16 +1,3 @@
-/* margin: 0 (not `auto`) on the sides — this section is already a grid
-   item inside .shopify-section's own centering grid (grid-column: 2,
-   pre-sized to the theme's content-width track; see critical.css). Auto
-   margins on a grid item are special-cased by the CSS Grid spec: they
-   make the item shrink-to-fit its own content and center within the
-   track instead of stretching to fill it. That was invisible normally
-   (content was wide enough to fill the track anyway), but became a
-   visible bug once the description became a collapsible <details> —
-   collapsing it lowered the row's max-content width below the track
-   width, so the whole section would visibly shrink and re-center itself
-   every time it was toggled. max-width alone still caps the width; the
-   grid item stretches to fill (and centers within) its track by default
-   without auto margins fighting that. */
 .j-product {
   max-width: var(--container-width);
   margin: 50px 0;
@@ -19,20 +6,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: 60px;
-  /* start, not stretch — stretch tied the gallery/image's height to the
-     info card's height, which meant opening the description (making the
-     card taller) also visibly resized the image, since it was matching
-     the card rather than having a size of its own. The image now has a
-     fixed aspect-ratio below and is never affected by anything in the
-     content column. */
   align-items: start;
 }
 
-/* First-load entrance — the gallery settles in slightly ahead of the
-   buy-box card, giving the page a moment of motion instead of both
-   halves snapping in at once. One-time keyframe animation, not tied to
-   any interaction, so it's safe to leave unscoped to a JS "loaded"
-   class. */
 @media (prefers-reduced-motion: no-preference) {
   .j-product__gallery {
     animation: j-product-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -195,10 +171,6 @@
 
   border-radius: 999px;
   background: rgba(239, 68, 68, 0.1);
-  /* --color-error (#dc2626) only hits ~4.24:1 on this pale-red badge
-     background — under the 4.5:1 minimum, even though it passes on
-     plain white elsewhere. A darker red specifically for this badge
-     clears it (~5.69:1) without touching the shared token. */
   color: #b91c1c;
 
   font-size: var(--font-size-sm);
@@ -209,9 +181,6 @@
   display: none;
 }
 
-/* Price-tag shape — pointed left edge (clip-path), rounded right
-   corners, small bullet dot before the label — instead of a plain
-   rounded pill. */
 .j-product__pickup {
   display: inline-flex;
   align-self: flex-start;
@@ -230,9 +199,6 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  /* Dark, not white — the lighter tag background (see above) drops
-     white text below an accessible contrast ratio (~2.4:1); dark text
-     clears it comfortably (~7.3:1). */
   color: var(--color-ink);
 }
 
@@ -250,13 +216,6 @@
   color: var(--color-ink);
 }
 
-/* Clean white card with a gold accent bar down the left edge, instead of
-   the sage-green FAQ gradient — that read as mismatched against this
-   page's own purple/lavender backdrop and gold accents used everywhere
-   else on the product page. */
-/* Plain accordion — a top divider line instead of a bordered/shadowed
-   card, matching a minimal "SHIPPING"-style info section rather than
-   a boxed callout. */
 .j-product__description {
   margin: 30px 0 50px;
   padding-top: 20px;
@@ -284,9 +243,6 @@
   display: none;
 }
 
-/* Plain +/− instead of a chevron — a single rotating bar (the "−")
-   with a second bar that fades out as the panel opens, rather than
-   swapping text content (which can't be animated). */
 .j-product__description-sign {
   position: relative;
   flex-shrink: 0;
@@ -421,9 +377,6 @@
   gap: 10px 12px;
 }
 
-/* Every block in the form is full-width by default (same stacked
-   look as before) — Quantity and the Add to Cart row are the only
-   two that opt out below, so they can share one row instead. */
 .product-form > * {
   flex: 1 1 100%;
 }
@@ -433,12 +386,6 @@
   flex: 0 0 auto;
 }
 
-/* Unwraps the Buy Buttons block's own wrapper div so its children
-   (the Add to Cart row, the error message, the payment button) become
-   direct flex items of .product-form themselves, sitting alongside
-   Quantity instead of being trapped full-width inside this block's
-   own box. The block stays fully editable in the theme editor; only
-   its on-canvas selection outline may be less precise as a result. */
 .j-product__buy-buttons {
   display: contents;
 }
@@ -466,21 +413,12 @@
   font-size: 1rem;
 }
 
-/* Quantity + Add to Cart sit side by side, sharing one row height —
-   the stepper stays a fixed width and the cart button fills the rest. */
 .j-product__cart-row {
   display: flex;
   align-items: stretch;
   gap: 12px;
 }
 
-/* Quantity stepper — minus/plus buttons around the number input, instead
-   of a bare full-width native number field with its own tiny spinner
-   arrows. */
-/* Label stacked above the control (not inline beside it) — the label
-   is naturally inline-level and .j-product__qty-control is
-   inline-flex, so without this the two would flow side by side on
-   the same line instead of the label reading as its own row. */
 .j-product__quantity {
   display: flex;
   flex-direction: column;
@@ -497,9 +435,6 @@
   content: ":";
 }
 
-/* Three separate circular controls with visible gaps between them,
-   rather than one joined pill/box — matches the "− (1) +" tag-style
-   reference instead of reading as a single bordered input group. */
 .j-product__qty-control {
   display: inline-flex;
   align-items: center;
@@ -558,12 +493,6 @@
   margin-top: 8px;
 }
 
-/* Trust badges block — the stretch of page between the buy buttons and
-   "You may also like" had nothing reliably in it (vendor/SKU/low-stock
-   only show for products whose data happens to trigger them); this
-   gives every product page real trust content regardless. Same
-   icon+text row language as .j-hero__trust, adapted for a light
-   background instead of sitting over a photo. */
 .j-product__trust {
   display: flex;
   flex-wrap: wrap;
@@ -615,9 +544,6 @@
   transition-duration: 0.1s;
 }
 
-/* Same treatment as "Continue Shopping" in the cart drawer (see
-   .j-cart__continue in cart.css) — white/black outline by default,
-   sharp corners, fills gold on hover. */
 #AddToCartButton {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -645,7 +571,6 @@
   }
 }
 
-
 /* Mobile */
 
 @media (max-width: 768px) {
@@ -657,11 +582,6 @@
 
 /* Product Gallery */
 
-/* Desktop: main image + a vertical thumbnail column beside it (`auto`
-   track, sized to the thumbnails' own width so they can never overflow
-   into the content column next to it — see .j-product-thumbnail below).
-   Mobile switches this to a single column via the media query further
-   down, with dot indicators instead of thumbnails (see .j-product__dots). */
 .j-product__gallery {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -671,16 +591,6 @@
   min-width: 0;
 }
 
-/* Sticky gallery — a common pattern on premium PDPs (the image stays in
-   view while a shopper scrolls through a longer buy-box: description,
-   trust badges, etc.) that this theme didn't have. Desktop only (see
-   the 768px breakpoint below, where the layout switches to a single
-   stacked column where "sticky" wouldn't mean anything). top: 100px
-   clears the sticky header's ~70-90px height already used as reference
-   elsewhere (see hero.css's padding-top for the same header-clearance
-   figure); max-height + the outer .j-product's own align-items: start
-   keep it from ever growing taller than the viewport or fighting the
-   content column's natural height. */
 @media (min-width: 769px) {
   .j-product__gallery {
     position: sticky;
@@ -689,17 +599,10 @@
   }
 }
 
-/* Thumbnails column visually first (left of the main image) while
-   staying after it in source order — keeps the main image as the
-   first thing a screen reader/keyboard user reaches, matching its
-   primary role, instead of reordering the DOM to match the visual. */
 .j-product__thumbnails-wrap {
   order: -1;
 }
 
-/* Fixed aspect-ratio, not a height tied to the content column — the
-   image has a size of its own and is never affected by anything
-   happening in the info card (e.g. opening the description). */
 .j-product__main-image {
   position: relative;
   min-width: 0;
@@ -728,15 +631,6 @@
   }
 }
 
-/* Directional carousel-style slide (not a crossfade) — clicking a
-   thumbnail slides the new image in from the side it sits on relative
-   to the current one (right if it's later in the media order, left if
-   earlier), while the current image slides out the opposite side.
-   Direction/entering/leaving classes are applied by product-gallery.js,
-   which is the only thing that knows which direction a given thumbnail
-   click represents. Steady state (no transition in progress) only ever
-   has .is-active visible; every other slide sits hidden regardless of
-   leftover position, so nothing but the active slide can ever show. */
 .j-product__media-slide {
   position: absolute;
   inset: 0;
@@ -751,10 +645,6 @@
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Starting position for the incoming slide, set with no transition so
-   it snaps there instantly before .is-active (added a frame later)
-   animates it in — see initProductGallery's use of
-   requestAnimationFrame. */
 .j-product__media-slide.is-entering-next {
   visibility: visible;
   transform: translateX(100%);
@@ -801,8 +691,6 @@
   border: none;
 }
 
-/* Vertical column beside the main image — arrows above/below the
-   scrollable thumbnail list. */
 .j-product__thumbnails-wrap {
   display: flex;
   flex-direction: column;
@@ -820,9 +708,6 @@
   overflow-y: auto;
   scroll-behavior: smooth;
   padding-right: 2px;
-  /* Hide the native scrollbar — the arrow buttons are the intended way
-     to scroll this list; a thin native bar alongside them reads as
-     redundant clutter. */
   scrollbar-width: none;
 }
 
@@ -860,9 +745,6 @@
   color: var(--color-ink);
 }
 
-/* Toggled by product-gallery.js — hidden entirely when there aren't
-   enough thumbnails to scroll, and faded out at whichever end of the
-   list is already fully in view. */
 .j-product__thumb-scroll[hidden] {
   display: none;
 }
@@ -873,11 +755,6 @@
   pointer-events: none;
 }
 
-/* Rendered as a background-image on the button itself (see
-   product.liquid), not a nested <img> — the visible size is then purely
-   the button's own box, with no possibility of an inner replaced
-   element rendering at its own intrinsic/HTML-attribute size instead of
-   the size this CSS specifies. */
 .j-product-thumbnail {
   flex: 0 0 76px;
   width: 76px;
@@ -906,9 +783,6 @@
   border-color: var(--color-gold);
 }
 
-/* Mobile-only dot indicators (see .j-product__thumbnails-wrap above,
-   which is desktop-only — see the media query below). Hidden by default;
-   the mobile media query below flips which one shows. */
 .j-product__dots {
   display: none;
   align-items: center;
@@ -916,11 +790,6 @@
   gap: 4px;
 }
 
-/* The button itself is a full 24x24px touch target (Lighthouse/WCAG
-   2.5.8 minimum), even though it visually reads as a small 8px dot — the
-   dot is drawn via ::after, centered inside the larger invisible hit
-   area, rather than making the button itself that small and hard to tap
-   accurately on mobile. */
 .j-product__dot {
   position: relative;
   width: 24px;
@@ -959,11 +828,6 @@
   opacity: 0;
 }
 
-/* Product Options (Swatches & Pills) */
-
-/* Each option (Color, Size, ...) sits side by side sharing one row —
-   Color on the left, Size on the right — rather than each stacked as
-   its own full-width row. */
 .j-product__options {
   display: flex;
   flex-direction: column;
@@ -971,8 +835,6 @@
   margin: 8px 0;
 }
 
-/* Header (label + selected value) on its own line above the
-   swatches/pills, not inline beside them. */
 .j-product__option {
   display: flex;
   flex-direction: column;
@@ -1013,15 +875,10 @@
   width: 44px;
   height: 44px;
   padding: 0;
-
   border: none;
   background: none;
-
   cursor: pointer;
-  /* Room below the square for the active-state underline bar, so it
-     doesn't crowd the swatch itself or get clipped. */
   padding-bottom: 8px;
-
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1031,9 +888,6 @@
   width: 100%;
   height: 36px;
   border-radius: var(--radius-sm);
-  /* A fixed, more visible ring than the theme's default light gray
-     border — pale swatch colors (cream/ivory/white) are otherwise hard
-     to tell apart from the white background around them. */
   border: 1.5px solid rgba(0, 0, 0, 0.2);
   background: var(--color-border);
   background-size: cover;
@@ -1041,8 +895,6 @@
   transition: border-color 0.25s ease;
 }
 
-/* Underline bar beneath the swatch, not a ring around it — expands in
-   from the center when a swatch becomes active. */
 .j-product__swatch::after {
   content: "";
   position: absolute;
@@ -1088,12 +940,6 @@
   transform: rotate(-45deg);
 }
 
-/* Size / other option pills */
-
-/* A wrapping flex row, not a fixed N-column grid — a grid stretches
-   each box to fill its column track even when there are only 2-3
-   options, making them wider than the label needs; flex sizes each
-   box to its own min-width instead, however many options there are. */
 .j-product__pills {
   display: flex;
   flex-wrap: wrap;
@@ -1131,8 +977,6 @@
   transition-duration: 0.1s;
 }
 
-/* Solid dark border (not a filled background) — reads as "selected
-   outline" the way the reference does, rather than an inverted button. */
 .j-product__pill.is-active {
   background: var(--color-background);
   color: var(--color-ink);
@@ -1244,22 +1088,11 @@
   font-size: var(--font-size-sm);
 }
 
-/* Gallery — mobile. This has to come after the base .j-product__gallery /
-   .j-product__thumbnails-wrap / .j-product__dots rules earlier in this
-   file: those are unconditional (not wrapped in a media query) with the
-   same specificity as these overrides, so if this block appeared earlier
-   in the file, the later unconditional rules would win the cascade tie
-   and silently cancel this out even while the media query is active. */
 @media (max-width: 768px) {
-  /* Single column — no side-by-side room for a thumbnail column on a
-     narrow screen. */
   .j-product__gallery {
     grid-template-columns: 1fr;
   }
 
-  /* Dots instead of thumbnails on mobile — a thumbnail strip (in any
-     orientation) doesn't have anywhere good to go at this width without
-     either shrinking illegibly small or eating into the photo. */
   .j-product__thumbnails-wrap {
     display: none;
   }
@@ -1285,14 +1118,6 @@
   }
 }
 
-/* Info card — mobile. At the very end of the file on purpose: this has
-   to come after every base rule it overrides (.j-product__content,
-   __title, __pickup, __options, __option, __swatch, __pill, etc.), all
-   unconditional and scattered throughout this file — putting this
-   anywhere earlier risks the same cascade-order bug already hit once
-   with the gallery/dots mobile rules above (an unconditional rule later
-   in the file wins a specificity tie over a media query earlier in it,
-   even while that media query is active). */
 @media (max-width: 768px) {
   .j-product__content {
     gap: 14px;
@@ -1311,10 +1136,6 @@
     font-size: var(--font-size-xs);
   }
 
-  /* Color and Size no longer forced onto one row — on a narrow screen
-     that squeezed the Size pills down to barely-tappable widths. Each
-     option gets its own full-width row instead, wrapping onto a second
-     line if the swatches/pills don't fit. */
   .j-product__options {
     flex-direction: column;
     align-items: flex-start;

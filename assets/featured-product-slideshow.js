@@ -1,4 +1,3 @@
-
 function initFeaturedProductSlideshow(root) {
   const track = root.querySelector(".j-featured-product-slideshow__track");
   const slides = root.querySelectorAll(".j-featured-product-slide");

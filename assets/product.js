@@ -20,9 +20,6 @@ function initProductQuantityStepper() {
   plus.addEventListener("click", () => step(1));
 }
 
-// See product-variants.js for why this listener is needed — without it,
-// the quantity +/- stepper stops working after any edit to the product
-// section in the theme editor.
 document.addEventListener("shopify:section:load", (event) => {
   if (event.target.querySelector(".j-product__qty-control")) {
     initProductQuantityStepper();
@@ -39,11 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jerry-recently-viewed";
   try {
     let products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    // Remove duplicate
     products = products.filter((item) => item !== handle);
-    // Add current product first
     products.unshift(handle);
-    // Keep only last 4
     products = products.slice(0, 4);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   } catch (error) {

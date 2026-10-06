@@ -3,11 +3,6 @@
   padding: var(--space-12) var(--space-8) var(--space-16);
 }
 
-/* repeat(4, ...) — NOT auto-fit/auto-fill, which has repeatedly
-   collapsed to a single huge column in testing (see the matching
-   comment on .j-product-recommendations .j-product-grid in
-   components.css). Column count adjusts per product count via :has()
-   below instead. */
 .j-recently-viewed .j-product-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-8);
@@ -21,8 +16,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* A single result shouldn't stretch edge to edge as one giant card —
-   capped to roughly the same width as one column in the 4-up layout. */
 .j-recently-viewed .j-product-grid:has(> :nth-child(1):last-child) {
   grid-template-columns: minmax(0, 1fr);
   max-width: 320px;

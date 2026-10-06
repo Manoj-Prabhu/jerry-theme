@@ -20,15 +20,6 @@
 
 /* -------------------------
    Page Hero Band
-
-   Shared gradient band used to give every non-homepage template
-   (collection, blog, article, faq, contact, cart, 404, search,
-   list-collections, and the customer account pages) the same
-   page-title treatment as the homepage hero (see hero.css /
-   .j-hero-band). Applied with `full-width` on the outer element so
-   it bleeds edge-to-edge via the `.shopify-section > .full-width`
-   rule in critical.css, with an `__inner` wrapper to re-center the
-   title content within the normal content width.
 -------------------------- */
 
 .j-page-hero-band {
@@ -74,32 +65,12 @@
   color: #fff;
 }
 
-/* Breadcrumbs render inside the band itself now — as a sibling of
-   .j-page-hero-band__inner, not a child of it (see main-collection/
-   main-contact/main-faq/main-blog/main-about/main-wishlist.liquid) —
-   instead of as their own separate block above it, since a plain-
-   background breadcrumb bar sandwiched between the white header and a
-   full-bleed banner photo read as an unintended gap/seam rather than
-   one cohesive banner. Its own top padding is dropped since the band
-   already has vertical padding of its own; only relevant to the plain
-   (no image) state, since --has-image below takes it out of flow
-   entirely. */
+/* Breadcrumbs  */
 .j-page-hero-band .j-breadcrumbs {
   padding-top: 0;
   margin-bottom: var(--space-4);
 }
 
-/* Pinned to the very top of the photo (independent of the band's own
-   96px vertical padding, which is tuned to center the title instead) —
-   a sibling of .j-page-hero-band__inner in the markup, not a child of
-   it, specifically so its "top" isn't measured from __inner's own box
-   (which already starts 96px down, since __inner sits after the band's
-   own top padding in normal flow — positioning against it would've put
-   this 96px + top lower than intended, not just "top" from the photo's
-   actual top edge). Positioned against the band itself instead, which
-   has no such offset, so top: 20px here really is ~20px from the photo.
-   max-width/margin/padding reproduce __inner's own centering, since
-   without being nested inside it this no longer gets that for free. */
 .j-page-hero-band--has-image .j-breadcrumbs {
   position: absolute;
   top: var(--space-5, 20px);
@@ -128,20 +99,10 @@
   padding: 0 var(--space-8);
 }
 
-/* Only needed for pages where the <h1> sits directly in the band with no
-   wrapper div of its own (404, search, list-collections, login/register,
-   activate/reset password) and is followed by another element (a
-   description or subtext paragraph) — pages whose title lives inside its
-   own header block (e.g. .j-blog__header, .j-account__header) already
-   control their own internal spacing. */
 .j-page-hero-band__inner > h1:not(:last-child) {
   margin-bottom: 12px;
 }
 
-/* These are plain page titles (Products, Contact, etc.), not a hero
-   headline — the heavy poster-style Anton face (used site-wide for h1 via
-   base.css) reads as too loud here, so this scope swaps in the lighter
-   logo font at a reduced weight instead of overriding h1 globally. */
 .j-page-hero-band__inner h1 {
   font-family: var(--font-page-title--family);
   font-style: var(--font-page-title--style);

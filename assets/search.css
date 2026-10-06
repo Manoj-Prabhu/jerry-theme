@@ -33,9 +33,6 @@
   }
 }
 
-/* Article / page results (product results reuse .j-product-card from
-   featured-collection.css, which is loaded globally). */
-
 .j-search-result {
   display: flex;
   flex-direction: column;

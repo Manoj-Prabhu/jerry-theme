@@ -1,4 +1,3 @@
-
 function resizeCartImageUrl(src, width) {
   if (!src) return "";
   const separator = src.includes("?") ? "&" : "?";
@@ -125,10 +124,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Money
   // -------------------------
 
-  const CONFETTI_COLORS = ["#ffd166", "#ef476f", "#06d6a0", "#118ab2", "#ffffff"];
+  const CONFETTI_COLORS = [
+    "#ffd166",
+    "#ef476f",
+    "#06d6a0",
+    "#118ab2",
+    "#ffffff",
+  ];
 
   function launchConfetti(originEl) {
-    if (!originEl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      !originEl ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       return;
     }
 
@@ -281,7 +289,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   item.product_has_only_default_variant
                     ? ""
                     : `<ul class="j-cart-item__options">${item.options_with_values
-                        .map((option) => `<li>${option.name}: ${option.value}</li>`)
+                        .map(
+                          (option) =>
+                            `<li>${option.name}: ${option.value}</li>`,
+                        )
                         .join("")}</ul>`
                 }
 
@@ -685,7 +696,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error(error);
         showFormError(
-          error.message || strings.addToCartError || "Unable to add item to cart.",
+          error.message ||
+            strings.addToCartError ||
+            "Unable to add item to cart.",
         );
       } finally {
         setLoading(false);

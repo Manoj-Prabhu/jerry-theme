@@ -614,7 +614,8 @@
     padding: 0 var(--space-2);
   }
 
-  .j-featured-product__thumbnails-wrap.has-thumb-scroll .j-featured-product__thumbnails {
+  .j-featured-product__thumbnails-wrap.has-thumb-scroll
+    .j-featured-product__thumbnails {
     padding: 0 56px;
   }
 }

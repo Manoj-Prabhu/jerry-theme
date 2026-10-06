@@ -21,10 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let mascotAssetsPromise = null;
 
-  // Loads the Rive runtime + mascot.js on first use only, instead of on
-  // every page load — the mascot only ever appears inside this modal,
-  // so there's no reason to ship ~37KB of animation library to visitors
-  // who never open Quick View.
   function loadMascotAssets() {
     const config = window.jerryMascotConfig;
     if (!config || !config.riveUrl || !config.scriptUrl) {
@@ -102,24 +98,12 @@ document.addEventListener("DOMContentLoaded", () => {
       );
   }
 
-  // Product JS API images (product.media[].preview_image.src /
-  // product.images[]) are original, full-resolution CDN URLs — rendering
-  // them directly downloads multi-MB originals for a modal-sized image.
-  // Shopify's CDN supports resizing any file URL on the fly via a `width`
-  // query param. format=webp matches every Liquid image_tag call
-  // elsewhere in the theme, which re-encode instead of shipping the
-  // original JPEG/PNG bytes.
   function resizeImageUrl(src, width) {
     if (!src) return "";
     const separator = src.includes("?") ? "&" : "?";
     return `${src}${separator}width=${width}&format=webp`;
   }
 
-  // Includes every media type (image/video/external_video/model), not
-  // just images, so rich product media (a demo video, a 3D model) shows
-  // up in Quick View the same way it does on the full product page —
-  // previously this filtered everything down to images only, silently
-  // dropping any video or 3D content a product had.
   function getProductMedia(product) {
     if (product.media && product.media.length) {
       return product.media.map((media) => ({
@@ -140,18 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }));
   }
 
-  // Loads the model-viewer UI on first use only, via Shopify's own
-  // Shopify.loadFeatures API — the sanctioned way themes pull this in
-  // (same mechanism product.liquid's model_viewer_tag filter relies on
-  // server-side), rather than guessing at a CDN script URL directly. Only
-  // needed for the rare product that has a 3D model attached.
   let modelViewerFeaturePromise = null;
 
   function loadModelViewerFeature() {
     if (modelViewerFeaturePromise) return modelViewerFeaturePromise;
 
     modelViewerFeaturePromise = new Promise((resolve, reject) => {
-      if (!window.Shopify || typeof window.Shopify.loadFeatures !== "function") {
+      if (
+        !window.Shopify ||
+        typeof window.Shopify.loadFeatures !== "function"
+      ) {
         reject(new Error("[quick-view] Shopify.loadFeatures unavailable"));
         return;
       }
@@ -168,21 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return modelViewerFeaturePromise;
   }
 
-  // Builds the markup for whichever media type is currently active in the
-  // main viewer — mirrors the media_type branches product.liquid handles
-  // server-side (image_tag / video_tag / external_video_tag /
-  // model_viewer_tag), since this modal has to build the same thing from
-  // the Product JS API's JSON instead of Liquid.
   function renderMainMedia(media, fallbackAlt) {
-    // A product with no media at all (product.media and product.featured_image
-    // both empty — e.g. freshly created, before photos are uploaded) makes
-    // the caller's fallback chain bottom out at { src: undefined }. Without
-    // this guard that produced <img src=""> — a broken-image glyph, and an
-    // empty src can trigger a spurious request to the current page URL in
-    // some browsers. sections/product.liquid handles the equivalent
-    // server-rendered case with placeholder_svg_tag; this is the same
-    // placeholder treatment built as a plain inline SVG, since Liquid's
-    // image filters aren't available to this client-side render path.
     if (!media || !media.src) {
       return `
         <div id="QuickViewMainImage" class="j-quick-view__main-placeholder" aria-hidden="true">
@@ -198,8 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (media.mediaType === "video" && media.sources.length) {
       const sourcesHtml = media.sources
         .map(
-          (source) =>
-            `<source src="${source.url}" type="${source.mime_type}">`,
+          (source) => `<source src="${source.url}" type="${source.mime_type}">`,
         )
         .join("");
 
@@ -217,7 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    if (media.mediaType === "external_video" && media.host && media.externalId) {
+    if (
+      media.mediaType === "external_video" &&
+      media.host &&
+      media.externalId
+    ) {
       const embedUrl =
         media.host === "vimeo"
           ? `https://player.vimeo.com/video/${media.externalId}`
@@ -265,12 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // Call after inserting renderMainMedia()'s output into the DOM — the
-  // model-viewer feature (and its interactive rotate/zoom controls) can
-  // only attach to the actual <model-viewer> element once it exists on
-  // the page, not while its markup is still just a string.
   function activateModelViewerIfPresent() {
-    const modelViewer = content.querySelector("model-viewer#QuickViewMainImage");
+    const modelViewer = content.querySelector(
+      "model-viewer#QuickViewMainImage",
+    );
     if (!modelViewer) return;
 
     loadModelViewerFeature()
@@ -282,16 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error(error));
   }
 
-  // Quick View can't see a variant option's actual configured swatch
-  // color/image (Shopify's /products/{handle}.js API only returns raw
-  // option-value strings, not swatch metadata) the way product.liquid
-  // and product-card.liquid can via `value.swatch.color`/`.image` — so
-  // this falls back to guessing a CSS color from the option text
-  // itself. A raw name like "Bronze" isn't a real CSS color keyword,
-  // so the browser silently drops an invalid `background-color: bronze`
-  // and the swatch renders with no color at all (reads as gray/silver).
-  // This table covers common apparel/product color names that aren't
-  // valid CSS keywords, checked before falling back to the raw name.
   const COMMON_COLOR_NAME_FALLBACKS = {
     bronze: "#8c7853",
     rosegold: "#b76e79",
@@ -457,7 +416,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     loading="lazy"
                   >
                   ${
-                    item.mediaType === "video" || item.mediaType === "external_video"
+                    item.mediaType === "video" ||
+                    item.mediaType === "external_video"
                       ? '<span class="j-quick-view-thumbnail__icon" aria-hidden="true">▶</span>'
                       : ""
                   }
@@ -631,9 +591,6 @@ document.addEventListener("DOMContentLoaded", () => {
       thumb.addEventListener("click", () => {
         const imageSrc = thumb.dataset.image;
 
-        // Only image-type thumbnails can correspond to a variant's
-        // featured_image — video/3D-model thumbnails just swap the main
-        // viewer below, they never drive variant selection.
         if (thumb.dataset.mediaType === "image" && imageSrc) {
           const sameImageVariants = currentProduct.variants.filter(
             (v) =>
@@ -642,11 +599,6 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           if (sameImageVariants.length) {
-            // Only adopt the option(s) this image actually determines (e.g.
-            // Color) — if every variant sharing this image agrees on a given
-            // option index, that index is image-specific. Any other option
-            // (e.g. Size) keeps whatever the shopper already had selected,
-            // instead of jumping to whichever variant is first for this image.
             const mergedOptions = selectedVariant.options.map(
               (currentValue, index) => {
                 const isImageSpecific = sameImageVariants.every(
@@ -677,10 +629,15 @@ document.addEventListener("DOMContentLoaded", () => {
           (item) => String(item.id) === String(mediaId),
         );
 
-        const mainImageWrap = content.querySelector(".j-quick-view__main-image");
+        const mainImageWrap = content.querySelector(
+          ".j-quick-view__main-image",
+        );
 
         if (media && mainImageWrap) {
-          mainImageWrap.innerHTML = renderMainMedia(media, currentProduct.title);
+          mainImageWrap.innerHTML = renderMainMedia(
+            media,
+            currentProduct.title,
+          );
           activateModelViewerIfPresent();
         }
 
@@ -761,12 +718,8 @@ document.addEventListener("DOMContentLoaded", () => {
         formError.textContent = "";
 
         const quantity = Number(qtyInput.value) || 1;
-
-        // --- ADD THIS: capture the cat in a box on click ---
         const mascotEl = document.querySelector(".j-quick-view__mascot");
         if (mascotEl) {
-          // Read wherever the cat currently is mid-pace so the cage
-          // drops around its actual position, not a reset one.
           const currentTransform = getComputedStyle(mascotEl).transform;
           let captureX = 0;
 
@@ -780,7 +733,6 @@ document.addEventListener("DOMContentLoaded", () => {
           void mascotEl.offsetWidth; // force reflow to restart animation
           mascotEl.classList.add("is-captured");
         }
-        // --- END ADD ---
 
         const strings = window.themeStrings || {};
 
@@ -826,29 +778,16 @@ document.addEventListener("DOMContentLoaded", () => {
           addButton.disabled = false;
           addButton.textContent = strings.addToCart || "Add to Cart";
 
-          // --- ADD THIS: release the cat if add-to-cart failed ---
           const mascotEl = document.querySelector(".j-quick-view__mascot");
           if (mascotEl) mascotEl.classList.remove("is-captured");
-          // --- END ADD ---
         }
       });
     }
   }
 
-  // -------------------------
-  // Open
-  // -------------------------
-
-  // Delegated so Quick View buttons injected later (recommendations,
-  // recently viewed, predictive search) work without any extra rebinding.
   document.addEventListener("click", async (event) => {
     const button = event.target.closest(".j-quick-view-button");
     if (!button) return;
-
-    // This button sits inside .j-product-card__image, right next to the
-    // small image-only <a> that makes the photo itself clickable (see
-    // product-card.liquid) — stopPropagation keeps a click here from
-    // also being picked up as a click on that overlapping link.
     event.preventDefault();
     event.stopPropagation();
 

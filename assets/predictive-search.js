@@ -126,9 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
     openResults();
   };
 
-  // Cancels the previous in-flight request whenever a new one starts, so a
-  // slower response to an earlier (shorter) query can't land after — and
-  // overwrite — the results for what the shopper has since typed.
   let searchAbortController = null;
 
   const runPredictiveSearch = async (query) => {
@@ -160,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* Events */
 
-  // Debounced so a fast typer doesn't fire a request per keystroke.
   let searchDebounceTimer = null;
 
   input.addEventListener("input", () => {
@@ -183,8 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Enter never navigates away — shoppers pick a result from the
-  // predictive dropdown instead of landing on the full search page.
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 

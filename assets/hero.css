@@ -4,12 +4,6 @@
   background: linear-gradient(135deg, #d8b4fe 0%, #ffffff 75%);
 }
 
-/* Wave divider into Shop by Category (see the SVG markup at the end of
-   hero.liquid) — anchored to the band, not the slideshow, so it stays
-   fixed regardless of which slide is active. Height is a flat pixel
-   value rather than a percentage since it's meant to read as a
-   consistent decorative flourish at every hero height, not scale with
-   the hero itself. */
 .j-hero-band__divider {
   position: absolute;
   left: 0;
@@ -17,11 +11,6 @@
   bottom: -1px;
   width: 100%;
   height: 60px;
-  /* Above the raw video/scrim (z-index: 0/1 on .j-hero's own layers) but
-     below the heading/buttons (z-index: 2) and the arrows (z-index: 3)
-     — this only ever decorates the media behind the content, it must
-     never be able to paint over the content or arrows themselves even
-     if the wave shape dips up further than expected on a short hero. */
   z-index: 1;
   pointer-events: none;
 }
@@ -32,14 +21,6 @@
   }
 }
 
-/* Pulls the hero up to extend behind the header instead of starting just
-   below it — matches .j-site-header's own height at each breakpoint (see
-   header.css) so the hero's top edge tucks exactly under the header's
-   bottom edge with no gap and no overlap past it. This is what makes the
-   header's hover-reveal effect (see .j-body--home .j-site-header-wrapper
-   in header.css) actually have hero media behind it to reveal — without
-   this, the header would just be see-through onto empty space. Scoped to
-   the homepage only, since only it has this hero section. */
 .j-body--home .j-hero-band {
   margin-top: -80px;
 }
@@ -61,25 +42,10 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  /* Scales with viewport width instead of a fixed height, so very wide
-     windows get a proportionally taller banner — a fixed height at large
-     widths creates an extremely wide-and-short crop shape that forces
-     object-fit: cover to zoom in and cut off most of the photo. */
   min-height: clamp(430px, 40vw, 640px);
   padding: 70px var(--space-8);
 }
 
-/* Dark scrim over the full-bleed image/video — darkest behind the text on
-   the left, fading to transparent by the right so the photo itself still
-   reads clearly. A pseudo-element instead of an extra element, so this
-   needed no changes to hero.liquid's markup at all.
-
-   The left stop (0%-45%, roughly where .j-hero__content sits) is opaque
-   enough on its own — no separate card/backdrop behind the text — to
-   guarantee ~4.5:1 for white text even against a worst-case pure-white
-   photo underneath. Text-shadow alone isn't credited by contrast
-   checkers, and a boxed backdrop behind just the text read as a pasted-
-   on UI card, so the guarantee has to live in the scrim itself instead. */
 .j-hero::before {
   content: "";
   position: absolute;
@@ -99,15 +65,6 @@
 
 /* Slideshow */
 
-/* Every slide sits in the same grid cell, in normal flow — so the track
-   (and the hero) is as tall as its tallest slide straight from CSS, on
-   the very first paint. Slides used to be position: absolute with only
-   the active one in flow; JS then measured them all and locked the
-   track to the tallest. That made the hero grow after load whenever a
-   later slide had longer text than the first (a layout shift), and the
-   later, slightly larger slide then replaced the first as the page's
-   LCP several seconds late. The slide's own position: relative comes
-   from .j-hero above. */
 .j-hero-slideshow__track {
   display: grid;
 }
@@ -131,26 +88,9 @@
     visibility 0s linear 0s;
 }
 
-/* A direct child of the slide (sibling to .j-hero__content, not nested
-   inside .j-hero__image) with its own z-index above the content's — the
-   arrows previously sat inside .j-hero__image's lower stacking context,
-   so the text block could sit visually and interactively on top of them,
-   making the prev arrow unclickable wherever it overlapped the
-   description text.
-
-   Fixed position on every slide, deliberately not tracking the trust
-   row's actual position (an earlier version of this did) — the trust
-   row shifts up/down slightly slide to slide depending on how much that
-   slide's heading/description wraps to, which made the arrows visibly
-   hop to a different spot on every slide change. A consistent, always-
-   in-the-same-place position reads as more intentional. */
 .j-hero-slideshow__arrows {
   position: absolute;
   right: 24px;
-  /* Cleared above the 60px wave divider (see .j-hero-band__divider) with
-     a bit of breathing room, instead of the previous 24px — that sat the
-     arrows' lower half directly over the wave's curve, visually slicing
-     into both the circles and the wave shape. */
   bottom: 84px;
   z-index: 3;
   display: flex;
@@ -194,30 +134,16 @@
   }
 }
 
-/* Content — sits above both the media (z-index: 0) and the scrim
-   (z-index: 1) defined on .j-hero above. */
-
 .j-hero__content {
   position: relative;
   z-index: 2;
-  /* Widened alongside the bigger headline below (was a flat 560px) —
-     the larger clamp()'d h1 needs more room to breathe before wrapping
-     awkwardly tight on wide screens. */
   max-width: clamp(560px, 45vw, 720px);
-  /* No card/backdrop behind the text — the contrast guarantee lives in
-     .j-hero::before's scrim instead (see its own comment), so the text
-     sits directly on the photo/video like the rest of the hero. */
 }
 
 .j-hero__badge {
   display: inline-block;
   padding: 8px 16px;
   border-radius: 999px;
-  /* Translucent + blurred instead of a solid white/mint pill — a solid
-     light pill read as a leftover from the old light-gradient hero once
-     everything else moved to sitting directly on the photo/video. This
-     glass treatment matches the overlay aesthetic instead of looking
-     pasted on top of it. */
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(240, 193, 75, 0.4);
   backdrop-filter: blur(8px);
@@ -308,9 +234,6 @@
   background: var(--color-gold);
   border-color: var(--color-gold);
   color: var(--color-ink);
-  /* A flat color swap read as static against the hero's motion (video
-     background, text-reveal animation) — a small lift + shadow gives
-     the hover itself a sense of motion instead of just a color change. */
   transform: translateY(-3px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
@@ -366,12 +289,6 @@
   height: 20px;
 }
 
-/* Media — the full-bleed background behind the scrim and content (see the
-   z-index stack set up on .j-hero and .j-hero__content above). Previously
-   a floating card on the right half of a two-column layout; now fills the
-   entire hero, which is the actual structural change from that split
-   layout to a single unified image/video-plus-text block. */
-
 .j-hero__image {
   position: absolute;
   inset: 0;
@@ -399,17 +316,8 @@
   display: block;
 }
 
-/* First slide only: stacked over its own poster <img> (the LCP element —
-   see hero.liquid) and kept invisible until it's actually playing, so the
-   image is what paints first. hero-slideshow.js adds .is-playing. With
-   reduced motion the video never plays, so the poster image just stays. */
 .j-hero__video--over-poster {
   position: absolute;
-  /* 1px smaller than the poster on every side, not flush: at equal size
-     the browser's LCP is whichever of the two painted first, which made
-     it flip between runs. Kept a hair smaller, the video can never
-     outrank the image. The 1px edge shows the poster — the video's own
-     first frame — under the hero's dark scrim, so it isn't visible. */
   inset: 1px;
   width: calc(100% - 2px);
   height: calc(100% - 2px);
@@ -426,10 +334,6 @@
 @media (max-width: 991px) {
   .j-hero {
     min-height: 550px;
-    /* Same reasoning as the 480px breakpoint below — the header overlaps
-       ~70px here (see .j-body--home .j-hero-band above), which used to
-       exactly equal the default 70px padding-top with zero margin for
-       error. */
     padding-top: 90px;
   }
 
@@ -440,34 +344,10 @@
 
 @media (max-width: 480px) {
   .j-hero {
-    /* Taller than the content ever gets at phone widths (it measured
-       519-656px depending on screen width and which font had loaded), so
-       the hero is one fixed height here. Content-driven height changed
-       when the heading font swapped in; the hero then repainted at a new
-       size, and a later slide — painted at that new, larger size —
-       replaced the first as the page's LCP seconds after load. */
     min-height: 660px;
-    /* Top padding is deliberately larger than the sides/bottom — the
-       header overlaps the hero's top ~64px on this breakpoint (see
-       .j-body--home .j-hero-band above), and .j-hero's content is
-       vertically centered via flex, which only guarantees *at least*
-       padding-top worth of clearance above it (more if the content is
-       short, but never less once the content stack is tall enough to
-       fill the available space). 50px < 64px meant a long badge/heading
-       could end up tucked right under the header on some slides; 84px
-       keeps it clear with room to spare. */
     padding: 84px var(--space-4) 50px;
   }
 
-  /* The left-to-right scrim leaves the right ~20% of the image untouched
-     so the photo reads clearly there on wide screens — but a narrow phone
-     doesn't have enough width for that untouched zone to matter, so this
-     stays flat/uniform rather than a gradient. Kept much lighter than an
-     earlier version of this (0.65) — that made the whole photo/video read
-     as a dark, muddy overlay rather than a background you could actually
-     see, especially now that the heading/description/trust text already
-     carry their own text-shadow for contrast (see below) and don't need
-     the scrim to do all of that work by itself. */
   .j-hero::before {
     background: rgba(0, 0, 0, 0.22);
   }
@@ -484,15 +364,6 @@
     font-size: var(--font-size-md);
   }
 
-  /* Right-aligned (not centered) at this breakpoint, and smaller —
-     centering put the circles directly over whichever trust item landed
-     in the middle, hiding its text (e.g. "Easy Returns"). Right-aligning
-     alone isn't enough on its own though: the trust row's vertical
-     position still isn't fixed (it flows after however much the
-     heading/description wrap on a given slide), so see the matching
-     .j-hero__trust rule below, which keeps that row's own text out of
-     this same right-hand corner horizontally, regardless of which row
-     of it ends up at this height. */
   .j-hero-slideshow__arrows {
     right: 16px;
     bottom: 48px;
@@ -509,9 +380,6 @@
     height: 15px;
   }
 
-  /* Kept clear of the arrow cluster's own footprint (~34px x2 + 12px gap
-     + the 16px right offset above, so ~100px) so its text always wraps
-     before reaching that corner instead of running underneath it. */
   .j-hero__trust {
     max-width: calc(100% - 100px);
   }

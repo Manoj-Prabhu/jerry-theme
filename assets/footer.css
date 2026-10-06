@@ -3,21 +3,9 @@
 .j-footer {
   position: relative;
   width: 100%;
-  /* Was an unrelated mint green with no connection to anything else in
-     the theme's palette. This is the same cream/gold family already
-     used for the contact page's info card (assets/contact.css) and the
-     header/cart's gold accents — ties the footer back into the site's
-     one accent identity instead of introducing a fifth, disconnected
-     hue. */
   background: linear-gradient(135deg, #f5ecd7 0%, #ffffff 100%);
 }
 
-/* Curved divider into the footer (see the SVG markup at the top of
-   footer.liquid) — sits above the footer's own top edge, overlapping
-   upward into whatever section precedes it, so the footer reads as
-   flowing up over that section instead of starting with a flat seam.
-   Same technique as the hero's own wave into Shop by Category (see
-   .j-hero-band__divider in hero.css). */
 .j-footer__divider {
   position: absolute;
   left: 0;
@@ -48,8 +36,6 @@
   gap: 40px;
 }
 
-/* When every footer menu is disabled, there's no middle column to lay
-   out — just balance the brand and newsletter columns evenly. */
 .j-footer__container--no-menus {
   grid-template-columns: 1fr 1fr;
 }
@@ -58,9 +44,6 @@
   min-width: 0;
 }
 
-/* Menu columns reflow to however many are actually enabled (1–3),
-   instead of assuming a fixed count — so a disabled menu never leaves
-   an awkward gap, at any screen size. */
 .j-footer__menus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -85,8 +68,6 @@
   letter-spacing: 0.06em;
 }
 
-/* Small gold underline beneath each column heading — a quiet recurring
-   accent rather than plain uppercase labels sitting on their own. */
 .j-footer__column h4::after {
   content: "";
   position: absolute;
@@ -102,10 +83,6 @@
   letter-spacing: 0.01em;
 }
 
-/* Small gold rule under the wordmark — gives the brand column the same
-   "accent line" treatment as the column headings (.j-footer__column
-   h4::after), instead of the logo sitting on its own with nothing to
-   anchor it visually against the taller menu/newsletter columns. */
 .j-footer__logo-rule {
   display: block;
   width: 36px;
@@ -124,10 +101,6 @@
   font-size: var(--font-size-sm);
 }
 
-/* Ambient mascot — see assets/footer-mascot.js for the lazy Rive load.
-   A soft circular backdrop means this reads as an intentional graphic
-   element even before (or if) the animation loads, rather than a bare
-   unstyled canvas. */
 .j-footer__mascot {
   display: block;
   width: 72px;
@@ -158,9 +131,6 @@
     transform 0.2s ease;
 }
 
-/* Underline grows in from the left on hover instead of appearing all at
-   once — a small deliberate motion to pair with the existing translateX
-   nudge, rather than the translateX being the only feedback. */
 .j-footer__column a::after {
   content: "";
   position: absolute;
@@ -218,8 +188,6 @@
 }
 
 .j-footer__newsletter input::placeholder {
-  /* 0.45 measured at ~3.35:1 on white — under the 4.5:1 minimum for
-     visible placeholder text. 0.6 clears it with margin (~5.75:1). */
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -406,8 +374,6 @@
   color: var(--color-ink);
 }
 
-/* The select auto-submits on change via JS, making this button redundant
-   for JS users — keep it in the DOM as a no-JS fallback, just hidden. */
 .js .j-localization-form__submit {
   position: absolute;
   width: 1px;
@@ -496,9 +462,6 @@
   flex-shrink: 0;
 }
 
-/* Matches the social icons' bordered-circle rhythm (see
-   .j-footer__social-link) instead of the payment logos sitting as bare,
-   inconsistently-sized images with nothing framing them. */
 .j-footer__payment-icon {
   height: 22px;
   width: auto;

@@ -10,10 +10,6 @@
     return false;
   }
 
-  // Mounts an ambient, looping idle animation onto a caller-provided
-  // <canvas> (e.g. sitting above the Quick View Add to Cart button).
-  // Returns the Rive instance so the caller can `.cleanup()` it when
-  // the canvas is removed/re-rendered, or null if unavailable.
   function mountMascotIdle(canvas) {
     if (
       !canvas ||

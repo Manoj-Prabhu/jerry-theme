@@ -10,18 +10,10 @@ function initProductGallery() {
   if (!gallery || (thumbnails.length === 0 && dots.length === 0)) return;
 
   const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
-
-  // Source order of the slides in the DOM doubles as the gallery's
-  // left-to-right sequence — whichever direction a clicked thumbnail
-  // sits in relative to the currently active slide is the direction it
-  // visually slides in from (see the is-entering-*/is-leaving-* classes
-  // in product.css).
   const mediaOrder = Array.from(slides).map((slide) => slide.dataset.mediaId);
 
   function activateMedia(mediaId) {
-    const outgoing = gallery.querySelector(
-      ".j-product__media-slide.is-active",
-    );
+    const outgoing = gallery.querySelector(".j-product__media-slide.is-active");
     const incoming = gallery.querySelector(
       `.j-product__media-slide[data-media-id="${CSS.escape(mediaId)}"]`,
     );
@@ -44,8 +36,6 @@ function initProductGallery() {
     if (!incoming || incoming === outgoing) return;
 
     if (!outgoing || oldIndex === -1 || newIndex === -1) {
-      // No prior active slide (first render) — just show it, no
-      // direction to animate from.
       slides.forEach((slide) => {
         slide.classList.remove(
           "is-entering-next",
@@ -59,12 +49,11 @@ function initProductGallery() {
     }
 
     const direction = newIndex > oldIndex ? "next" : "prev";
-    const enterClass = direction === "next" ? "is-entering-next" : "is-entering-prev";
-    const leaveClass = direction === "next" ? "is-leaving-next" : "is-leaving-prev";
+    const enterClass =
+      direction === "next" ? "is-entering-next" : "is-entering-prev";
+    const leaveClass =
+      direction === "next" ? "is-leaving-next" : "is-leaving-prev";
 
-    // Clear any leftover state from a transition that got interrupted
-    // mid-flight (e.g. clicking a second thumbnail before the first
-    // one's animation finished).
     slides.forEach((slide) => {
       slide.classList.remove(
         "is-entering-next",
@@ -76,11 +65,6 @@ function initProductGallery() {
 
     incoming.classList.remove("is-active");
     incoming.classList.add(enterClass);
-    // Forces the browser to commit the entering slide's starting
-    // position (translateX ±100%) before the next frame flips it to
-    // .is-active — without this the two class changes would collapse
-    // into a single style recalc and the slide would never actually
-    // animate from off-screen.
     void incoming.offsetWidth;
 
     requestAnimationFrame(() => {
@@ -101,11 +85,6 @@ function initProductGallery() {
   }
 
   function syncVariantToMedia(mediaId) {
-    // Only sync an option index if this media implies a single value for
-    // it (e.g. Color, or the only option on a single-option product).
-    // If variants with other option values (e.g. different Sizes) share
-    // this same media, that index isn't media-specific — leave the
-    // user's current selection for it untouched.
     const sameMediaVariants = variants.filter(
       (variant) => String(variant.featuredMediaId) === mediaId,
     );
@@ -146,13 +125,6 @@ function initProductGallery() {
 
   gallery.activateMedia = activateMedia;
 
-  // -------------------------
-  // Swipe (mobile) — the dots already let a visitor jump to a specific
-  // image; this adds the swipe-through gesture visitors expect from a
-  // gallery on touch, using the same activateMedia/direction logic so
-  // it slides exactly like tapping a dot would.
-  // -------------------------
-
   const mainImage = document.querySelector(".j-product__main-image");
 
   if (mainImage) {
@@ -183,8 +155,6 @@ function initProductGallery() {
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
 
-        // Ignore mostly-vertical drags (page scroll) and drags too
-        // short to be a deliberate swipe.
         if (
           Math.abs(deltaX) < SWIPE_THRESHOLD ||
           Math.abs(deltaX) < Math.abs(deltaY)
@@ -199,10 +169,6 @@ function initProductGallery() {
 
         const currentIndex = mediaOrder.indexOf(activeSlide.dataset.mediaId);
         if (currentIndex === -1) return;
-
-        // Swipe left -> next image; swipe right -> previous. No
-        // wraparound, matching the dots/thumbnails (there's no "last
-        // dot loops to first" behavior there either).
         const nextIndex = deltaX < 0 ? currentIndex + 1 : currentIndex - 1;
         if (nextIndex < 0 || nextIndex >= mediaOrder.length) return;
 
@@ -214,19 +180,11 @@ function initProductGallery() {
     );
   }
 
-  // -------------------------
-  // Thumbnail scroll arrows (desktop column only — see .j-product__dots
-  // for the mobile equivalent, which doesn't need scrolling)
-  // -------------------------
-
   const thumbList = document.querySelector(".j-product__thumbnails");
   const upButton = document.querySelector(".j-product__thumb-scroll--up");
   const downButton = document.querySelector(".j-product__thumb-scroll--down");
 
   if (thumbList && upButton && downButton) {
-    // How far one click moves the list — one thumbnail's own height (plus
-    // its gap to the next one), so a click always lands exactly on a
-    // thumbnail boundary instead of stopping mid-scroll.
     function stepDistance() {
       const first = thumbList.querySelector(".j-product-thumbnail");
       return first ? first.offsetHeight + 10 : thumbList.clientHeight * 0.8;
@@ -256,10 +214,6 @@ function initProductGallery() {
 
     thumbList.addEventListener("scroll", updateArrowState, { passive: true });
 
-    // Bound once, ever, at module scope — this listens on `window`
-    // itself (never replaced by a section reload), so re-running init on
-    // every shopify:section:load would otherwise stack a duplicate
-    // listener each time instead of just picking up the new elements.
     if (!productGalleryResizeListenerBound) {
       productGalleryResizeListenerBound = true;
       let resizeTimer = null;
@@ -275,10 +229,6 @@ function initProductGallery() {
 
 document.addEventListener("DOMContentLoaded", initProductGallery);
 
-// See product-variants.js for why this listener is needed — the theme
-// editor swaps section markup via AJAX without firing DOMContentLoaded
-// again, so without this, thumbnails/dots stop switching the main image
-// after any edit to the product section.
 document.addEventListener("shopify:section:load", (event) => {
   if (event.target.querySelector(".j-product__gallery")) {
     initProductGallery();

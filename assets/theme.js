@@ -70,15 +70,42 @@ window.JerryProductCardCycle = (() => {
   const timers = new WeakMap();
   let observer = null;
 
+  // Images after the first ship without src/srcset (see
+  // product-card.liquid) so they aren't downloaded with the page.
+  const hydrate = (img) => {
+    if (!img || !img.dataset.src) return;
+    if (img.dataset.srcset) {
+      img.srcset = img.dataset.srcset;
+      img.removeAttribute("data-srcset");
+    }
+    img.src = img.dataset.src;
+    img.removeAttribute("data-src");
+  };
+
+  const isReady = (img) =>
+    !img.dataset.src && img.complete && img.naturalWidth > 0;
+
   const advance = (container) => {
     const images = container.querySelectorAll(".j-product-card__img");
     const activeIndex = Array.from(images).findIndex((img) =>
       img.classList.contains("is-active"),
     );
     const nextIndex = (activeIndex + 1) % images.length;
+    const next = images[nextIndex];
+    if (!next) return;
+
+    // Never swap to an image that hasn't arrived — request it and try
+    // again on the next tick, rather than fading to an empty box.
+    if (!isReady(next)) {
+      hydrate(next);
+      return;
+    }
 
     images[activeIndex]?.classList.remove("is-active");
-    images[nextIndex]?.classList.add("is-active");
+    next.classList.add("is-active");
+
+    // Fetch the one after, so it's ready by the time it's needed.
+    hydrate(images[(nextIndex + 1) % images.length]);
   };
 
   const getObserver = () => {
@@ -90,6 +117,8 @@ window.JerryProductCardCycle = (() => {
 
         if (entry.isIntersecting) {
           if (timers.has(container)) return;
+          // First hidden image, so the first swap has something to show.
+          hydrate(container.querySelectorAll(".j-product-card__img")[1]);
           timers.set(
             container,
             setInterval(() => advance(container), CYCLE_MS),
@@ -106,6 +135,13 @@ window.JerryProductCardCycle = (() => {
 
   return function scan(root = document) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // Cycling (and the extra image downloads it triggers) waits until
+    // the page itself has finished loading.
+    if (document.readyState !== "complete") {
+      window.addEventListener("load", () => scan(root), { once: true });
+      return;
+    }
 
     const containers = root.querySelectorAll(
       ".j-product-card__image[data-auto-cycle]",

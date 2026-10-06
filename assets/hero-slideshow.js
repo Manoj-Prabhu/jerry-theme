@@ -4,10 +4,6 @@ function initHeroSlideshow(root) {
 
   const autoplayDelay = Number(root.dataset.autoplay) || 5000;
 
-  // Non-first slides ship with data-src/data-srcset instead of real
-  // src/srcset (see hero.liquid) so the browser doesn't fetch every slide
-  // image (or, worse, video) upfront just because they geometrically
-  // overlap the viewport.
   function hydrateSlideImage(slide) {
     const img = slide.querySelector("img[data-src]");
     if (img) {
@@ -26,8 +22,6 @@ function initHeroSlideshow(root) {
       const video = videoSource.closest("video");
       videoSource.src = videoSource.dataset.src;
       videoSource.removeAttribute("data-src");
-      // Changing a <source>'s src after the fact needs an explicit load()
-      // for the <video> to actually pick it up.
       if (video) video.load();
     }
   }
@@ -37,36 +31,15 @@ function initHeroSlideshow(root) {
     hydrateSlideVideo(slide);
   }
 
-  // Images only here — they're light, so preloading every slide's image
-  // up front avoids any blank/loading gap on a crossfade. Videos are
-  // deliberately NOT included: each one can be several MB, and hydrating
-  // every hero video shortly after load (the previous behavior of this
-  // function) meant the page was downloading 3-4 full videos within a
-  // couple of seconds regardless of whether autoplay ever reached them —
-  // a large, mostly-wasted chunk of the page's total network payload.
-  // Videos hydrate progressively instead — see hydrateUpcomingVideo below,
-  // which only ever keeps one slide's video a step ahead of playback.
   function hydrateDeferredSlideImages() {
     slideshow.slides.forEach(hydrateSlideImage);
   }
 
-  // Hydrates (and lets the browser start buffering) the NEXT slide's
-  // video while the current one is still showing — a middle ground
-  // between loading every video upfront (expensive) and only starting a
-  // slide's own download at the exact moment it becomes active (a
-  // visible stutter/black-frame risk, since a multi-MB video won't be
-  // ready instantly). autoplayDelay is several seconds, which is ample
-  // lead time for this to finish before it's actually needed.
   function hydrateUpcomingVideo() {
     const nextIndex = (slideshow.currentIndex + 1) % slideshow.slides.length;
     hydrateSlideVideo(slideshow.slides[nextIndex]);
   }
 
-  // At most one hero video should ever be playing at a time — pause
-  // whichever slide is being left, and (after making sure its source is
-  // actually hydrated) play whichever slide is becoming active. Never
-  // autoplays for visitors who prefer reduced motion; the video just sits
-  // on its poster frame instead.
   function pauseSlideVideo(slide) {
     const video = slide.querySelector("video");
     if (video) video.pause();
@@ -78,27 +51,14 @@ function initHeroSlideshow(root) {
     const video = slide.querySelector("video");
     if (!video) return;
 
-    // The poster <img> under the video is deferred too (data-src) — make
-    // sure it's requested even if this slide is reached before the
-    // after-load hydration pass has run.
     hydrateSlideImage(slide);
     if (video.querySelector("source[data-src]")) hydrateSlideVideo(slide);
-
-    // load() is async; play() can be called immediately after regardless,
-    // the browser queues it correctly once the new source is ready.
     const playResult = video.play();
     if (playResult && typeof playResult.catch === "function") {
-      // Autoplay can be blocked by the browser in some contexts (e.g. low
-      // power mode) — that's fine, the poster frame is a reasonable
-      // fallback and isn't worth surfacing as an error.
       playResult.catch(() => {});
     }
   }
 
-  // Lets listeners (e.g. the hero heading's initials-cluster reveal in
-  // text-reveal.js) replay per-slide effects every time a slide becomes
-  // active — including the one that's active from first paint, not just
-  // slides reached via arrow/autoplay navigation.
   function announceActiveSlide(slide) {
     document.dispatchEvent(
       new CustomEvent("heroSlideActivated", { detail: { slide } }),
@@ -116,12 +76,8 @@ function initHeroSlideshow(root) {
       pauseSlideVideo(prevSlide);
       playSlideVideo(nextSlide);
       announceActiveSlide(nextSlide);
-      // Queue the slide after this one up next, keeping exactly one video
-      // hydrated ahead of playback at any given time.
       hydrateUpcomingVideo();
     },
-    // No point decoding a video nobody can see — pause it once the hero
-    // scrolls out of view, resume when it comes back.
     onVisibilityChange(inView) {
       const slide = slideshow.slides[slideshow.currentIndex];
       if (inView) {
@@ -132,16 +88,6 @@ function initHeroSlideshow(root) {
     },
   });
 
-  // The first slide's video sits over its poster <img> at opacity 0 (see
-  // hero.liquid / hero.css) so the image is what paints as LCP; reveal the
-  // video only once it's genuinely playing frames.
-  //
-  // "Genuinely playing" isn't enough on its own: on a fast connection the
-  // video can start before the poster image has finished painting. The
-  // two are the same size, and the browser keeps whichever painted first
-  // as LCP — so the video (low priority, no fetchpriority) intermittently
-  // became the LCP element. Waiting for the poster to load, plus two
-  // frames for it to actually paint, keeps the order fixed.
   root.querySelectorAll(".j-hero__video--over-poster").forEach((video) => {
     const poster = video.parentElement.querySelector(".j-hero__img");
     const reveal = () => video.classList.add("is-playing");
@@ -151,7 +97,6 @@ function initHeroSlideshow(root) {
         requestAnimationFrame(() => requestAnimationFrame(reveal));
       } else {
         poster.addEventListener("load", revealAfterPoster, { once: true });
-        // A broken poster shouldn't leave the video hidden forever.
         poster.addEventListener("error", reveal, { once: true });
       }
     };
@@ -171,11 +116,6 @@ function initHeroSlideshow(root) {
     }
   }
 
-  // Waits for window load, not just idle time: requestIdleCallback's 2s
-  // timeout forced the second slide's multi-MB video to start downloading
-  // while the first video (the LCP) was still loading, competing with it
-  // for bandwidth inside the window LCP is measured in. Autoplay already
-  // waits for load (below), so nothing is lost for real visitors.
   function hydrateAfterLoad() {
     whenIdle(hydrateDeferredSlideImages);
     whenIdle(hydrateUpcomingVideo);
@@ -188,36 +128,17 @@ function initHeroSlideshow(root) {
   }
 
   announceActiveSlide(slideshow.slides[slideshow.currentIndex]);
-
-  // The initial slide's video (if any) has the autoplay attribute directly
-  // in its HTML, which the browser honors regardless of the visitor's
-  // motion preference — pause it immediately if they prefer reduced motion.
   if (slideshow.prefersReducedMotion) {
     pauseSlideVideo(slideshow.slides[slideshow.currentIndex]);
   }
 
-  // Starting the autoplay timer immediately competes with the page's own
-  // critical-path loading: each slide advance during the initial load
-  // triggers a fresh video download (see hydrateUpcomingVideo), and under
-  // throttled/slow conditions those downloads don't finish within one
-  // autoplayDelay interval, so they pile up — several videos' worth of
-  // network traffic in flight before the page has even finished loading,
-  // inflating total payload and main-thread work in exactly the window
-  // LCP/TBT are measured in. Waiting for the window load event keeps the
-  // same autoplay behavior for real visitors while keeping the initial
-  // load free of extra slide-driven downloads.
-  //
-  // It also waits for the first slide's own image to have painted. On a
-  // slow phone the main thread can be busy enough that the load event
-  // fires, the timer runs out, and the slideshow moves to slide 2 before
-  // slide 1's image was ever counted — making slide 2 the page's LCP,
-  // seconds late.
   function startAutoplayAfterFirstPaint() {
-    const img = slideshow.slides[slideshow.currentIndex].querySelector(
-      ".j-hero__img",
-    );
+    const img =
+      slideshow.slides[slideshow.currentIndex].querySelector(".j-hero__img");
     const start = () =>
-      requestAnimationFrame(() => requestAnimationFrame(slideshow.startAutoplay));
+      requestAnimationFrame(() =>
+        requestAnimationFrame(slideshow.startAutoplay),
+      );
 
     if (!img || (img.complete && img.naturalWidth > 0)) {
       start();

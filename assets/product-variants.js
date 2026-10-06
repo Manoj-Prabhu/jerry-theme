@@ -74,7 +74,8 @@ function initProductVariants() {
         purchaseOptionsWrap
           .querySelectorAll(".j-product__selling-plan-select")
           .forEach((select) => {
-            select.disabled = select.dataset.sellingPlanGroup !== event.target.value;
+            select.disabled =
+              select.dataset.sellingPlanGroup !== event.target.value;
           });
 
         purchaseOptionsWrap
@@ -120,7 +121,8 @@ function initProductVariants() {
         (variant) =>
           variant.available &&
           variant.options.every(
-            (value, i) => testOptions[i] === undefined || value === testOptions[i],
+            (value, i) =>
+              testOptions[i] === undefined || value === testOptions[i],
           ),
       );
 
@@ -145,11 +147,6 @@ function initProductVariants() {
     }
   }
 
-  // The pickup availability shown on first paint is server-rendered for
-  // whichever variant loaded the page (see product.liquid) — it never
-  // updates on its own once a shopper picks a different variant here, so
-  // this has to re-render it from the same store-availability data each
-  // variant carries in #ProductVariantsJson.
   function updatePickupAvailability(variant) {
     if (!pickupAvailability) return;
 
@@ -198,10 +195,6 @@ function initProductVariants() {
   function selectVariant(variant) {
     currentVariant = variant;
     variantInput.value = variant.id;
-    // Setting .value directly (rather than a real user interaction with
-    // a native <select>) doesn't fire a change event on its own — Shop
-    // Pay Installments' own script listens for one on this input to know
-    // when to re-fetch the payment_terms banner for the new variant.
     variantInput.dispatchEvent(new Event("change", { bubbles: true }));
 
     updateInventoryStatus(variant);
@@ -306,11 +299,6 @@ function initProductVariants() {
 
 document.addEventListener("DOMContentLoaded", initProductVariants);
 
-// The theme editor swaps a section's markup via AJAX on every settings
-// change rather than reloading the page, so DOMContentLoaded only ever
-// fires once — without this, editing anything in the product section
-// (reordering/adding a block, changing a setting) would leave variant
-// swatches/pills unresponsive until a hard refresh.
 document.addEventListener("shopify:section:load", (event) => {
   if (event.target.querySelector("#ProductVariantsJson")) {
     initProductVariants();

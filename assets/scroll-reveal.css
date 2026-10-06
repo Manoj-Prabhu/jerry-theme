@@ -8,10 +8,6 @@
 
 .j-reveal.is-revealed {
   opacity: 1;
-  /* "none" (not translateY(0)) so this element stops establishing a
-     new containing block once revealed — otherwise any position:fixed
-     descendant (e.g. the product page's sticky add-to-cart bar) would
-     stay pinned to this element instead of the viewport. */
   transform: none;
 }
 

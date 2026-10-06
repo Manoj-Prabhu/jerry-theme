@@ -1,4 +1,3 @@
-
 function initBrandStorySlideshow(media) {
   if (media.dataset.slideshowInitialized) return;
   media.dataset.slideshowInitialized = "true";

@@ -1,10 +1,3 @@
-// Same lazy-load pattern as quick-view.js/404.js: the Rive runtime is
-// never loaded globally, only fetched where the mascot actually appears.
-// Unlike those two (opened on click / a rarely-visited page), this
-// canvas sits in the footer of every single page — so it's additionally
-// gated behind an IntersectionObserver, only fetching anything once a
-// visitor has actually scrolled this far. A homepage visitor who never
-// reaches the footer never downloads a single byte of this.
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("FooterMascotCanvas");
   if (!canvas) return;
@@ -53,15 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(canvas);
   }
 
-  // Being near the viewport isn't enough on its own: on a short page
-  // (a product page, a 404) the footer is within range the moment the
-  // page loads, so the Rive runtime — ~4.5s of CPU in Lighthouse's
-  // desktop product-page run — was starting up in the middle of page
-  // load for a purely decorative animation. Waiting for the visitor's
-  // first real interaction keeps it out of the load entirely; for
-  // anyone actually using the page it starts on their first scroll,
-  // tap or key press.
-  const interactionEvents = ["scroll", "pointerdown", "pointermove", "touchstart", "keydown"];
+  const interactionEvents = [
+    "scroll",
+    "pointerdown",
+    "pointermove",
+    "touchstart",
+    "keydown",
+  ];
 
   function onFirstInteraction() {
     interactionEvents.forEach((type) =>

@@ -1,15 +1,4 @@
 .j-new-products {
-  /* No margin: 0 auto here — this section is a grid item inside
-     .shopify-section's own centering grid (grid-column: 2, pre-sized to
-     the theme's content-width track; see critical.css and the same note
-     in featured-collection.css). Auto margins on a grid item make it
-     shrink-to-fit its own content instead of stretching to the track's
-     width — and because the horizontal photo strip below has
-     non-shrinking flex cards, "shrink-to-fit" resolved to the strip's
-     full max-content width (all cards side by side), blowing the whole
-     section out far past the viewport on mobile and pushing the
-     centered heading text off-screen. max-width alone keeps the section
-     centered and capped without triggering that shrink-to-fit sizing. */
   max-width: var(--container-width);
   padding: 80px var(--space-8);
 }
@@ -22,14 +11,6 @@
 }
 
 .j-new-products__heading-row {
-  /* No flexbox at all on this row — flex, inline-flex, justify-content:
-     center, and width: fit-content each independently reproduced the
-     same bug in testing (content invisible on mobile after the
-     scroll-reveal fade-in animation ran, only recovering when the
-     property was toggled off in devtools). Falling back to inline-block
-     children + vertical-align, centered via the parent's plain
-     text-align: center, avoids every flex-sizing code path that
-     triggered it. */
   margin-bottom: 8px;
 }
 
@@ -83,16 +64,8 @@
 }
 
 .j-new-products__view-all:hover {
-  /* A deeper gold/amber, not the theme's lighter var(--color-gold) gold used
-     elsewhere for dark-background/button contexts — as plain text on a
-     white background, that lighter gold only reaches ~1.7:1 contrast,
-     well under the 4.5:1 WCAG minimum. This shade passes at ~5:1. */
   color: #8a6d00;
 }
-
-/* Board — edge-to-edge photos, no card borders, badges are the only
-   overlay. A thin gap (not 0) keeps adjacent photos from visually
-   merging into one image at a glance. */
 
 .j-new-products__board {
   display: flex;
@@ -115,12 +88,6 @@
   background: var(--color-surface);
 }
 
-/* Stacked, not swapped in/out of the DOM — every image for a product
-   sits absolutely on top of the others, and .is-active (toggled in
-   new-products.js on hover, see below) is the only one visible at a
-   time. Letting the browser cross-fade opacity between two already-
-   loaded <img> elements is far smoother than anything driven by
-   swapping a single <img>'s src. */
 .j-new-products__image {
   position: absolute;
   inset: 0;
@@ -128,7 +95,9 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 0.4s ease, transform 0.5s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s ease;
 }
 
 .j-new-products__image.is-active {
@@ -152,11 +121,6 @@
   object-fit: cover;
 }
 
-/* .j-product-badges (see featured-collection.css) is already
-   position: absolute globally — .j-new-products__card's own
-   position: relative above is what anchors it to each photo here,
-   same role .j-product-card__image plays for the grid cards. */
-
 @media (max-width: 640px) {
   .j-new-products {
     padding: 40px 0 48px;
@@ -172,14 +136,6 @@
   }
 
   .j-new-products__board {
-    /* Exactly 2 cards visible at a time on mobile — the prev/next
-       arrows (see new-products.js) page between sets of 2 rather than
-       free-scrolling, so scroll-snap-type is mandatory to always land
-       on a clean 2-up view instead of stopping mid-card. Padding only
-       on the left (none on the right) so the 2 cards' flex-basis, sized
-       against the content box, exactly fills to the box's right edge
-       instead of leaving a sliver of the 3rd card peeking through the
-       right padding. */
     gap: var(--space-2);
     scroll-snap-type: x mandatory;
     padding-left: var(--space-6);
@@ -187,8 +143,6 @@
   }
 
   .j-new-products__card {
-    /* Two cards per row: each takes half the row width minus half the
-       gap between them. */
     flex-basis: calc((100% - var(--space-2)) / 2);
   }
 }

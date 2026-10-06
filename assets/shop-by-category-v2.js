@@ -1,50 +1,25 @@
-// Infinite loop — clones the full set of cards once before and once
-// after the real set, then silently snaps scrollLeft back by exactly one
-// set's width whenever the visitor scrolls (via drag, touch, trackpad, or
-// scroll-snap settling) far enough into a cloned set that it's about to
-// run out. Because the clone is pixel-identical to the real set it just
-// jumped past, the snap is invisible — it reads as an endless row rather
-// than a scroll that stops at the last category. Runs first in this file
-// (and so first on DOMContentLoaded, ahead of the coverflow/drag
-// listeners below) so the clones already exist in the DOM by the time
-// those measure the grid.
 function initShopByCategoryLoop(grid) {
   if (grid.dataset.loopInitialized) return;
   grid.dataset.loopInitialized = "true";
 
   const originalCards = Array.from(grid.children);
-  // Looping only makes sense with more than one card — and cloning a
-  // single card would just make it look duplicated, not endless.
   if (originalCards.length < 2) return;
 
   function cloneSet() {
     return originalCards.map((card) => {
       const clone = card.cloneNode(true);
-      // Duplicates exist purely for the visual wrap-around — hiding them
-      // from assistive tech and tab order keeps keyboard/screen reader
-      // navigation limited to the one real copy of each category.
       clone.setAttribute("aria-hidden", "true");
       clone.setAttribute("tabindex", "-1");
       return clone;
     });
   }
 
-  // Read this BEFORE inserting the clones below, while the grid still
-  // only contains the original set — scrollWidth at that point already
-  // equals exactly one set's width, with no division needed. Reading it
-  // afterward (dividing by 3) would force the browser to synchronously
-  // lay out the two freshly-inserted clone sets just to answer this one
-  // query, which is the "Forced reflow" Lighthouse flagged here.
   const setWidth = grid.scrollWidth;
 
   cloneSet()
     .reverse()
     .forEach((clone) => grid.insertBefore(clone, grid.firstChild));
   cloneSet().forEach((clone) => grid.appendChild(clone));
-
-  // Starts the visitor inside the middle (real) set, at the same
-  // position the row would have opened at before looping existed — no
-  // visible difference on first paint.
   grid.scrollLeft = setWidth;
 
   grid.addEventListener(
@@ -74,23 +49,12 @@ document.addEventListener("shopify:section:load", (event) => {
     .forEach(initShopByCategoryLoop);
 });
 
-// Continuous auto-scroll — the row drifts on its own by default (using
-// the infinite loop above, so it never hits a hard stop), pausing the
-// instant the cursor hovers any card and easing back up to speed instead
-// of snapping to full speed the instant the cursor leaves. Runs after
-// the loop init above (registered second, so it fires second on
-// DOMContentLoaded) since it needs the clones and the starting
-// scrollLeft already in place before it starts nudging that value.
-const AUTO_SCROLL_SPEED = 85; // px/second at full speed
+const AUTO_SCROLL_SPEED = 85;
 
 function initShopByCategoryAutoScroll(grid) {
   if (grid.dataset.autoScrollInitialized) return;
   grid.dataset.autoScrollInitialized = "true";
 
-  // Respects the same "no unprompted motion" preference the hero
-  // slideshow already honors elsewhere in this theme — autoplay never
-  // starts for visitors who've asked their OS to minimize motion. Manual
-  // drag/scroll/loop still work fine without it.
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   let isHovering = false;
@@ -133,31 +97,17 @@ function initShopByCategoryAutoScroll(grid) {
       isHovering || isPointerActive || grid.classList.contains("is-dragging");
 
     if (paused) {
-      // Eases down quickly rather than freezing mid-frame — a smooth
-      // stop instead of an abrupt one, without being slow enough to feel
-      // laggy in response to the hover.
       currentSpeed *= 0.85;
     } else {
-      // Eases up gradually toward full speed instead of resuming at full
-      // speed instantly — this is the "loop smoothly slowly" resume the
-      // hover-off should feel like.
       currentSpeed += (AUTO_SCROLL_SPEED - currentSpeed) * 0.03;
     }
 
     const isMoving = Math.abs(currentSpeed) > 0.01;
-    // scroll-snap (even proximity) can hold scrollLeft still against
-    // increments this small, netting zero visible movement — suspending
-    // it only while actually driving the scroll keeps snapping intact
-    // for manual drags/swipes.
     grid.classList.toggle("is-autoplay-moving", isMoving);
 
     if (isMoving) {
       grid.scrollLeft += currentSpeed * dt;
     } else if (paused) {
-      // Fully eased to a stop while paused — stop requesting frames too.
-      // Left running, this loop kept forcing a main-thread frame every
-      // ~16ms for as long as the cursor/finger stayed on the row, doing
-      // nothing. resumeTicking() restarts it once the pause ends.
       currentSpeed = 0;
       stopTicking();
     }
@@ -179,21 +129,6 @@ function initShopByCategoryAutoScroll(grid) {
     rafId = null;
   }
 
-  // This row sits below the hero, off-screen at page load on most
-  // viewports — running the tick loop from load onward burned main-thread
-  // time (and triggered layout on every frame via the scrollLeft write)
-  // animating a section nobody could see yet. Gating it to only run while
-  // actually in view removes that load-time cost with no visible
-  // difference for real visitors, since it was never seen moving before
-  // it scrolled into view anyway.
-  //
-  // The viewport gate alone isn't enough on phones, though: with the
-  // shorter mobile hero this row is already on screen at load, so the
-  // loop ran every frame from first paint — on a throttled mobile CPU that
-  // was continuous main-thread work right through the window TBT is
-  // measured in. Also waiting for window load (the same rule the hero's
-  // own autoplay follows) keeps the initial load free of it; the row
-  // simply starts drifting a moment later.
   let isInView = false;
   let pageLoaded = document.readyState === "complete";
 
@@ -238,41 +173,16 @@ document.addEventListener("shopify:section:load", (event) => {
     .forEach(initShopByCategoryAutoScroll);
 });
 
-// Coverflow-style "in focus" effect — whichever card sits nearest the
-// focus point scales up and sits flat, while cards further to either side
-// scale down and tilt away in 3D (like fanned-out pages), tapering
-// smoothly back to flat/full-size as a card approaches the focus point.
-//
-// The focus point is the row's horizontal center while scrolling/settled
-// (recomputed on every "scroll" event, so it responds to drag scrolling,
-// native touch/trackpad scrolling, and scroll-snap settling alike — all
-// three fire the same event, no separate wiring needed per input
-// method) — but while the mouse is hovering the row without scrolling it
-// (e.g. just moving the cursor down from the header into this section),
-// the focus point instead follows the cursor's x position, so the effect
-// still responds to something even when there's no scroll happening.
 const CARD_MIN_SCALE = 0.82;
 const CARD_MAX_SCALE = 1.15;
 const CARD_MAX_ROTATE_DEG = 32;
-
-// Each card's position inside the row's scrollable content never changes
-// while scrolling — only the row's scrollLeft does. Measuring all 15
-// cards (5 real + 2 cloned sets) with getBoundingClientRect() on every
-// update, ~25 times a second for as long as the row auto-scrolls, was
-// most of this file's cost on a throttled mobile CPU. This measures them
-// once and reuses that until the row's own size changes (see
-// invalidateCardGeometry).
 const cardGeometryCache = new WeakMap();
 
 function measureCardGeometry(grid) {
   const cards = Array.from(grid.querySelectorAll(".j-category-card"));
   const gridWidth = grid.clientWidth;
   if (!cards.length || gridWidth <= 0) return null;
-
-  // offsetLeft is unaffected by the scale/rotate transforms this effect
-  // itself applies, unlike getBoundingClientRect().
   const gridOffset = cards[0].offsetParent === grid ? 0 : grid.offsetLeft;
-
   const geometry = {
     gridWidth,
     cards: cards.map((card) => ({
@@ -295,26 +205,17 @@ function updateCardScales(grid, focusX) {
   const geometry = cardGeometryCache.get(grid) || measureCardGeometry(grid);
   if (!geometry) return;
 
-  // Focus point in the same coordinate space as the cached card centers
-  // (the row's scrollable content): the row's visible center by default,
-  // or the cursor's position within the row while hovering.
   const focusOffset =
     focusX == null
       ? geometry.gridWidth / 2
       : focusX - grid.getBoundingClientRect().left;
   const center = grid.scrollLeft + focusOffset;
-  // Half the row's width is the natural falloff distance — a card
-  // centered at the row's edge is as far from focus as this effect goes.
   const maxDistance = geometry.gridWidth / 2;
 
   geometry.cards.forEach((entry) => {
     const offset = entry.center - center;
     const distance = Math.abs(offset);
     const proximity = Math.max(0, 1 - distance / maxDistance);
-    // Opposite sign of proximity's falloff — 0deg at dead center, ramping
-    // up to the max tilt the further a card sits to either side. Cards
-    // left of center tilt one way, cards right of center tilt the other,
-    // like pages fanned open around the focused one.
     const scale = (
       CARD_MIN_SCALE +
       proximity * (CARD_MAX_SCALE - CARD_MIN_SCALE)
@@ -322,15 +223,7 @@ function updateCardScales(grid, focusX) {
     const rotate = Math.round(
       -Math.sign(offset) * (1 - proximity) * CARD_MAX_ROTATE_DEG,
     );
-    // Keeps the focused (scaled-up) card visually on top of its
-    // neighbors instead of the later-in-DOM card always winning.
     const zIndex = Math.round(proximity * 10);
-
-    // Only touches a card whose value actually changed. Most of the 15
-    // cards are off-screen at any moment, sitting at the same minimum
-    // scale / maximum tilt update after update — rewriting those every
-    // time restyled them (and restarted their CSS transition) for no
-    // visible difference.
     if (scale !== entry.scale) {
       entry.card.style.setProperty("--card-scale", scale);
       entry.scale = scale;
@@ -352,22 +245,9 @@ function initShopByCategoryScale(grid) {
 
   let ticking = false;
   let lastUpdateTime = 0;
-  // Continuous auto-scroll (see initShopByCategoryAutoScroll above) fires
-  // a native "scroll" event on nearly every animation frame, which drove
-  // this at the same ~60fps rate for as long as the row kept drifting —
-  // a coverflow scale/rotate effect doesn't need that much precision to
-  // read as smooth, and this measures every card's position via
-  // getBoundingClientRect() on every update, so capping it well below
-  // 60fps meaningfully cuts the layout-read cost this was accumulating
-  // continuously in the background.
-  //
-  // Touch devices get a lower ceiling still (~10fps): they're the slower
-  // CPUs, and the card's own 0.2s CSS transform transition (see
-  // shop-by-category.css) already smooths the gap between updates, so
-  // the tilt still reads as continuous.
   const MIN_UPDATE_INTERVAL_MS = window.matchMedia("(pointer: coarse)").matches
     ? 100
-    : 40; // ~25fps ceiling on desktop
+    : 40;
   const scheduleUpdate = (focusX) => {
     if (ticking) return;
     if (performance.now() - lastUpdateTime < MIN_UPDATE_INTERVAL_MS) return;
@@ -379,9 +259,6 @@ function initShopByCategoryScale(grid) {
     });
   };
 
-  // Card positions are cached (see measureCardGeometry) — anything that
-  // can change the row's layout has to drop that cache before the next
-  // update: a viewport resize, or late-loading fonts/images settling.
   const remeasure = () => {
     invalidateCardGeometry(grid);
     lastUpdateTime = 0;
@@ -394,27 +271,13 @@ function initShopByCategoryScale(grid) {
     window.addEventListener("load", remeasure, { once: true });
   }
 
-  // Mouse-hover follows the cursor instead of the scroll position — a
-  // fine/hover-capable pointer only, so this doesn't fight the
-  // drag-to-scroll gesture (dragging already updates via the "scroll"
-  // listener above once it moves grid.scrollLeft) or misfire from a
-  // touch tap, which reports as a pointer event too but has no
-  // meaningful "hover" concept.
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     grid.addEventListener("mousemove", (event) => {
       if (grid.classList.contains("is-dragging")) return;
       scheduleUpdate(event.clientX);
     });
-
-    // Falls back to the scroll-based centered state once the cursor
-    // leaves, rather than leaving cards frozen wherever the mouse last
-    // pointed.
     grid.addEventListener("mouseleave", () => scheduleUpdate());
   }
-
-  // Runs once up front so cards start in their correct scaled state
-  // (the initially-centered/first card focused) instead of all sitting
-  // at the default scale until the first scroll happens.
   scheduleUpdate();
 }
 
@@ -432,9 +295,6 @@ document.addEventListener("shopify:section:load", (event) => {
     .forEach(initShopByCategoryScale);
 });
 
-// Native overflow-x: auto already gives touch/trackpad users swipe
-// scrolling for free — this only adds click-and-drag support for mouse
-// users, who have no built-in way to drag a horizontal scroll container.
 function initShopByCategoryDrag(grid) {
   if (grid.dataset.dragInitialized) return;
   grid.dataset.dragInitialized = "true";
@@ -444,21 +304,9 @@ function initShopByCategoryDrag(grid) {
   let startX = 0;
   let startScrollLeft = 0;
 
-  // Distinguishes an intentional drag from a click that happens to have a
-  // pixel or two of jitter — below this, the card's link should still
-  // navigate normally on release.
   const DRAG_THRESHOLD = 6;
-
-  // Belt-and-suspenders alongside the cards' draggable="false" attribute
-  // (see shop-by-category.liquid) — a browser's native "drag this link"
-  // gesture can otherwise capture the pointer before pointermove ever
-  // reports movement, silently defeating the custom drag below.
   grid.addEventListener("dragstart", (event) => event.preventDefault());
-
   grid.addEventListener("pointerdown", (event) => {
-    // Only the primary mouse button drags — touch/pen already scroll
-    // natively via overflow-x, and dragging with those too would fight
-    // the browser's own gesture handling.
     if (event.pointerType !== "mouse" || event.button !== 0) return;
 
     isPointerDown = true;
@@ -486,15 +334,19 @@ function initShopByCategoryDrag(grid) {
 
   function endDrag(event) {
     if (isDragging) {
-      // Suppresses the click that would otherwise fire on release —
-      // without this, ending a drag on top of a category card would
-      // navigate to it even though the visitor was just scrolling.
       const suppressClick = (clickEvent) => {
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
       };
-      grid.addEventListener("click", suppressClick, { capture: true, once: true });
-      setTimeout(() => grid.removeEventListener("click", suppressClick, { capture: true }), 0);
+      grid.addEventListener("click", suppressClick, {
+        capture: true,
+        once: true,
+      });
+      setTimeout(
+        () =>
+          grid.removeEventListener("click", suppressClick, { capture: true }),
+        0,
+      );
 
       if (event && grid.hasPointerCapture(event.pointerId)) {
         grid.releasePointerCapture(event.pointerId);
@@ -521,8 +373,6 @@ function initAllShopByCategoryDrag() {
 
 document.addEventListener("DOMContentLoaded", initAllShopByCategoryDrag);
 
-// The theme editor replaces a section's markup wholesale on block
-// add/remove/reorder, leaving fresh elements with no listeners attached.
 document.addEventListener("shopify:section:load", (event) => {
   event.target
     .querySelectorAll(".j-shop-by-category__grid")
