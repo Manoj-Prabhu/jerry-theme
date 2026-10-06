@@ -98,14 +98,6 @@ function createCrossfadeSlideshow(
     goToSlide(currentIndex - 1);
   }
 
-  // Autoplay only actually ticks while the slideshow is on screen. Each
-  // crossfade makes the browser produce main-thread frames for as long as
-  // its transition runs; with several slideshows on one page (hero,
-  // featured product, brand story, testimonials) rotating on their own
-  // timers regardless of scroll position, some transition was running
-  // almost constantly — for content nobody could see. `wantsAutoplay` is
-  // what callers asked for (start/stopAutoplay); `isInView` is whether
-  // it's worth doing right now.
   let wantsAutoplay = false;
   let isInView = true;
 
@@ -150,9 +142,6 @@ function createCrossfadeSlideshow(
 
   if (slides.length > 1) {
     if (arrowSelector) {
-      // Each slide has its own copy of the prev/next arrows (overlaid on
-      // its content); delegate since only the active slide's copy is
-      // visible/clickable.
       root.addEventListener("click", (event) => {
         if (arrowSelector.next && event.target.closest(arrowSelector.next)) {
           next();
@@ -186,11 +175,6 @@ function createCrossfadeSlideshow(
   };
 }
 
-// Wires the DOMContentLoaded / shopify:section:load / bfcache-pageshow
-// boilerplate every crossfade slideshow needs. `initFn(root)` should
-// initialize `root` (bailing out early — returning nothing — if it's
-// already initialized or doesn't qualify, e.g. fewer than 2 slides) and
-// return the object created by createCrossfadeSlideshow.
 function initCrossfadeSlideshowSections(selector, initFn) {
   const instances = new WeakMap();
 
