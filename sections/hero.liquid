@@ -184,10 +184,29 @@
                   }}
                 {% endif %}
               {% else %}
+                {% comment %}
+                  Same structure as the first slide: the video's first frame as
+                  a real <img>, with the video on top (1px smaller, hidden until
+                  it plays). The poster used to be a poster="" attribute, which
+                  the browser fetched for every slide at page load; as an <img>
+                  it goes through the same data-src deferral as image slides.
+                  It also keeps a later slide's video from ever outranking the
+                  first slide's image as the page's LCP element.
+                {% endcomment %}
                 {% capture deferred_hero_video %}
+                  {% if hero_video.preview_image %}
+                    {{
+                      hero_video.preview_image
+                      | image_url: width: 1800, format: 'webp'
+                      | image_tag:
+                        widths: '480, 760, 1000, 1200, 1500, 1800',
+                        sizes: '(max-width: 749px) 200vw, 100vw',
+                        class: 'j-hero__img',
+                        alt: ''
+                    }}
+                  {% endif %}
                   {% if hero_source %}
-                    <video class="j-hero__video"
-                      poster="{{ hero_video.preview_image | image_url: width: 1000, format: 'webp' }}"
+                    <video class="j-hero__video j-hero__video--over-poster"
                       preload="metadata"
                       muted="muted"
                       loop="loop"
@@ -198,14 +217,14 @@
                       block.settings.video
                       | video_tag:
                         image_size: '1200x',
-                        class: 'j-hero__video',
+                        class: 'j-hero__video j-hero__video--over-poster',
                         muted: true,
                         loop: true,
                         playsinline: true
                     }}
                   {% endif %}
                 {% endcapture %}
-                {{ deferred_hero_video | replace: ' src=', ' data-src=' }}
+                {{ deferred_hero_video | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' | replace: ' poster=', ' data-poster=' }}
               {% endif %}
 
             {% elsif block.settings.image %}

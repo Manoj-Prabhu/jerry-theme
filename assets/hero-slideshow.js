@@ -2,7 +2,6 @@ function initHeroSlideshow(root) {
   if (root.dataset.heroSlideshowInitialized) return;
   root.dataset.heroSlideshowInitialized = "true";
 
-  const track = root.querySelector(".j-hero-slideshow__track");
   const autoplayDelay = Number(root.dataset.autoplay) || 5000;
 
   // Non-first slides ship with data-src/data-srcset instead of real
@@ -79,7 +78,11 @@ function initHeroSlideshow(root) {
     const video = slide.querySelector("video");
     if (!video) return;
 
-    if (video.querySelector("source[data-src]")) hydrateSlide(slide);
+    // The poster <img> under the video is deferred too (data-src) — make
+    // sure it's requested even if this slide is reached before the
+    // after-load hydration pass has run.
+    hydrateSlideImage(slide);
+    if (video.querySelector("source[data-src]")) hydrateSlideVideo(slide);
 
     // load() is async; play() can be called immediately after regardless,
     // the browser queues it correctly once the new source is ready.
@@ -104,7 +107,6 @@ function initHeroSlideshow(root) {
 
   const slideshow = createCrossfadeSlideshow(root, {
     slideSelector: ".j-hero-slideshow__slide",
-    track,
     autoplayDelay,
     arrowSelector: {
       prev: ".j-hero-slideshow__arrow--prev",
@@ -204,10 +206,33 @@ function initHeroSlideshow(root) {
   // LCP/TBT are measured in. Waiting for the window load event keeps the
   // same autoplay behavior for real visitors while keeping the initial
   // load free of extra slide-driven downloads.
+  //
+  // It also waits for the first slide's own image to have painted. On a
+  // slow phone the main thread can be busy enough that the load event
+  // fires, the timer runs out, and the slideshow moves to slide 2 before
+  // slide 1's image was ever counted — making slide 2 the page's LCP,
+  // seconds late.
+  function startAutoplayAfterFirstPaint() {
+    const img = slideshow.slides[slideshow.currentIndex].querySelector(
+      ".j-hero__img",
+    );
+    const start = () =>
+      requestAnimationFrame(() => requestAnimationFrame(slideshow.startAutoplay));
+
+    if (!img || (img.complete && img.naturalWidth > 0)) {
+      start();
+    } else {
+      img.addEventListener("load", start, { once: true });
+      img.addEventListener("error", start, { once: true });
+    }
+  }
+
   if (document.readyState === "complete") {
-    slideshow.startAutoplay();
+    startAutoplayAfterFirstPaint();
   } else {
-    window.addEventListener("load", slideshow.startAutoplay, { once: true });
+    window.addEventListener("load", startAutoplayAfterFirstPaint, {
+      once: true,
+    });
   }
 
   return slideshow;

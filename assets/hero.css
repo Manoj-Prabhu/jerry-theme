@@ -99,14 +99,21 @@
 
 /* Slideshow */
 
+/* Every slide sits in the same grid cell, in normal flow — so the track
+   (and the hero) is as tall as its tallest slide straight from CSS, on
+   the very first paint. Slides used to be position: absolute with only
+   the active one in flow; JS then measured them all and locked the
+   track to the tallest. That made the hero grow after load whenever a
+   later slide had longer text than the first (a layout shift), and the
+   later, slightly larger slide then replaced the first as the page's
+   LCP several seconds late. The slide's own position: relative comes
+   from .j-hero above. */
 .j-hero-slideshow__track {
-  position: relative;
-  transition: height 0.4s ease;
+  display: grid;
 }
 
 .j-hero-slideshow__slide {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -115,26 +122,13 @@
     visibility 0s linear 0.8s;
 }
 
-/* Before JS runs, the active slide stays in normal document flow so the
-   track gets its height for free from CSS alone — this is what prevents
-   the hero from rendering collapsed (0px) on first paint and then
-   jumping open once JS measures it, which is a real, measured layout
-   shift (CLS), not just a cosmetic nitpick. Once JS has explicitly
-   locked in a height (see hero-slideshow.js), it adds `.is-ready` and
-   this rule stops applying, so every slide — including the active one —
-   switches to absolute for a jump-free crossfade between slides. */
 .j-hero-slideshow__slide.is-active {
-  position: static;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transition:
     opacity 0.8s ease,
     visibility 0s linear 0s;
-}
-
-.j-hero-slideshow.is-ready .j-hero-slideshow__slide.is-active {
-  position: absolute;
 }
 
 /* A direct child of the slide (sibling to .j-hero__content, not nested
@@ -446,7 +440,13 @@
 
 @media (max-width: 480px) {
   .j-hero {
-    min-height: 470px;
+    /* Taller than the content ever gets at phone widths (it measured
+       519-656px depending on screen width and which font had loaded), so
+       the hero is one fixed height here. Content-driven height changed
+       when the heading font swapped in; the hero then repainted at a new
+       size, and a later slide — painted at that new, larger size —
+       replaced the first as the page's LCP seconds after load. */
+    min-height: 660px;
     /* Top padding is deliberately larger than the sides/bottom — the
        header overlaps the hero's top ~64px on this breakpoint (see
        .j-body--home .j-hero-band above), and .j-hero's content is
