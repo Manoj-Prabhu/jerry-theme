@@ -20,12 +20,10 @@
   its own filter options (product type / vendor / price) from whatever
   products are actually in the wishlist and paginates client-side.
 {% endcomment %}
-{% # theme-check-disable AssetPreload %}
-<link rel="preload" href="{{ 'collection.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="{{ 'collection.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
 <noscript>{{ 'collection.css' | asset_url | stylesheet_tag }}</noscript>
-<link rel="preload" href="{{ 'wishlist-page.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="{{ 'wishlist-page.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
 <noscript>{{ 'wishlist-page.css' | asset_url | stylesheet_tag }}</noscript>
-{% # theme-check-enable AssetPreload %}
 
 {% assign wishlist_title = page.title | default: 'Wishlist' %}
 

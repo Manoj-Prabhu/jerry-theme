@@ -25,11 +25,17 @@
             <div class="j-category-card__image">
               {% if block.settings.image %}
                 {% assign img_alt = block.settings.title | default: shop.name %}
+                {%- liquid
+                  assign card_loading = 'lazy'
+                  if section.index == 1 and forloop.index <= 3
+                    assign card_loading = 'eager'
+                  endif
+                -%}
                 {{
                   block.settings.image
                   | image_url: width: 800, format: 'webp'
                   | image_tag:
-                    loading: 'lazy',
+                    loading: card_loading,
                     widths: '400, 600, 800',
                     sizes: '(max-width: 768px) 60vw, 26vw',
                     alt: img_alt

@@ -88,11 +88,17 @@
               <div class="j-testimonials__media">
                 {% if block.settings.image %}
                   {% assign img_alt = block.settings.image.alt | default: block.settings.name | default: shop.name %}
+                  {%- liquid
+                    assign slide_loading = 'lazy'
+                    if section.index == 1 and forloop.first
+                      assign slide_loading = 'eager'
+                    endif
+                  -%}
                   {{
                     block.settings.image
                     | image_url: width: 1200, format: 'webp'
                     | image_tag:
-                      loading: 'lazy',
+                      loading: slide_loading,
                       widths: '600, 750, 900, 1200',
                       sizes: '(max-width: 900px) 92vw, 50vw',
                       alt: img_alt

@@ -29,7 +29,22 @@
     {% if has_products %}
       <div class="j-product-grid">
         {% for product in selected_collection.products limit: section.settings.products_to_show %}
-          {% render 'product-card', product: product, priority: forloop.first %}
+          {%- comment -%}
+            Only one image per page should carry fetchpriority="high". The
+            first card gets it only when this section opens the page;
+            anywhere lower, the hero or main product image is the LCP.
+          {%- endcomment -%}
+          {%- liquid
+            assign card_priority = false
+            assign card_eager = false
+            if section.index == 1 and forloop.index <= 4
+              assign card_eager = true
+              if forloop.first
+                assign card_priority = true
+              endif
+            endif
+          -%}
+          {% render 'product-card', product: product, priority: card_priority, eager: card_eager %}
         {% endfor %}
       </div>
 

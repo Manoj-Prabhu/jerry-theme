@@ -1,6 +1,0 @@
-/* This file previously defined a set of generic utility classes
-   (display, text alignment, font weight, text/background color,
-   border radius, shadow, and margin/padding helpers). None of them
-   were referenced by any class="..." attribute, JS classList/className
-   usage, or compound selector anywhere else in the theme, so the whole
-   set was removed as dead code. */

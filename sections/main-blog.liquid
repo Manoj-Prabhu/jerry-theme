@@ -47,6 +47,12 @@
             {% if article.image %}
 
               {% assign article_image_alt = article.image.alt | default: article.title %}
+              {%- liquid
+                assign article_loading = 'lazy'
+                if forloop.index <= 3
+                  assign article_loading = 'eager'
+                endif
+              -%}
 
               <div class="j-blog-card__image">
 
@@ -54,7 +60,7 @@
                   article.image
                   | image_url: width: 700, format: 'webp'
                   | image_tag:
-                    loading: 'lazy',
+                    loading: article_loading,
                     alt: article_image_alt,
                     widths: '350, 500, 700',
                     sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 33vw'

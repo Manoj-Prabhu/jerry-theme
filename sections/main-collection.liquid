@@ -33,7 +33,7 @@
     unintentional gap/seam rather than one cohesive banner. Kept out of
     __inner specifically so it can be pinned near the very top of the
     band independent of __inner's own vertical centering (see
-    .j-page-hero-band--has-image .j-breadcrumbs in layout.css) — __inner
+    .j-page-hero-band--has-image .j-breadcrumbs in base.css) — __inner
     only wraps the title block, whose vertical position is unrelated.
   {% endcomment %}
   {% render 'breadcrumbs' %}
@@ -147,7 +147,19 @@
 
             {% for product in collection.products %}
 
-              {% render 'product-card', product: product, priority: forloop.first %}
+              {%- liquid
+                assign card_eager = false
+                if forloop.index <= 4
+                  assign card_eager = true
+                endif
+                # One fetchpriority="high" per page: the banner image takes it when
+                # there is one, otherwise the first product card does.
+                assign card_priority = false
+                if forloop.first and banner_image == blank
+                  assign card_priority = true
+                endif
+              -%}
+              {% render 'product-card', product: product, priority: card_priority, eager: card_eager %}
 
             {% endfor %}
 

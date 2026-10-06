@@ -1,11 +1,17 @@
 <div class="custom-section full-width">
   {% if section.settings.background_image %}
+    {%- liquid
+      assign bg_loading = 'eager'
+      if section.index > 3
+        assign bg_loading = 'lazy'
+      endif
+    -%}
     <div class="custom-section__background">
       {{
         section.settings.background_image
         | image_url: width: 2000, format: 'webp'
         | image_tag:
-          loading: 'lazy',
+          loading: bg_loading,
           widths: '750, 1100, 1500, 2000',
           sizes: '100vw',
           alt: ''

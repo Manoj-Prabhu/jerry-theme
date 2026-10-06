@@ -1,6 +1,12 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
+    {% comment %}
+      Charset, viewport and title come first: the charset declaration has to
+      sit within the first 1024 bytes of the document.
+    {% endcomment %}
+    {% render 'meta-tags' %}
+
     {% if settings.favicon != blank %}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {% endif %}
@@ -117,28 +123,24 @@
     {% endunless %}
 
     {% comment %}
-      Logo preload: handled via the `preload: true` argument on the
-      image_tag filter directly in sections/header.liquid (the idiomatic
-      Shopify approach), rather than a manual <link> here.
+      Render-blocking stylesheets are kept to a handful: each one blocks
+      first paint and takes one of the 10 preload slots Shopify sends per
+      response, which the font and LCP image preloads also need. base.css
+      holds the design tokens, base, layout, component, utility and
+      breadcrumb styles in one file for that reason. Shopify preloads these
+      automatically, so none of them asks for a preload itself.
     {% endcomment %}
-
-    {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'variables.css' | asset_url | stylesheet_tag }}
+    {{ 'critical.css' | asset_url | stylesheet_tag }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'layout.css' | asset_url | stylesheet_tag }}
-    {{ 'components.css' | asset_url | stylesheet_tag }}
-    {{ 'utilities.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
     {% comment %}
-      The homepage has no breadcrumbs, and its footer sits far below the
-      fold, so neither needs to block its first paint. cart.css styles the
+      The homepage footer sits far below the fold, so it doesn't need to
+      block first paint there. cart.css styles the
       off-canvas drawer (hidden until opened) everywhere except the /cart
-      page itself, where it's the main above-the-fold content. These are
+      page itself, where it's the main above-the-fold content. Both are
       deferred via the non_critical_css list below instead.
     {% endcomment %}
     {% unless template.name == 'index' %}
-      {{ 'breadcrumbs.css' | asset_url | stylesheet_tag }}
       {{ 'footer.css' | asset_url | stylesheet_tag }}
     {% endunless %}
     {% if template.name == 'cart' %}
@@ -149,7 +151,9 @@
       Non-critical CSS (not needed for first paint — quick view only opens on
       click, back-to-top only appears after scrolling, scroll-reveal only
       matters once elements approach the viewport): loaded without blocking
-      render via the preload+swap pattern, with a <noscript> fallback.
+      render (media="print" until loaded), with a <noscript> fallback.
+      Not rel="preload": that would fetch them at high priority, ahead of
+      the resources the first paint actually needs.
 
       new-products.css, testimonials.css and brand-story.css style
       homepage sections that sit well below the fold (after Hero, Shop by
@@ -160,7 +164,6 @@
       above, since those two ARE above the fold and deferring them would
       risk a flash of unstyled content.
     {% endcomment %}
-    {% # theme-check-disable AssetPreload %}
     {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
     {% unless template.name == 'cart' %}
       {% assign cart_deferred_css = 'cart.css' | split: ',' %}
@@ -171,10 +174,9 @@
       {% assign non_critical_css = non_critical_css | concat: index_deferred_css %}
     {% endif %}
     {% for file in non_critical_css %}
-      <link rel="preload" href="{{ file | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      <link rel="stylesheet" href="{{ file | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
       <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
     {% endfor %}
-    {% # theme-check-enable AssetPreload %}
 
     {% comment %}
       featured-collection.css holds the shared .j-product-card / .j-wishlist-button
@@ -216,9 +218,6 @@
     {% if template.name == '404' %}
       {{ '404.css' | asset_url | stylesheet_tag }}
     {% endif %}
-
-    {% # Social, title, etc. %}
-    {% render 'meta-tags' %}
 
     {{ content_for_header }}
   </head>

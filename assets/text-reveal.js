@@ -59,18 +59,29 @@ function wrapLettersInNode(node, letterIndexRef) {
   });
 }
 
-function prepareTextReveal(heading) {
+// Text that is already on screen when the page loads must stay visible:
+// hiding it to replay an entrance animation delays what the visitor (and
+// LCP) sees. Marking it revealed before the words are wrapped means the new
+// spans render in their final state, with no fade.
+function isOnScreen(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < window.innerHeight;
+}
+
+function prepareTextReveal(heading, startRevealed = false) {
   if (heading.dataset.textReveal) return;
   heading.dataset.textReveal = "true";
 
+  if (startRevealed) heading.classList.add("is-revealed");
   wrapWordsInNode(heading, { count: 0 });
   heading.classList.add("j-text-reveal");
 }
 
-function prepareHeroTextReveal(heading) {
+function prepareHeroTextReveal(heading, startRevealed = false) {
   if (heading.dataset.textReveal) return;
   heading.dataset.textReveal = "true";
 
+  if (startRevealed) heading.classList.add("is-revealed");
   wrapLettersInNode(heading, { count: 0 });
   heading.classList.add("j-text-reveal");
 }
@@ -102,9 +113,19 @@ function initHeroTextReveal() {
   const badges = document.querySelectorAll(".j-hero__badge");
   const descriptions = document.querySelectorAll(".j-hero p");
 
-  headings.forEach(prepareHeroTextReveal);
-  badges.forEach(prepareTextReveal);
-  descriptions.forEach(prepareTextReveal);
+  // The slide showing at page load keeps its text as rendered; the reveal
+  // only plays when a slide is activated later.
+  const inInitialSlide = (el) => {
+    const slide = el.closest(".j-hero");
+    const isCurrent =
+      !slide.classList.contains("j-hero-slideshow__slide") ||
+      slide.classList.contains("is-active");
+    return isCurrent && isOnScreen(slide);
+  };
+
+  headings.forEach((el) => prepareHeroTextReveal(el, inInitialSlide(el)));
+  badges.forEach((el) => prepareTextReveal(el, inInitialSlide(el)));
+  descriptions.forEach((el) => prepareTextReveal(el, inInitialSlide(el)));
 
   if (!textRevealHeroListenerBound) {
     textRevealHeroListenerBound = true;
@@ -125,13 +146,17 @@ function initHeroTextReveal() {
         if (!entry.isIntersecting) return;
 
         const slide = entry.target;
+        obs.unobserve(slide);
+
+        const heading = slide.querySelector("h1");
+        if (heading && heading.classList.contains("is-revealed")) return;
+
         playTextReveal(
           slide.querySelector(".j-hero__badge"),
           HERO_BADGE_DELAY_MS,
         );
-        playTextReveal(slide.querySelector("h1"), HERO_SLIDE_CROSSFADE_MS);
+        playTextReveal(heading, HERO_SLIDE_CROSSFADE_MS);
         playTextReveal(slide.querySelector("p"), HERO_DESCRIPTION_DELAY_MS);
-        obs.unobserve(slide);
       });
     },
     { threshold: 0.2 },
@@ -145,7 +170,7 @@ function initSectionTitleReveal() {
 
   if (!targets.length) return;
 
-  targets.forEach(prepareTextReveal);
+  targets.forEach((heading) => prepareTextReveal(heading, isOnScreen(heading)));
 
   const observer = new IntersectionObserver(
     (entries, obs) => {

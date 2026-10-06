@@ -428,6 +428,15 @@
                 </div>
                 {% endif %}
 
+                {% comment %}
+                  Selling plan prices are a loop inside the variant loop, so they
+                  are only walked for products that actually have selling plans.
+                {% endcomment %}
+                {% assign has_selling_plans = false %}
+                {% if product.selling_plan_groups.size > 0 %}
+                  {% assign has_selling_plans = true %}
+                {% endif %}
+
                 {% capture variants_json %}[
                   {% for variant in product.variants %}
                     {% capture unit_price %}
@@ -436,9 +445,11 @@
                       {%- endif -%}
                     {% endcapture %}
                     {% capture selling_plan_allocations %}{
-                      {% for allocation in variant.selling_plan_allocations %}
-                        "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
-                      {% endfor %}
+                      {% if has_selling_plans %}
+                        {% for allocation in variant.selling_plan_allocations %}
+                          "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
+                        {% endfor %}
+                      {% endif %}
                     }{% endcapture %}
                     {
                       "id": {{ variant.id }},

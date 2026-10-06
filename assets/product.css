@@ -9,13 +9,11 @@
   align-items: start;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .j-product__gallery {
-    animation: j-product-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
+/* The gallery holds the LCP image, so it is never faded in. */
 
+@media (prefers-reduced-motion: no-preference) {
   .j-product__content {
-    animation: j-product-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    animation: j-product-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
 

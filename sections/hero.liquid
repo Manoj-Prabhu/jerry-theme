@@ -32,6 +32,18 @@
     aria-label="Hero"
   >
 
+    {%- comment -%}
+      The first slide is the LCP image when the hero opens the page, so it
+      gets fetchpriority="high". Placed lower down it stays at normal
+      priority. section.index is nil in the editor, which keeps "high".
+    {%- endcomment -%}
+    {%- liquid
+      assign hero_priority = 'high'
+      if section.index > 1
+        assign hero_priority = 'auto'
+      endif
+    -%}
+
     <div class="j-hero-slideshow__track">
       {% for block in slide_blocks %}
         <div
@@ -156,7 +168,7 @@
                     | image_url: width: 1800, format: 'webp'
                     | image_tag:
                       loading: 'eager',
-                      fetchpriority: 'high',
+                      fetchpriority: hero_priority,
                       widths: '480, 760, 1000, 1200, 1500, 1800',
                       sizes: '(max-width: 749px) 200vw, 100vw',
                       class: 'j-hero__img',
@@ -235,7 +247,7 @@
                   | image_url: width: 1200, format: 'webp'
                   | image_tag:
                     loading: 'eager',
-                    fetchpriority: 'high',
+                    fetchpriority: hero_priority,
                     widths: '360, 480, 600, 760, 1000, 1200',
                     sizes: '100vw',
                     class: 'j-hero__img',

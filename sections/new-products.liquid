@@ -69,17 +69,24 @@
 
             {% if product.featured_image %}
               {% assign card_images = product.images | slice: 0, 4 %}
+              {% assign card_position = forloop.index %}
               {% for card_image in card_images %}
                 {% assign card_img_class = 'j-new-products__image' %}
                 {% if forloop.first %}
                   {% assign card_img_class = card_img_class | append: ' is-active' %}
                 {% endif %}
                 {% assign img_alt = card_image.alt | default: product.title %}
+                {%- liquid
+                  assign card_loading = 'lazy'
+                  if section.index == 1 and card_position <= 2 and forloop.first
+                    assign card_loading = 'eager'
+                  endif
+                -%}
                 {{
                   card_image
                   | image_url: width: 900, format: 'webp'
                   | image_tag:
-                    loading: 'lazy',
+                    loading: card_loading,
                     widths: '300, 400, 500, 700, 900',
                     sizes: '(max-width: 700px) 40vw, 480px',
                     class: card_img_class,

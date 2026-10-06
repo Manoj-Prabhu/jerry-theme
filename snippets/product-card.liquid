@@ -54,12 +54,21 @@
             }}
           {% else %}
             {% assign img_alt = card_image.alt | default: product.title %}
+            {% comment %}
+              `eager` is passed for the first few cards of a grid that sits
+              at the top of the page — those are visible in the initial
+              viewport, so they must not be lazy-loaded.
+            {% endcomment %}
+            {% assign card_loading = 'lazy' %}
+            {% if eager and forloop.first %}
+              {% assign card_loading = 'eager' %}
+            {% endif %}
             {% capture card_image_tag %}
               {{
                 card_image
                 | image_url: width: 700, format: 'webp'
                 | image_tag:
-                  loading: 'lazy',
+                  loading: card_loading,
                   class: img_class,
                   alt: img_alt,
                   widths: '200, 350, 500, 600, 700',
@@ -192,34 +201,18 @@
         {% assign option_name_down = option.name | downcase %}
         {% if option_name_down == 'color' or option_name_down == 'colour' %}
           {% assign color_option = option %}
+          {% break %}
         {% endif %}
       {% endfor %}
 
       {% if color_option %}
         {% assign swatch_limit = 4 %}
         {% comment %}
-          Swatch hover-preview: hovering a color swatch swaps the card's
-          image to that color's photo without navigating away — see
-          assets/swatch-preview.js. Each swatch
-          needs the matching variant's image, found by walking variants
-          for one whose option at this color option's position equals
-          the swatch's value (options_with_values' values don't expose a
-          direct `.variant` link on every theme-compatible Shopify
-          version, so this matches the same way variant selection does
-          elsewhere in the theme).
-        {% endcomment %}
-        {% comment %}
-          Shopify Liquid has no array-mutation filters (push/pop aren't
-          real Shopify filters, despite existing in some other Liquid
-          implementations — `shopify theme check` flags them as
-          UnknownFilter), so a true single-pass "first variant per
-          color" lookup table isn't buildable here. `where` is a real,
-          Shopify-native filter though, and matching through it is still
-          simpler and faster in practice than a hand-written nested
-          Liquid loop over the full variant list for every swatch. The
-          option key is built dynamically ('option' + position) so this
-          works regardless of which option position color happens to be
-          in on a given product.
+          Swatch hover-preview: hovering a color swatch swaps the card image
+          to that color's photo (see assets/swatch-preview.js). The image
+          comes from the option value's own variant, so a grid of cards
+          doesn't load every product's full variant list. The variant list
+          is only searched when an option value has no variant of its own.
         {% endcomment %}
         {% assign option_key = 'option' | append: color_option.position %}
 
@@ -227,8 +220,11 @@
           {% for value in color_option.values limit: swatch_limit %}
             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
 
-            {% assign matching_variants = product.variants | where: option_key, value %}
-            {% assign preview_variant = matching_variants.first %}
+            {% assign preview_variant = value.variant %}
+            {% if preview_variant == blank %}
+              {% assign matching_variants = product.variants | where: option_key, value %}
+              {% assign preview_variant = matching_variants.first %}
+            {% endif %}
             {% assign preview_image = preview_variant.featured_image %}
 
             <span
