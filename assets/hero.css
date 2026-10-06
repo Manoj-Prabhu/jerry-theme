@@ -411,7 +411,14 @@
    reduced motion the video never plays, so the poster image just stays. */
 .j-hero__video--over-poster {
   position: absolute;
-  inset: 0;
+  /* 1px smaller than the poster on every side, not flush: at equal size
+     the browser's LCP is whichever of the two painted first, which made
+     it flip between runs. Kept a hair smaller, the video can never
+     outrank the image. The 1px edge shows the poster — the video's own
+     first frame — under the hero's dark scrim, so it isn't visible. */
+  inset: 1px;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
   opacity: 0;
   transition: opacity 0.4s ease;
 }

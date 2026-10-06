@@ -133,12 +133,31 @@ function initHeroSlideshow(root) {
   // The first slide's video sits over its poster <img> at opacity 0 (see
   // hero.liquid / hero.css) so the image is what paints as LCP; reveal the
   // video only once it's genuinely playing frames.
+  //
+  // "Genuinely playing" isn't enough on its own: on a fast connection the
+  // video can start before the poster image has finished painting. The
+  // two are the same size, and the browser keeps whichever painted first
+  // as LCP — so the video (low priority, no fetchpriority) intermittently
+  // became the LCP element. Waiting for the poster to load, plus two
+  // frames for it to actually paint, keeps the order fixed.
   root.querySelectorAll(".j-hero__video--over-poster").forEach((video) => {
+    const poster = video.parentElement.querySelector(".j-hero__img");
     const reveal = () => video.classList.add("is-playing");
+
+    const revealAfterPoster = () => {
+      if (!poster || (poster.complete && poster.naturalWidth > 0)) {
+        requestAnimationFrame(() => requestAnimationFrame(reveal));
+      } else {
+        poster.addEventListener("load", revealAfterPoster, { once: true });
+        // A broken poster shouldn't leave the video hidden forever.
+        poster.addEventListener("error", reveal, { once: true });
+      }
+    };
+
     if (!video.paused && video.readyState >= 3) {
-      reveal();
+      revealAfterPoster();
     } else {
-      video.addEventListener("playing", reveal, { once: true });
+      video.addEventListener("playing", revealAfterPoster, { once: true });
     }
   });
 
