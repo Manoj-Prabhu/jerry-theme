@@ -143,15 +143,21 @@
                   than it's actually drawn — Chrome discounts an upscaled
                   image's LCP size, so the full-resolution video replaced
                   it as LCP the moment it started playing.
+
+                  widths go up to 1800 for the same reason on desktop: Chrome
+                  never credits an image with more pixels than its file has,
+                  so a 1200px-wide frame stretched across a wider hero
+                  counted as smaller than the 720p video over it, and LCP
+                  flipped to the video on some runs.
                 {% endcomment %}
                 {% if hero_video.preview_image %}
                   {{
                     hero_video.preview_image
-                    | image_url: width: 1200, format: 'webp'
+                    | image_url: width: 1800, format: 'webp'
                     | image_tag:
                       loading: 'eager',
                       fetchpriority: 'high',
-                      widths: '480, 760, 1000, 1200',
+                      widths: '480, 760, 1000, 1200, 1500, 1800',
                       sizes: '(max-width: 749px) 200vw, 100vw',
                       class: 'j-hero__img',
                       alt: ''
