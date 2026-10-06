@@ -1,16 +1,3 @@
-// Renders the wishlist page's product grid — mirrors
-// recently-viewed.js's approach (localStorage handles -> fetch each via
-// the Product JS API -> render once), reading the "jerry-wishlist" key
-// instead of "jerry-recently-viewed". See wishlist.js for where that key
-// is written.
-//
-// Pagination and filters reuse main-collection.liquid's markup/classes
-// (collection.css supplies all the visual styling, collection.js the
-// mobile filter-drawer open/close behavior) but run entirely client-side:
-// there's no Shopify collection or Search & Discovery filter object
-// behind an arbitrary, per-visitor localStorage product list, so the
-// filter options (product type / vendor / price) are derived from
-// whatever's actually in the wishlist, and paging just slices the array.
 const WISHLIST_STORAGE_KEY = "jerry-wishlist";
 const WISHLIST_IMAGE_WIDTHS = [200, 350, 500, 600, 700];
 const WISHLIST_PAGE_SIZE = 8;
@@ -19,7 +6,12 @@ let wishlistProducts = [];
 let filteredProducts = [];
 let currentPage = 1;
 let currentSort = "featured";
-let activeFilters = { types: new Set(), vendors: new Set(), minPrice: null, maxPrice: null };
+let activeFilters = {
+  types: new Set(),
+  vendors: new Set(),
+  minPrice: null,
+  maxPrice: null,
+};
 
 function resizeWishlistImageUrl(src, width) {
   if (!src) return "";
@@ -180,8 +172,10 @@ function showWishlistEmptyState(reason) {
   if (emptyText) {
     emptyText.textContent =
       reason === "filters"
-        ? strings.wishlistNoFilterMatches || "No wishlist items match the selected filters."
-        : strings.wishlistEmpty || "Your wishlist is empty. Tap the heart on any product to save it here.";
+        ? strings.wishlistNoFilterMatches ||
+          "No wishlist items match the selected filters."
+        : strings.wishlistEmpty ||
+          "Your wishlist is empty. Tap the heart on any product to save it here.";
   }
   if (empty) empty.hidden = false;
 
@@ -195,12 +189,16 @@ function hideWishlistEmptyState() {
 }
 
 function productMatchesFilters(product) {
-  if (activeFilters.types.size && !activeFilters.types.has(product.type)) return false;
-  if (activeFilters.vendors.size && !activeFilters.vendors.has(product.vendor)) return false;
+  if (activeFilters.types.size && !activeFilters.types.has(product.type))
+    return false;
+  if (activeFilters.vendors.size && !activeFilters.vendors.has(product.vendor))
+    return false;
 
   const price = product.price / 100;
-  if (activeFilters.minPrice != null && price < activeFilters.minPrice) return false;
-  if (activeFilters.maxPrice != null && price > activeFilters.maxPrice) return false;
+  if (activeFilters.minPrice != null && price < activeFilters.minPrice)
+    return false;
+  if (activeFilters.maxPrice != null && price > activeFilters.maxPrice)
+    return false;
 
   return true;
 }
@@ -222,9 +220,6 @@ function sortProducts(products) {
       sorted.sort((a, b) => b.title.localeCompare(a.title));
       break;
     default:
-      // "featured" — the order products were added to the wishlist, i.e.
-      // wishlistProducts' own fetch order (no separate merchant-curated
-      // sequence exists for a localStorage-only product list).
       break;
   }
 
@@ -232,7 +227,9 @@ function sortProducts(products) {
 }
 
 function recomputeFilteredProducts() {
-  filteredProducts = sortProducts(wishlistProducts.filter(productMatchesFilters));
+  filteredProducts = sortProducts(
+    wishlistProducts.filter(productMatchesFilters),
+  );
 }
 
 function hasActiveFilters() {
@@ -262,7 +259,9 @@ function renderCurrentPage() {
   const start = (currentPage - 1) * WISHLIST_PAGE_SIZE;
   const pageItems = filteredProducts.slice(start, start + WISHLIST_PAGE_SIZE);
 
-  container.innerHTML = pageItems.map(renderWishlistCard).join("") + buildPaginationHtml(totalPages);
+  container.innerHTML =
+    pageItems.map(renderWishlistCard).join("") +
+    buildPaginationHtml(totalPages);
 
   if (window.JerryWishlist) window.JerryWishlist.sync(container);
   if (window.JerryProductCardCycle) window.JerryProductCardCycle(container);
@@ -272,12 +271,16 @@ function restoreFilterPanelState() {
   const panel = document.getElementById("WishlistFiltersPanel");
   if (!panel) return;
 
-  panel.querySelectorAll('input[data-filter-group="type"]').forEach((checkbox) => {
-    checkbox.checked = activeFilters.types.has(checkbox.value);
-  });
-  panel.querySelectorAll('input[data-filter-group="vendor"]').forEach((checkbox) => {
-    checkbox.checked = activeFilters.vendors.has(checkbox.value);
-  });
+  panel
+    .querySelectorAll('input[data-filter-group="type"]')
+    .forEach((checkbox) => {
+      checkbox.checked = activeFilters.types.has(checkbox.value);
+    });
+  panel
+    .querySelectorAll('input[data-filter-group="vendor"]')
+    .forEach((checkbox) => {
+      checkbox.checked = activeFilters.vendors.has(checkbox.value);
+    });
 
   const minInput = document.getElementById("WishlistPriceMin");
   const maxInput = document.getElementById("WishlistPriceMax");
@@ -293,16 +296,22 @@ function applyFiltersFromPanel() {
   if (!panel) return;
 
   const types = new Set(
-    Array.from(panel.querySelectorAll('input[data-filter-group="type"]:checked')).map((el) => el.value),
+    Array.from(
+      panel.querySelectorAll('input[data-filter-group="type"]:checked'),
+    ).map((el) => el.value),
   );
   const vendors = new Set(
-    Array.from(panel.querySelectorAll('input[data-filter-group="vendor"]:checked')).map((el) => el.value),
+    Array.from(
+      panel.querySelectorAll('input[data-filter-group="vendor"]:checked'),
+    ).map((el) => el.value),
   );
 
   const minInput = document.getElementById("WishlistPriceMin");
   const maxInput = document.getElementById("WishlistPriceMax");
-  const minPrice = minInput && minInput.value !== "" ? Number(minInput.value) : null;
-  const maxPrice = maxInput && maxInput.value !== "" ? Number(maxInput.value) : null;
+  const minPrice =
+    minInput && minInput.value !== "" ? Number(minInput.value) : null;
+  const maxPrice =
+    maxInput && maxInput.value !== "" ? Number(maxInput.value) : null;
 
   activeFilters = { types, vendors, minPrice, maxPrice };
 
@@ -313,7 +322,12 @@ function applyFiltersFromPanel() {
 }
 
 function clearFilters() {
-  activeFilters = { types: new Set(), vendors: new Set(), minPrice: null, maxPrice: null };
+  activeFilters = {
+    types: new Set(),
+    vendors: new Set(),
+    minPrice: null,
+    maxPrice: null,
+  };
   currentPage = 1;
   recomputeFilteredProducts();
   renderCurrentPage();
@@ -326,8 +340,14 @@ function buildFilterPanel() {
   const toggle = document.getElementById("WishlistFilterToggle");
   if (!panel) return;
 
-  const types = [...new Set(wishlistProducts.map((product) => product.type).filter(Boolean))].sort();
-  const vendors = [...new Set(wishlistProducts.map((product) => product.vendor).filter(Boolean))].sort();
+  const types = [
+    ...new Set(wishlistProducts.map((product) => product.type).filter(Boolean)),
+  ].sort();
+  const vendors = [
+    ...new Set(
+      wishlistProducts.map((product) => product.vendor).filter(Boolean),
+    ),
+  ].sort();
   const prices = wishlistProducts.map((product) => product.price / 100);
   const minPrice = Math.floor(Math.min(...prices));
   const maxPrice = Math.ceil(Math.max(...prices));
@@ -417,7 +437,7 @@ function buildFilterPanel() {
     });
   }
 
-  panel.querySelectorAll('input[data-filter-group]').forEach((checkbox) => {
+  panel.querySelectorAll("input[data-filter-group]").forEach((checkbox) => {
     checkbox.addEventListener("change", applyFiltersFromPanel);
   });
 
@@ -433,7 +453,8 @@ function handlePaginationClick(event) {
   renderCurrentPage();
 
   const container = document.getElementById("WishlistPageProducts");
-  if (container) container.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (container)
+    container.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function initWishlistPage() {
@@ -475,10 +496,6 @@ async function initWishlistPage() {
   wishlistProducts = fetchedProducts.filter(Boolean);
 
   if (!wishlistProducts.length) {
-    // Every stored handle 404'd (products deleted/unpublished since
-    // being saved) — same "nothing left to show" outcome as never
-    // having saved anything, so it gets the same empty state rather
-    // than a silently blank grid.
     showWishlistEmptyState("empty");
     return;
   }
@@ -490,15 +507,13 @@ async function initWishlistPage() {
 
 document.addEventListener("DOMContentLoaded", initWishlistPage);
 
-// Clicking a card's own heart button on this page removes it — react
-// immediately instead of leaving a now-unwishlisted card sitting there
-// until the visitor reloads. See wishlist.js, which dispatches this
-// after updating localStorage.
 document.addEventListener("jerry:wishlist-changed", (event) => {
   const container = document.getElementById("WishlistPageProducts");
   if (!container || event.detail.added) return; // only removals affect this page
 
-  wishlistProducts = wishlistProducts.filter((product) => product.handle !== event.detail.handle);
+  wishlistProducts = wishlistProducts.filter(
+    (product) => product.handle !== event.detail.handle,
+  );
 
   buildFilterPanel();
   recomputeFilteredProducts();

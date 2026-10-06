@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     } catch (error) {
-      /* localStorage unavailable (private browsing, in-app webview, etc.) */
       return [];
     }
   }
@@ -28,10 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("aria-pressed", "true");
       button.setAttribute(
         "aria-label",
-        (strings.removeFromWishlistHtml || "Remove __TITLE__ from Wishlist").replace(
-          "__TITLE__",
-          title,
-        ),
+        (
+          strings.removeFromWishlistHtml || "Remove __TITLE__ from Wishlist"
+        ).replace("__TITLE__", title),
       );
     } else {
       button.classList.remove("is-active");
@@ -64,10 +62,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const particle = document.createElement("span");
       particle.className = "j-heart-burst__particle";
       particle.textContent = "♥";
-      particle.style.setProperty("--burst-x", `${Math.round((Math.random() - 0.5) * 80)}px`);
-      particle.style.setProperty("--burst-y", `${Math.round(70 + Math.random() * 50)}px`);
-      particle.style.setProperty("--burst-rotate", `${Math.round((Math.random() - 0.5) * 50)}deg`);
-      particle.style.setProperty("--burst-size", `${Math.round(14 + Math.random() * 10)}px`);
+      particle.style.setProperty(
+        "--burst-x",
+        `${Math.round((Math.random() - 0.5) * 80)}px`,
+      );
+      particle.style.setProperty(
+        "--burst-y",
+        `${Math.round(70 + Math.random() * 50)}px`,
+      );
+      particle.style.setProperty(
+        "--burst-rotate",
+        `${Math.round((Math.random() - 0.5) * 50)}deg`,
+      );
+      particle.style.setProperty(
+        "--burst-size",
+        `${Math.round(14 + Math.random() * 10)}px`,
+      );
       particle.style.setProperty("--burst-delay", `${i * 50}ms`);
       burst.appendChild(particle);
     }
@@ -97,27 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Re-sync buttons whenever product cards are injected dynamically
-  // (predictive search results, product recommendations, etc.)
   window.JerryWishlist = { sync: syncWishlistButtons };
-
-  // Saved handles never expire on their own — if a merchant deletes a
-  // product (or a whole test catalog) after a visitor wishlisted it, that
-  // handle just sits in localStorage forever, inflating the header count
-  // for a product that no longer exists. Cross-checking against the
-  // store's actual product list on load prunes anything stale, so the
-  // count only ever reflects products that still exist. Runs at most once
-  // per day per visitor (not on every page load) since it costs a network
-  // request; failures are silent and leave the existing wishlist alone.
   const PRUNE_CHECK_KEY = "jerry-wishlist-pruned-at";
   const PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
-  // A single /products.json request only ever returns one page (max 250
-  // products) — stores with a larger catalog would have anything past the
-  // first page wrongly pruned as "deleted". Checking each wishlisted
-  // handle individually via /products/{handle}.js instead scales with the
-  // wishlist size (typically a handful of items) rather than the catalog
-  // size, and needs no pagination.
   function pruneWishlistAgainstCatalog() {
     const wishlist = getWishlist();
     if (wishlist.length === 0) return;
@@ -156,9 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(() => {});
   }
 
-  // The initial DOM scan isn't needed for first paint (buttons render in
-  // their default "not wishlisted" state either way) — deferring it to
-  // idle time keeps it off the critical main-thread work during load.
   const runInitialSync = () => {
     syncWishlistButtons();
     updateWishlistCount();
@@ -195,12 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveWishlist(wishlist);
     updateWishlistCount();
-
-    // Lets the wishlist page (assets/wishlist-page.js) remove/re-check a
-    // card in place instead of the toggle only taking effect after a
-    // full reload — this heart button exists on any product card
-    // anywhere (including the wishlist page's own cards), so a removal
-    // there needs to be reflected immediately, not just in localStorage.
     document.dispatchEvent(
       new CustomEvent("jerry:wishlist-changed", { detail: { handle, added } }),
     );

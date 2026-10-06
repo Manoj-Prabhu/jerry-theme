@@ -1,9 +1,3 @@
-/* .j-wishlist-page reuses sections/main-collection.liquid's
-   .j-collection / .j-collection-layout / .j-collection-grid /
-   .j-collection-filters / .j-pagination structure and CSS (see
-   collection.css) for a consistent, premium look shared with the real
-   catalog page — only the empty state below is unique to this page. */
-
 .j-wishlist-page__empty {
   grid-column: 1 / -1;
   max-width: 360px;
@@ -34,20 +28,6 @@
   margin-top: var(--space-5);
 }
 
-/* .j-filter-toggle (collection.css) sets its own `display: flex`, which
-   as an author-stylesheet rule beats the UA stylesheet's `[hidden] {
-   display: none }` regardless of specificity — collection.css never hits
-   this because it only ever removes that button from the DOM outright
-   (`{% if collection.filters != empty %}`) rather than toggling `hidden`
-   on it. This page does toggle `hidden` on it (wishlist-page.js decides
-   at runtime whether there's anything to filter by), so the override
-   needs to be explicit here. */
 #WishlistFilterToggle[hidden] {
   display: none;
 }
-
-/* The loading-skeleton component (.j-product-skeleton-card, shown while
-   this page's products are being fetched) lives in components.css —
-   Recently Viewed and Product Recommendations use the exact same
-   fetch-then-render pattern and needed the identical skeleton, and that
-   file is loaded globally on every page rather than just this one. */

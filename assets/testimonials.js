@@ -15,8 +15,6 @@ function initTestimonialsSlideshow(root) {
     },
   });
 
-  // Waits for window load, matching the hero and featured-product
-  // slideshows — keeps slide transitions out of the initial-load window.
   if (document.readyState === "complete") {
     slideshow.startAutoplay();
   } else {

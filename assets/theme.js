@@ -1,11 +1,5 @@
 "use strict";
 
-/**
- * Formats a price given in cents into the shop's active money format
- * (e.g. "${{amount}}", "{{amount}} CAD"). Mirrors Shopify's standard
- * formatMoney implementation so client-side/AJAX-rendered prices match
- * the shop's actual currency instead of a hardcoded symbol.
- */
 window.formatMoney = function formatMoney(cents, format) {
   if (typeof cents === "string") cents = cents.replace(".", "");
 
@@ -55,23 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.JerryProductCardCycle();
 });
 
-/**
- * Product cards with more than one image auto-cycle through them (no
- * hover required). Only cards currently visible in the viewport run their
- * interval, and the whole feature is skipped under prefers-reduced-motion.
- *
- * Exposed on window and re-callable: sections that inject product cards
- * after page load (recommendations, recently viewed, predictive search)
- * call it again, scoped to their own container, to pick up the new cards —
- * the shared observer/timer map means already-cycling cards are unaffected.
- */
 window.JerryProductCardCycle = (() => {
   const CYCLE_MS = 1800;
   const timers = new WeakMap();
   let observer = null;
-
-  // Images after the first ship without src/srcset (see
-  // product-card.liquid) so they aren't downloaded with the page.
   const hydrate = (img) => {
     if (!img || !img.dataset.src) return;
     if (img.dataset.srcset) {
@@ -94,8 +75,6 @@ window.JerryProductCardCycle = (() => {
     const next = images[nextIndex];
     if (!next) return;
 
-    // Never swap to an image that hasn't arrived — request it and try
-    // again on the next tick, rather than fading to an empty box.
     if (!isReady(next)) {
       hydrate(next);
       return;
@@ -104,7 +83,6 @@ window.JerryProductCardCycle = (() => {
     images[activeIndex]?.classList.remove("is-active");
     next.classList.add("is-active");
 
-    // Fetch the one after, so it's ready by the time it's needed.
     hydrate(images[(nextIndex + 1) % images.length]);
   };
 
@@ -117,7 +95,6 @@ window.JerryProductCardCycle = (() => {
 
         if (entry.isIntersecting) {
           if (timers.has(container)) return;
-          // First hidden image, so the first swap has something to show.
           hydrate(container.querySelectorAll(".j-product-card__img")[1]);
           timers.set(
             container,
@@ -136,8 +113,6 @@ window.JerryProductCardCycle = (() => {
   return function scan(root = document) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Cycling (and the extra image downloads it triggers) waits until
-    // the page itself has finished loading.
     if (document.readyState !== "complete") {
       window.addEventListener("load", () => scan(root), { once: true });
       return;

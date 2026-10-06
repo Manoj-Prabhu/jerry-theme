@@ -6,58 +6,21 @@
   --color-rose: #d98e9b;
   --color-sage: #8ba888;
   --color-orange: #e08a3c;
-
   --color-white: #ffffff;
   --color-black: #000000;
-
-  /* Gold accent family — the theme's one real accent color, previously
-     scattered as raw hex across ~15 files with several near-duplicate
-     shades instead of a shared set of tokens (this --color-gold
-     variable existed but pointed at #d4af37, a shade almost nothing in
-     the theme actually used — #f0c14b was the real accent, hardcoded
-     ~80 times with no variable at all). Named here as one small,
-     deliberate family instead: a base accent plus the two darker
-     variants gradients/borders and AA-contrast text respectively need. */
   --color-gold: #f0c14b;
   --color-gold-dark: #b8873a;
   --color-gold-deep: #b8860b;
-  /* AA-safe text variant of --color-gold-deep — that shade only clears
-     ~3.9:1 on white/cream backgrounds (fails WCAG AA's 4.5:1 for normal
-     text); this darkened version clears ~6.25:1 while still reading as
-     gold. Use for gold-colored TEXT specifically; --color-gold-deep
-     itself remains correct for borders/backgrounds/decorative fills
-     where contrast against their own background isn't the constraint. */
   --color-gold-deep-text: #7a5c0a;
-
-  /* Dark neutral used as text/icon color sitting directly on the gold
-     accent (white fails contrast there; this passes comfortably) —
-     named so it reads as one deliberate choice everywhere it's reused,
-     not a coincidence that ~50 separate rules happened to pick the same
-     near-black. */
   --color-ink: #1a1a1a;
-
-  /* Darkened from the more common #6b7280 to keep headroom above 4.5:1
-     on white (was 4.83:1 — passes, but with almost no margin against
-     any merchant-customized off-white background_color). */
   --color-text-light: #5b6270;
-
-  /* Darkened from the more common #22c55e/#ef4444 shades — those only hit
-     ~2.3:1 and ~3.8:1 against white, failing WCAG AA (4.5:1) for normal
-     text. These pass at ~5:1 and ~4.8:1 while staying visually green/red. */
   --color-success: #15803d;
   --color-error: #dc2626;
-
-  /* Aliases — map legacy token names used across the theme to the
-     settings-driven variables from css-variables.liquid */
-
   --color-text: var(--color-foreground);
   --container-width: var(--page-width);
 
   /* Typography */
 
-  /* Micro text (badge counts, tiny labels) — previously scattered as
-     raw 10px/11px across files with no shared token, a 1px drift that
-     read as accidental rather than a deliberate size. */
   --font-size-2xs: 10px;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
@@ -99,11 +62,14 @@
      don't support calc() inside a color's alpha channel) */
 
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 4px rgb(0 0 0 / calc(0.05 * var(--shadow-strength-multiplier, 1)));
+  --shadow-sm: 0 2px 4px
+    rgb(0 0 0 / calc(0.05 * var(--shadow-strength-multiplier, 1)));
   --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 8px 20px rgb(0 0 0 / calc(0.08 * var(--shadow-strength-multiplier, 1)));
+  --shadow-md: 0 8px 20px
+    rgb(0 0 0 / calc(0.08 * var(--shadow-strength-multiplier, 1)));
   --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 18px 40px rgb(0 0 0 / calc(0.12 * var(--shadow-strength-multiplier, 1)));
+  --shadow-lg: 0 18px 40px
+    rgb(0 0 0 / calc(0.12 * var(--shadow-strength-multiplier, 1)));
 
   /* Animation (speed driven by Theme Settings > Effects > Animation
      speed) */

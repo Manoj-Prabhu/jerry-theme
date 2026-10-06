@@ -2,13 +2,6 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--color-secondary);
-  /* The content column has its own 80px top/bottom padding, but the
-     media column stretches (align-items: stretch) to match that same
-     height with no padding of its own — so without this, the product
-     photo runs flush to the very bottom of the section, landing right
-     against the footer's background with no visual break between them.
-     This padding keeps this section's own background showing as a
-     clear gap below the photo before the footer starts. */
   padding: 48px 0;
 }
 
@@ -33,10 +26,6 @@
     visibility 0s linear 0.8s;
 }
 
-/* Same "static until measured, then absolute" approach as the hero
-   slideshow (see hero.css/hero-slideshow.js) — keeps the active slide
-   in normal flow until JS has locked in the track's height, avoiding a
-   collapsed-then-expand jump (CLS) on first paint. */
 .j-testimonials__slide.is-active {
   position: static;
   opacity: 1;
@@ -65,9 +54,6 @@
   align-items: flex-start;
   justify-content: center;
   gap: 16px;
-  /* Widened from 480px alongside the bigger quote text below — at the
-     old width the larger font wrapped to 2-3 words per line, cramped
-     rather than confident. */
   max-width: 560px;
   padding: 80px var(--space-8);
   margin: 0 auto 0 0;
@@ -103,20 +89,10 @@
 .j-testimonials__quote {
   margin: 0;
   color: var(--color-secondary-text);
-  /* A quiet pull quote: the body font in regular-weight italic, a step
-     above body size (18px on phones up to 22px on desktop). The italic
-     is what marks it as someone's words; larger or bolder treatments
-     read as either oversized paragraph copy or a second headline
-     competing with the section titles. */
   font-weight: var(--font-normal);
   font-style: italic;
   font-size: clamp(var(--font-size-lg), 1.6vw, var(--font-size-xl));
   line-height: 1.6;
-
-  /* Bounds wildly different quote lengths between blocks to the same
-     6 lines, so the JS-measured slide height (see updateHeight in
-     crossfade-slideshow.js) stays roughly stable across autoplay
-     transitions instead of visibly jumping. */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 6;
@@ -139,9 +115,6 @@
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-surface);
-  /* A thin gold ring — matches the accent used everywhere else this
-     pass (badge/highlight/hover colors) instead of leaving the avatar
-     as a bare unstyled circle. */
   box-shadow: 0 0 0 2px var(--color-gold);
 }
 
@@ -230,10 +203,6 @@
   .j-testimonials__media {
     min-height: 320px;
     order: 1;
-    /* Inset like a card instead of running edge to edge — matches the
-       content column's own side padding just below it, so the photo
-       doesn't look like an oversized full-bleed banner stacked above a
-       much narrower text block. */
     margin: 0 var(--space-6);
     border-radius: var(--radius-lg);
   }
