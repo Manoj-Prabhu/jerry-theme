@@ -8,7 +8,16 @@
 <noscript>{{ 'recently-viewed.css' | asset_url | stylesheet_tag }}</noscript>
 {% # theme-check-enable AssetPreload %}
 
-<div class="j-recently-viewed">
+{% comment %}
+  Starts hidden (outside the theme editor) and is only revealed by the
+  inline script below, before first paint, when this visitor actually
+  has other products in their history. It used to always render four
+  tall skeleton cards and then, for anyone with no history — every
+  first-time visitor — swap them for one line of text, collapsing the
+  section by several hundred pixels after load and shifting everything
+  beneath it (a 0.12 layout shift in Lighthouse).
+{% endcomment %}
+<div class="j-recently-viewed"{% unless request.design_mode %} hidden{% endunless %}>
 
   <h2 class="j-section-title">
     {{ 'product.recently_viewed_title' | t }}
@@ -28,6 +37,24 @@
   </div>
 
 </div>
+
+<script>
+  (function () {
+    var section = document.currentScript.previousElementSibling;
+    try {
+      var current = decodeURIComponent((location.pathname.split('/products/')[1] || '').split('/')[0]);
+      var handles = JSON.parse(localStorage.getItem('jerry-recently-viewed')) || [];
+      for (var i = 0; i < handles.length; i++) {
+        if (handles[i] !== current) {
+          section.hidden = false;
+          break;
+        }
+      }
+    } catch (error) {
+      /* localStorage unavailable — leave the section hidden */
+    }
+  })();
+</script>
 
 <script src="{{ 'recently-viewed.js' | asset_url }}" defer="defer"></script>
 

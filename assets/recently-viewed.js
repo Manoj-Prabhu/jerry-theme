@@ -32,8 +32,31 @@ async function initRecentlyViewed() {
     /* localStorage unavailable (private browsing, in-app webview, etc.) */
   }
 
+  // The product being viewed right now isn't "recently viewed" — and
+  // product.js adds it to this list on every product page load, so
+  // without this a first-time visitor's list was never truly empty.
+  const currentHandle = decodeURIComponent(
+    (window.location.pathname.split("/products/")[1] || "").split("/")[0],
+  );
+  handles = handles.filter((handle) => handle !== currentHandle);
+
+  const section = container.closest(".j-recently-viewed");
+  const inThemeEditor = Boolean(window.Shopify && window.Shopify.designMode);
+
+  // Nothing to show: the section stays hidden (see the inline script in
+  // recently-viewed-products.liquid, which makes the same decision
+  // before first paint). Only the theme editor gets a visible message,
+  // so a merchant can still find and select the section there.
+  function showEmptyState() {
+    if (inThemeEditor) {
+      container.innerHTML = "<p>No recently viewed products.</p>";
+    } else if (section) {
+      section.hidden = true;
+    }
+  }
+
   if (!handles.length) {
-    container.innerHTML = "<p>No recently viewed products.</p>";
+    showEmptyState();
     return;
   }
 
@@ -142,9 +165,12 @@ async function initRecentlyViewed() {
   // sections/recently-viewed-products.liquid, outside this container)
   // was left sitting over a blank grid instead of the same message used
   // when there's nothing saved at all.
-  container.innerHTML = validCards.length
-    ? validCards.join("")
-    : "<p>No recently viewed products.</p>";
+  if (!validCards.length) {
+    showEmptyState();
+    return;
+  }
+
+  container.innerHTML = validCards.join("");
 
   if (window.JerryWishlist) {
     window.JerryWishlist.sync(container);
