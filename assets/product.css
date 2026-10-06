@@ -1031,14 +1031,22 @@
 
   box-shadow: var(--shadow-lg);
 
+  /* Hidden while off-screen so its blur and shadow aren't rendered. */
+  visibility: hidden;
   transform: translateY(100%);
-  transition: transform 0.35s ease;
+  transition:
+    transform 0.35s ease,
+    visibility 0s linear 0.35s;
 
   z-index: 999;
 }
 
 .j-sticky-cart.is-visible {
+  visibility: visible;
   transform: translateY(0);
+  transition:
+    transform 0.35s ease,
+    visibility 0s linear 0s;
 }
 
 .j-sticky-cart__product {

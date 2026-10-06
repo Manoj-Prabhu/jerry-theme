@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const interactionEvents = [
     "scroll",
+    "wheel",
     "pointerdown",
-    "pointermove",
     "touchstart",
     "keydown",
   ];
