@@ -1,3 +1,4 @@
+{%- assign section_settings = section.settings -%}
 {% comment %}
   Brand Story — editorial image + narrative block, with an optional row
   of stats (e.g. "Est. 2020", "40+ Countries"). Sits between Featured
@@ -14,32 +15,38 @@
 %}
 
 <section class="j-brand-story full-width">
-  <div class="j-brand-story__inner j-brand-story__inner--{{ section.settings.image_position }}">
+  <div class="j-brand-story__inner j-brand-story__inner--{{ section_settings.image_position }}">
 
     <div
       class="j-brand-story__media"
       {% if image_blocks.size > 1 %}
         data-slideshow
-        data-slideshow-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
+        data-slideshow-autoplay="{{ section_settings.autoplay_speed | times: 1000 }}"
       {% endif %}
     >
       {% if image_blocks.size > 0 %}
         {% for block in image_blocks %}
-          {% if block.settings.image != blank %}
+          {% assign block_settings = block.settings %}
+          {% if block_settings.image != blank %}
             <div
               class="j-brand-story__slide{% if forloop.first %} is-active{% endif %}"
               {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
               {{ block.shopify_attributes }}
             >
-              {% assign img_alt = section.settings.heading | default: shop.name %}
+              {% assign img_alt = section_settings.heading | default: shop.name %}
               {%- liquid
                 assign slide_loading = 'lazy'
-                if section.index == 1 and forloop.first
+                if forloop.first
                   assign slide_loading = 'eager'
+                endif
+                # Written as a positive "not at the top" test so the editor and Section
+                # Rendering API, where section.index is nil, keep the image eager.
+                if section.index > 1 or section.location == 'footer'
+                  assign slide_loading = 'lazy'
                 endif
               -%}
               {{
-                block.settings.image
+                block_settings.image
                 | image_url: width: 1200, format: 'webp'
                 | image_tag: loading: slide_loading, widths: '480, 600, 768, 1000, 1200', sizes: '(max-width: 480px) 75vw, (max-width: 900px) 88vw, 42vw', class: 'j-brand-story__image', alt: img_alt
               }}
@@ -53,30 +60,31 @@
 
     <div class="j-brand-story__content">
 
-      {% if section.settings.eyebrow != blank %}
-        <span class="j-brand-story__eyebrow">{{ section.settings.eyebrow }}</span>
+      {% if section_settings.eyebrow != blank %}
+        <span class="j-brand-story__eyebrow">{{ section_settings.eyebrow }}</span>
       {% endif %}
 
-      {% if section.settings.heading != blank %}
-        <h2 class="j-brand-story__heading">{{ section.settings.heading }}</h2>
+      {% if section_settings.heading != blank %}
+        <h2 class="j-brand-story__heading">{{ section_settings.heading }}</h2>
       {% endif %}
 
-      {% if section.settings.body != blank %}
-        <div class="j-brand-story__body">{{ section.settings.body }}</div>
+      {% if section_settings.body != blank %}
+        <div class="j-brand-story__body">{{ section_settings.body }}</div>
       {% endif %}
 
       {% if stat_blocks.size > 0 %}
         <div class="j-brand-story__stats">
           {% for block in stat_blocks %}
+            {% assign block_settings = block.settings %}
             <div class="j-brand-story__stat" {{ block.shopify_attributes }}>
-              <span class="j-brand-story__stat-number">{{ block.settings.number }}</span>
-              <span class="j-brand-story__stat-label">{{ block.settings.label }}</span>
+              <span class="j-brand-story__stat-number">{{ block_settings.number }}</span>
+              <span class="j-brand-story__stat-label">{{ block_settings.label }}</span>
             </div>
           {% endfor %}
         </div>
       {% endif %}
 
-      {% if section.settings.button_label != blank %}
+      {% if section_settings.button_label != blank %}
         {% comment %}
           The visually-hidden suffix makes the link text descriptive on its
           own — "Learn More" alone is flagged by Lighthouse's "Links do not
@@ -85,10 +93,10 @@
           links in isolation. The visible button keeps its shorter label.
         {% endcomment %}
         <a
-          href="{{ section.settings.button_link | default: '#' }}"
+          href="{{ section_settings.button_link | default: '#' }}"
           class="j-button j-button-outline j-brand-story__button"
         >
-          {{ section.settings.button_label }}<span class="visually-hidden"> about {{ shop.name }}</span>
+          {{ section_settings.button_label }}<span class="visually-hidden"> about {{ shop.name }}</span>
         </a>
       {% endif %}
 

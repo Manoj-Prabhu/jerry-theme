@@ -37,7 +37,7 @@
         # below) — skipping it whenever the cart has items avoids doing
         # any of this work on what's normally the more common case.
         if cart.item_count == 0
-          assign suggested_collection = collections[section.settings.empty_cart_collection]
+          assign suggested_collection = section.settings.empty_cart_collection
 
           # Falls back to the first non-empty collection when no collection
           # is chosen in the section settings (or the chosen one no longer
@@ -49,7 +49,7 @@
           # keeps worst-case cost bounded on stores with hundreds of them.
           if suggested_collection == blank
             for c in collections limit: 50
-              if c.products.size > 0
+              if c.products_count > 0
                 assign suggested_collection = c
                 break
               endif

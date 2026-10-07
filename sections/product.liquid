@@ -195,6 +195,7 @@
       >
 
       {% for block in section.blocks %}
+        {% assign block_settings = block.settings %}
         {% case block.type %}
 
           {% when 'title' %}
@@ -378,14 +379,18 @@
                         <div class="j-product__swatches">
                           {% for value in option.values %}
                             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
+                            {% assign value_escaped = value | escape %}
                             <button
                               type="button"
-                              class="j-product__swatch {% if value == selected_value %}is-active{% endif %}"
+                              class="j-product__swatch {% if value == selected_value %}is-active{% endif %}{% unless value.available %} is-sold-out{% endunless %}"
                               data-option-index="{{ option_index }}"
-                              data-value="{{ value | escape }}"
-                              aria-label="{{ value | escape }}"
+                              data-option-value-id="{{ value.id }}"
+                              data-media-id="{{ value.variant.featured_media.id }}"
+                              {% if value.product_url %}data-product-url="{{ value.product_url }}"{% endif %}
+                              data-value="{{ value_escaped }}"
+                              aria-label="{{ value_escaped }}"
                               aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
-                              title="{{ value | escape }}"
+                              title="{{ value_escaped }}"
                             >
                               {% if value.swatch.image %}
                                 <span
@@ -408,11 +413,15 @@
 
                         <div class="j-product__pills">
                           {% for value in option.values %}
+                            {% assign value_escaped = value | escape %}
                             <button
                               type="button"
-                              class="j-product__pill {% if value == selected_value %}is-active{% endif %}"
+                              class="j-product__pill {% if value == selected_value %}is-active{% endif %}{% unless value.available %} is-sold-out{% endunless %}"
                               data-option-index="{{ option_index }}"
-                              data-value="{{ value | escape }}"
+                              data-option-value-id="{{ value.id }}"
+                              data-media-id="{{ value.variant.featured_media.id }}"
+                              {% if value.product_url %}data-product-url="{{ value.product_url }}"{% endif %}
+                              data-value="{{ value_escaped }}"
                               aria-pressed="{% if value == selected_value %}true{% else %}false{% endif %}"
                             >
                               {{ value }}
@@ -429,49 +438,42 @@
                 {% endif %}
 
                 {% comment %}
-                  Selling plan prices are a loop inside the variant loop, so they
-                  are only walked for products that actually have selling plans.
+                  Only the selected variant is described here. When a shopper
+                  picks another option, product-variants.js re-requests this
+                  section with the new option values (Section Rendering API)
+                  and reads the same element from the response, so the page
+                  never loads the product's full variant list — it works the
+                  same for 3 variants or 2,000.
                 {% endcomment %}
-                {% assign has_selling_plans = false %}
-                {% if product.selling_plan_groups.size > 0 %}
-                  {% assign has_selling_plans = true %}
-                {% endif %}
-
-                {% capture variants_json %}[
-                  {% for variant in product.variants %}
-                    {% capture unit_price %}
-                      {%- if variant.unit_price_measurement -%}
-                        {{ variant.unit_price | unit_price_with_measurement: variant.unit_price_measurement }}
-                      {%- endif -%}
-                    {% endcapture %}
-                    {% capture selling_plan_allocations %}{
-                      {% if has_selling_plans %}
-                        {% for allocation in variant.selling_plan_allocations %}
-                          "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
-                        {% endfor %}
-                      {% endif %}
-                    }{% endcapture %}
-                    {
-                      "id": {{ variant.id }},
-                      "available": {{ variant.available }},
-                      "price": {{ variant.price | money | json }},
-                      "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
-                      "unitPrice": {{ unit_price | strip | json }},
-                      "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
-                      "options": {{ variant.options | json }},
-                      "image": {{ variant.featured_image | default: product.featured_image | image_url: width: 1200, format: 'webp' | json }},
-                      "featuredMediaId": {{ variant.featured_media.id | default: product.featured_media.id | json }},
-                      "inventoryManagement": {{ variant.inventory_management | json }},
-                      "inventoryQuantity": {{ variant.inventory_quantity | json }},
-                      "inventoryPolicy": {{ variant.inventory_policy | json }},
-                      "hasPickup": {{ variant.store_availabilities.size | json }},
-                      "pickupAvailable": {{ variant.store_availabilities.first.available | json }},
-                      "pickupLocation": {{ variant.store_availabilities.first.location.name | json }},
-                      "sku": {{ variant.sku | json }}
-                    }{% unless forloop.last %},{% endunless %}
+                {% capture unit_price %}
+                  {%- if current_variant.unit_price_measurement -%}
+                    {{ current_variant.unit_price | unit_price_with_measurement: current_variant.unit_price_measurement }}
+                  {%- endif -%}
+                {% endcapture %}
+                {% capture selling_plan_allocations %}{
+                  {% for allocation in current_variant.selling_plan_allocations %}
+                    "{{ allocation.selling_plan.id }}": {{ allocation.price | money | json }}{% unless forloop.last %},{% endunless %}
                   {% endfor %}
-                ]{% endcapture %}
-                <script type="application/json" id="ProductVariantsJson">{{ variants_json }}</script>
+                }{% endcapture %}
+                <script type="application/json" id="ProductVariantJson" data-section-id="{{ section.id }}">
+                  {
+                    "id": {{ current_variant.id }},
+                    "available": {{ current_variant.available }},
+                    "price": {{ current_variant.price | money | json }},
+                    "compareAtPrice": {% if current_variant.compare_at_price > current_variant.price %}{{ current_variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                    "unitPrice": {{ unit_price | strip | json }},
+                    "sellingPlanAllocations": {{ selling_plan_allocations | strip }},
+                    "options": {{ current_variant.options | json }},
+                    "featuredMediaId": {{ current_variant.featured_media.id | default: product.featured_media.id | json }},
+                    "inventoryManagement": {{ current_variant.inventory_management | json }},
+                    "inventoryQuantity": {{ current_variant.inventory_quantity | json }},
+                    "inventoryPolicy": {{ current_variant.inventory_policy | json }},
+                    "hasPickup": {{ current_variant.store_availabilities.size | json }},
+                    "pickupAvailable": {{ current_variant.store_availabilities.first.available | json }},
+                    "pickupLocation": {{ current_variant.store_availabilities.first.location.name | json }},
+                    "sku": {{ current_variant.sku | json }}
+                  }
+                </script>
 
               {% endif %}
 
@@ -578,14 +580,14 @@
               {% for i in (1..3) %}
                 {% case i %}
                   {% when 1 %}
-                    {% assign trust_icon = block.settings.icon_1 %}
-                    {% assign trust_text = block.settings.text_1 %}
+                    {% assign trust_icon = block_settings.icon_1 %}
+                    {% assign trust_text = block_settings.text_1 %}
                   {% when 2 %}
-                    {% assign trust_icon = block.settings.icon_2 %}
-                    {% assign trust_text = block.settings.text_2 %}
+                    {% assign trust_icon = block_settings.icon_2 %}
+                    {% assign trust_text = block_settings.text_2 %}
                   {% when 3 %}
-                    {% assign trust_icon = block.settings.icon_3 %}
-                    {% assign trust_text = block.settings.text_3 %}
+                    {% assign trust_icon = block_settings.icon_3 %}
+                    {% assign trust_text = block_settings.text_3 %}
                 {% endcase %}
 
                 {% if trust_text != blank %}
@@ -639,15 +641,15 @@
             {% endif %}
 
           {% when 'text' %}
-            {% if block.settings.text != blank %}
+            {% if block_settings.text != blank %}
               <div class="j-product__text" {{ block.shopify_attributes }}>
-                {{ block.settings.text }}
+                {{ block_settings.text }}
               </div>
             {% endif %}
 
           {% when 'custom_liquid' %}
             <div {{ block.shopify_attributes }}>
-              {{ block.settings.custom_liquid }}
+              {{ block_settings.custom_liquid }}
             </div>
 
           {% when '@app' %}

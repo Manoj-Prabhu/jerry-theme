@@ -554,7 +554,7 @@ document.addEventListener("DOMContentLoaded", () => {
               : ""
           }
 
-          <a href="/products/${product.handle}" class="j-quick-view__link">
+          <a href="${product.url}" class="j-quick-view__link">
             ${(window.themeStrings && window.themeStrings.viewFullDetails) || "View full details"}
           </a>
 
@@ -740,7 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
           addButton.disabled = true;
           addButton.textContent = strings.adding || "Adding...";
 
-          const response = await fetch("/cart/add.js", {
+          const response = await fetch(`${window.themeRoutes.cartAdd}.js`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -794,7 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const handle = button.dataset.handle;
 
     try {
-      const response = await fetch(`/products/${handle}.js`);
+      const response = await fetch(window.themeRoutes.product(handle));
       const product = await response.json();
 
       currentProduct = product;

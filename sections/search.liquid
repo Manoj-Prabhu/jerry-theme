@@ -161,9 +161,7 @@
 
             </div>
 
-            {% if paginate.pages > 1 %}
-              {{ paginate | default_pagination }}
-            {% endif %}
+            {% render 'pagination', paginate: paginate %}
 
           {% endpaginate %}
 

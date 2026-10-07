@@ -1,7 +1,7 @@
 {% liquid
-  assign selected_collection = collections[section.settings.collection]
+  assign selected_collection = section.settings.collection
   assign has_products = false
-  if selected_collection != blank and selected_collection.products.size > 0
+  if selected_collection != blank and selected_collection.products_count > 0
     assign has_products = true
   endif
 %}
@@ -37,11 +37,17 @@
           {%- liquid
             assign card_priority = false
             assign card_eager = false
-            if section.index == 1 and forloop.index <= 4
+            if forloop.index <= 4
               assign card_eager = true
               if forloop.first
                 assign card_priority = true
               endif
+            endif
+            # A positive "not at the top" test: section.index is nil in the
+            # editor and Section Rendering API, which stays on the eager side.
+            if section.index > 1 or section.location == 'footer'
+              assign card_eager = false
+              assign card_priority = false
             endif
           -%}
           {% render 'product-card', product: product, priority: card_priority, eager: card_eager %}

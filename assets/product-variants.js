@@ -1,11 +1,14 @@
 function initProductVariants() {
   const optionsWrap = document.getElementById("ProductOptions");
-  const variantsJson = document.getElementById("ProductVariantsJson");
+  const variantJson = document.getElementById("ProductVariantJson");
   const purchaseOptionsWrap = document.getElementById("ProductPurchaseOptions");
 
-  if (!variantsJson) return;
+  if (!variantJson) return;
 
-  const variants = JSON.parse(variantsJson.textContent);
+  // Only the selected variant is in the page. Other variants are fetched one
+  // selection at a time by re-rendering this section (Section Rendering API),
+  // so the picker works the same for a handful of variants or thousands.
+  const sectionId = variantJson.dataset.sectionId;
   const optionButtons = optionsWrap
     ? optionsWrap.querySelectorAll(".j-product__swatch, .j-product__pill")
     : [];
@@ -25,9 +28,7 @@ function initProductVariants() {
   const sellingPlanInput = document.getElementById("SelectedSellingPlan");
   const LOW_STOCK_THRESHOLD = 3;
 
-  let currentVariant =
-    variants.find((variant) => variant.id === Number(variantInput.value)) ||
-    variants[0];
+  let currentVariant = JSON.parse(variantJson.textContent);
 
   function getSelectedSellingPlanId() {
     if (!purchaseOptionsWrap) return null;
@@ -104,30 +105,136 @@ function initProductVariants() {
     }
   });
 
-  function findVariant(options) {
-    return variants.find((variant) =>
-      variant.options.every((value, index) => value === options[index]),
-    );
+  const stateCache = new Map();
+  let latestRequest = 0;
+  let abortController = null;
+
+  function selectedOptionValueIds() {
+    return Array.from(optionButtons)
+      .filter((button) => button.classList.contains("is-active"))
+      .map((button) => button.dataset.optionValueId)
+      .filter(Boolean);
   }
 
-  function updateAvailability() {
+  // Reads the selected variant and each option value's state out of a
+  // server-rendered copy of this section.
+  function readSectionState(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const json = doc.getElementById("ProductVariantJson");
+    const buttons = {};
+
+    doc
+      .querySelectorAll("#ProductOptions [data-option-value-id]")
+      .forEach((button) => {
+        buttons[button.dataset.optionValueId] = {
+          soldOut: button.classList.contains("is-sold-out"),
+          mediaId: button.dataset.mediaId || "",
+        };
+      });
+
+    return { variant: json ? JSON.parse(json.textContent) : null, buttons };
+  }
+
+  async function fetchSectionState(optionValueIds) {
+    const key = optionValueIds.join(",");
+
+    if (stateCache.has(key)) return stateCache.get(key);
+
+    if (abortController) abortController.abort();
+    abortController = new AbortController();
+
+    const response = await fetch(
+      `${window.location.pathname}?section_id=${encodeURIComponent(sectionId)}&option_values=${key}`,
+      { signal: abortController.signal },
+    );
+
+    if (!response.ok)
+      throw new Error(`Section request failed: ${response.status}`);
+
+    const state = readSectionState(await response.text());
+    stateCache.set(key, state);
+
+    return state;
+  }
+
+  function setLoading(isLoading) {
+    if (optionsWrap) optionsWrap.setAttribute("aria-busy", String(isLoading));
+
+    if (!isLoading) return;
+
+    // Nothing can be added to the cart until the new selection is known.
+    [addToCartButton, stickyButton].forEach((button) => {
+      if (button) button.disabled = true;
+    });
+  }
+
+  function syncOptionButtons(buttonStates) {
     optionButtons.forEach((button) => {
-      const index = Number(button.dataset.optionIndex);
-      const testOptions = selectedOptions.slice();
+      const state = buttonStates[button.dataset.optionValueId];
 
-      testOptions[index] = button.dataset.value;
+      if (!state) return;
 
-      const isAvailable = variants.some(
-        (variant) =>
-          variant.available &&
-          variant.options.every(
-            (value, i) =>
-              testOptions[i] === undefined || value === testOptions[i],
-          ),
+      button.classList.toggle("is-sold-out", state.soldOut);
+      button.dataset.mediaId = state.mediaId;
+    });
+  }
+
+  function markUnavailable() {
+    if (addToCartButton) {
+      addToCartButton.disabled = true;
+      addToCartButton.textContent =
+        (window.themeStrings && window.themeStrings.unavailable) ||
+        "Unavailable";
+    }
+
+    if (stickyButton) stickyButton.disabled = true;
+
+    if (inventoryStatus) {
+      inventoryStatus.hidden = true;
+    }
+
+    if (pickupAvailability) {
+      pickupAvailability.hidden = true;
+    }
+  }
+
+  async function updateSelection() {
+    const optionValueIds = selectedOptionValueIds();
+    const request = ++latestRequest;
+
+    setLoading(true);
+
+    let state;
+
+    try {
+      state = await fetchSectionState(optionValueIds);
+    } catch (error) {
+      if (error.name === "AbortError" || request !== latestRequest) return;
+
+      // Fall back to a full page load of the same selection.
+      window.location.assign(
+        `${window.location.pathname}?option_values=${optionValueIds.join(",")}`,
+      );
+      return;
+    }
+
+    if (request !== latestRequest) return;
+
+    setLoading(false);
+
+    const matchesSelection =
+      state.variant &&
+      state.variant.options.every(
+        (value, index) => value === selectedOptions[index],
       );
 
-      button.classList.toggle("is-sold-out", !isAvailable);
-    });
+    if (matchesSelection) {
+      selectVariant(state.variant);
+    } else {
+      markUnavailable();
+    }
+
+    syncOptionButtons(state.buttons);
   }
 
   function updateInventoryStatus(variant) {
@@ -244,6 +351,15 @@ function initProductVariants() {
 
   optionButtons.forEach((button) => {
     button.addEventListener("click", () => {
+      // Combined listings: an option value that belongs to a sibling product
+      // carries that product's URL, so selecting it opens that product.
+      const siblingUrl = button.dataset.productUrl;
+
+      if (siblingUrl && siblingUrl !== window.location.pathname) {
+        window.location.assign(siblingUrl);
+        return;
+      }
+
       const index = Number(button.dataset.optionIndex);
       const group = button.closest(".j-product__swatches, .j-product__pills");
 
@@ -267,40 +383,15 @@ function initProductVariants() {
         optionValueLabel.textContent = button.dataset.value;
       }
 
-      const variant = findVariant(selectedOptions);
-
-      if (variant) {
-        selectVariant(variant);
-      } else {
-        if (addToCartButton) {
-          addToCartButton.disabled = true;
-          addToCartButton.textContent =
-            (window.themeStrings && window.themeStrings.unavailable) ||
-            "Unavailable";
-        }
-
-        if (stickyButton) stickyButton.disabled = true;
-
-        if (inventoryStatus) {
-          inventoryStatus.hidden = true;
-        }
-
-        if (pickupAvailability) {
-          pickupAvailability.hidden = true;
-        }
-      }
-
-      updateAvailability();
+      updateSelection();
     });
   });
-
-  updateAvailability();
 }
 
 document.addEventListener("DOMContentLoaded", initProductVariants);
 
 document.addEventListener("shopify:section:load", (event) => {
-  if (event.target.querySelector("#ProductVariantsJson")) {
+  if (event.target.querySelector("#ProductVariantJson")) {
     initProductVariants();
   }
 });

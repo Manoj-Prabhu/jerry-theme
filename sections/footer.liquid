@@ -1,7 +1,8 @@
 {% assign menu_blocks = section.blocks | where: 'type', 'menu' %}
 {% assign has_menus = false %}
 {% for block in menu_blocks %}
-  {% if block.settings.menu.links.size > 0 %}
+  {% assign block_settings = block.settings %}
+  {% if block_settings.menu.links.size > 0 %}
     {% assign has_menus = true %}
   {% endif %}
 {% endfor %}
@@ -56,12 +57,13 @@
       <div class="j-footer__menus">
 
         {% for block in menu_blocks %}
-          {% if block.settings.menu.links.size > 0 %}
+          {% assign block_settings = block.settings %}
+          {% if block_settings.menu.links.size > 0 %}
             <div class="j-footer__column" {{ block.shopify_attributes }}>
-              <h4>{{ block.settings.menu.title }}</h4>
+              <h4>{{ block_settings.menu.title }}</h4>
 
               <ul>
-                {% for link in block.settings.menu.links %}
+                {% for link in block_settings.menu.links %}
                   <li>
                     <a href="{{ link.url }}">{{ link.title }}</a>
                   </li>
@@ -195,10 +197,11 @@
 
   <div class="j-footer__blocks">
     {% for block in section.blocks %}
+      {% assign block_settings = block.settings %}
       {% case block.type %}
         {% when 'custom_liquid' %}
           <div {{ block.shopify_attributes }}>
-            {{ block.settings.custom_liquid }}
+            {{ block_settings.custom_liquid }}
           </div>
         {% when '@app' %}
           {% render block %}

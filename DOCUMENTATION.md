@@ -37,7 +37,7 @@ Showcase customer reviews with a star rating, quote, name, and optional avatar p
 
 ## Product Pages
 
-- **Color swatches** and **star ratings** appear automatically on product cards if your products have a "Color" option and a `rating`/`rating_count` metafield set up under **Settings → Custom data → Products**.
+- **Color swatches** and **star ratings** appear automatically on product cards if your products have a "Color" option and a `rating`/`rating_count` metafield set up under **Settings → Custom data → Products**. Star ratings can be switched off in **Theme settings → Product cards → Show product rating**.
 - **Badges** (New, Sale, Bestseller, Sold Out) appear automatically based on product tags and inventory status.
 - **Quick View** lets shoppers preview and add a product to cart without leaving the page they're on — no setup required, it's built in.
 - **Wishlist** lets shoppers save products to a personal list (stored in their browser, no account required). Create a page using the "Wishlist" template to give shoppers a dedicated page listing everything they've saved, matching the rest of the theme's styling.

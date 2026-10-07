@@ -33,6 +33,10 @@
     {% endform %}
   </div>
 
+  {% comment %}
+    customer.addresses only limits what it fetches inside a paginate block.
+  {% endcomment %}
+  {% paginate customer.addresses by 10 %}
   <div class="j-account__address-list">
     {% for address in customer.addresses %}
       <div class="j-account__address-card">
@@ -75,6 +79,9 @@
       </div>
     {% endfor %}
   </div>
+
+  {% render 'pagination', paginate: paginate %}
+  {% endpaginate %}
 
 </div>
 

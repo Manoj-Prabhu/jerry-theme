@@ -39,13 +39,14 @@
     {%- endcomment -%}
     {%- liquid
       assign hero_priority = 'high'
-      if section.index > 1
+      if section.index > 1 or section.location == 'footer'
         assign hero_priority = 'auto'
       endif
     -%}
 
     <div class="j-hero-slideshow__track">
       {% for block in slide_blocks %}
+        {% assign block_settings = block.settings %}
         <div
           class="j-hero j-hero-slideshow__slide{% if forloop.first %} is-active{% endif %}"
           data-slide-index="{{ forloop.index0 }}"
@@ -55,30 +56,30 @@
 
           <div class="j-hero__content">
 
-            {% if block.settings.badge != blank %}
-              <span class="j-hero__badge">{{ block.settings.badge }}</span>
+            {% if block_settings.badge != blank %}
+              <span class="j-hero__badge">{{ block_settings.badge }}</span>
             {% endif %}
 
             <h1>
-              {{ block.settings.heading }}
-              <span class="j-hero__highlight">{{ block.settings.highlight_heading }}</span>
+              {{ block_settings.heading }}
+              <span class="j-hero__highlight">{{ block_settings.highlight_heading }}</span>
             </h1>
 
-            <p>{{ block.settings.description }}</p>
+            <p>{{ block_settings.description }}</p>
 
             <div class="j-hero__buttons">
               <a
-                href="{{ block.settings.button_link | default: routes.all_products_collection_url }}"
+                href="{{ block_settings.button_link | default: routes.all_products_collection_url }}"
                 class="j-button"
               >
-                {{ block.settings.button_label }}
+                {{ block_settings.button_label }}
               </a>
 
               <a
-                href="{{ block.settings.secondary_link | default: routes.all_products_collection_url }}"
+                href="{{ block_settings.secondary_link | default: routes.all_products_collection_url }}"
                 class="j-button j-button-outline"
               >
-                {{ block.settings.secondary_label }}
+                {{ block_settings.secondary_label }}
               </a>
             </div>
 
@@ -97,7 +98,7 @@
           {% endcomment %}
           <div class="j-hero__image" aria-hidden="true">
 
-            {% if block.settings.video %}
+            {% if block_settings.video %}
 
               {% comment %}
                 Only the first/active slide's video is eager + autoplaying.
@@ -122,7 +123,7 @@
                 if the file has no mp4 rendition in range.
               {% endcomment %}
               {% liquid
-                assign hero_video = block.settings.video
+                assign hero_video = block_settings.video
                 assign hero_source = nil
                 for source in hero_video.sources
                   if source.format == 'mp4' and source.height <= 720
@@ -185,7 +186,7 @@
                   ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
                 {% else %}
                   {{
-                    block.settings.video
+                    block_settings.video
                     | video_tag:
                       image_size: '1200x',
                       class: 'j-hero__video j-hero__video--over-poster',
@@ -226,7 +227,7 @@
                     ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
                   {% else %}
                     {{
-                      block.settings.video
+                      block_settings.video
                       | video_tag:
                         image_size: '1200x',
                         class: 'j-hero__video j-hero__video--over-poster',
@@ -239,11 +240,11 @@
                 {{ deferred_hero_video | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' | replace: ' poster=', ' data-poster=' }}
               {% endif %}
 
-            {% elsif block.settings.image %}
+            {% elsif block_settings.image %}
               {% if forloop.first %}
-                {% assign img_alt = block.settings.heading | default: shop.name %}
+                {% assign img_alt = block_settings.heading | default: shop.name %}
                 {{
-                  block.settings.image
+                  block_settings.image
                   | image_url: width: 1200, format: 'webp'
                   | image_tag:
                     loading: 'eager',
@@ -265,9 +266,9 @@
                   downloading slides the visitor may never scroll to.
                 {% endcomment %}
                 {% capture deferred_hero_image %}
-                  {% assign img_alt = block.settings.heading | default: shop.name %}
+                  {% assign img_alt = block_settings.heading | default: shop.name %}
                   {{
-                    block.settings.image
+                    block_settings.image
                     | image_url: width: 1200, format: 'webp'
                     | image_tag:
                       widths: '360, 480, 600, 760, 1000, 1200',

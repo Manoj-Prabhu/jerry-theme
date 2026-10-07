@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `/search/suggest?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&section_id=predictive-search`,
+        `${window.themeRoutes.predictiveSearch}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&section_id=predictive-search`,
         { signal: searchAbortController.signal },
       );
 

@@ -262,6 +262,8 @@
     "add_to_cart_error": "Unable to add item to cart.",
     "sold_out": "Sold Out",
     "sale": "Sale",
+    "new": "New",
+    "bestseller": "Bestseller",
     "taxes_included": "Tax included.",
     "low_stock_html": "Only {{ count }} left in stock",
     "pickup_available_html": "Pickup available at {{ location }}",

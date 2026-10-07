@@ -5,11 +5,9 @@ function initProductGallery() {
   const thumbnails = document.querySelectorAll(".j-product-thumbnail");
   const dots = document.querySelectorAll(".j-product__dot");
   const slides = document.querySelectorAll(".j-product__media-slide");
-  const variantsJson = document.getElementById("ProductVariantsJson");
 
   if (!gallery || (thumbnails.length === 0 && dots.length === 0)) return;
 
-  const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
   const mediaOrder = Array.from(slides).map((slide) => slide.dataset.mediaId);
 
   function activateMedia(mediaId) {
@@ -84,29 +82,23 @@ function initProductGallery() {
     });
   }
 
+  // Selecting an image that belongs to one option value (a color's photo,
+  // say) selects that value too. Each option button carries the media of the
+  // variant it would select (see data-media-id in sections/product.liquid);
+  // an option whose values all share this image isn't tied to it, so it is
+  // left alone.
   function syncVariantToMedia(mediaId) {
-    const sameMediaVariants = variants.filter(
-      (variant) => String(variant.featuredMediaId) === mediaId,
-    );
-    const matchingVariant = sameMediaVariants[0];
+    document
+      .querySelectorAll("#ProductOptions .j-product__option")
+      .forEach((group) => {
+        const matches = Array.from(
+          group.querySelectorAll(".j-product__swatch, .j-product__pill"),
+        ).filter((button) => button.dataset.mediaId === mediaId);
 
-    if (!matchingVariant) return;
+        if (matches.length !== 1) return;
 
-    matchingVariant.options.forEach((value, index) => {
-      const isMediaSpecific = sameMediaVariants.every(
-        (variant) => variant.options[index] === value,
-      );
-
-      if (!isMediaSpecific) return;
-
-      const button = document.querySelector(
-        `.j-product__swatch[data-option-index="${index}"][data-value="${CSS.escape(value)}"], .j-product__pill[data-option-index="${index}"][data-value="${CSS.escape(value)}"]`,
-      );
-
-      if (button && !button.classList.contains("is-active")) {
-        button.click();
-      }
-    });
+        if (!matches[0].classList.contains("is-active")) matches[0].click();
+      });
   }
 
   thumbnails.forEach((thumbnail) => {

@@ -14,6 +14,22 @@
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
     <script>
       window.themeMoneyFormat = {{ shop.money_format | json }};
+      {% comment %}
+        Storefront endpoints for the theme's scripts. They come from Liquid's
+        `routes` object so requests keep the shopper's language and market
+        (/fr/cart/add.js rather than /cart/add.js).
+      {% endcomment %}
+      window.themeRoutes = {
+        root: {{ routes.root_url | json }},
+        cart: {{ routes.cart_url | json }},
+        cartAdd: {{ routes.cart_add_url | json }},
+        cartChange: {{ routes.cart_change_url | json }},
+        predictiveSearch: {{ routes.predictive_search_url | json }},
+        productRecommendations: {{ routes.product_recommendations_url | json }},
+        product: function (handle) {
+          return this.root.replace(/\/$/, "") + "/products/" + handle + ".js";
+        }
+      };
       window.themeStrings = {
         cartItemCountOne: {{ 'cart.item_count' | t: count: 1 | json }},
         cartItemCountOther: {{ 'cart.item_count' | t: count: 2 | json }},

@@ -25,9 +25,10 @@
         {% assign card_images = product.images | slice: 0, 4 %}
 
         {% for card_image in card_images %}
-          {% assign img_class = 'j-product-card__img' %}
           {% if forloop.first %}
-            {% assign img_class = img_class | append: ' is-active' %}
+            {% assign img_class = 'j-product-card__img is-active' %}
+          {% else %}
+            {% assign img_class = 'j-product-card__img' %}
           {% endif %}
 
           {% comment %}
@@ -131,7 +132,15 @@
 
       <h2>{{ product.title }}</h2>
 
-      {% assign rating = product.metafields.custom.rating.value %}
+      {% comment %}
+        The rating metafields are only read when ratings are switched on in
+        Theme settings > Product cards, so a store that doesn't use them pays
+        no lookup per card.
+      {% endcomment %}
+      {% assign rating = null %}
+      {% if settings.show_product_rating %}
+        {% assign rating = product.metafields.custom.rating.value %}
+      {% endif %}
       {% if rating %}
         {% assign rating_count = product.metafields.custom.rating_count.value %}
         <div class="j-product-card__rating">
@@ -214,14 +223,13 @@
           doesn't load every product's full variant list. The variant list
           is only searched when an option value has no variant of its own.
         {% endcomment %}
-        {% assign option_key = 'option' | append: color_option.position %}
-
         <div class="j-product-card__swatches">
           {% for value in color_option.values limit: swatch_limit %}
             {% assign color_key = value | remove: ' ' | remove: '-' | downcase %}
 
             {% assign preview_variant = value.variant %}
             {% if preview_variant == blank %}
+              {% assign option_key = 'option' | append: color_option.position %}
               {% assign matching_variants = product.variants | where: option_key, value %}
               {% assign preview_variant = matching_variants.first %}
             {% endif %}

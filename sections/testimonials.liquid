@@ -8,6 +8,7 @@
   <div class="j-testimonials__slideshow" data-autoplay="5000">
     <div class="j-testimonials__track">
       {% for block in section.blocks %}
+        {% assign block_settings = block.settings %}
         {% case block.type %}
 
           {% when 'testimonial' %}
@@ -22,15 +23,15 @@
                   <p class="j-testimonials__eyebrow">{{ section.settings.eyebrow }}</p>
                 {% endif %}
 
-                {% if block.settings.rating > 0 %}
+                {% if block_settings.rating > 0 %}
                   <div class="j-testimonials__stars" aria-hidden="true">
                     {% for i in (1..5) %}
-                      <span class="j-star" style="--fill: {% if i <= block.settings.rating %}100{% else %}0{% endif %}%;">★</span>
+                      <span class="j-star" style="--fill: {% if i <= block_settings.rating %}100{% else %}0{% endif %}%;">★</span>
                     {% endfor %}
                   </div>
                 {% endif %}
 
-                {% if block.settings.quote != blank %}
+                {% if block_settings.quote != blank %}
                   <div class="j-testimonials__quote-wrap">
                     {% comment %}
                       Large decorative quotation mark — this section
@@ -45,29 +46,29 @@
                       <path d="M0 24V14.4C0 6.4 4.8 1.2 13.6 0l1.6 4C9.6 5.6 7.2 8.8 6.8 13.2H14V24H0ZM17.6 24V14.4C17.6 6.4 22.4 1.2 31.2 0l1.6 4c-5.6 1.6-8 4.8-8.4 9.2h7.2V24H17.6Z" fill="#f0c14b"/>
                     </svg>
                     <blockquote class="j-testimonials__quote">
-                      {{ block.settings.quote }}
+                      {{ block_settings.quote }}
                     </blockquote>
                   </div>
                 {% endif %}
 
                 <div class="j-testimonials__author">
                   <div class="j-testimonials__avatar">
-                    {% if block.settings.avatar %}
-                      {% assign img_alt = block.settings.name | default: '' %}
+                    {% if block_settings.avatar %}
+                      {% assign img_alt = block_settings.name | default: '' %}
                       {{
-                        block.settings.avatar
+                        block_settings.avatar
                         | image_url: width: 96, format: 'webp'
                         | image_tag: loading: 'lazy', alt: img_alt, widths: '48, 96'
                       }}
                     {% else %}
                       <span class="j-testimonials__avatar-initial">
-                        {{ block.settings.name | slice: 0 | upcase }}
+                        {{ block_settings.name | slice: 0 | upcase }}
                       </span>
                     {% endif %}
                   </div>
 
                   <span class="j-testimonials__author-line">
-                    — {{ block.settings.name }}{% if block.settings.role != blank %} / {{ block.settings.role }}{% endif %}
+                    — {{ block_settings.name }}{% if block_settings.role != blank %} / {{ block_settings.role }}{% endif %}
                   </span>
                 </div>
 
@@ -86,16 +87,21 @@
               </div>
 
               <div class="j-testimonials__media">
-                {% if block.settings.image %}
-                  {% assign img_alt = block.settings.image.alt | default: block.settings.name | default: shop.name %}
+                {% if block_settings.image %}
+                  {% assign img_alt = block_settings.image.alt | default: block_settings.name | default: shop.name %}
                   {%- liquid
                     assign slide_loading = 'lazy'
-                    if section.index == 1 and forloop.first
+                    if forloop.first
                       assign slide_loading = 'eager'
+                    endif
+                    # Written as a positive "not at the top" test so the editor and Section
+                    # Rendering API, where section.index is nil, keep the image eager.
+                    if section.index > 1 or section.location == 'footer'
+                      assign slide_loading = 'lazy'
                     endif
                   -%}
                   {{
-                    block.settings.image
+                    block_settings.image
                     | image_url: width: 1200, format: 'webp'
                     | image_tag:
                       loading: slide_loading,
@@ -112,7 +118,7 @@
 
           {% when 'custom_liquid' %}
             <div {{ block.shopify_attributes }}>
-              {{ block.settings.custom_liquid }}
+              {{ block_settings.custom_liquid }}
             </div>
 
           {% when '@app' %}

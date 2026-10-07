@@ -2,7 +2,7 @@
   {% if section.settings.background_image %}
     {%- liquid
       assign bg_loading = 'eager'
-      if section.index > 3
+      if section.index > 3 or section.location == 'footer'
         assign bg_loading = 'lazy'
       endif
     -%}

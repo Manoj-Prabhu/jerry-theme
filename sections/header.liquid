@@ -1,11 +1,12 @@
+{%- assign section_settings = section.settings -%}
 {% render 'announcement-bar' %}
 
 <header
-  class="j-site-header-wrapper full-width {% if section.settings.enable_sticky_header %}j-header--sticky{% endif %}"
+  class="j-site-header-wrapper full-width {% if section_settings.enable_sticky_header %}j-header--sticky{% endif %}"
 >
   <div class="j-site-header">
 
-  {% if section.settings.menu.links != blank %}
+  {% if section_settings.menu.links != blank %}
     <button
       type="button"
       class="j-menu-toggle"
@@ -23,14 +24,14 @@
 
     <a href="{{ routes.root_url }}" class="j-logo">
 
-      {% if section.settings.logo != blank %}
+      {% if section_settings.logo != blank %}
 
-        {% assign logo_style = 'width:' | append: section.settings.logo_width | append: 'px;height:auto;' %}
-        {% assign logo_sizes = section.settings.logo_width | append: 'px' %}
+        {% assign logo_style = 'width:' | append: section_settings.logo_width | append: 'px;height:auto;' %}
+        {% assign logo_sizes = section_settings.logo_width | append: 'px' %}
 
         {{
-          section.settings.logo
-          | image_url: width: section.settings.logo_width, format: 'webp'
+          section_settings.logo
+          | image_url: width: section_settings.logo_width, format: 'webp'
           | image_tag:
             alt: shop.name,
             widths: '120,160,200,240,300,400',
@@ -72,7 +73,7 @@
       ✕
     </button>
 
-    {% for link in section.settings.menu.links %}
+    {% for link in section_settings.menu.links %}
       {% liquid
         assign is_mega_menu = false
         for column in link.links
@@ -163,7 +164,7 @@
       explicit fallback covers that case without needing the merchant to
       re-save the section in the editor first.
     {% endcomment %}
-    {% assign search_placeholder_suggestions = section.settings.search_placeholder_suggestions %}
+    {% assign search_placeholder_suggestions = section_settings.search_placeholder_suggestions %}
     {% if search_placeholder_suggestions == blank %}
       {% capture search_placeholder_suggestions %}Search for jeans...
 Search for jackets...

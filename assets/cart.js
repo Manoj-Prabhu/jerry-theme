@@ -504,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function refreshCart() {
     try {
-      const response = await fetch("/cart.js");
+      const response = await fetch(`${window.themeRoutes.cart}.js`);
       const cart = await response.json();
 
       renderCart(cart);
@@ -522,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       setLoading(true);
 
-      await fetch("/cart/change.js", {
+      await fetch(`${window.themeRoutes.cartChange}.js`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -549,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       setLoading(true);
 
-      const response = await fetch("/cart/change.js", {
+      const response = await fetch(`${window.themeRoutes.cartChange}.js`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -653,7 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
           submitButton.textContent = strings.adding || "Adding...";
         }
 
-        const response = await fetch("/cart/add.js", {
+        const response = await fetch(`${window.themeRoutes.cartAdd}.js`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -721,7 +721,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const code = discountForm.querySelector("#CartDiscountCode").value.trim();
       if (!code) return;
-      window.location.href = `${window.Shopify?.routes?.root || "/"}discount/${encodeURIComponent(code)}?redirect=${encodeURIComponent("/cart")}`;
+      window.location.href = `${window.themeRoutes.root.replace(/\/$/, "")}/discount/${encodeURIComponent(code)}?redirect=${encodeURIComponent(window.themeRoutes.cart)}`;
     });
   }
 });

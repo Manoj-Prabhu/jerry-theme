@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Promise.all(
       wishlist.map((handle) =>
-        fetch(`/products/${handle}.js`).then(
+        fetch(window.themeRoutes.product(handle)).then(
           (response) => response.ok,
           () => true, // network error: assume it still exists, don't prune
         ),

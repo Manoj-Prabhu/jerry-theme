@@ -11,7 +11,7 @@ function initProductRecommendations(root) {
 
     try {
       const response = await fetch(
-        `/recommendations/products?section_id=${sectionId}&product_id=${productId}&limit=${limit}&intent=${intent}`,
+        `${window.themeRoutes.productRecommendations}?section_id=${sectionId}&product_id=${productId}&limit=${limit}&intent=${intent}`,
       );
 
       if (!response.ok) {

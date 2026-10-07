@@ -63,7 +63,7 @@ function initStickyCart() {
     try {
       stickyButton.disabled = true;
 
-      const response = await fetch("/cart/add.js", {
+      const response = await fetch(`${window.themeRoutes.cartAdd}.js`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

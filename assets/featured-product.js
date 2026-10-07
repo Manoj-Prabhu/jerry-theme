@@ -8,10 +8,15 @@ function initFeaturedProduct(root) {
   const form = root.querySelector(".j-featured-product__form");
   if (!form) return;
 
-  const variantsJsonEl = document.getElementById(
-    `FeaturedProductVariantsJson-${sectionId}`,
-  );
-  const variants = variantsJsonEl ? JSON.parse(variantsJsonEl.textContent) : [];
+  // Only the selected variant is in the page; another selection is fetched by
+  // re-rendering this section for the product (Section Rendering API).
+  const variantJsonId = `FeaturedProductVariantJson-${sectionId}`;
+  const variantJsonEl = document.getElementById(variantJsonId);
+  const initialVariant = variantJsonEl
+    ? JSON.parse(variantJsonEl.textContent)
+    : null;
+  const variantCache = new Map();
+  let latestRequest = 0;
 
   const variantInput = document.getElementById(
     `FeaturedProductSelectedVariant-${sectionId}`,
@@ -46,15 +51,68 @@ function initFeaturedProduct(root) {
   );
 
   let selectedOptions = [];
-  const initialVariant = variants.find(
-    (variant) => variant.id === Number(variantInput ? variantInput.value : 0),
-  );
   if (initialVariant) selectedOptions = initialVariant.options.slice();
 
-  function findVariant(options) {
-    return variants.find((variant) =>
-      variant.options.every((value, index) => value === options[index]),
+  // option_values only applies to the product a URL belongs to, so the
+  // section is requested from the product's own URL.
+  async function fetchVariant(optionValueIds) {
+    const key = optionValueIds.join(",");
+
+    if (variantCache.has(key)) return variantCache.get(key);
+
+    const response = await fetch(
+      `${root.dataset.productUrl}?section_id=${encodeURIComponent(root.dataset.section)}&option_values=${key}`,
     );
+
+    if (!response.ok)
+      throw new Error(`Section request failed: ${response.status}`);
+
+    const doc = new DOMParser().parseFromString(
+      await response.text(),
+      "text/html",
+    );
+    const json = doc.getElementById(variantJsonId);
+    const variant = json ? JSON.parse(json.textContent) : null;
+
+    variantCache.set(key, variant);
+
+    return variant;
+  }
+
+  async function updateSelection() {
+    const optionValueIds = Array.from(optionButtons)
+      .filter((button) => button.classList.contains("is-active"))
+      .map((button) => button.dataset.optionValueId)
+      .filter(Boolean);
+    const request = ++latestRequest;
+    const wasDisabled = addButton ? addButton.disabled : false;
+
+    // Nothing can be added to the cart until the new selection is known.
+    if (addButton) addButton.disabled = true;
+
+    let variant = null;
+
+    try {
+      variant = await fetchVariant(optionValueIds);
+    } catch (error) {
+      if (request === latestRequest && addButton) {
+        addButton.disabled = wasDisabled;
+      }
+      return;
+    }
+
+    if (request !== latestRequest) return;
+
+    const matchesSelection =
+      variant &&
+      variant.options.every((value, index) => value === selectedOptions[index]);
+
+    if (matchesSelection) {
+      selectVariant(variant);
+    } else if (addButton) {
+      // No variant for this combination: leave the previous one in place.
+      addButton.disabled = wasDisabled;
+    }
   }
 
   function activateMedia(mediaId) {
@@ -125,8 +183,7 @@ function initFeaturedProduct(root) {
         .querySelector(".j-featured-product__option-value");
       if (optionValueLabel) optionValueLabel.textContent = button.dataset.value;
 
-      const variant = findVariant(selectedOptions);
-      if (variant) selectVariant(variant);
+      updateSelection();
     });
   });
 
@@ -255,7 +312,7 @@ function initFeaturedProduct(root) {
       if (addButtonText)
         addButtonText.textContent = strings.adding || "Adding...";
 
-      const response = await fetch("/cart/add.js", {
+      const response = await fetch(`${window.themeRoutes.cartAdd}.js`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

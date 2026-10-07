@@ -14,25 +14,31 @@
 
   <div class="j-shop-by-category__grid">
     {% for block in section.blocks %}
+      {% assign block_settings = block.settings %}
       {% case block.type %}
         {% when 'category' %}
           <a
-            href="{{ block.settings.link }}"
+            href="{{ block_settings.link }}"
             class="j-category-card"
             draggable="false"
             {{ block.shopify_attributes }}
           >
             <div class="j-category-card__image">
-              {% if block.settings.image %}
-                {% assign img_alt = block.settings.title | default: shop.name %}
+              {% if block_settings.image %}
+                {% assign img_alt = block_settings.title | default: shop.name %}
                 {%- liquid
                   assign card_loading = 'lazy'
-                  if section.index == 1 and forloop.index <= 3
+                  if forloop.index <= 3
                     assign card_loading = 'eager'
+                  endif
+                  # Written as a positive "not at the top" test so the editor and Section
+                  # Rendering API, where section.index is nil, keep the image eager.
+                  if section.index > 1 or section.location == 'footer'
+                    assign card_loading = 'lazy'
                   endif
                 -%}
                 {{
-                  block.settings.image
+                  block_settings.image
                   | image_url: width: 800, format: 'webp'
                   | image_tag:
                     loading: card_loading,
@@ -51,7 +57,7 @@
                 lookbook tile instead of a generic thumbnail-plus-label
                 grid.
               {% endcomment %}
-              <span class="j-category-card__title">{{ block.settings.title }}</span>
+              <span class="j-category-card__title">{{ block_settings.title }}</span>
             </div>
           </a>
       {% endcase %}

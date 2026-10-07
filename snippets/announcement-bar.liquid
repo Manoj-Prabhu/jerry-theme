@@ -21,11 +21,12 @@
         %}
 
         {% for block in section.blocks %}
+          {% assign block_settings = block.settings %}
 
           {% liquid
-            assign announcement_text = block.settings.text
+            assign announcement_text = block_settings.text
 
-            if block.settings.use_free_shipping_amount
+            if block_settings.use_free_shipping_amount
               assign announcement_text = announcement_text | replace: '[amount]', free_shipping_amount
             endif
           %}
@@ -35,10 +36,10 @@
             {{ block.shopify_attributes }}
           >
 
-            {% if block.settings.link != blank %}
+            {% if block_settings.link != blank %}
 
               <a
-                href="{{ block.settings.link }}"
+                href="{{ block_settings.link }}"
                 class="j-announcement__text"
               >
                 {{ announcement_text }}

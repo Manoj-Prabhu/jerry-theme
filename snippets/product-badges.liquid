@@ -28,13 +28,12 @@
   endif
 
   if settings.show_bestseller_badge and settings.bestseller_tag != blank
+    # One case-insensitive lookup instead of a loop over every tag.
     assign bestseller_tag_downcase = settings.bestseller_tag | downcase
-    for tag in product.tags
-      assign tag_downcase = tag | downcase
-      if tag_downcase == bestseller_tag_downcase
-        assign show_bestseller = true
-      endif
-    endfor
+    assign product_tags_downcase = product.tags | join: '|' | downcase | split: '|'
+    if product_tags_downcase contains bestseller_tag_downcase
+      assign show_bestseller = true
+    endif
   endif
 %}
 
@@ -43,24 +42,24 @@
 
     {% if show_sold_out %}
       <span class="j-product-badge j-product-badge--sold-out">
-        Sold Out
+        {{ 'product.sold_out' | t }}
       </span>
     {% else %}
       {% if show_sale %}
         <span class="j-product-badge j-product-badge--sale">
-          Sale
+          {{ 'product.sale' | t }}
         </span>
       {% endif %}
 
       {% if show_new %}
         <span class="j-product-badge j-product-badge--new">
-          New
+          {{ 'product.new' | t }}
         </span>
       {% endif %}
 
       {% if show_bestseller %}
         <span class="j-product-badge j-product-badge--bestseller">
-          Bestseller
+          {{ 'product.bestseller' | t }}
         </span>
       {% endif %}
     {% endif %}

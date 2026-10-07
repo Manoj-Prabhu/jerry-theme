@@ -25,9 +25,10 @@
 
       <div class="j-about-values__grid">
         {% for block in value_blocks %}
+          {% assign block_settings = block.settings %}
           <div class="j-about-values__card" {{ block.shopify_attributes }}>
             <span class="j-about-values__icon" aria-hidden="true">
-              {% case block.settings.icon %}
+              {% case block_settings.icon %}
                 {% when 'quality' %}
                   <svg viewBox="0 0 20 20" fill="none">
                     <path d="M10 2.5 12.2 7l5 .7-3.6 3.5.9 5-4.5-2.4L5.5 16.2l.9-5-3.6-3.5 5-.7Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
@@ -61,8 +62,8 @@
                   </svg>
               {% endcase %}
             </span>
-            <h3 class="j-about-values__card-heading">{{ block.settings.heading }}</h3>
-            <p class="j-about-values__card-text">{{ block.settings.text }}</p>
+            <h3 class="j-about-values__card-heading">{{ block_settings.heading }}</h3>
+            <p class="j-about-values__card-text">{{ block_settings.text }}</p>
           </div>
         {% endfor %}
       </div>

@@ -63,7 +63,7 @@ function renderWishlistCard(product) {
 
       <div class="j-product-card__image"${images.length > 1 ? " data-auto-cycle" : ""}>
 
-        <a href="/products/${product.handle}" class="j-product-card__image-link" tabindex="-1" aria-hidden="true">
+        <a href="${product.url}" class="j-product-card__image-link" tabindex="-1" aria-hidden="true">
           ${imagesHtml}
         </a>
 
@@ -89,7 +89,7 @@ function renderWishlistCard(product) {
 
       </div>
 
-      <a href="/products/${product.handle}" class="j-product-card__link">
+      <a href="${product.url}" class="j-product-card__link">
         <div class="j-product-card__content">
 
           <h2>${product.title}</h2>
@@ -483,7 +483,7 @@ async function initWishlistPage() {
   const fetchedProducts = await Promise.all(
     handles.map(async (handle) => {
       try {
-        const response = await fetch(`/products/${handle}.js`);
+        const response = await fetch(window.themeRoutes.product(handle));
         if (!response.ok) return null;
         return await response.json();
       } catch (error) {

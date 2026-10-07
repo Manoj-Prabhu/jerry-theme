@@ -37,13 +37,9 @@
     </div>
   {% endif %}
 
-  {% assign category_count = 0 %}
-  {% for block in section.blocks %}
-    {% if block.type == 'category' %}
-      {% assign category_count = category_count | plus: 1 %}
-    {% endif %}
-  {% endfor %}
-  {% assign faq_row_count = category_count | plus: 1 | divided_by: 2 %}
+  {% assign category_blocks = section.blocks | where: 'type', 'category' %}
+  {% assign note_blocks = section.blocks | where: 'type', 'note' %}
+  {% assign faq_row_count = category_blocks.size | plus: 1 | divided_by: 2 %}
 
   {% # theme-check-disable UnclosedHTMLElement %}
   {% comment %}
@@ -65,6 +61,7 @@
     {% assign group_open = false %}
 
     {% for block in section.blocks %}
+      {% assign block_settings = block.settings %}
 
       {% case block.type %}
 
@@ -77,7 +74,7 @@
           <div class="j-faq__group" {{ block.shopify_attributes }}>
 
             <h2 class="j-faq__category">
-              {{ block.settings.heading }}
+              {{ block_settings.heading }}
             </h2>
 
             {% assign group_open = true %}
@@ -90,11 +87,11 @@
           >
 
             <summary class="j-faq__question">
-              {{ block.settings.question }}
+              {{ block_settings.question }}
             </summary>
 
             <div class="j-faq__answer">
-              {{ block.settings.answer }}
+              {{ block_settings.answer }}
             </div>
 
           </details>
@@ -110,17 +107,16 @@
   </div>
   {% # theme-check-enable UnclosedHTMLElement %}
 
-  {% for block in section.blocks %}
-    {% if block.type == 'note' %}
-      <div class="j-faq__note" {{ block.shopify_attributes }}>
-        {% if block.settings.heading != blank %}
-          <h2 class="j-faq__note-heading">{{ block.settings.heading }}</h2>
-        {% endif %}
-        <div class="j-faq__note-content">
-          {{ block.settings.content }}
-        </div>
+  {% for block in note_blocks %}
+    {% assign block_settings = block.settings %}
+    <div class="j-faq__note" {{ block.shopify_attributes }}>
+      {% if block_settings.heading != blank %}
+        <h2 class="j-faq__note-heading">{{ block_settings.heading }}</h2>
+      {% endif %}
+      <div class="j-faq__note-content">
+        {{ block_settings.content }}
       </div>
-    {% endif %}
+    </div>
   {% endfor %}
 
 </div>

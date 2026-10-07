@@ -1,3 +1,4 @@
+{%- assign section_settings = section.settings -%}
 {% comment %}
   About page — image + narrative block with an optional row of stats.
   Same visual language as the homepage's Brand Story section (gold-framed
@@ -12,19 +13,19 @@
 %}
 
 <section class="j-about-story full-width">
-  <div class="j-about-story__inner j-about-story__inner--{{ section.settings.image_position }}">
+  <div class="j-about-story__inner j-about-story__inner--{{ section_settings.image_position }}">
 
     <div class="j-about-story__media">
-      {% if section.settings.image != blank %}
-        {% assign img_alt = section.settings.heading | default: shop.name %}
+      {% if section_settings.image != blank %}
+        {% assign img_alt = section_settings.heading | default: shop.name %}
         {%- liquid
           assign story_loading = 'eager'
-          if section.index > 3
+          if section.index > 3 or section.location == 'footer'
             assign story_loading = 'lazy'
           endif
         -%}
         {{
-          section.settings.image
+          section_settings.image
           | image_url: width: 1200, format: 'webp'
           | image_tag: loading: story_loading, widths: '480, 768, 1000, 1200', class: 'j-about-story__image', alt: img_alt
         }}
@@ -35,36 +36,37 @@
 
     <div class="j-about-story__content">
 
-      {% if section.settings.eyebrow != blank %}
-        <span class="j-about-story__eyebrow">{{ section.settings.eyebrow }}</span>
+      {% if section_settings.eyebrow != blank %}
+        <span class="j-about-story__eyebrow">{{ section_settings.eyebrow }}</span>
       {% endif %}
 
-      {% if section.settings.heading != blank %}
-        <h2 class="j-about-story__heading">{{ section.settings.heading }}</h2>
+      {% if section_settings.heading != blank %}
+        <h2 class="j-about-story__heading">{{ section_settings.heading }}</h2>
       {% endif %}
 
-      {% if section.settings.body != blank %}
-        <div class="j-about-story__body">{{ section.settings.body }}</div>
+      {% if section_settings.body != blank %}
+        <div class="j-about-story__body">{{ section_settings.body }}</div>
       {% endif %}
 
       {% if stat_blocks.size > 0 %}
         <div class="j-about-story__stats">
           {% for block in stat_blocks %}
+            {% assign block_settings = block.settings %}
             <div class="j-about-story__stat" {{ block.shopify_attributes }}>
-              <span class="j-about-story__stat-number">{{ block.settings.number }}</span>
-              <span class="j-about-story__stat-label">{{ block.settings.label }}</span>
+              <span class="j-about-story__stat-number">{{ block_settings.number }}</span>
+              <span class="j-about-story__stat-label">{{ block_settings.label }}</span>
             </div>
           {% endfor %}
         </div>
       {% endif %}
 
-      {% if section.settings.button_label != blank %}
+      {% if section_settings.button_label != blank %}
         <a
-          href="{{ section.settings.button_link | default: '#' }}"
+          href="{{ section_settings.button_link | default: '#' }}"
           class="j-button j-button-outline--gold j-about-story__button"
-          aria-label="{{ section.settings.button_label }} at {{ shop.name }}"
+          aria-label="{{ section_settings.button_label }} at {{ shop.name }}"
         >
-          {{ section.settings.button_label }}
+          {{ section_settings.button_label }}
         </a>
       {% endif %}
 
