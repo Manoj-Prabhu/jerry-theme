@@ -24,6 +24,13 @@
 
         {% assign card_images = product.images | slice: 0, 4 %}
 
+        {% comment %}
+          `sizes` describes how wide the card image is laid out. The default
+          matches the 2-up / 3-up / 4-up product grid (collection, search,
+          recommendations); a section with a different grid passes its own.
+        {% endcomment %}
+        {% assign card_sizes = sizes | default: '(max-width: 992px) 43vw, (max-width: 1100px) 28vw, 320px' %}
+
         {% for card_image in card_images %}
           {% if forloop.first %}
             {% assign img_class = 'j-product-card__img is-active' %}
@@ -50,8 +57,9 @@
                 class: img_class,
                 alt: img_alt,
                 widths: '200, 350, 500, 600, 700',
-                sizes: '(max-width: 1100px) 50vw, 25vw',
-                fetchpriority: 'high'
+                sizes: card_sizes,
+                fetchpriority: 'high',
+                preload: true
             }}
           {% else %}
             {% assign img_alt = card_image.alt | default: product.title %}
@@ -73,7 +81,7 @@
                   class: img_class,
                   alt: img_alt,
                   widths: '200, 350, 500, 600, 700',
-                  sizes: '(max-width: 1100px) 50vw, 25vw'
+                  sizes: card_sizes
               }}
             {% endcapture %}
             {% if forloop.first %}

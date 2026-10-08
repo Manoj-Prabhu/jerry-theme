@@ -231,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     class="j-cart__suggestion-image"
                     src="${resizeCartImageUrl(cartItems.dataset.suggestionImage, 480)}"
                     srcset="${[240, 360, 480].map((w) => `${resizeCartImageUrl(cartItems.dataset.suggestionImage, w)} ${w}w`).join(", ")}"
+                    sizes="280px"
                     alt=""
                     loading="lazy"
                   >`

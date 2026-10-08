@@ -7,6 +7,14 @@ function initHeroSlideshow(root) {
   function hydrateSlideImage(slide) {
     const img = slide.querySelector("img[data-src]");
     if (img) {
+      // A <picture> source has to be ready before the <img> starts loading.
+      slide
+        .querySelectorAll("picture source[data-srcset]")
+        .forEach((source) => {
+          source.srcset = source.dataset.srcset;
+          source.removeAttribute("data-srcset");
+        });
+
       if (img.dataset.srcset) {
         img.srcset = img.dataset.srcset;
         img.removeAttribute("data-srcset");

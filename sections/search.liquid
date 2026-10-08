@@ -115,7 +115,7 @@
                         assign card_eager = true
                       endif
                     -%}
-                    {% render 'product-card', product: result, eager: card_eager %}
+                    {% render 'product-card', product: result, priority: forloop.first, eager: card_eager %}
 
                   {% when 'article' %}
                     <article class="j-search-result j-search-result--article">

@@ -39,8 +39,10 @@
     {%- endcomment -%}
     {%- liquid
       assign hero_priority = 'high'
+      assign hero_preload = true
       if section.index > 1 or section.location == 'footer'
         assign hero_priority = 'auto'
+        assign hero_preload = false
       endif
     -%}
 
@@ -170,6 +172,7 @@
                     | image_tag:
                       loading: 'eager',
                       fetchpriority: hero_priority,
+                      preload: hero_preload,
                       widths: '480, 760, 1000, 1200, 1500, 1800',
                       sizes: '(max-width: 749px) 200vw, 100vw',
                       class: 'j-hero__img',
@@ -241,19 +244,43 @@
               {% endif %}
 
             {% elsif block_settings.image %}
+              {% comment %}
+                An optional mobile image is offered through <picture>, so a
+                phone downloads only that image and a desktop only the main
+                one. fetchpriority sits on the <img> and applies to whichever
+                source the browser picks.
+              {% endcomment %}
+              {% assign mobile_image = block_settings.mobile_image %}
               {% if forloop.first %}
                 {% assign img_alt = block_settings.heading | default: shop.name %}
+                {% comment %} A preload would fetch the desktop image on phones too. {% endcomment %}
+                {% assign slide_preload = hero_preload %}
+                {% if mobile_image %}
+                  {% assign slide_preload = false %}
+                {% endif %}
+                <picture class="j-hero__picture">
+                {% if mobile_image %}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="{{ mobile_image | image_url: width: 480, format: 'webp' }} 480w, {{ mobile_image | image_url: width: 600, format: 'webp' }} 600w, {{ mobile_image | image_url: width: 760, format: 'webp' }} 760w, {{ mobile_image | image_url: width: 1000, format: 'webp' }} 1000w, {{ mobile_image | image_url: width: 1200, format: 'webp' }} 1200w"
+                    sizes="100vw"
+                    width="{{ mobile_image.width }}"
+                    height="{{ mobile_image.height }}"
+                  >
+                {% endif %}
                 {{
                   block_settings.image
                   | image_url: width: 1200, format: 'webp'
                   | image_tag:
                     loading: 'eager',
                     fetchpriority: hero_priority,
+                    preload: slide_preload,
                     widths: '360, 480, 600, 760, 1000, 1200',
                     sizes: '100vw',
                     class: 'j-hero__img',
                     alt: img_alt
                 }}
+                </picture>
               {% else %}
                 {% comment %}
                   Every slide sits at position: absolute; inset: 0 from
@@ -277,7 +304,18 @@
                       alt: img_alt
                   }}
                 {% endcapture %}
+                <picture class="j-hero__picture">
+                {% if mobile_image %}
+                  <source
+                    media="(max-width: 749px)"
+                    data-srcset="{{ mobile_image | image_url: width: 480, format: 'webp' }} 480w, {{ mobile_image | image_url: width: 600, format: 'webp' }} 600w, {{ mobile_image | image_url: width: 760, format: 'webp' }} 760w, {{ mobile_image | image_url: width: 1000, format: 'webp' }} 1000w, {{ mobile_image | image_url: width: 1200, format: 'webp' }} 1200w"
+                    sizes="100vw"
+                    width="{{ mobile_image.width }}"
+                    height="{{ mobile_image.height }}"
+                  >
+                {% endif %}
                 {{ deferred_hero_image | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' }}
+                </picture>
               {% endif %}
             {% else %}
               <div class="j-hero__placeholder">
@@ -376,6 +414,12 @@
           "id": "image",
           "label": "Image",
           "info": "Ignored if a video is set below."
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Optional. Shown instead of the image on phones; a portrait image works best. Ignored if a video is set below."
         },
         {
           "type": "video",

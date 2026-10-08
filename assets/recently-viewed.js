@@ -95,7 +95,7 @@ async function initRecentlyViewed() {
               <img
                 src="${resizeImageUrl(src, 350)}"
                 srcset="${srcset}"
-                sizes="(max-width: 1100px) 50vw, 25vw"
+                sizes="(max-width: 992px) 43vw, (max-width: 1100px) 28vw, 320px"
                 alt="${product.title}"
                 loading="lazy"
                 class="j-product-card__img${index === 0 ? " is-active" : ""}"

@@ -19,6 +19,7 @@ Welcome to Jerry! This guide walks you through setting up and customizing your s
 The homepage hero supports multiple slides, each with its own image, small badge label (e.g. "New Arrival"), heading, highlighted text, description, and two buttons (primary and secondary).
 - Click **Hero** in the section list, then **Add block → Slide** to add a new slide.
 - Each slide's image, badge, heading, description, and button links/labels can be set independently.
+- **Mobile image** (optional): upload a second image for a slide to show on phones instead of the main image — a portrait crop works best. Phones download only the mobile image and larger screens only the main one. It isn't used when the slide has a video.
 - You can also add **Trust items** (small icon + text, e.g. "Free Shipping", "Secure Checkout") shown beneath the hero.
 - Slides and Trust items share a combined limit of 7 blocks total — the default setup uses 1 slide + 3 trust items, but you can mix them differently (e.g. 4 slides + 3 trust items, or 6 slides + 1 trust item).
 - The slideshow autoplays and crossfades automatically; shoppers can also use the arrow controls or hover to pause.

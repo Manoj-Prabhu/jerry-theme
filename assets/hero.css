@@ -308,6 +308,12 @@
   display: block;
 }
 
+/* The wrapper adds no box of its own, so the image sizes against the slide. */
+
+.j-hero__picture {
+  display: contents;
+}
+
 .j-hero__img,
 .j-hero__video {
   width: 100%;

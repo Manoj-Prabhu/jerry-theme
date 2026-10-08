@@ -20,9 +20,9 @@
   its own filter options (product type / vendor / price) from whatever
   products are actually in the wishlist and paginates client-side.
 {% endcomment %}
-<link rel="stylesheet" href="{{ 'collection.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
+<link rel="stylesheet" href="{{ 'collection.css' | asset_url }}" media="print" fetchpriority="high" onload="this.onload=null;this.media='all'">
 <noscript>{{ 'collection.css' | asset_url | stylesheet_tag }}</noscript>
-<link rel="stylesheet" href="{{ 'wishlist-page.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
+<link rel="stylesheet" href="{{ 'wishlist-page.css' | asset_url }}" media="print" fetchpriority="high" onload="this.onload=null;this.media='all'">
 <noscript>{{ 'wishlist-page.css' | asset_url | stylesheet_tag }}</noscript>
 
 {% assign wishlist_title = page.title | default: 'Wishlist' %}
