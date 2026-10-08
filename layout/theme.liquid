@@ -111,6 +111,17 @@
     {% endif %}
 
     {% # Inlined CSS Variables %}
+    {% comment %}
+      The wishlist page's content is rendered in the browser from
+      localStorage, so its script is the one exception to "defer everything":
+      loaded async from the head, it can request the products while the rest
+      of the page is still arriving. It only reads window.themeRoutes, set
+      just above.
+    {% endcomment %}
+    {% if template.name == 'page' and template.suffix == 'wishlist' %}
+      <script src="{{ 'wishlist-page.js' | asset_url }}" async></script>
+    {% endif %}
+
     {% render 'css-variables' %}
 
     {% comment %}
@@ -150,54 +161,68 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
     {% comment %}
-      The homepage footer sits far below the fold, so it doesn't need to
-      block first paint there. cart.css styles the
-      off-canvas drawer (hidden until opened) everywhere except the /cart
-      page itself, where it's the main above-the-fold content. Both are
-      deferred via the non_critical_css list below instead.
+      Stylesheets for content below the first screen don't block first paint.
+      Which files those are depends on the page:
+
+      - footer.css: the footer is far down the home, product and collection
+        pages. On short pages (cart, 404, account…) it can sit in the first
+        screen, so it stays render-blocking there.
+      - featured-collection.css (product cards): the cards are below the fold
+        on the home and product pages, but they are the main content of
+        collection and search pages.
+      - new-products.css, testimonials.css, brand-story.css: homepage
+        sections well below the hero.
+
+      They are still fetched at high priority (see the loop below).
     {% endcomment %}
-    {% unless template.name == 'index' %}
+    {% assign below_fold_css = '' | split: ',' %}
+    {% case template.name %}
+      {% when 'index' %}
+        {% assign below_fold_css = 'featured-collection.css,new-products.css,testimonials.css,brand-story.css,footer.css' | split: ',' %}
+      {% when 'product' %}
+        {% assign below_fold_css = 'featured-collection.css,footer.css' | split: ',' %}
+      {% when 'collection' %}
+        {% assign below_fold_css = 'footer.css' | split: ',' %}
+    {% endcase %}
+
+    {% unless below_fold_css contains 'footer.css' %}
       {{ 'footer.css' | asset_url | stylesheet_tag }}
     {% endunless %}
+    {% comment %}
+      cart.css styles the off-canvas drawer (hidden until opened) everywhere
+      except the /cart page itself, where it is the main content.
+    {% endcomment %}
     {% if template.name == 'cart' %}
       {{ 'cart.css' | asset_url | stylesheet_tag }}
     {% endif %}
 
     {% comment %}
-      Non-critical CSS (not needed for first paint — quick view only opens on
-      click, back-to-top only appears after scrolling, scroll-reveal only
-      matters once elements approach the viewport): loaded without blocking
-      render (media="print" until loaded), with a <noscript> fallback.
-      Not rel="preload": that would fetch them at high priority, ahead of
-      the resources the first paint actually needs.
-
-      new-products.css, testimonials.css and brand-story.css style
-      homepage sections that sit well below the fold (after Hero, Shop by
-      Category and Featured Collection) — nothing they style is visible
-      before the browser has had time to fetch them anyway, so blocking
-      the whole page's first paint on them (Lighthouse's "Render-blocking
-      requests") buys nothing. hero.css and shop-by-category.css stay
-      above, since those two ARE above the fold and deferring them would
-      risk a flash of unstyled content.
+      Interaction-only CSS: quick view opens on click, back-to-top appears
+      after scrolling, scroll-reveal matters once elements near the viewport,
+      the cart drawer opens on click. Loaded without blocking render
+      (media="print" until loaded) and left at the browser's default low
+      priority, with a <noscript> fallback. Not rel="preload", which would
+      fetch them ahead of what the first paint needs.
     {% endcomment %}
-    {% assign non_critical_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
+    {% assign interaction_css = 'quick-view.css,back-to-top.css,scroll-reveal.css' | split: ',' %}
     {% unless template.name == 'cart' %}
       {% assign cart_deferred_css = 'cart.css' | split: ',' %}
-      {% assign non_critical_css = non_critical_css | concat: cart_deferred_css %}
+      {% assign interaction_css = interaction_css | concat: cart_deferred_css %}
     {% endunless %}
-    {% if template.name == 'index' %}
-      {% assign index_deferred_css = 'new-products.css,testimonials.css,brand-story.css,footer.css' | split: ',' %}
-      {% assign non_critical_css = non_critical_css | concat: index_deferred_css %}
-    {% endif %}
+    {% for file in interaction_css %}
+      <link rel="stylesheet" href="{{ file | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
+      <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
+    {% endfor %}
+
     {% comment %}
-      The homepage section stylesheets style content that is laid out as
-      soon as the page renders, so they are fetched at high priority: left at
-      the default (lowest) priority they arrive seconds late on a slow
-      connection and the page visibly reflows when they land (measured CLS
-      0.34 on mobile). The interaction-only files stay at low priority.
+      Below-the-fold content CSS is non-blocking too, but fetched at high
+      priority: the content it styles is laid out as soon as the page
+      renders. Left at the default (lowest) priority these files arrive
+      seconds late on a slow connection and the page visibly reflows when
+      they land (measured CLS 0.34 on the mobile homepage).
     {% endcomment %}
-    {% for file in non_critical_css %}
-      <link rel="stylesheet" href="{{ file | asset_url }}" media="print" {% if template.name == 'index' and index_deferred_css contains file %}fetchpriority="high" {% endif %}onload="this.onload=null;this.media='all'">
+    {% for file in below_fold_css %}
+      <link rel="stylesheet" href="{{ file | asset_url }}" media="print" fetchpriority="high" onload="this.onload=null;this.media='all'">
       <noscript>{{ file | asset_url | stylesheet_tag }}</noscript>
     {% endfor %}
 
@@ -206,7 +231,9 @@
       component styles used by every product grid (collection, search, product
       recommendations) — not just the homepage section — so it stays global.
     {% endcomment %}
-    {{ 'featured-collection.css' | asset_url | stylesheet_tag }}
+    {% unless below_fold_css contains 'featured-collection.css' %}
+      {{ 'featured-collection.css' | asset_url | stylesheet_tag }}
+    {% endunless %}
 
     {% # Page-specific CSS — only loaded on the templates that use it %}
     {% if template.name == 'index' %}
@@ -216,8 +243,15 @@
     {% if template.name == 'product' %}
       {{ 'product.css' | asset_url | stylesheet_tag }}
     {% endif %}
-    {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' %}
+    {% assign is_wishlist_page = false %}
+    {% if template.name == 'page' and template.suffix == 'wishlist' %}
+      {% assign is_wishlist_page = true %}
+    {% endif %}
+    {% if template.name == 'collection' or template.name == 'search' or template.name == 'list-collections' or is_wishlist_page %}
       {{ 'collection.css' | asset_url | stylesheet_tag }}
+      {% if is_wishlist_page %}
+        {{ 'wishlist-page.css' | asset_url | stylesheet_tag }}
+      {% endif %}
     {% endif %}
     {% if template.name == 'search' %}
       {{ 'search.css' | asset_url | stylesheet_tag }}
@@ -280,6 +314,7 @@
         src: {{ 'mascot-cat.riv' | asset_url | json }},
         stateMachine: "State Machine 1",
         riveUrl: {{ 'rive.min.js' | asset_url | json }},
+        wasmUrl: {{ 'rive.wasm' | asset_url | json }},
         scriptUrl: {{ 'mascot.js' | asset_url | json }},
       };
     </script>

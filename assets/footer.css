@@ -144,13 +144,17 @@
   transition: transform 0.25s ease;
 }
 
-.j-footer__column a:hover {
-  color: var(--color-gold-deep);
-  transform: translateX(2px);
+@media (hover: hover) {
+  .j-footer__column a:hover {
+    color: var(--color-gold-deep);
+    transform: translateX(2px);
+  }
 }
 
-.j-footer__column a:hover::after {
-  transform: scaleX(1);
+@media (hover: hover) {
+  .j-footer__column a:hover::after {
+    transform: scaleX(1);
+  }
 }
 
 /* Newsletter */
@@ -222,14 +226,18 @@
   transition: transform 0.2s ease;
 }
 
-.j-footer__newsletter-submit:hover {
-  background: var(--color-gold-deep);
-  color: var(--color-ink);
-  box-shadow: 0 6px 16px rgba(184, 134, 11, 0.35);
+@media (hover: hover) {
+  .j-footer__newsletter-submit:hover {
+    background: var(--color-gold-deep);
+    color: var(--color-ink);
+    box-shadow: 0 6px 16px rgba(184, 134, 11, 0.35);
+  }
 }
 
-.j-footer__newsletter-submit:hover svg {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .j-footer__newsletter-submit:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 .j-footer__newsletter-trust {
@@ -368,10 +376,12 @@
     background-color 0.2s ease;
 }
 
-.j-localization-form__submit:hover {
-  border-color: var(--color-gold-deep);
-  background: var(--color-gold-deep);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .j-localization-form__submit:hover {
+    border-color: var(--color-gold-deep);
+    background: var(--color-gold-deep);
+    color: var(--color-ink);
+  }
 }
 
 .js .j-localization-form__submit {
@@ -435,11 +445,13 @@
   height: 16px;
 }
 
-.j-footer__social-link:hover {
-  color: var(--color-gold);
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .j-footer__social-link:hover {
+    color: var(--color-gold);
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    transform: translateY(-2px);
+  }
 }
 
 /* Copyright */
@@ -476,10 +488,12 @@
     transform 0.25s ease;
 }
 
-.j-footer__payment-icon:hover {
-  opacity: 1;
-  border-color: var(--color-gold-deep);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .j-footer__payment-icon:hover {
+    opacity: 1;
+    border-color: var(--color-gold-deep);
+    transform: translateY(-2px);
+  }
 }
 
 /* App blocks */

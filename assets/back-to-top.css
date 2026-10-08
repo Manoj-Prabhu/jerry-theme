@@ -40,9 +40,11 @@
   bottom: 90px;
 }
 
-.j-back-to-top:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
+@media (hover: hover) {
+  .j-back-to-top:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
 }
 
 .j-back-to-top svg {

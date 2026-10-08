@@ -1,5 +1,47 @@
 "use strict";
 
+// Shared helpers. theme.js is the first theme script on every page, so the
+// other scripts call these instead of each keeping its own copy.
+
+// Shopify CDN URL for an image at a given width, re-encoded as WebP.
+window.JerryResizeImageUrl = function resizeImageUrl(src, width) {
+  if (!src) return "";
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}width=${width}&format=webp`;
+};
+
+// Loads the Rive runtime and the mascot script once, however many places ask.
+// Resolves when window.jerryMascotMount is ready to use.
+window.JerryLoadMascot = (function () {
+  let request = null;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  return function loadMascot() {
+    const config = window.jerryMascotConfig;
+
+    if (!config || !config.riveUrl || !config.scriptUrl) {
+      return Promise.reject(new Error("[mascot] config missing"));
+    }
+
+    if (!request) {
+      request = loadScript(config.riveUrl).then(() =>
+        loadScript(config.scriptUrl),
+      );
+    }
+
+    return request;
+  };
+})();
+
 window.formatMoney = function formatMoney(cents, format) {
   if (typeof cents === "string") cents = cents.replace(".", "");
 

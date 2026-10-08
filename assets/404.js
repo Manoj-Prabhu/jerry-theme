@@ -2,22 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("Error404MascotCanvas");
   if (!canvas) return;
 
-  const config = window.jerryMascotConfig;
-  if (!config || !config.riveUrl || !config.scriptUrl) return;
-
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const riveScript = document.createElement("script");
-  riveScript.src = config.riveUrl;
-  riveScript.onload = () => {
-    const mascotScript = document.createElement("script");
-    mascotScript.src = config.scriptUrl;
-    mascotScript.onload = () => {
+  window
+    .JerryLoadMascot()
+    .then(() => {
       if (typeof window.jerryMascotMount === "function") {
         window.jerryMascotMount(canvas);
       }
-    };
-    document.head.appendChild(mascotScript);
-  };
-  document.head.appendChild(riveScript);
+    })
+    .catch(() => {
+      /* decorative — nothing to do if it can't load */
+    });
 });

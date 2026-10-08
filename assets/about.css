@@ -189,10 +189,12 @@
     border-color 0.3s ease;
 }
 
-.j-about-values__card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: transparent;
+@media (hover: hover) {
+  .j-about-values__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
+  }
 }
 
 .j-about-values__icon {

@@ -1,9 +1,3 @@
-function resizeCartImageUrl(src, width) {
-  if (!src) return "";
-  const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}width=${width}&format=webp`;
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const drawer = document.querySelector(".j-cart-drawer");
   const overlay = document.querySelector(".j-cart-overlay");
@@ -186,11 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => container.remove(), 1600);
   }
 
-  function formatMoney(cents) {
-    return window.formatMoney
-      ? window.formatMoney(cents)
-      : `$${(cents / 100).toFixed(2)}`;
-  }
+  const formatMoney = window.formatMoney;
 
   // -------------------------
   // Header Cart Count
@@ -229,8 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
               cartItems.dataset.suggestionImage
                 ? `<img
                     class="j-cart__suggestion-image"
-                    src="${resizeCartImageUrl(cartItems.dataset.suggestionImage, 480)}"
-                    srcset="${[240, 360, 480].map((w) => `${resizeCartImageUrl(cartItems.dataset.suggestionImage, w)} ${w}w`).join(", ")}"
+                    src="${window.JerryResizeImageUrl(cartItems.dataset.suggestionImage, 480)}"
+                    srcset="${[240, 360, 480].map((w) => `${window.JerryResizeImageUrl(cartItems.dataset.suggestionImage, w)} ${w}w`).join(", ")}"
                     sizes="280px"
                     alt=""
                     loading="lazy"
@@ -270,8 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="j-cart-item__image">
             <img
-              src="${resizeCartImageUrl(item.image, 160)}"
-              srcset="${[80, 120, 160].map((w) => `${resizeCartImageUrl(item.image, w)} ${w}w`).join(", ")}"
+              src="${window.JerryResizeImageUrl(item.image, 160)}"
+              srcset="${[80, 120, 160].map((w) => `${window.JerryResizeImageUrl(item.image, w)} ${w}w`).join(", ")}"
               sizes="80px"
               alt="${item.product_title}"
               width="80"

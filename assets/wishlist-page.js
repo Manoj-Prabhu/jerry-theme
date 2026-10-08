@@ -13,12 +13,6 @@ let activeFilters = {
   maxPrice: null,
 };
 
-function resizeWishlistImageUrl(src, width) {
-  if (!src) return "";
-  const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}width=${width}&format=webp`;
-}
-
 function getWishlistHandles() {
   try {
     return JSON.parse(localStorage.getItem(WISHLIST_STORAGE_KEY)) || [];
@@ -42,12 +36,12 @@ function renderWishlistCard(product) {
   const imagesHtml = images
     .map((src, index) => {
       const srcset = WISHLIST_IMAGE_WIDTHS.map(
-        (width) => `${resizeWishlistImageUrl(src, width)} ${width}w`,
+        (width) => `${window.JerryResizeImageUrl(src, width)} ${width}w`,
       ).join(", ");
 
       return `
         <img
-          src="${resizeWishlistImageUrl(src, 350)}"
+          src="${window.JerryResizeImageUrl(src, 350)}"
           srcset="${srcset}"
           sizes="(max-width: 992px) 43vw, (max-width: 1100px) 28vw, 320px"
           alt="${product.title}"
@@ -457,6 +451,25 @@ function handlePaginationClick(event) {
     container.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+// The wishlist is the main content of its page and can only come from the
+// browser (it lives in localStorage), so its product requests are sent the
+// moment this script runs instead of waiting for the document to finish
+// loading. Rendering still waits for the DOM.
+const wishlistProductsRequest = Promise.all(
+  getWishlistHandles().map(async (handle) => {
+    try {
+      const response = await fetch(window.themeRoutes.product(handle), {
+        priority: "high",
+      });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }),
+);
+
 async function initWishlistPage() {
   const container = document.getElementById("WishlistPageProducts");
   if (!container) return;
@@ -480,18 +493,7 @@ async function initWishlistPage() {
     return;
   }
 
-  const fetchedProducts = await Promise.all(
-    handles.map(async (handle) => {
-      try {
-        const response = await fetch(window.themeRoutes.product(handle));
-        if (!response.ok) return null;
-        return await response.json();
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
-    }),
-  );
+  const fetchedProducts = await wishlistProductsRequest;
 
   wishlistProducts = fetchedProducts.filter(Boolean);
 
@@ -505,7 +507,14 @@ async function initWishlistPage() {
   renderCurrentPage();
 }
 
-document.addEventListener("DOMContentLoaded", initWishlistPage);
+// Loaded async, so it can run after DOMContentLoaded has already fired.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initWishlistPage, {
+    once: true,
+  });
+} else {
+  initWishlistPage();
+}
 
 document.addEventListener("jerry:wishlist-changed", (event) => {
   const container = document.getElementById("WishlistPageProducts");

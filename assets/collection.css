@@ -125,8 +125,10 @@
   transition: color var(--transition-fast);
 }
 
-.j-collection-filters__clear:hover {
-  color: var(--color-primary);
+@media (hover: hover) {
+  .j-collection-filters__clear:hover {
+    color: var(--color-primary);
+  }
 }
 
 .j-collection-filters__close {
@@ -147,10 +149,12 @@
     transform var(--transition-fast);
 }
 
-.j-collection-filters__close:hover {
-  background: var(--color-primary);
-  color: #fff;
-  transform: rotate(90deg);
+@media (hover: hover) {
+  .j-collection-filters__close:hover {
+    background: var(--color-primary);
+    color: #fff;
+    transform: rotate(90deg);
+  }
 }
 
 .j-filter {
@@ -181,8 +185,10 @@
   transition: color var(--transition-fast);
 }
 
-.j-filter summary:hover {
-  color: var(--color-gold-dark);
+@media (hover: hover) {
+  .j-filter summary:hover {
+    color: var(--color-gold-dark);
+  }
 }
 
 .j-filter summary::-webkit-details-marker {
@@ -231,8 +237,10 @@
   transition: background var(--transition-fast);
 }
 
-.j-filter__option:hover {
-  background: var(--color-surface);
+@media (hover: hover) {
+  .j-filter__option:hover {
+    background: var(--color-surface);
+  }
 }
 
 .j-filter__option input[type="checkbox"] {
@@ -276,8 +284,10 @@
   transition: color var(--transition-fast);
 }
 
-.j-filter__option:hover .j-filter__option-label {
-  color: var(--color-gold-dark);
+@media (hover: hover) {
+  .j-filter__option:hover .j-filter__option-label {
+    color: var(--color-gold-dark);
+  }
 }
 
 .j-filter__option-count {
@@ -349,10 +359,12 @@
     color var(--transition-fast);
 }
 
-.j-collection-filters__apply:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .j-collection-filters__apply:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+  }
 }
 
 .j-filter-toggle {
@@ -373,10 +385,12 @@
     color var(--transition-fast);
 }
 
-.j-filter-toggle:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .j-filter-toggle:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+  }
 }
 
 .j-filter-toggle svg {
@@ -473,8 +487,10 @@
     box-shadow var(--transition-fast);
 }
 
-.j-collection-toolbar select:hover {
-  border-color: var(--color-primary);
+@media (hover: hover) {
+  .j-collection-toolbar select:hover {
+    border-color: var(--color-primary);
+  }
 }
 
 .j-collection-toolbar select:focus {

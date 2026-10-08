@@ -122,10 +122,12 @@
   height: 18px;
 }
 
-.j-hero-slideshow__arrow:hover {
-  background: var(--color-gold);
-  color: var(--color-ink);
-  transform: scale(1.08);
+@media (hover: hover) {
+  .j-hero-slideshow__arrow:hover {
+    background: var(--color-gold);
+    color: var(--color-ink);
+    transform: scale(1.08);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -230,12 +232,14 @@
     box-shadow var(--transition-fast);
 }
 
-.j-hero__buttons .j-button:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-ink);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+@media (hover: hover) {
+  .j-hero__buttons .j-button:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
 }
 
 .j-hero__buttons .j-button-outline {
@@ -251,12 +255,14 @@
     box-shadow var(--transition-fast);
 }
 
-.j-hero__buttons .j-button-outline:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-ink);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+@media (hover: hover) {
+  .j-hero__buttons .j-button-outline:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
 }
 
 /* Trust Row */

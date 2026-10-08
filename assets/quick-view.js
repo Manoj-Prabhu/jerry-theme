@@ -19,33 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  let mascotAssetsPromise = null;
-
-  function loadMascotAssets() {
-    const config = window.jerryMascotConfig;
-    if (!config || !config.riveUrl || !config.scriptUrl) {
-      return Promise.reject(new Error("[mascot] config missing"));
-    }
-
-    if (mascotAssetsPromise) return mascotAssetsPromise;
-
-    mascotAssetsPromise = new Promise((resolve, reject) => {
-      const riveScript = document.createElement("script");
-      riveScript.src = config.riveUrl;
-      riveScript.onload = () => {
-        const mascotScript = document.createElement("script");
-        mascotScript.src = config.scriptUrl;
-        mascotScript.onload = resolve;
-        mascotScript.onerror = reject;
-        document.head.appendChild(mascotScript);
-      };
-      riveScript.onerror = reject;
-      document.head.appendChild(riveScript);
-    });
-
-    return mascotAssetsPromise;
-  }
-
   function getFocusableElements() {
     return Array.from(
       modal.querySelectorAll(
@@ -81,11 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Helpers
   // -------------------------
 
-  function formatMoney(cents) {
-    return window.formatMoney
-      ? window.formatMoney(cents)
-      : `$${(cents / 100).toFixed(2)}`;
-  }
+  const formatMoney = window.formatMoney;
 
   function normalizeSrc(src) {
     if (!src) return "";
@@ -96,12 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         /_(?:pico|icon|thumb|small|compact|medium|large|grande|original|\d+x\d*|\d*x\d+)(?=\.[a-z0-9]+$)/i,
         "",
       );
-  }
-
-  function resizeImageUrl(src, width) {
-    if (!src) return "";
-    const separator = src.includes("?") ? "&" : "?";
-    return `${src}${separator}width=${width}&format=webp`;
   }
 
   function getProductMedia(product) {
@@ -177,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
           controls
           controlslist="nodownload"
           playsinline
-          poster="${resizeImageUrl(media.src, 600)}"
+          poster="${window.JerryResizeImageUrl(media.src, 600)}"
         >
           ${sourcesHtml}
         </video>
@@ -217,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id="QuickViewMainImage"
           class="j-quick-view__main-model"
           src="${modelSource.url}"
-          poster="${resizeImageUrl(media.src, 600)}"
+          poster="${window.JerryResizeImageUrl(media.src, 600)}"
           camera-controls
           ar
         ></model-viewer>
@@ -227,8 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return `
       <img
         id="QuickViewMainImage"
-        src="${resizeImageUrl(media.src, 600)}"
-        srcset="${[300, 450, 600, 800].map((width) => `${resizeImageUrl(media.src, width)} ${width}w`).join(", ")}"
+        src="${window.JerryResizeImageUrl(media.src, 600)}"
+        srcset="${[300, 450, 600, 800].map((width) => `${window.JerryResizeImageUrl(media.src, width)} ${width}w`).join(", ")}"
         sizes="(max-width: 700px) 90vw, 420px"
         alt="${media.alt || fallbackAlt || ""}"
         loading="eager"
@@ -409,8 +372,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   ${item.mediaType === "image" ? `data-image="${item.src}"` : ""}
                 >
                   <img
-                    src="${resizeImageUrl(item.src, 120)}"
-                    srcset="${[60, 120, 180].map((w) => `${resizeImageUrl(item.src, w)} ${w}w`).join(", ")}"
+                    src="${window.JerryResizeImageUrl(item.src, 120)}"
+                    srcset="${[60, 120, 180].map((w) => `${window.JerryResizeImageUrl(item.src, w)} ${w}w`).join(", ")}"
                     sizes="60px"
                     alt="${product.title} ${index + 1}"
                     loading="lazy"
@@ -569,7 +532,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cleanupMascot();
     const mascotCanvas = document.getElementById("QuickViewMascotCanvas");
     if (mascotCanvas) {
-      loadMascotAssets()
+      window
+        .JerryLoadMascot()
         .then(() => {
           if (typeof window.jerryMascotMount === "function") {
             mascotInstance = window.jerryMascotMount(mascotCanvas);

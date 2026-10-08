@@ -4,11 +4,13 @@ This theme bundles the following third-party software as a self-hosted
 theme asset. No scripts are loaded from external CDNs at runtime — this
 file is included purely as an attribution notice for the bundled code.
 
-## Rive (`assets/rive.min.js`)
+## Rive (`assets/rive.min.js`, `assets/rive.wasm`)
 
-- **Package:** `@rive-app/canvas`, version 2.39.1
+- **Package:** `@rive-app/canvas-lite`, version 2.39.1 — the JavaScript
+  runtime and its WebAssembly engine. Both files are served from the
+  theme's own assets; nothing is loaded from an external CDN.
 - **Used for:** the ambient mascot animation (see `assets/mascot.js`),
-  shown in the Quick View modal and the 404 page.
+  shown in the footer, the Quick View modal and the 404 page.
 - **License:** MIT
 
 ```

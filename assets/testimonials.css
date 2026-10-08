@@ -161,9 +161,11 @@
   height: 16px;
 }
 
-.j-testimonials__arrow:hover {
-  color: var(--color-secondary-text);
-  border-color: var(--color-secondary-text);
+@media (hover: hover) {
+  .j-testimonials__arrow:hover {
+    color: var(--color-secondary-text);
+    border-color: var(--color-secondary-text);
+  }
 }
 
 /* Media (right) */

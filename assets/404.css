@@ -59,9 +59,11 @@
   margin-top: 0;
 }
 
-.j-404 .j-button:hover {
-  background: var(--color-gold);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .j-404 .j-button:hover {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
 }
 
 @media (max-width: 480px) {

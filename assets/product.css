@@ -303,8 +303,10 @@
   background: transparent;
 }
 
-.j-product__purchase-option:hover {
-  border-color: var(--color-rose);
+@media (hover: hover) {
+  .j-product__purchase-option:hover {
+    border-color: var(--color-rose);
+  }
 }
 
 .j-product__purchase-option.is-active {
@@ -437,8 +439,10 @@
     transform 0.15s ease;
 }
 
-.j-product__qty-control button:hover {
-  border-color: #8a7862;
+@media (hover: hover) {
+  .j-product__qty-control button:hover {
+    border-color: #8a7862;
+  }
 }
 
 .j-product__qty-control button:active {
@@ -510,11 +514,13 @@
     box-shadow 0.2s ease;
 }
 
-.product-form .j-button:hover {
-  background: var(--color-gold);
-  color: var(--color-ink);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .product-form .j-button:hover {
+    background: var(--color-gold);
+    color: var(--color-ink);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .product-form .j-button:active {
@@ -718,10 +724,12 @@
   height: 16px;
 }
 
-.j-product__thumb-scroll:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .j-product__thumb-scroll:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+  }
 }
 
 .j-product__thumb-scroll[hidden] {
@@ -752,10 +760,12 @@
     box-shadow 0.25s ease;
 }
 
-.j-product-thumbnail:hover {
-  border-color: var(--color-gold);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+@media (hover: hover) {
+  .j-product-thumbnail:hover {
+    border-color: var(--color-gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
 }
 
 .j-product-thumbnail.is-active {
@@ -890,12 +900,16 @@
   transform: scaleX(1);
 }
 
-.j-product__swatch:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .j-product__swatch:hover {
+    transform: translateY(-2px);
+  }
 }
 
-.j-product__swatch:hover .j-product__swatch-inner {
-  border-color: var(--color-gold);
+@media (hover: hover) {
+  .j-product__swatch:hover .j-product__swatch-inner {
+    border-color: var(--color-gold);
+  }
 }
 
 .j-product__swatch:active {
@@ -948,8 +962,10 @@
     box-shadow 0.25s ease;
 }
 
-.j-product__pill:hover {
-  border-color: var(--color-ink);
+@media (hover: hover) {
+  .j-product__pill:hover {
+    border-color: var(--color-ink);
+  }
 }
 
 .j-product__pill:active {

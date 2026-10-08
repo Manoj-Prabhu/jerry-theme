@@ -11,4 +11,4 @@ Jerry uses the following third-party assets and libraries.
 
 ## Libraries
 
-- [Rive](https://rive.app/) (`@rive-app/canvas`) — runtime used to render the cat mascot animation, MIT License
+- [Rive](https://rive.app/) (`@rive-app/canvas-lite`) — runtime used to render the cat mascot animation, MIT License

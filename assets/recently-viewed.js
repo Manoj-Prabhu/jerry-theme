@@ -7,11 +7,6 @@
 // mirrors every Liquid image_tag call elsewhere in the theme (e.g.
 // product-card.liquid) — without it these were the one place still
 // shipping full JPEG/PNG bytes instead of the smaller re-encode.
-function resizeImageUrl(src, width) {
-  if (!src) return "";
-  const separator = src.includes("?") ? "&" : "?";
-  return `${src}${separator}width=${width}&format=webp`;
-}
 
 // 600 closes the gap between 500 and 700 — this grid's real card width
 // (.j-product-grid, shared with product-card.liquid) lands around
@@ -88,12 +83,12 @@ async function initRecentlyViewed() {
         const imagesHtml = images
           .map((src, index) => {
             const srcset = RECENTLY_VIEWED_IMAGE_WIDTHS.map(
-              (width) => `${resizeImageUrl(src, width)} ${width}w`,
+              (width) => `${window.JerryResizeImageUrl(src, width)} ${width}w`,
             ).join(", ");
 
             return `
               <img
-                src="${resizeImageUrl(src, 350)}"
+                src="${window.JerryResizeImageUrl(src, 350)}"
                 srcset="${srcset}"
                 sizes="(max-width: 992px) 43vw, (max-width: 1100px) 28vw, 320px"
                 alt="${product.title}"

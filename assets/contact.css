@@ -189,9 +189,11 @@
   padding-top: 14px;
 }
 
-.j-contact__field input:hover,
-.j-contact__field textarea:hover {
-  border-color: var(--color-gold-dark);
+@media (hover: hover) {
+  .j-contact__field input:hover,
+  .j-contact__field textarea:hover {
+    border-color: var(--color-gold-dark);
+  }
 }
 
 .j-contact__field input:focus,
@@ -219,8 +221,10 @@
   transition: transform var(--transition-fast);
 }
 
-.j-contact__submit:hover svg {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .j-contact__submit:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 .j-contact__success {

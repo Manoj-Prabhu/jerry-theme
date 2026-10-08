@@ -48,8 +48,10 @@
   cursor: pointer;
 }
 
-.j-account__link:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  .j-account__link:hover {
+    color: var(--color-accent);
+  }
 }
 
 .j-account__note {
@@ -109,9 +111,11 @@
     box-shadow var(--transition-fast);
 }
 
-.j-account__field input:hover,
-.j-account__field select:hover {
-  border-color: var(--color-primary);
+@media (hover: hover) {
+  .j-account__field input:hover,
+  .j-account__field select:hover {
+    border-color: var(--color-primary);
+  }
 }
 
 .j-account__field input:focus,

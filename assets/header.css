@@ -23,8 +23,10 @@
   transition: color var(--transition);
 }
 
-.j-announcement__text:hover {
-  color: var(--color-gold);
+@media (hover: hover) {
+  .j-announcement__text:hover {
+    color: var(--color-gold);
+  }
 }
 
 .j-announcement.has-close .j-announcement__slider {
@@ -116,8 +118,10 @@
   transition: opacity var(--transition-fast);
 }
 
-.j-announcement__close:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .j-announcement__close:hover {
+    opacity: 1;
+  }
 }
 
 /* Header */
@@ -314,14 +318,16 @@
     box-shadow var(--transition);
 }
 
-.j-logo:hover .j-logo-mark {
-  background: linear-gradient(
-    135deg,
-    var(--color-accent) 0%,
-    color-mix(in srgb, var(--color-accent) 65%, #000) 100%
-  );
-  box-shadow: 0 4px 10px
-    color-mix(in srgb, var(--color-accent) 45%, transparent);
+@media (hover: hover) {
+  .j-logo:hover .j-logo-mark {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent) 0%,
+      color-mix(in srgb, var(--color-accent) 65%, #000) 100%
+    );
+    box-shadow: 0 4px 10px
+      color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
 }
 
 /* Navigation */
@@ -342,8 +348,10 @@
   transition: color 0.3s ease;
 }
 
-.j-nav-link:hover {
-  color: var(--color-accent);
+@media (hover: hover) {
+  .j-nav-link:hover {
+    color: var(--color-accent);
+  }
 }
 
 .j-nav-link::after {
@@ -361,8 +369,10 @@
   transition: width 0.3s ease;
 }
 
-.j-nav-link:hover::after {
-  width: 100%;
+@media (hover: hover) {
+  .j-nav-link:hover::after {
+    width: 100%;
+  }
 }
 
 /* Icons */
@@ -381,8 +391,10 @@
   transition: transform 0.25s ease;
 }
 
-.header__icons a:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .header__icons a:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .header__icons svg {
@@ -573,9 +585,11 @@
   display: none;
 }
 
-.j-search-form input:hover {
-  background: var(--color-white);
-  border-color: var(--color-border);
+@media (hover: hover) {
+  .j-search-form input:hover {
+    background: var(--color-white);
+    border-color: var(--color-border);
+  }
 }
 
 .j-search-form input:focus {
@@ -697,8 +711,10 @@
   margin-top: 2px;
 }
 
-.j-predictive-search-item:hover {
-  background: var(--color-surface);
+@media (hover: hover) {
+  .j-predictive-search-item:hover {
+    background: var(--color-surface);
+  }
 }
 
 .j-predictive-search-item img {
@@ -805,9 +821,11 @@
   transition: background var(--transition-fast);
 }
 
-.j-recent-searches__term:hover {
-  background: var(--color-surface);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .j-recent-searches__term:hover {
+    background: var(--color-surface);
+    color: var(--color-accent);
+  }
 }
 
 .j-recent-searches__remove {
@@ -831,9 +849,11 @@
     color var(--transition-fast);
 }
 
-.j-recent-searches__remove:hover {
-  background: var(--color-surface);
-  color: var(--color-text);
+@media (hover: hover) {
+  .j-recent-searches__remove:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
 }
 
 .j-header__wishlist {
@@ -854,8 +874,10 @@
     transform var(--transition-fast);
 }
 
-.j-header__wishlist:hover svg {
-  transform: scale(1.1);
+@media (hover: hover) {
+  .j-header__wishlist:hover svg {
+    transform: scale(1.1);
+  }
 }
 
 .j-header__wishlist.has-items svg {
@@ -895,9 +917,14 @@
   transition: transform var(--transition-fast);
 }
 
-.j-nav-item:hover .j-nav-arrow,
 .j-nav-item:focus-within .j-nav-arrow {
   transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .j-nav-item:hover .j-nav-arrow {
+    transform: rotate(180deg);
+  }
 }
 
 .j-dropdown {
@@ -951,9 +978,11 @@
     color var(--transition-fast);
 }
 
-.j-dropdown__link:hover {
-  background: var(--color-surface);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .j-dropdown__link:hover {
+    background: var(--color-surface);
+    color: var(--color-accent);
+  }
 }
 
 @media (min-width: 993px) {
@@ -1051,8 +1080,10 @@
   box-sizing: border-box;
 }
 
-.j-mega-menu__tile:hover .j-mega-menu__tile-image {
-  transform: scale(1.04);
+@media (hover: hover) {
+  .j-mega-menu__tile:hover .j-mega-menu__tile-image {
+    transform: scale(1.04);
+  }
 }
 
 .j-mega-menu__tile-caption {
@@ -1183,10 +1214,12 @@
       transform var(--transition-fast);
   }
 
-  .j-menu-close:hover {
-    background: var(--color-gold);
-    color: var(--color-ink);
-    transform: rotate(90deg);
+  @media (hover: hover) {
+    .j-menu-close:hover {
+      background: var(--color-gold);
+      color: var(--color-ink);
+      transform: rotate(90deg);
+    }
   }
 
   .j-nav-item {
