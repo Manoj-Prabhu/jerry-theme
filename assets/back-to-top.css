@@ -25,7 +25,7 @@
     opacity var(--transition-fast),
     visibility var(--transition-fast),
     transform var(--transition-fast),
-    bottom var(--transition),
+    translate var(--transition),
     background var(--transition-fast),
     color var(--transition-fast);
 }
@@ -36,8 +36,11 @@
   transform: translateY(0);
 }
 
+/* Lifted clear of the sticky add-to-cart bar with translate rather than by
+   changing bottom, so moving it never triggers layout. */
+
 .j-back-to-top.is-raised {
-  bottom: 90px;
+  translate: 0 -66px;
 }
 
 @media (hover: hover) {
@@ -61,7 +64,7 @@
   }
 
   .j-back-to-top.is-raised {
-    bottom: 78px;
+    translate: 0 -62px;
   }
 
   .j-back-to-top svg {

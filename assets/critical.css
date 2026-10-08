@@ -94,6 +94,14 @@ a {
   opacity: 0;
 }
 
+/* Until the drawer is opened for the first time its contents aren't
+   rendered at all, so they cost no layout and request no fonts or images
+   (see .is-primed in assets/cart.js). */
+
+.j-cart-drawer:not(.is-primed) {
+  content-visibility: hidden;
+}
+
 /** Section layout utilities */
 
 .shopify-section {

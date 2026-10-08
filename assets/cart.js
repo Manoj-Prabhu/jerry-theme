@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!drawer) return;
 
     lastCartTrigger = document.activeElement;
+    // Starts rendering the drawer's contents (see critical.css); it stays
+    // rendered from here on so closing can animate.
+    drawer.classList.add("is-primed");
     drawer.classList.add("is-open");
     document.documentElement.classList.add("j-scroll-lock");
     document.addEventListener("keydown", trapDrawerFocus);
@@ -450,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const fill = bar.querySelector(".j-cart-page__shipping-fill");
       if (fill) {
-        fill.style.width = `${percent}%`;
+        fill.style.setProperty("--progress", String(percent / 100));
       }
     });
   }

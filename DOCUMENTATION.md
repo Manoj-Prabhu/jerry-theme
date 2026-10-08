@@ -153,7 +153,7 @@ Standard Shopify blogs work out of the box with Jerry's styling — just create 
 
 ## App Blocks
 
-If you install an app that provides theme app blocks (e.g. reviews, loyalty, upsells), you can add them directly to the **Product** and **Footer** sections via **Add block → [App name]** in the Theme Editor.
+If you install an app that provides theme app blocks (e.g. reviews, loyalty, upsells), you can add them directly to the **Product**, **Featured product**, **Testimonials** and **Footer** sections via **Add block → [App name]** in the Theme Editor. To place an app block anywhere else on a page, add the **Apps** section (**Add section → Apps**) and add the app block inside it.
 
 ---
 

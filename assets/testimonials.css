@@ -7,14 +7,16 @@
 
 /* Slideshow */
 
+/* Every slide sits in the same grid cell, so the track is always as tall as
+   the tallest slide: no height to measure or animate in JavaScript, and
+   nothing below moves when the slide changes. */
+
 .j-testimonials__track {
-  position: relative;
-  transition: height 0.4s ease;
+  display: grid;
 }
 
 .j-testimonials__slide {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
@@ -27,17 +29,12 @@
 }
 
 .j-testimonials__slide.is-active {
-  position: static;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transition:
     opacity 0.8s ease,
     visibility 0s linear 0s;
-}
-
-.j-testimonials__slideshow.is-ready .j-testimonials__slide.is-active {
-  position: absolute;
 }
 
 @media (prefers-reduced-motion: reduce) {

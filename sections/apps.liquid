@@ -1,0 +1,39 @@
+{% comment %}
+  Apps section
+
+  A wrapper merchants can add to any page to place app blocks (reviews,
+  trust badges, forms…) outside the product section. It renders nothing of
+  its own — only the blocks added to it.
+{% endcomment %}
+
+<div class="j-apps {% if section.settings.include_margins %}container{% endif %}">
+  {% for block in section.blocks %}
+    {% render block %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Apps",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "include_margins",
+      "label": "Match the page width",
+      "info": "Keeps app content aligned with the rest of the page. Turn off for apps that should span the full width.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apps"
+    }
+  ]
+}
+{% endschema %}

@@ -58,7 +58,7 @@
       <div class="j-cart-page__shipping-track">
         <div
           class="j-cart-page__shipping-fill"
-          style="width: {{ progress_percent }}%"
+          style="--progress: {{ progress_percent | divided_by: 100.0 }}"
         ></div>
       </div>
 

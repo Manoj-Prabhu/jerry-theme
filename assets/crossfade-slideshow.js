@@ -2,7 +2,6 @@ function createCrossfadeSlideshow(
   root,
   {
     slideSelector,
-    track,
     autoplayDelay = 5000,
     arrowSelector,
     onChange,
@@ -13,54 +12,6 @@ function createCrossfadeSlideshow(
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
-
-  function updateHeight() {
-    if (!track) return;
-    const originalVisibility = slides.map((slide) => slide.style.visibility);
-
-    slides.forEach((slide) => {
-      slide.style.position = "static";
-      slide.style.visibility = "hidden";
-    });
-
-    let maxHeight = 0;
-    slides.forEach((slide) => {
-      maxHeight = Math.max(maxHeight, slide.offsetHeight);
-    });
-
-    slides.forEach((slide, index) => {
-      slide.style.position = "";
-      slide.style.visibility = originalVisibility[index];
-    });
-
-    track.style.height = `${maxHeight}px`;
-  }
-
-  if (track) {
-    updateHeight();
-    root.classList.add("is-ready");
-
-    let resizeTimer = null;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateHeight, 150);
-    });
-
-    // Theme editor edits (text, images, blocks) update the DOM live, which
-    // would otherwise leave the locked height stale.
-    let mutationTimer = null;
-    const observer = new MutationObserver(() => {
-      clearTimeout(mutationTimer);
-      mutationTimer = setTimeout(updateHeight, 50);
-    });
-    observer.observe(root, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: ["src", "srcset"],
-    });
-  }
 
   let currentIndex = slides.findIndex((slide) =>
     slide.classList.contains("is-active"),
@@ -166,7 +117,6 @@ function createCrossfadeSlideshow(
     prev,
     startAutoplay,
     stopAutoplay,
-    updateHeight,
     prefersReducedMotion,
     get currentIndex() {
       return currentIndex;

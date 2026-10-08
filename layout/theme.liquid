@@ -125,29 +125,27 @@
     {% render 'css-variables' %}
 
     {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical variants (regular + bold primary, plus the
-         logo font) — these render above the fold on first paint (body text,
-         bold headings/prices, and the header logo). Everything else
-         (italics, body-font bold, etc.) loads on-demand via @font-face.
+      Font preloading: only the fonts that paint text in the first screen:
+      - the body font: navigation, announcement bar and body copy on every page
+      - the heading / logo font: the logo mark and section headings
+      - the primary (h1) font: on the homepage, where the hero heading uses it
+      Everything else (italics, bold weights, page-title and product-name
+      fonts) loads on demand through @font-face. Fonts are served from the
+      shop's own domain, so no preconnect is needed.
     {% endcomment %}
-    {% unless settings.type_primary_font.system? and settings.type_logo_font.system? %}
-      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-    {% endunless %}
-
-    {% unless settings.type_primary_font.system? %}
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-
-      {% assign primary_font_bold = settings.type_primary_font | font_modify: 'weight', 'bold' %}
-      {% if primary_font_bold != blank %}
-        {{ primary_font_bold | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-      {% endif %}
+    {% unless settings.type_body_font.system? %}
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {% endunless %}
 
     {% unless settings.type_logo_font.system? %}
-      {{ settings.type_logo_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+      {{ settings.type_logo_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {% endunless %}
+
+    {% if template.name == 'index' %}
+      {% unless settings.type_primary_font.system? %}
+        {{ settings.type_primary_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+      {% endunless %}
+    {% endif %}
 
     {% comment %}
       Render-blocking stylesheets are kept to a handful: each one blocks
@@ -164,8 +162,8 @@
       Stylesheets for content below the first screen don't block first paint.
       Which files those are depends on the page:
 
-      - footer.css: the footer is far down the home, product and collection
-        pages. On short pages (cart, 404, account…) it can sit in the first
+      - footer.css: the footer is far down the home and product pages, and
+        on collection pages with more than one row of products. On short pages (cart, 404, account…) it can sit in the first
         screen, so it stays render-blocking there.
       - featured-collection.css (product cards): the cards are below the fold
         on the home and product pages, but they are the main content of
@@ -182,7 +180,14 @@
       {% when 'product' %}
         {% assign below_fold_css = 'featured-collection.css,footer.css' | split: ',' %}
       {% when 'collection' %}
-        {% assign below_fold_css = 'footer.css' | split: ',' %}
+        {% comment %}
+          A collection with only a row of products (or none) is short enough
+          for the footer to show in the first screen, where it must not
+          arrive unstyled.
+        {% endcomment %}
+        {% if collection.products_count > 4 %}
+          {% assign below_fold_css = 'footer.css' | split: ',' %}
+        {% endif %}
     {% endcase %}
 
     {% unless below_fold_css contains 'footer.css' %}

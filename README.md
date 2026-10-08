@@ -55,7 +55,7 @@ shopify theme push --ignore="templates/*.json" --ignore="config/settings_data.js
 - **Collection filtering and sorting** — price, availability, and product options
 - **Country/region selector** — lets shoppers switch markets and currency from the footer
 - **Customer accounts** — themed login, registration, account overview, order history, address book, and password reset/activation
-- **App blocks** — merchants can add app content to the product and footer sections via the theme editor
+- **App blocks** — merchants can add app content to the product, featured product, testimonials and footer sections, or anywhere on a page through the Apps section
 - **Blog, article, FAQ, about, contact, and wishlist page** templates — Contact, About, and FAQ each support an optional banner image behind the page title
 - Fully responsive, with reduced-motion support throughout
 

@@ -1,5 +1,4 @@
 function initFeaturedProductSlideshow(root) {
-  const track = root.querySelector(".j-featured-product-slideshow__track");
   const slides = root.querySelectorAll(".j-featured-product-slide");
 
   // A single product renders one static slide — nothing to rotate.
@@ -8,7 +7,6 @@ function initFeaturedProductSlideshow(root) {
   const autoplayDelay = Number(root.dataset.autoplay) || 5000;
   const slideshow = createCrossfadeSlideshow(root, {
     slideSelector: ".j-featured-product-slide",
-    track,
     autoplayDelay,
   });
 
