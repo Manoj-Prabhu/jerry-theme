@@ -370,7 +370,13 @@
                   {% when 'video' %}
                     {{ media | video_tag: image_size: '900x', controls: true, controlslist: 'nodownload' }}
                   {% when 'external_video' %}
-                    {{ media | external_video_tag: image_size: '900x' }}
+                    {% render 'external-video-facade',
+                      media: media,
+                      image_width: 900,
+                      widths: '400, 600, 800, 900',
+                      sizes: '(max-width: 480px) 80vw, (max-width: 768px) 90vw, 46vw',
+                      fallback_title: fp_product.title
+                    %}
                   {% when 'model' %}
                     {{ media | model_viewer_tag: image_size: '900x' }}
                   {% else %}

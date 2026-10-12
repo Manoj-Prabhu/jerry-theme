@@ -1,0 +1,59 @@
+{% comment %}
+  External (YouTube / Vimeo) product video, loaded on demand.
+
+  The page renders only the video's preview image and a play button. The
+  player iframe — which pulls in the host's own scripts — is kept in a
+  <template> and inserted when the shopper presses play (see the
+  [data-video-facade] handler in assets/theme.js).
+
+  Accepts:
+  - media: the external_video media object
+  - image_width: width requested for the preview image
+  - widths, sizes: srcset widths and layout sizes for the preview image
+  - loading, fetchpriority: optional, for when the video is the first media
+    on the page (defaults to a lazy image at normal priority)
+  - fallback_title: used for the labels when the media has no alt text
+
+  Usage:
+  {% render 'external-video-facade', media: media, image_width: 1000, widths: '400, 600, 800, 1000', sizes: '50vw', fallback_title: product.title %}
+{% endcomment %}
+
+{%- liquid
+  assign video_title = media.alt | default: fallback_title
+  assign poster_loading = loading | default: 'lazy'
+  assign poster_priority = fetchpriority | default: 'auto'
+-%}
+
+<div class="j-video-facade" data-video-facade>
+  {% if media.preview_image %}
+    {{
+      media.preview_image
+      | image_url: width: image_width, format: 'webp'
+      | image_tag:
+        loading: poster_loading,
+        fetchpriority: poster_priority,
+        widths: widths,
+        sizes: sizes,
+        class: 'j-video-facade__poster',
+        alt: video_title
+    }}
+  {% endif %}
+
+  <button
+    type="button"
+    class="j-video-facade__play"
+    aria-label="{{ 'product.play_video' | t }}{% if video_title != blank %}: {{ video_title | escape }}{% endif %}"
+  >
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
+      <path d="M8 5.14v13.72a1 1 0 0 0 1.52.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z"/>
+    </svg>
+  </button>
+
+  <template>
+    {{ media | external_video_url: autoplay: true | external_video_tag: title: video_title }}
+  </template>
+
+  <noscript>
+    {{ media | external_video_tag: title: video_title }}
+  </noscript>
+</div>

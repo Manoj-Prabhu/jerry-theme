@@ -82,7 +82,15 @@
             {% when 'video' %}
               {{ media | video_tag: image_size: '1000x', controls: true, controlslist: 'nodownload' }}
             {% when 'external_video' %}
-              {{ media | external_video_tag: image_size: '1000x' }}
+              {% render 'external-video-facade',
+                media: media,
+                image_width: 1000,
+                widths: '400, 500, 600, 700, 800, 1000',
+                sizes: '(max-width: 768px) 80vw, min(635px, calc(55.6vw - 165px))',
+                loading: media_loading,
+                fetchpriority: media_priority,
+                fallback_title: product.title
+              %}
             {% when 'model' %}
               {{ media | model_viewer_tag: image_size: '1000x' }}
             {% else %}

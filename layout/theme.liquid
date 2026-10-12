@@ -125,25 +125,27 @@
     {% render 'css-variables' %}
 
     {% comment %}
-      Font preloading: only the fonts that paint text in the first screen:
-      - the body font: navigation, announcement bar and body copy on every page
-      - the heading / logo font: the logo mark and section headings
-      - the primary (h1) font: on the homepage, where the hero heading uses it
-      Everything else (italics, bold weights, page-title and product-name
-      fonts) loads on demand through @font-face. Fonts are served from the
-      shop's own domain, so no preconnect is needed.
+      Font preloading: two fonts per page, the ones that paint text in the
+      first screen. More than that and the preloads start competing with the
+      stylesheets and the LCP image.
+      - the body font, on every page: navigation, announcement bar, body copy
+      - on the homepage, the primary (h1) font: the hero heading
+      - everywhere else, the heading / logo font: the logo mark and headings
+      The rest (italics, bold weights, page-title and product-name fonts)
+      load on demand through @font-face. Fonts are served from the shop's own
+      domain, so no preconnect is needed.
     {% endcomment %}
     {% unless settings.type_body_font.system? %}
       {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {% endunless %}
 
-    {% unless settings.type_logo_font.system? %}
-      {{ settings.type_logo_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
-    {% endunless %}
-
     {% if template.name == 'index' %}
       {% unless settings.type_primary_font.system? %}
         {{ settings.type_primary_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+      {% endunless %}
+    {% else %}
+      {% unless settings.type_logo_font.system? %}
+        {{ settings.type_logo_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
       {% endunless %}
     {% endif %}
 

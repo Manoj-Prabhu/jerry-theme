@@ -3,6 +3,25 @@
 // Shared helpers. theme.js is the first theme script on every page, so the
 // other scripts call these instead of each keeping its own copy.
 
+// External (YouTube / Vimeo) videos render as a preview image with a play
+// button (see snippets/external-video-facade.liquid). The player iframe sits
+// in a <template> and is only added to the page when play is pressed, so
+// the video host's scripts never load for shoppers who don't watch.
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".j-video-facade__play");
+  if (!button) return;
+
+  const facade = button.closest("[data-video-facade]");
+  const template = facade && facade.querySelector("template");
+  if (!template) return;
+
+  facade.replaceChildren(template.content.cloneNode(true));
+  facade.classList.add("is-playing");
+
+  const player = facade.querySelector("iframe");
+  if (player) player.focus();
+});
+
 // Shopify CDN URL for an image at a given width, re-encoded as WebP.
 window.JerryResizeImageUrl = function resizeImageUrl(src, width) {
   if (!src) return "";
