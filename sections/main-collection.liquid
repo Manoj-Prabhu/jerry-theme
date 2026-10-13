@@ -12,6 +12,7 @@
   {% if banner_image %}
     <div class="j-page-hero-band__image">
       {% assign img_alt = banner_image.alt | default: collection.title %}
+      {% assign focal_style = 'object-position: ' | append: banner_image.presentation.focal_point %}
       {{
         banner_image
         | image_url: width: 1600, format: 'webp'
@@ -21,7 +22,8 @@
           preload: true,
           widths: '800, 1200, 1600',
           sizes: '100vw',
-          alt: img_alt
+          alt: img_alt,
+          style: focal_style
       }}
     </div>
   {% endif %}

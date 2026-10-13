@@ -20,6 +20,7 @@
 
   {% if article.image %}
     <div class="j-article__hero">
+      {% assign focal_style = 'object-position: ' | append: article.image.presentation.focal_point %}
       {{
         article.image
         | image_url: width: 1400, format: 'webp'
@@ -28,7 +29,8 @@
           fetchpriority: 'high',
           alt: article.title,
           widths: '400, 500, 600, 700, 800, 1000, 1200, 1400',
-          sizes: '(max-width: 700px) 100vw, 700px'
+          sizes: '(max-width: 700px) 100vw, 700px',
+          style: focal_style
       }}
     </div>
   {% endif %}

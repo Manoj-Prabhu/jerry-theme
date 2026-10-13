@@ -237,6 +237,16 @@
                 source the browser picks.
               {% endcomment %}
               {% assign mobile_image = block_settings.mobile_image %}
+              {% comment %}
+                The focal point set on each image in the editor, passed to
+                hero.css as custom properties: the mobile image has its own.
+              {% endcomment %}
+              {%- liquid
+                assign hero_focal_style = '--hero-focal: ' | append: block_settings.image.presentation.focal_point | append: ';'
+                if mobile_image
+                  assign hero_focal_style = hero_focal_style | append: ' --hero-focal-mobile: ' | append: mobile_image.presentation.focal_point | append: ';'
+                endif
+              -%}
               {% if forloop.first %}
                 {% assign img_alt = block_settings.heading | default: shop.name %}
                 {% comment %} A preload would fetch the desktop image on phones too. {% endcomment %}
@@ -264,6 +274,7 @@
                     widths: '360, 480, 600, 760, 1000, 1200',
                     sizes: '100vw',
                     class: 'j-hero__img',
+                    style: hero_focal_style,
                     alt: img_alt
                 }}
                 </picture>
@@ -287,6 +298,7 @@
                       widths: '360, 480, 600, 760, 1000, 1200',
                       sizes: '100vw',
                       class: 'j-hero__img',
+                      style: hero_focal_style,
                       alt: img_alt
                   }}
                 {% endcapture %}

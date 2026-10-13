@@ -26,6 +26,7 @@
 <div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
   {% if section.settings.banner_image %}
     <div class="j-page-hero-band__image">
+      {% assign focal_style = 'object-position: ' | append: section.settings.banner_image.presentation.focal_point %}
       {{
         section.settings.banner_image
         | image_url: width: 1600, format: 'webp'
@@ -34,7 +35,8 @@
           fetchpriority: 'high',
           widths: '800, 1200, 1600',
           sizes: '100vw',
-          alt: wishlist_title
+          alt: wishlist_title,
+          style: focal_style
       }}
     </div>
   {% endif %}

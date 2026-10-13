@@ -154,9 +154,9 @@
           {% if cart.item_count == 0 %}disabled{% endif %}
         >
 
-        {% if cart.item_count > 0 %}
-          <div style="--shopify-payment-button-color-scheme: dark;">
-            {{ form | payment_button }}
+        {% if additional_checkout_buttons and cart.item_count > 0 %}
+          <div class="additional-checkout-buttons">
+            {{ content_for_additional_checkout_buttons }}
           </div>
         {% endif %}
       {% endform %}

@@ -45,10 +45,11 @@
                   assign slide_loading = 'lazy'
                 endif
               -%}
+              {% assign focal_style = 'object-position: ' | append: block_settings.image.presentation.focal_point %}
               {{
                 block_settings.image
                 | image_url: width: 1200, format: 'webp'
-                | image_tag: loading: slide_loading, widths: '480, 600, 768, 1000, 1200', sizes: '(max-width: 480px) 75vw, (max-width: 900px) 88vw, 42vw', class: 'j-brand-story__image', alt: img_alt
+                | image_tag: loading: slide_loading, widths: '480, 600, 768, 1000, 1200', sizes: '(max-width: 480px) 75vw, (max-width: 900px) 88vw, 42vw', class: 'j-brand-story__image', alt: img_alt, style: focal_style
               }}
             </div>
           {% endif %}

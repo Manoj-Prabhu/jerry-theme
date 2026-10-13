@@ -24,10 +24,11 @@
             assign story_loading = 'lazy'
           endif
         -%}
+        {% assign focal_style = 'object-position: ' | append: section_settings.image.presentation.focal_point %}
         {{
           section_settings.image
           | image_url: width: 1200, format: 'webp'
-          | image_tag: loading: story_loading, widths: '480, 768, 1000, 1200', sizes: '(max-width: 900px) 100vw, 50vw', class: 'j-about-story__image', alt: img_alt
+          | image_tag: loading: story_loading, widths: '480, 768, 1000, 1200', sizes: '(max-width: 900px) 100vw, 50vw', class: 'j-about-story__image', alt: img_alt, style: focal_style
         }}
       {% else %}
         <div class="j-about-story__media-placeholder">{{ 'image' | placeholder_svg_tag: 'j-about-story__placeholder-svg' }}</div>

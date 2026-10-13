@@ -328,6 +328,18 @@
   display: block;
 }
 
+/* Focal point chosen in the theme editor (see sections/hero.liquid). */
+
+.j-hero__img {
+  object-position: var(--hero-focal, center);
+}
+
+@media (max-width: 749px) {
+  .j-hero__img {
+    object-position: var(--hero-focal-mobile, var(--hero-focal, center));
+  }
+}
+
 .j-hero__video--over-poster {
   position: absolute;
   inset: 1px;

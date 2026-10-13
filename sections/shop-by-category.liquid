@@ -37,6 +37,7 @@
                     assign card_loading = 'lazy'
                   endif
                 -%}
+                {% assign focal_style = 'object-position: ' | append: block_settings.image.presentation.focal_point %}
                 {{
                   block_settings.image
                   | image_url: width: 800, format: 'webp'
@@ -44,7 +45,8 @@
                     loading: card_loading,
                     widths: '400, 600, 800',
                     sizes: '(max-width: 768px) 60vw, 26vw',
-                    alt: img_alt
+                    alt: img_alt,
+                    style: focal_style
                 }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'j-category-card__placeholder' }}

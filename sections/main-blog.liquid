@@ -6,6 +6,7 @@
 <div class="full-width j-page-hero-band {% if section.settings.banner_image %}j-page-hero-band--has-image{% endif %}">
   {% if section.settings.banner_image %}
     <div class="j-page-hero-band__image">
+      {% assign focal_style = 'object-position: ' | append: section.settings.banner_image.presentation.focal_point %}
       {{
         section.settings.banner_image
         | image_url: width: 1600, format: 'webp'
@@ -14,7 +15,8 @@
           fetchpriority: 'high',
           widths: '800, 1200, 1600',
           sizes: '100vw',
-          alt: blog.title
+          alt: blog.title,
+          style: focal_style
       }}
     </div>
   {% endif %}
@@ -56,6 +58,7 @@
 
               <div class="j-blog-card__image">
 
+                {% assign focal_style = 'object-position: ' | append: article.image.presentation.focal_point %}
                 {{
                   article.image
                   | image_url: width: 700, format: 'webp'
@@ -63,7 +66,8 @@
                     loading: article_loading,
                     alt: article_image_alt,
                     widths: '350, 500, 700',
-                    sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 33vw'
+                    sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 33vw',
+                    style: focal_style
                 }}
 
                 <span class="j-blog-card__date">
