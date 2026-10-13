@@ -25,13 +25,17 @@ function initHeroSlideshow(root) {
   }
 
   function hydrateSlideVideo(slide) {
-    const videoSource = slide.querySelector("video source[data-src]");
-    if (videoSource) {
-      const video = videoSource.closest("video");
-      videoSource.src = videoSource.dataset.src;
-      videoSource.removeAttribute("data-src");
-      if (video) video.load();
-    }
+    const video = slide.querySelector("video");
+    if (!video) return;
+
+    const sources = video.querySelectorAll("source[data-src]");
+    if (!sources.length) return;
+
+    sources.forEach((source) => {
+      source.src = source.dataset.src;
+      source.removeAttribute("data-src");
+    });
+    video.load();
   }
 
   function hydrateSlide(slide) {
@@ -44,6 +48,9 @@ function initHeroSlideshow(root) {
   }
 
   function hydrateUpcomingVideo() {
+    // Videos never play with reduced motion, so none is downloaded.
+    if (slideshow.prefersReducedMotion) return;
+
     const nextIndex = (slideshow.currentIndex + 1) % slideshow.slides.length;
     hydrateSlideVideo(slideshow.slides[nextIndex]);
   }
@@ -60,7 +67,7 @@ function initHeroSlideshow(root) {
     if (!video) return;
 
     hydrateSlideImage(slide);
-    if (video.querySelector("source[data-src]")) hydrateSlideVideo(slide);
+    hydrateSlideVideo(slide);
     const playResult = video.play();
     if (playResult && typeof playResult.catch === "function") {
       playResult.catch(() => {});
@@ -72,6 +79,8 @@ function initHeroSlideshow(root) {
       new CustomEvent("heroSlideActivated", { detail: { slide } }),
     );
   }
+
+  let heroInView = true;
 
   const slideshow = createCrossfadeSlideshow(root, {
     slideSelector: ".j-hero-slideshow__slide",
@@ -87,6 +96,7 @@ function initHeroSlideshow(root) {
       hydrateUpcomingVideo();
     },
     onVisibilityChange(inView) {
+      heroInView = inView;
       const slide = slideshow.slides[slideshow.currentIndex];
       if (inView) {
         playSlideVideo(slide);
@@ -124,7 +134,15 @@ function initHeroSlideshow(root) {
     }
   }
 
+  // No video is requested while the page is still loading (see the note on
+  // data-src in sections/hero.liquid): the first slide shows its poster
+  // image until then.
+  function playActiveSlideVideo() {
+    if (heroInView) playSlideVideo(slideshow.slides[slideshow.currentIndex]);
+  }
+
   function hydrateAfterLoad() {
+    whenIdle(playActiveSlideVideo);
     whenIdle(hydrateDeferredSlideImages);
     whenIdle(hydrateUpcomingVideo);
   }
@@ -136,9 +154,6 @@ function initHeroSlideshow(root) {
   }
 
   announceActiveSlide(slideshow.slides[slideshow.currentIndex]);
-  if (slideshow.prefersReducedMotion) {
-    pauseSlideVideo(slideshow.slides[slideshow.currentIndex]);
-  }
 
   function startAutoplayAfterFirstPaint() {
     const img =

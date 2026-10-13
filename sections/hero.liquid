@@ -103,15 +103,16 @@
             {% if block_settings.video %}
 
               {% comment %}
-                Only the first/active slide's video is eager + autoplaying.
-                Other slides get their <source> deferred the same way
-                images are (data-src, hydrated on idle) — a video file is
-                far heavier than an image, so downloading N of them
-                upfront for slides the visitor may never reach is worse
-                here than it ever was for photos. hero-slideshow.js starts
-                playback only once a slide actually becomes active, and
-                pauses it again when the slide is left, so at most one
-                hero video is ever playing at a time.
+                No slide's video can load from the initial HTML: every
+                <source> carries data-src, which hero-slideshow.js fills in.
+                A video file is far heavier than anything else on the page,
+                and a browser starts fetching an autoplaying one as soon as
+                it parses the tag — alongside the stylesheets, the fonts and
+                the poster image below, which is the LCP element. The first
+                slide's video is requested once the page has finished
+                loading; a later slide's just before it is shown. Playback
+                starts when a slide becomes active and pauses when it is
+                left, so at most one hero video is ever playing at a time.
               {% endcomment %}
 
               {% comment %}
@@ -136,17 +137,38 @@
                 endfor
               %}
 
+              {% capture hero_video_markup %}
+                {% if hero_source %}
+                  <video class="j-hero__video j-hero__video--over-poster"
+                    preload="metadata"
+                    muted="muted"
+                    loop="loop"
+                    playsinline="true"
+                  ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
+                {% else %}
+                  {{
+                    block_settings.video
+                    | video_tag:
+                      image_size: '1200x',
+                      class: 'j-hero__video j-hero__video--over-poster',
+                      muted: true,
+                      loop: true,
+                      playsinline: true
+                  }}
+                {% endif %}
+              {% endcapture %}
+              {% assign hero_video_markup = hero_video_markup | replace: ' src=', ' data-src=' | replace: ' poster=', ' data-poster=' %}
+
               {% if forloop.first %}
                 {% comment %}
                   The homepage's LCP element. A <video> can't be made an
                   early, high-priority LCP on its own: fetchpriority isn't a
                   valid attribute on <video>, and browsers start video
-                  downloads late and at low priority — Lighthouse measured
-                  ~5.5s before this video's request even began. Painting
-                  its first frame as a real <img> (fetchpriority=high, in
-                  the initial HTML) makes that the LCP instead. The video
-                  sits on top at opacity 0 and fades in once it's actually
-                  playing (see .j-hero__video--over-poster in hero.css and
+                  downloads late and at low priority. Painting its first
+                  frame as a real <img> (fetchpriority=high, in the initial
+                  HTML) makes that the LCP instead. The video sits on top at
+                  opacity 0 and fades in once it's actually playing (see
+                  .j-hero__video--over-poster in hero.css and
                   hero-slideshow.js); at the same size, that later paint
                   doesn't replace the image as LCP.
                 {% endcomment %}
@@ -179,26 +201,7 @@
                       alt: ''
                   }}
                 {% endif %}
-                {% if hero_source %}
-                  <video class="j-hero__video j-hero__video--over-poster"
-                    preload="metadata"
-                    muted="muted"
-                    loop="loop"
-                    playsinline="true"
-                    autoplay="autoplay"
-                  ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
-                {% else %}
-                  {{
-                    block_settings.video
-                    | video_tag:
-                      image_size: '1200x',
-                      class: 'j-hero__video j-hero__video--over-poster',
-                      muted: true,
-                      loop: true,
-                      playsinline: true,
-                      autoplay: true
-                  }}
-                {% endif %}
+                {{ hero_video_markup }}
               {% else %}
                 {% comment %}
                   Same structure as the first slide: the video's first frame as
@@ -209,7 +212,7 @@
                   It also keeps a later slide's video from ever outranking the
                   first slide's image as the page's LCP element.
                 {% endcomment %}
-                {% capture deferred_hero_video %}
+                {% capture deferred_hero_poster %}
                   {% if hero_video.preview_image %}
                     {{
                       hero_video.preview_image
@@ -221,26 +224,9 @@
                         alt: ''
                     }}
                   {% endif %}
-                  {% if hero_source %}
-                    <video class="j-hero__video j-hero__video--over-poster"
-                      preload="metadata"
-                      muted="muted"
-                      loop="loop"
-                      playsinline="true"
-                    ><source src="{{ hero_source.url }}" type="{{ hero_source.mime_type }}"></video>
-                  {% else %}
-                    {{
-                      block_settings.video
-                      | video_tag:
-                        image_size: '1200x',
-                        class: 'j-hero__video j-hero__video--over-poster',
-                        muted: true,
-                        loop: true,
-                        playsinline: true
-                    }}
-                  {% endif %}
                 {% endcapture %}
-                {{ deferred_hero_video | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' | replace: ' poster=', ' data-poster=' }}
+                {{ deferred_hero_poster | replace: ' src=', ' data-src=' | replace: ' srcset=', ' data-srcset=' }}
+                {{ hero_video_markup }}
               {% endif %}
 
             {% elsif block_settings.image %}

@@ -11,13 +11,11 @@ function initFeaturedCollectionReveal() {
   const SETTLE_VH_FRACTION = 0.4;
   const SLIDE_DISTANCE_PX = 220;
 
-  function updateCard(card, index) {
-    const rect = card.getBoundingClientRect();
-    const vh = window.innerHeight;
+  function updateCard(card, index, top, vh) {
     const startY = vh * ENTER_VH_FRACTION;
     const endY = vh * SETTLE_VH_FRACTION;
 
-    let progress = (startY - rect.top) / (startY - endY);
+    let progress = (startY - top) / (startY - endY);
     progress = Math.min(Math.max(progress, 0), 1);
 
     const OPACITY_RAMP_FRACTION = 0.35;
@@ -30,8 +28,13 @@ function initFeaturedCollectionReveal() {
 
   let ticking = false;
 
+  // Every card is measured before any is moved; measuring one after moving
+  // another makes the browser recalculate the page for each card.
   function updateAllCards() {
-    cards.forEach(updateCard);
+    const vh = window.innerHeight;
+    const tops = cards.map((card) => card.getBoundingClientRect().top);
+
+    cards.forEach((card, index) => updateCard(card, index, tops[index], vh));
     ticking = false;
   }
 

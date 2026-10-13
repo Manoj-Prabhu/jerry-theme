@@ -114,14 +114,18 @@ function initHeroTextReveal() {
   const descriptions = document.querySelectorAll(".j-hero p");
 
   // The slide showing at page load keeps its text as rendered; the reveal
-  // only plays when a slide is activated later.
-  const inInitialSlide = (el) => {
-    const slide = el.closest(".j-hero");
-    const isCurrent =
-      !slide.classList.contains("j-hero-slideshow__slide") ||
-      slide.classList.contains("is-active");
-    return isCurrent && isOnScreen(slide);
-  };
+  // only plays when a slide is activated later. The slides are measured once,
+  // before any text is wrapped: wrapping changes the page, and measuring
+  // again after each element would lay the whole page out every time.
+  const initialSlides = new Set(
+    Array.from(slides).filter((slide) => {
+      const isCurrent =
+        !slide.classList.contains("j-hero-slideshow__slide") ||
+        slide.classList.contains("is-active");
+      return isCurrent && isOnScreen(slide);
+    }),
+  );
+  const inInitialSlide = (el) => initialSlides.has(el.closest(".j-hero"));
 
   headings.forEach((el) => prepareHeroTextReveal(el, inInitialSlide(el)));
   badges.forEach((el) => prepareTextReveal(el, inInitialSlide(el)));
@@ -170,7 +174,12 @@ function initSectionTitleReveal() {
 
   if (!targets.length) return;
 
-  targets.forEach((heading) => prepareTextReveal(heading, isOnScreen(heading)));
+  // Measured in one pass before any heading is wrapped, as in the hero.
+  const onScreen = Array.from(targets, isOnScreen);
+
+  targets.forEach((heading, index) =>
+    prepareTextReveal(heading, onScreen[index]),
+  );
 
   const observer = new IntersectionObserver(
     (entries, obs) => {
