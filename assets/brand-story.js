@@ -37,6 +37,10 @@ function animateStatNumber(el) {
 
   const [, prefix, digits, suffix] = match;
   const target = Number(digits.replace(/,/g, ""));
+  // "2020" stays "2020" while counting; "10,000" keeps its separators.
+  const format = digits.includes(",")
+    ? (value) => value.toLocaleString("en-US")
+    : String;
   if (!Number.isFinite(target) || target <= 0) return;
 
   const startTime = performance.now();
@@ -46,7 +50,7 @@ function animateStatNumber(el) {
     const eased = 1 - Math.pow(1 - progress, 3);
     const current = Math.round(target * eased);
 
-    el.textContent = `${prefix}${current.toLocaleString("en-US")}${suffix}`;
+    el.textContent = `${prefix}${format(current)}${suffix}`;
 
     if (progress < 1) {
       requestAnimationFrame(tick);

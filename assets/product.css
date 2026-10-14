@@ -163,6 +163,7 @@
 .j-product__pickup {
   display: inline-flex;
   align-self: flex-start;
+  max-width: 100%;
   align-items: center;
   gap: 8px;
 
@@ -191,6 +192,7 @@
 }
 
 .j-product__pickup p {
+  min-width: 0;
   margin: 0;
   color: var(--color-ink);
 }

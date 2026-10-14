@@ -25,7 +25,11 @@
           >
             <div class="j-category-card__image">
               {% if block_settings.image %}
-                {% assign img_alt = block_settings.title | default: shop.name %}
+                {% comment %}
+                  Decorative: the card's title is visible text inside the same
+                  link, so repeating it as alt text would be read out twice.
+                {% endcomment %}
+                {% assign img_alt = '' %}
                 {%- liquid
                   assign card_loading = 'lazy'
                   if forloop.index <= 3
