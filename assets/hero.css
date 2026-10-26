@@ -37,6 +37,14 @@
   }
 }
 
+/* The home hero sits 80px up under the transparent header, so its top
+   padding must clear the header too, or the badge slides beneath it. */
+@media (min-width: 993px) {
+  .j-body--home .j-hero-band .j-hero {
+    padding-top: 120px;
+  }
+}
+
 .j-hero {
   position: relative;
   display: flex;
@@ -355,7 +363,7 @@
 
 /* Responsive */
 
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   .j-hero {
     min-height: 550px;
     padding-top: 90px;

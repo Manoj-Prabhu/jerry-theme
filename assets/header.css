@@ -548,6 +548,13 @@
   transform: translateY(-50%);
   overflow: hidden;
   pointer-events: none;
+  /* Hidden until header.js starts the rotation, so it never overlaps the
+     native placeholder (no JS, reduced motion, or before JS runs). */
+  display: none;
+}
+
+.j-search-form__animated-placeholder.is-ready {
+  display: block;
 }
 
 .j-search-form__animated-placeholder span {
@@ -1371,5 +1378,25 @@
 
   .j-menu-toggle {
     gap: 4px;
+  }
+}
+
+/* Small desktops (993–1279px): the full nav, search and icons need about
+   1130px at the default spacing, so tighten the gaps here to keep the
+   header icons on screen and give the search field room. */
+
+@media (min-width: 993px) and (max-width: 1279px) {
+  .j-site-header {
+    column-gap: var(--space-5);
+    padding: 0 var(--space-5);
+  }
+
+  .header__menu {
+    gap: 24px;
+  }
+
+  .j-search-form,
+  .j-search-form input {
+    min-width: 0;
   }
 }

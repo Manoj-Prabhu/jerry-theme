@@ -22,6 +22,7 @@ class JerryHeader {
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     input.setAttribute("placeholder", "");
+    wrapper.classList.add("is-ready");
 
     const ROTATE_INTERVAL = 2600;
     const LEAVE_DURATION = 350;
