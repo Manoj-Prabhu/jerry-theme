@@ -44,7 +44,11 @@ async function initRecentlyViewed() {
   // so a merchant can still find and select the section there.
   function showEmptyState() {
     if (inThemeEditor) {
-      container.innerHTML = "<p>No recently viewed products.</p>";
+      const emptyText = document.createElement("p");
+      emptyText.textContent =
+        (window.themeStrings || {}).recentlyViewedEmpty ||
+        "No recently viewed products.";
+      container.replaceChildren(emptyText);
     } else if (section) {
       section.hidden = true;
     }

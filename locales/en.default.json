@@ -260,6 +260,7 @@
     "adding": "Adding...",
     "unavailable": "Unavailable",
     "add_to_cart_error": "Unable to add item to cart.",
+    "invalid_selection_error": "Please select a valid option and quantity.",
     "sold_out": "Sold Out",
     "sale": "Sale",
     "new": "New",
@@ -287,6 +288,7 @@
     "recommendations_title": "You may also like",
     "complementary_title": "Frequently bought together",
     "recently_viewed_title": "Recently Viewed",
+    "recently_viewed_empty": "No recently viewed products.",
     "rating_label_html": "{{ rating }} out of 5 stars",
     "rating_count": {
       "one": "{{ count }} review",

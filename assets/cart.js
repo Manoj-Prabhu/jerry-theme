@@ -432,13 +432,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const message = bar.querySelector(".j-cart-page__shipping-message");
       if (message) {
+        const strings = window.themeStrings || {};
         message.innerHTML = unlocked
           ? `<span class="j-cart-page__shipping-emoji">
               🎉
               <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
               <i class="j-spark"></i><i class="j-spark"></i><i class="j-spark"></i>
-            </span> You've unlocked free shipping!`
-          : `Add <strong>${formatMoney(remaining)}</strong> more to unlock free shipping`;
+            </span> ${strings.freeShippingUnlocked || "You've unlocked free shipping!"}`
+          : (
+              strings.freeShippingRemainingHtml ||
+              "Add <strong>__AMOUNT__</strong> more to unlock free shipping"
+            ).replace("__AMOUNT__", formatMoney(remaining));
       }
 
       if (justUnlocked) {
@@ -633,7 +637,10 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (!variantId || !quantity || quantity < 1) {
-        showFormError("Please select a valid option and quantity.");
+        showFormError(
+          (window.themeStrings || {}).invalidSelectionError ||
+            "Please select a valid option and quantity.",
+        );
         return;
       }
 
